@@ -56,10 +56,10 @@
   "test": "five_browsers_with_lag_and_loss_play_the_same_match"
  },
  {
-  "name": "a returning player gets no log",
+  "name": "a returning player never takes the seat back",
   "file": "crates/core/src/online.rs",
-  "find": "    let upto = confirmed(s);\n    let take_over",
-  "replace": "    let upto = 0;\n    let take_over",
+  "find": "            mine.insert(0, (me as u8, Cmd::Autopilot(255).encode()));",
+  "replace": "",
   "test": "a_player_who_drops_is_played_by_the_computer_and_rejoins"
  },
  {
@@ -77,11 +77,11 @@
   "test": "placeholders_fill_every_level_and_mark_the_current_one"
  },
  {
-  "name": "browsers chase each other",
+  "name": "browsers chase each other (both guards off)",
   "file": "crates/core/src/online.rs",
-  "find": "lead.saturating_sub(m.world.tick + DELAY + 3)",
-  "replace": "lead.saturating_sub(m.world.tick + DELAY)",
-  "test": "five_browsers_with_lag_and_loss_play_the_same_match"
+  "find": "                .filter(|&k| s.humans[k] && k != s.me && !s.away[k])\n                .map(|k| s.known[k])\n                .max()\n                .unwrap_or(0);\n            // a browser that is behind by more than the usual lead catches up;\n            // one tick of lead is ordinary and must not set the browsers\n            // chasing each other faster than the clock\n            (m.world.tick, c, lead.saturating_sub(m.world.tick + DELAY + 3))",
+  "replace": "                .filter(|&k| s.humans[k] && k != s.me)\n                .map(|k| s.known[k])\n                .max()\n                .unwrap_or(0);\n            // a browser that is behind by more than the usual lead catches up;\n            // one tick of lead is ordinary and must not set the browsers\n            // chasing each other faster than the clock\n            (m.world.tick, c, lead.saturating_sub(m.world.tick + DELAY))",
+  "test": "browsers_on_a_fast_wire_keep_to_the_clock"
  },
  {
   "name": "silence is counted in ticks",

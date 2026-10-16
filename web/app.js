@@ -91,14 +91,14 @@ function build(n) {
   if (n.t === "img") {
     node.src = n.i;
     node.alt = "";
-  } else if (n.i) {
-    const img = document.createElement("img");
-    img.src = n.i;
-    img.alt = "";
-    img.className = "slot-icon";
-    node.append(img);
   }
-  if (n.x) node.append(document.createTextNode(n.x));
+  // an icon or a text beside children becomes a child of its own, so the
+  // keyed children below keep them
+  const kids = n.n || [];
+  const extra = [];
+  if (n.i && n.t !== "img") extra.push({ t: "img", c: "slot-icon", i: n.i, k: "icon" });
+  if (n.x && kids.length) extra.push({ t: "span", c: "label", x: n.x, k: "label" });
+  if (n.x && !kids.length) node.textContent = n.x;
   for (const [k, v] of n.s || []) node.style.setProperty(k, v);
   if (n.a) {
     node.dataset.a = n.a;
@@ -113,7 +113,7 @@ function build(n) {
     node.dataset.term = n.term;
     node.title = hints.get(n.term);
   }
-  sync(node, n.n || []);
+  if (extra.length || kids.length) sync(node, extra.concat(kids));
   return node;
 }
 

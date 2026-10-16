@@ -199,3 +199,7 @@ body[data-stage="still"] #ui, body[data-stage="still"] #notice:empty { display: 
 .hero-mini .portrait { width: 100%; aspect-ratio: 1; display: block; }
 .status-line { color: var(--muted); font-family: var(--hud-font); letter-spacing: .03em; min-height: 1.2em; }
 .net-line { position: absolute; top: 88px; left: 50%; transform: translateX(-50%); padding: 3px 12px; background: var(--panel); border-left: 4px solid var(--mana); font-family: var(--hud-font); font-size: 14px; }
+.pops { position: absolute; inset: 0; pointer-events: none; }
+.gold-pop { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -100%); color: var(--accent); font-family: var(--hud-font); font-size: 20px; font-weight: 700; text-shadow: 0 2px 3px #000; animation: rise 1.5s ease-out forwards; }
+@keyframes rise { from { opacity: 1; margin-top: 0; } to { opacity: 0; margin-top: -40px; } }
+@media (prefers-reduced-motion: reduce) { .gold-pop { animation: none; } }

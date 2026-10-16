@@ -101,8 +101,8 @@ fn a_last_hit_pays_the_killer_alone_within_the_bounty() {
     w.step(&ctx, &[]);
     let gained = w.players[0].gold - before[0];
     assert!((38..=48).contains(&gained), "the killer gained {gained}");
-    for p in 1..10 {
-        assert_eq!(w.players[p].gold, before[p], "player {p} gained nothing");
+    for (p, gold) in before.iter().enumerate().skip(1) {
+        assert_eq!(w.players[p].gold, *gold, "player {p} gained nothing");
     }
     assert_eq!(w.players[0].last_hits, 1);
 }

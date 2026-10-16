@@ -12,10 +12,10 @@ fn rule_histogram() {
         w.players[p].present = true;
     }
     let mut hist = vec![[0u32; 20]; 10];
-    let mut far = vec![0u32; 10];
+    let mut far = [0u32; 10];
     for _ in 0..(12 * 60 * TPS) {
         w.step(&ctx, &[]);
-        if w.tick % 30 == 0 {
+        if w.tick.is_multiple_of(30) {
             for p in 0..10 {
                 let r = w.players[p].brain.rule.clamp(0, 19) as usize;
                 hist[p][r] += 1;
@@ -129,7 +129,7 @@ fn how_long_a_bot_match_lasts() {
         let mut towers_at = Vec::new();
         while w.winner.is_none() && w.tick < 60 * 60 * TPS as u32 {
             w.step(&ctx, &[]);
-            if w.tick % (5 * 60 * TPS as u32) == 0 {
+            if w.tick.is_multiple_of(5 * 60 * TPS as u32) {
                 let n = w
                     .units
                     .iter()

@@ -85,6 +85,8 @@ pub struct Match {
     pub online: bool,
     /// Kill feed and announcements: (tick, text).
     pub feed: Vec<(u32, String)>,
+    /// Gold this player earned, shown floating where it was earned: (tick, place, amount).
+    pub popups: Vec<(u32, P, i32)>,
     /// Towers of the other side destroyed, hero kills, bosses slain by my side.
     pub towers_taken: i32,
     pub bosses: i32,
@@ -310,6 +312,7 @@ impl Game {
             pending: Vec::new(),
             online,
             feed: Vec::new(),
+            popups: Vec::new(),
             towers_taken: 0,
             bosses: 0,
         });
@@ -428,9 +431,14 @@ impl Game {
                     m.feed.push((m.world.tick, strings.ui("feed.boss")));
                 }
                 world::EV_RUNE => m.feed.push((m.world.tick, strings.ui("feed.rune"))),
+                world::EV_GOLD if e.b == m.me as i32 && e.at != [0, 0] => {
+                    m.popups.push((m.world.tick, e.at, e.a))
+                }
                 _ => {}
             }
         }
+        let now = m.world.tick;
+        m.popups.retain(|(t, _, _)| now < t + (3 * TPS / 2) as u32);
         if m.feed.len() > 8 {
             let cut = m.feed.len() - 8;
             m.feed.drain(..cut);

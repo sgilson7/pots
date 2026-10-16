@@ -597,6 +597,20 @@ fn hud(g: &Game) -> Node {
     if g.learn {
         kids.push(keyed(text("div", "aim-hint", s.ui("hud.learn")), "aim"));
     }
+    // gold earned, floating over the spot where it was earned
+    let cam = g.camera();
+    let aspect = g.aspect();
+    let mut pops = Vec::new();
+    for (k, (tick, at, amount)) in m.popups.iter().enumerate() {
+        let h = crate::scene::ground_at(&g.terrain, *at) + crate::fx::ONE * 4;
+        if let Some((x, y)) = cam.screen(aspect, crate::scene::to_scene(*at, h)) {
+            let mut n = text("span", "gold-pop", format!("+{amount}"));
+            n.s.push(("--x".into(), format!("{}%", x / crate::fx::ONE)));
+            n.s.push(("--y".into(), format!("{}%", y / crate::fx::ONE)));
+            pops.push(keyed(n, format!("g{tick}-{k}")));
+        }
+    }
+    kids.push(keyed(with(node("div", "pops"), pops), "pops"));
     kids.push(keyed(bottom(g, w, me, hero), "bottom"));
     if g.shop {
         kids.push(keyed(shop(g, w, me), "shop"));

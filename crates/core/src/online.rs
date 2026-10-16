@@ -859,6 +859,8 @@ fn welcome_back(g: &mut Game, peer: &str, seat: usize) {
         );
     }
     send(o, peer, &m, false);
+    // everyone else learns the seat is back
+    broadcast_lobby(o);
 }
 
 impl Session {

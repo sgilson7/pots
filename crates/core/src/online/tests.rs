@@ -381,3 +381,23 @@ fn a_browser_that_falls_silent_is_handed_to_the_computer_without_a_long_wait() {
         "the match waited too long: {ran} ticks in five seconds"
     );
 }
+
+#[test]
+fn browsers_on_a_fast_wire_keep_to_the_clock() {
+    // no lag at all, as between browsers on one machine: each sees the
+    // others' ordinary lead at once, which must not set them chasing
+    let mut room = Room::new(3, 0, 0, 13);
+    pick_and_start(&mut room);
+    // and one browser drops, so the host speaks for its seat, as in the
+    // run where the browsers once raced at twice the clock
+    room.connected[2] = false;
+    net_event(&mut room.games[0], "left", "j2");
+    let start = room.games[0].m.as_ref().unwrap().world.tick;
+    for _ in 0..1200 {
+        room.step(false);
+    }
+    let ran = room.games[1].m.as_ref().unwrap().world.tick - start;
+    // 1200 frames at 60 a second are 600 ticks
+    assert!(ran <= 600 + 10, "the match ran {ran} ticks in 600 ticks of time");
+    assert!(ran >= 600 - 10, "the match ran {ran} ticks in 600 ticks of time");
+}
