@@ -214,7 +214,13 @@ pub fn regen(w: &mut World, ctx: &Ctx) {
         .enumerate()
         .map(|(k, s)| (k as u8, s.fountain))
         .collect();
-    let ids: Vec<Uid> = w.units.iter().filter(|u| u.alive).map(|u| u.id).collect();
+    // a unit at no health is dead this tick, whatever it would regenerate
+    let ids: Vec<Uid> = w
+        .units
+        .iter()
+        .filter(|u| u.alive && u.hp > 0)
+        .map(|u| u.id)
+        .collect();
     let mut dots: Vec<(Uid, Uid, i32)> = Vec::new();
     for id in ids {
         let s = of(ctx, w, id);

@@ -25,6 +25,7 @@ fn files() -> Files<'static> {
 /// A message in flight: when it lands, from whom, to whom, what.
 struct Flight {
     at: u32,
+    fast: bool,
     from: usize,
     to: usize,
     text: String,
@@ -93,8 +94,21 @@ impl Room {
         } else {
             0
         };
+        let mut at = self.frame + delay;
+        // the reliable channel keeps order between two browsers; only fast messages may overtake
+        if !fast {
+            let last = self
+                .wire
+                .iter()
+                .filter(|f| f.from == from && f.to == to && !f.fast)
+                .map(|f| f.at)
+                .max()
+                .unwrap_or(0);
+            at = at.max(last);
+        }
         self.wire.push(Flight {
-            at: self.frame + delay,
+            at,
+            fast,
             from,
             to,
             text,
@@ -271,6 +285,11 @@ fn five_browsers_with_lag_and_loss_play_the_same_match() {
         "browsers stay within the limit of each other: {ticks:?}"
     );
     assert!(lo > 30 * 30, "the match ran: {ticks:?}");
+    // the clock: 2400 frames at 60 a second are 40 seconds, 1200 ticks
+    assert!(
+        hi <= 1200 + 2 * (MAX_AHEAD + DELAY),
+        "the match keeps to the clock, not faster: {ticks:?}"
+    );
 }
 
 #[test]
@@ -303,7 +322,7 @@ fn a_player_who_drops_is_played_by_the_computer_and_rejoins() {
         })
         .collect();
     assert!(
-        room.games[1].m.as_ref().unwrap().world.tick > 800,
+        room.games[1].m.as_ref().unwrap().world.tick > 550,
         "the match did not wait for the dropped browser: {info:?}"
     );
     // the same player returns in a fresh page with its room link
@@ -331,5 +350,34 @@ fn a_player_who_drops_is_played_by_the_computer_and_rejoins() {
     assert!(
         compared > 0 && agree,
         "the returning browser's world agrees with the host's ({compared})"
+    );
+}
+
+#[test]
+fn a_browser_that_falls_silent_is_handed_to_the_computer_without_a_long_wait() {
+    let mut room = Room::new(3, 2, 0, 5);
+    pick_and_start(&mut room);
+    for _ in 0..300 {
+        room.step(false);
+    }
+    // browser 2 stops answering, and the transport never says it left
+    room.connected[2] = false;
+    let seat2 = room.games[2].online.my_seat.unwrap();
+    let before = room.games[0].m.as_ref().unwrap().world.tick;
+    // five seconds of frames: the host hears nothing for two and a half,
+    // then gives the seat to the computer and the match goes on
+    for _ in 0..300 {
+        room.step(false);
+    }
+    let host = room.games[0].m.as_ref().unwrap();
+    assert!(
+        host.world.players[seat2].bot.is_some(),
+        "the silent seat is the computer's"
+    );
+    let ran = host.world.tick - before;
+    // 300 frames are 150 ticks; at most the silence (75 ticks) and the limit are lost
+    assert!(
+        ran >= 150 - 75 - MAX_AHEAD - DELAY - 10,
+        "the match waited too long: {ran} ticks in five seconds"
     );
 }

@@ -62,4 +62,7 @@ These stay with the person and go in `BRIEF.md` or `PLAN.md`:
 
 | Default | Changed to | Reason | Recorded in |
 | --- | --- | --- | --- |
-| | | | |
+| D3, D4, page scan | `web/net/` holds the online transport: `config.js` may hold timings and the relay addresses, `rtc.js` may name the WebRTC and WebSocket APIs, and `connect-src` lists the relays in `config.js` | online play is in the brief (kits/online) | `crates/core/tests/online_fence.rs`; SECOND-ORDER.md R1.16 |
+| D5 (strings in data) | `data/*.json` that are not `strings.json` keep notes for people under `_after` and `_note` keys, which the copy checks skip | the DotA name each unit, ability and item follows is for the person, not the player | SECOND-ORDER.md R1.17 |
+| D18 (default style pack) | `styles/pots/` for the icons; the 3D look is the models in `data/models.json` | the brief describes a look | `data/art.json`; SECOND-ORDER.md R1.18 |
+| D1 kit choice | the realtime kit's `rng.rs`, Gatecrasher's `fx.rs`, `geom.rs`, `mesh.rs` and `render.rs`, the canvas kit's `draw.rs` for the minimap | a 3D game on a fixed tick, after Sam's own games | SECOND-ORDER.md R1.19 |

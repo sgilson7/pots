@@ -429,7 +429,17 @@ fn creep(w: &mut World, ctx: &Ctx, id: Uid) {
     let u = w.get(id).expect("listed");
     let (team, lane, wp) = (u.team, u.lane as usize, u.waypoint as usize);
     let acquire = ctx.rules.units[u.def as usize].acquire;
-    let current = u.target;
+    let mut current = u.target;
+    // a hero is kept as the target only while the aggro it drew lasts, or
+    // while no enemy creep is near
+    let on_hero = w.live(current).map(|t| t.hero.is_some()).unwrap_or(false);
+    if on_hero && u.aggro_until <= w.tick {
+        if let Some(c) = lane_target(w, ctx, id, acquire, true) {
+            if w.get(c).map(|t| t.hero.is_none()).unwrap_or(false) {
+                current = c;
+            }
+        }
+    }
     let keep = u.aggro_until > w.tick || current != NO_UNIT;
     if keep && current != NO_UNIT && w.live(current).is_some() {
         let near = w
@@ -443,7 +453,9 @@ fn creep(w: &mut World, ctx: &Ctx, id: Uid) {
     if let Some(u) = w.get_mut(id) {
         u.target = NO_UNIT;
     }
-    if let Some(t) = lane_target(w, ctx, id, acquire, false) {
+    // lane creeps fight enemy creeps first and heroes only when no creep is
+    // near (the review, §2.12, after the Dota 2 port)
+    if let Some(t) = lane_target(w, ctx, id, acquire, true) {
         crate::orders::engage(w, ctx, id, t, true);
         return;
     }

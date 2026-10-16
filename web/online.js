@@ -40,16 +40,20 @@ function close() {
   peerIds.clear();
 }
 
+// A room link (#room=CODE or #room=CODE.SEAT) joins on opening, and after a
+// reload rejoins the seat; a link pasted into an open page joins too.
+function joinFromLink() {
+  const room = new URLSearchParams(location.hash.slice(1)).get("room");
+  if (!room || linkKey !== "") return;
+  act("screen", "online");
+  act("online.join", room);
+}
+
 export function setup(g, a) {
   game = g;
   act = a;
-  // a room link (#room=CODE or #room=CODE.SEAT) joins on opening, and after a reload rejoins the seat
-  const hash = new URLSearchParams(location.hash.slice(1));
-  const room = hash.get("room");
-  if (room) {
-    act("screen", "online");
-    act("online.join", room);
-  }
+  joinFromLink();
+  window.addEventListener("hashchange", joinFromLink);
 }
 
 export function pump(g) {

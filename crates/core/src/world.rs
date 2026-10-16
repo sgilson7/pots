@@ -96,6 +96,8 @@ pub enum Order {
     Attack(Uid),
     AttackMove(P),
     Hold,
+    /// Stand still and attack nothing.
+    Stand,
     /// Cast ability `slot` at a unit or a point.
     Cast(u8, Uid, P),
     /// Use the item in inventory slot `slot`.

@@ -55,8 +55,9 @@ pub const RESEND: u32 = 45;
 pub const TAKE_OVER_AFTER: u32 = 60;
 /// Most ticks run in one display frame while catching up.
 pub const CATCH_UP_PER_FRAME: u32 = 240;
-/// A seat whose browser has said nothing for this many ticks is away.
-pub const SILENT_TICKS: u32 = 300;
+/// A seat whose browser has said nothing for this long (microseconds of
+/// real time, not ticks: ticks stop while the match waits for it) is away.
+pub const SILENT_US: i64 = 2_500_000;
 
 /// One seat of the room.
 #[derive(Debug, Clone, Default, Serialize, Deserialize, PartialEq, Eq)]
@@ -118,7 +119,15 @@ pub enum Msg {
     Bye {
         reason: String,
     },
+    /// Part of the order log for a returning player, sent before its Start:
+    /// a long match's log is larger than one data-channel message may be.
+    Log {
+        entries: Vec<[i32; 7]>,
+    },
 }
+
+/// Log entries in one message.
+pub const LOG_CHUNK: usize = 1500;
 
 impl Msg {
     pub fn text(&self) -> String {
@@ -163,8 +172,12 @@ pub struct Session {
     pub take_over: u32,
     /// The host speaks for these seats (players away).
     pub away: [bool; PLAYERS],
-    /// The last tick each seat was heard from (host).
+    /// When each seat was last heard from: the tick, and this browser's
+    /// microseconds (host).
     pub heard: [u32; PLAYERS],
+    pub heard_us: [i64; PLAYERS],
+    /// This browser's clock since the match began, microseconds.
+    pub clock_us: i64,
     pub seed: u64,
     pub horn: u32,
     pub bots: u8,
@@ -181,6 +194,9 @@ pub struct Session {
     pub replayed: u64,
     /// Seats coming back, and the tick each takes its seat again (host).
     pub returning: Vec<(usize, u32)>,
+    /// After a rejoin, the host repeats every order since the log it sent,
+    /// until this tick, so nothing falls between the log and the live stream.
+    pub resend_from: Option<(u32, u32)>,
 }
 
 #[derive(Debug, Default)]
@@ -210,6 +226,8 @@ pub struct Online {
     /// The host: each seat's token, kept for the whole match so a player
     /// who drops can come back to the same seat.
     pub tokens: Vec<String>,
+    /// A returning joiner: log entries received before the Start.
+    pub early_log: Vec<[i32; 7]>,
 }
 
 fn empty_seats() -> Vec<Seat> {
@@ -458,7 +476,9 @@ pub fn event(g: &mut Game, kind: &str, peer: &str) {
                 o.status = "online.host_left".into();
             }
         }
-        ("error", _) => o.status = peer.to_string(),
+        // a transport error in a running match (a relay failing, a retry under a
+        // working link) does not replace the match's status
+        ("error", _) if !o.started => o.status = peer.to_string(),
         _ => {}
     }
 }
@@ -647,8 +667,9 @@ fn joiner_receives(g: &mut Game, peer: &str, msg: Msg) {
             g.online.my_seat = Some(seat);
             g.online.started = true;
             begin(g, seed, horn, bots, seats, seat, take_over);
+            let early = std::mem::take(&mut g.online.early_log);
             let s = g.online.s.as_mut().expect("just begun");
-            for e in log {
+            for e in early.into_iter().chain(log) {
                 let (tick, seat) = (e[0] as u32, e[1] as u8);
                 let v = [e[2], e[3], e[4], e[5], e[6]];
                 s.inputs.entry(tick).or_default().push((seat, v));
@@ -664,6 +685,7 @@ fn joiner_receives(g: &mut Game, peer: &str, msg: Msg) {
             };
         }
         Msg::In { seats } => take_in(g, seats),
+        Msg::Log { entries } => g.online.early_log.extend(entries),
         Msg::Bye { reason } => {
             g.online.status = reason;
             g.online.want = None;
@@ -699,6 +721,7 @@ fn take_in(g: &mut Game, seats: Vec<(usize, u32, Vec<[i32; 6]>)>) {
         }
         s.known[seat] = upto;
         s.heard[seat] = now;
+        s.heard_us[seat] = s.clock_us;
     }
 }
 
@@ -734,6 +757,8 @@ fn begin(g: &mut Game, seed: u64, horn: u32, bots: u8, seats: Vec<Seat>, me: usi
         take_over,
         away: [false; PLAYERS],
         heard: [0; PLAYERS],
+        heard_us: [0; PLAYERS],
+        clock_us: 0,
         seed,
         horn,
         bots,
@@ -746,6 +771,7 @@ fn begin(g: &mut Game, seed: u64, horn: u32, bots: u8, seats: Vec<Seat>, me: usi
         stalls: 0,
         replayed: 0,
         returning: Vec::new(),
+        resend_from: None,
     });
 }
 
@@ -810,17 +836,28 @@ fn welcome_back(g: &mut Game, peer: &str, seat: usize) {
     }
     s.away[seat] = false;
     s.take_over_for(seat, take_over);
+    s.resend_from = Some((upto, now + 10 * TPS as u32));
     let m = Msg::Start {
         seed: s.seed,
         horn: s.horn,
         bots: s.bots,
         seats: s.seats.clone(),
         seat,
-        log,
+        log: Vec::new(),
         upto,
         take_over,
     };
     o.seats[seat].away = false;
+    for part in log.chunks(LOG_CHUNK) {
+        send(
+            o,
+            peer,
+            &Msg::Log {
+                entries: part.to_vec(),
+            },
+            false,
+        );
+    }
     send(o, peer, &m, false);
 }
 
@@ -828,6 +865,7 @@ impl Session {
     /// The host keeps speaking for a returning seat until it takes over.
     fn take_over_for(&mut self, seat: usize, at: u32) {
         self.heard[seat] = at;
+        self.heard_us[seat] = self.clock_us + SILENT_US;
         self.returning.push((seat, at));
     }
 }
@@ -838,6 +876,7 @@ pub fn frame(g: &mut Game, dt: i64) {
     let tick_us = 1_000_000 / TPS as i64;
     let Some(s) = g.online.s.as_mut() else { return };
     s.acc_us += dt;
+    s.clock_us += dt;
     let rollback = s.rollback_to.take();
     if let Some(r) = rollback {
         roll_back(g, r);
@@ -851,11 +890,14 @@ pub fn frame(g: &mut Game, dt: i64) {
             let c = confirmed(s);
             // the furthest any other seat's browser has reported
             let lead = (0..PLAYERS)
-                .filter(|&k| s.humans[k] && k != s.me)
+                .filter(|&k| s.humans[k] && k != s.me && !s.away[k])
                 .map(|k| s.known[k])
                 .max()
                 .unwrap_or(0);
-            (m.world.tick, c, lead.saturating_sub(m.world.tick + DELAY))
+            // a browser that is behind by more than the usual lead catches up;
+            // one tick of lead is ordinary and must not set the browsers
+            // chasing each other faster than the clock
+            (m.world.tick, c, lead.saturating_sub(m.world.tick + DELAY + 3))
         };
         let limit = if catching {
             CATCH_UP_PER_FRAME
@@ -993,7 +1035,12 @@ fn send_orders(g: &mut Game) {
     let mut list = Vec::new();
     for k in seats {
         let upto = s.known[k];
-        let from = upto.saturating_sub(RESEND);
+        let mut from = upto.saturating_sub(RESEND);
+        if let Some((since, until)) = s.resend_from {
+            if s.known[s.me] < until {
+                from = from.min(since);
+            }
+        }
         let mut cmds = Vec::new();
         for (&tick, l) in s.inputs.range(from..upto) {
             for (seat, v) in l {
@@ -1028,7 +1075,7 @@ fn speak_for_away(g: &mut Game) {
             let speak = s.away[k] || returning.map(|at| now + DELAY < at).unwrap_or(false);
             if speak {
                 s.known[k] = s.known[k].max(now + DELAY + 1);
-            } else if now > s.heard[k] + SILENT_TICKS && now > SILENT_TICKS {
+            } else if s.clock_us > s.heard_us[k] + SILENT_US && s.clock_us > SILENT_US {
                 newly_silent.push(k);
             }
         }
@@ -1134,6 +1181,7 @@ pub fn probe(g: &Game) -> serde_json::Value {
         "desync": o.desync,
         "catching": o.catching,
         "away": s.map(|s| s.away.iter().filter(|a| **a).count()).unwrap_or(0),
+        "seats": o.seats.iter().map(|x| format!("{}{}", if x.human { "h" } else { "-" }, if x.away { "a" } else { "" })).collect::<Vec<_>>(),
         // the last few checksums, so runners can be compared tick for tick
         "sumlog": s.map(|s| s.sums.iter().rev().take(6).map(|(t, v)| (*t, v.to_string())).collect::<Vec<_>>()).unwrap_or_default(),
     })

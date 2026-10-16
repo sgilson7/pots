@@ -57,6 +57,9 @@ pub enum Cond {
     Chance(i32),
     /// The difficulty table's own flag (e.g. "denies").
     Skill(String),
+    /// Carries a ready item that heals (a salve, a tango, the bottle), or one that restores mana.
+    CanHeal,
+    CanMana,
     Not(Box<Cond>),
 }
 
@@ -154,6 +157,9 @@ pub struct Brain {
     /// The trace of rules tried at the last decision, for the tree view:
     /// one entry per rule: 0 not reached, 1 failed, 2 chosen.
     pub trace: Vec<u8>,
+    /// Counts for measuring the farm routine: decisions, creeps in reach,
+    /// last-hit tries, deny tries.
+    pub farm: [u32; 4],
 }
 
 /// Every bot whose turn it is decides and issues a command.
@@ -306,6 +312,23 @@ fn holds(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Loo
         Cond::After(m) => w.tick as i32 >= m * 60 * TPS,
         Cond::Chance(pct) => w.rng.below(100) < *pct as u32,
         Cond::Skill(flag) => d.flags.contains(flag),
+        Cond::CanHeal | Cond::CanMana => {
+            let want: &[&str] = if *c == Cond::CanHeal {
+                &["salve", "tango", "bottle"]
+            } else {
+                &["clarity", "bottle"]
+            };
+            w.get(l.hero)
+                .map(|u| {
+                    u.items.iter().any(|s| {
+                        s.item > 0
+                            && s.ready_at <= w.tick
+                            && (s.charges > 0 || ctx.rules.items[s.item as usize - 1].charges == 0)
+                            && want.contains(&ctx.rules.items[s.item as usize - 1].logic.as_str())
+                    })
+                })
+                .unwrap_or(false)
+        }
         Cond::Not(c) => !holds(w, ctx, ai, d, p, l, c),
     }
 }
@@ -389,7 +412,7 @@ fn useful_cast(w: &World, ctx: &Ctx, l: &Look, slot: usize) -> Option<(Uid, P)> 
 }
 
 /// The point a laning hero holds: a little behind its own creeps' front.
-fn lane_spot(w: &World, ctx: &Ctx, l: &Look, lane: u8) -> P {
+fn lane_spot(w: &World, ctx: &Ctx, l: &Look, lane: u8, range: i32) -> P {
     let names = ["top", "mid", "bot"];
     let side = &ctx.rules.map.sides[l.team as usize];
     let path = side
@@ -416,12 +439,24 @@ fn lane_spot(w: &World, ctx: &Ctx, l: &Look, lane: u8) -> P {
         .map(|u| u.pos());
     match front {
         Some(f) => {
-            // stand back toward home from the front by 300 units
+            // wait just inside reach of the enemy creeps nearest the front,
+            // on the home side of them
+            let foe = w
+                .units
+                .iter()
+                .filter(|u| {
+                    u.alive && u.team == other(l.team) && ctx.rules.units[u.def as usize].kind == Kind::Creep
+                })
+                .min_by_key(|u| crate::world::dist2(u.pos(), f))
+                .map(|u| u.pos())
+                .filter(|p| within(*p, f, 900))
+                .unwrap_or(f);
             let home = side.fountain;
-            let d = crate::world::dist(f, home).max(1);
+            let d = crate::world::dist(foe, home).max(1);
+            let back = (range + 40).clamp(150, 500);
             [
-                f[0] + (home[0] - f[0]) * 300 / d,
-                f[1] + (home[1] - f[1]) * 300 / d,
+                foe[0] + (home[0] - foe[0]) * back / d,
+                foe[1] + (home[1] - foe[1]) * back / d,
             ]
         }
         // no creeps: the first allied tower of the lane
@@ -494,10 +529,29 @@ fn act(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Look,
         }
         "buy" => {
             if let Some(k) = next_purchase(w, ctx, ai, p) {
+                let before = w.players[p].gold;
                 orders::apply(w, ctx, p, Cmd::Buy(k as u16));
-                w.players[p].brain.next_item += 1;
+                if w.players[p].gold == before {
+                    // a full inventory: sell the cheapest item to make room, then try again
+                    let cheapest = w.get(hero).and_then(|u| {
+                        u.items
+                            .iter()
+                            .enumerate()
+                            .filter(|(_, s)| s.item > 0)
+                            .min_by_key(|(_, s)| ctx.rules.item_total(s.item as usize - 1))
+                            .map(|(i, _)| i)
+                    });
+                    if let Some(slot) = cheapest {
+                        orders::apply(w, ctx, p, Cmd::Sell(slot as u8));
+                        orders::apply(w, ctx, p, Cmd::Buy(k as u16));
+                    }
+                }
+                if w.players[p].gold < before {
+                    w.players[p].brain.next_item += 1;
+                }
             }
         }
+        "potion" => use_consumable(w, ctx, p, l),
         "retreat" | "go_home" => {
             let to = if action == "go_home" {
                 ctx.rules.map.sides[l.team as usize].fountain
@@ -561,6 +615,37 @@ fn act(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Look,
             }
         }
         "farm" => farm(w, ctx, d, p, l),
+        "siege" => {
+            // an enemy building our creeps are already at, and that can be hurt
+            let target = w
+                .units
+                .iter()
+                .filter(|u| {
+                    u.alive
+                        && u.team == other(l.team)
+                        && u.team != NEUTRAL
+                        && matches!(
+                            ctx.rules.units[u.def as usize].kind,
+                            Kind::Tower | Kind::Barracks | Kind::Sphere
+                        )
+                        && !u.has(M::Invulnerable)
+                        && within(u.pos(), l.here, 1400)
+                })
+                .filter(|b| {
+                    w.units.iter().any(|c| {
+                        c.alive
+                            && c.team == l.team
+                            && ctx.rules.units[c.def as usize].kind == Kind::Creep
+                            && within(c.pos(), b.pos(), 700)
+                    })
+                })
+                .min_by_key(|b| crate::world::dist2(b.pos(), l.here))
+                .map(|b| b.id);
+            match target {
+                Some(t) => orders::apply(w, ctx, p, Cmd::Attack(t)),
+                None => farm(w, ctx, d, p, l),
+            }
+        }
         "push" => {
             let lane = w.players[p].brain.lane;
             let names = ["top", "mid", "bot"];
@@ -577,10 +662,63 @@ fn act(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Look,
     }
 }
 
+/// Uses a healing item when hurt or a mana item when low: a salve or the
+/// bottle on itself, a tango on the nearest tree, a clarity.
+fn use_consumable(w: &mut World, ctx: &Ctx, p: usize, l: &Look) {
+    let Some(u) = w.get(l.hero) else { return };
+    let items = u.items;
+    let healing = u.mods.iter().any(|m| m.kind == M::Regen && m.tag >= 5000);
+    for (slot, s) in items.iter().enumerate() {
+        if s.item == 0 || s.ready_at > w.tick {
+            continue;
+        }
+        let it = &ctx.rules.items[s.item as usize - 1];
+        let cmd = match it.logic.as_str() {
+            "salve" | "bottle" if l.hp_pct < 60 && !healing => Some(Cmd::Item(slot as u8, l.hero, l.here)),
+            "clarity" if l.mana_pct < 40 => Some(Cmd::Item(slot as u8, l.hero, l.here)),
+            "tango" if l.hp_pct < 75 && !healing => {
+                // the nearest standing tree
+                let t = ctx.terrain;
+                let (cx, cy) = (l.here[0] / t.tree_cell, l.here[1] / t.tree_cell);
+                let mut best: Option<(i32, P)> = None;
+                for dy in -4..=4 {
+                    for dx in -4..=4 {
+                        let (x, y) = (cx + dx, cy + dy);
+                        if x < 0 || y < 0 || x >= t.tw || y >= t.tw {
+                            continue;
+                        }
+                        let i = (y * t.tw + x) as usize;
+                        if matches!(w.trees[i], crate::map::Tree::Standing) {
+                            let d = dx * dx + dy * dy;
+                            if best.map(|b| d < b.0).unwrap_or(true) {
+                                best = Some((d, t.tree_centre(i)));
+                            }
+                        }
+                    }
+                }
+                best.map(|(_, at)| Cmd::Item(slot as u8, NO_UNIT, at))
+            }
+            _ => None,
+        };
+        if let Some(c) = cmd {
+            orders::apply(w, ctx, p, c);
+            return;
+        }
+    }
+}
+
 /// Laning: last-hit enemy creeps, deny allied ones, otherwise hold a spot
 /// behind the creep front. A miss-timed attack is how a weaker bot shows.
 fn farm(w: &mut World, ctx: &Ctx, d: &Difficulty, p: usize, l: &Look) {
     let hero = l.hero;
+    // a swing already under way at a creep is left to land
+    let swinging = w
+        .get(hero)
+        .map(|u| matches!(u.act, Act::Swing { .. }))
+        .unwrap_or(false);
+    if swinging {
+        return;
+    }
     let s = stats::of(ctx, w, hero);
     let reach = s.range + 350;
     let avg = (s.damage[0] + s.damage[1]) / 2 + s.bonus;
@@ -597,31 +735,77 @@ fn farm(w: &mut World, ctx: &Ctx, d: &Difficulty, p: usize, l: &Look) {
         .collect();
     let skilled = w.rng.below(100) < d.last_hit as u32;
     let mut best: Option<(i32, Uid)> = None;
+    // the time from the order to the blow landing: the walk is ignored, the
+    // swing and the missile's flight are counted, and the next decision is
+    // a reaction away, so a creep's expected loss over that time is allowed for
+    let hero_def = &ctx.rules.units[w.get(hero).map(|u| u.def as usize).unwrap_or(0)];
     for &(id, hp, team) in &creeps {
         let armor = stats::of(ctx, w, id).armor;
-        let hit = avg * crate::combat::armor_keep(armor, ctx.rules.t.armor_factor) / 1000;
+        let mut hit = avg * crate::combat::armor_keep(armor, ctx.rules.t.armor_factor) / 1000;
+        let creep_at = w.get(id).map(|u| u.pos()).unwrap_or(l.here);
+        let far = crate::world::dist(l.here, creep_at);
+        let flight = if hero_def.missile > 0 {
+            far * 100 / hero_def.missile
+        } else {
+            0
+        };
+        let walk = (far - s.range - 48).max(0) * 100 / s.move_speed.max(1);
+        let lands_in = hero_def.attack_point + flight + walk + d.reaction * 100 / TPS / 2;
+        let attackers = w
+            .units
+            .iter()
+            .filter(|u| {
+                u.alive
+                    && u.team != team
+                    && u.target == id
+                    && ctx.rules.units[u.def as usize].kind == Kind::Creep
+            })
+            .count() as i32;
+        // a lane creep deals about 22 damage a second
+        hit += attackers * 22 * lands_in / 100;
         let enemy = team != l.team;
         let max = stats::of(ctx, w, id).max_hp;
         let deny_ok = !enemy && hp * 100 < max * ctx.rules.t.deny_below && w.rng.below(100) < d.deny as u32;
         // a skilled decision waits for the creep to drop within one hit;
         // an unskilled one swings at whatever is lowest
         let ready = if skilled { hp <= hit } else { true };
-        if (enemy || deny_ok) && ready {
+        // a creep under an enemy tower is left alone
+        let under_tower = !enemy_towers_near(w, ctx, l.team, creep_at, 50).is_empty();
+        if (enemy || deny_ok) && ready && !under_tower {
             let key = hp;
             if best.map(|b| key < b.0).unwrap_or(true) {
                 best = Some((key, id));
             }
         }
     }
+    w.players[p].brain.farm[0] += 1;
+    if !creeps.is_empty() {
+        w.players[p].brain.farm[1] += 1;
+    }
     if let Some((_, t)) = best {
+        let deny = w.get(t).map(|u| u.team == l.team).unwrap_or(false);
+        w.players[p].brain.farm[if deny { 3 } else { 2 }] += 1;
         orders::apply(w, ctx, p, Cmd::Attack(t));
         return;
     }
-    let spot = lane_spot(w, ctx, l, w.players[p].brain.lane);
-    if !within(l.here, spot, 150) {
+    let mut spot = lane_spot(w, ctx, l, w.players[p].brain.lane, s.range);
+    // never wait inside an enemy tower's reach: step back toward home out of it
+    let home = ctx.rules.map.sides[l.team as usize].fountain;
+    for _ in 0..8 {
+        if enemy_towers_near(w, ctx, l.team, spot, 150).is_empty() {
+            break;
+        }
+        let d = crate::world::dist(spot, home).max(1);
+        spot = [
+            spot[0] + (home[0] - spot[0]) * 200 / d,
+            spot[1] + (home[1] - spot[1]) * 200 / d,
+        ];
+    }
+    if !within(l.here, spot, 120) {
         orders::apply(w, ctx, p, Cmd::Move(spot));
     } else {
-        orders::apply(w, ctx, p, Cmd::Hold);
+        // between last hits a player stops rather than pushing the lane
+        orders::apply(w, ctx, p, Cmd::Stand);
     }
 }
 

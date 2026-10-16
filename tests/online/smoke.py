@@ -19,6 +19,7 @@ with sync_playwright() as p:
     for k, pg in enumerate(pgs):
         pg.on("console", lambda m, k=k: logs[k].append(f"{m.type}: {m.text}"))
         pg.on("pageerror", lambda e, k=k: logs[k].append(f"pageerror: {e}"))
+        pg.on("response", lambda r, k=k: r.status == 404 and logs[k].append(f"404: {r.url}"))
     host = pgs[0]
     host.goto(base); host.wait_for_selector("body[data-ready='true']", state="attached")
     host.click("[data-a='screen'][data-v='online']"); host.click("[data-a='online.host']")
@@ -33,7 +34,26 @@ with sync_playwright() as p:
     host.click(".hero-mini[data-v='0']"); pgs[1].click(".hero-mini[data-v='1']")
     time.sleep(2)
     host.click("[data-a='online.start']")
-    time.sleep(40)
+    time.sleep(20)
+    if "--rejoin" in sys.argv:
+        url = pgs[1].url
+        print("joiner hash:", pgs[1].evaluate("location.hash"), "host hash:", host.evaluate("location.hash"))
+        print("dropping the joiner; its link is", url)
+        bs[1].close()
+        time.sleep(15)
+        print("host after the drop:", json.dumps(probe(host)["net"])[:300])
+        bs[1] = p.chromium.launch(args=ARGS)
+        pgs[1] = bs[1].new_page(viewport={"width": 1280, "height": 720})
+        pgs[1].on("console", lambda m: logs[1].append(f"{m.type}: {m.text}"))
+        pgs[1].goto(url)
+        for _ in range(40):
+            time.sleep(1)
+            n = probe(pgs[1]).get("net", {})
+            if n.get("started") and not n.get("catching"):
+                break
+        print("rejoined:", json.dumps(probe(pgs[1]).get("net", {}))[:400])
+        print("host at the rejoin:", json.dumps(probe(host).get("net", {}))[:500])
+    time.sleep(20)
     for k, pg in enumerate(pgs):
         print(k, json.dumps(probe(pg))[:600])
         pg.screenshot(path=f"/tmp/smoke{k}.png")

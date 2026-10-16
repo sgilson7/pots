@@ -111,6 +111,28 @@
     },
     {
      "if": [
+      {
+       "hp_below": 70
+      },
+      "can_heal"
+     ],
+     "do": "potion",
+     "note": "use a salve, a tango or a clarity"
+    },
+    {
+     "if": [
+      {
+       "not": {
+        "mana_above": 35
+       }
+      },
+      "can_mana"
+     ],
+     "do": "potion",
+     "note": "use a clarity when low on mana"
+    },
+    {
+     "if": [
       "can_buy"
      ],
      "do": "buy",
@@ -225,6 +247,23 @@
      ],
      "do": "harass",
      "note": "harass in lane"
+    },
+    {
+     "if": [
+      {
+       "after": 8
+      },
+      {
+       "not": {
+        "enemy_hero_near": 1000
+       }
+      },
+      {
+       "hp_above": 50
+      }
+     ],
+     "do": "siege",
+     "note": "help the creeps take a building"
     },
     {
      "do": "farm",

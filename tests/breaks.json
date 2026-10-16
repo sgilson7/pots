@@ -1,16 +1,93 @@
 [
-  {
-    "name": "an empty title is refused",
-    "file": "crates/core/src/page.rs",
-    "find": "if strings.title.trim().is_empty() {",
-    "replace": "if false {",
-    "test": "an_empty_title_is_rejected_by_name"
-  },
-  {
-    "name": "an unknown action is refused",
-    "file": "crates/core/src/api.rs",
-    "find": "other => return Err(format!(\"Unknown action \\\"{other}\\\".\")),",
-    "replace": "_ => {}",
-    "test": "act_refuses_an_unknown_action"
-  }
+ {
+  "name": "armor reduces nothing",
+  "file": "crates/core/src/combat.rs",
+  "find": "let fa = factor as i64 * armor_x100 as i64;",
+  "replace": "let fa = 0i64 * factor as i64 * armor_x100 as i64;",
+  "test": "armor_reduction_matches_hand_worked_values"
+ },
+ {
+  "name": "the deny rule is gone",
+  "file": "crates/core/src/orders.rs",
+  "find": "if target.hp * 100 > max * ctx.rules.t.deny_below {",
+  "replace": "if false {",
+  "test": "a_creep_can_be_denied_only_below_half_health"
+ },
+ {
+  "name": "gold goes to everyone",
+  "file": "crates/core/src/combat.rs",
+  "find": "        give_gold(w, p, gold, false, at);\n    }\n    if kind == Kind::Tower {",
+  "replace": "        for q in 0..world::PLAYERS {\n            give_gold(w, q, gold, false, at);\n        }\n    }\n    if kind == Kind::Tower {",
+  "test": "a_last_hit_pays_the_killer_alone_within_the_bounty"
+ },
+ {
+  "name": "towers stand unprotected",
+  "file": "crates/core/src/lanes.rs",
+  "find": "        if shielded {",
+  "replace": "        if false && shielded {",
+  "test": "a_tower_can_be_hurt_only_after_the_one_before_it_falls"
+ },
+ {
+  "name": "the stock damage table",
+  "file": "crates/core/src/rules.rs",
+  "find": "            .copied()\n            .unwrap_or(100)",
+  "replace": "            .map(|_| 100)\n            .unwrap_or(100)",
+  "test": "a_hero_s_attack_does_half_damage_to_a_building"
+ },
+ {
+  "name": "respawn ignores level",
+  "file": "crates/core/src/combat.rs",
+  "find": "let respawn = w.tick + (level * t.respawn_per_level * TPS) as u32;",
+  "replace": "let respawn = w.tick + (t.respawn_per_level * TPS) as u32;",
+  "test": "a_hero_waits_four_seconds_a_level_to_respawn"
+ },
+ {
+  "name": "levels ignore the table",
+  "file": "crates/core/src/combat.rs",
+  "find": "while h.level < max && h.xp >= levels[(h.level - 1) as usize] {",
+  "replace": "while h.level < max && h.xp >= levels[(h.level - 1) as usize] * 2 {",
+  "test": "experience_raises_levels_at_the_table_s_thresholds"
+ },
+ {
+  "name": "a late order is not rolled back",
+  "file": "crates/core/src/online.rs",
+  "find": "            if tick < now {\n                s.rollback_to = Some(s.rollback_to.map(|r| r.min(tick)).unwrap_or(tick));\n            }",
+  "replace": "",
+  "test": "five_browsers_with_lag_and_loss_play_the_same_match"
+ },
+ {
+  "name": "a returning player gets no log",
+  "file": "crates/core/src/online.rs",
+  "find": "    let upto = confirmed(s);\n    let take_over",
+  "replace": "    let upto = 0;\n    let take_over",
+  "test": "a_player_who_drops_is_played_by_the_computer_and_rejoins"
+ },
+ {
+  "name": "the mission goal is never reached",
+  "file": "crates/core/src/game.rs",
+  "find": "\"last_hits\" => p.last_hits >= ms.target,",
+  "replace": "\"last_hits\" => p.last_hits > ms.target * 2,",
+  "test": "the_first_mission_is_won_at_fifteen_last_hits"
+ },
+ {
+  "name": "placeholders show only the first level",
+  "file": "crates/core/src/text.rs",
+  "find": "let all_same = shown.iter().all(|s| *s == shown[0]);",
+  "replace": "let all_same = true;",
+  "test": "placeholders_fill_every_level_and_mark_the_current_one"
+ },
+ {
+  "name": "browsers chase each other",
+  "file": "crates/core/src/online.rs",
+  "find": "lead.saturating_sub(m.world.tick + DELAY + 3)",
+  "replace": "lead.saturating_sub(m.world.tick + DELAY)",
+  "test": "five_browsers_with_lag_and_loss_play_the_same_match"
+ },
+ {
+  "name": "silence is counted in ticks",
+  "file": "crates/core/src/online.rs",
+  "find": "s.clock_us > s.heard_us[k] + SILENT_US && s.clock_us > SILENT_US",
+  "replace": "now > s.heard[k] + 300 && now > 300",
+  "test": "a_browser_that_falls_silent_is_handed_to_the_computer_without_a_long_wait"
+ }
 ]

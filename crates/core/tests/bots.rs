@@ -42,6 +42,21 @@ fn ten_bots_play_twenty_minutes_without_a_fault() {
         per_tick,
         w.units.iter().filter(|u| u.alive).count()
     );
+    for (k, p) in w.players.iter().enumerate() {
+        let rule = w.players[k].brain.rule;
+        println!(
+            "seat {k}: lh {} dn {} k/d/a {}/{}/{} gold {} items {:?} rule {rule}",
+            p.last_hits,
+            p.denies,
+            p.kills,
+            p.deaths,
+            p.assists,
+            p.gold,
+            w.get(p.hero)
+                .map(|u| u.items.iter().filter(|s| s.item > 0).count())
+                .unwrap_or(0)
+        );
+    }
     assert!(w.players.iter().all(|p| p.hero != 0), "every bot picked a hero");
     assert!(lh > 0, "bots last-hit creeps");
 }

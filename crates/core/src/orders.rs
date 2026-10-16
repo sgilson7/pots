@@ -36,6 +36,9 @@ pub enum Cmd {
     Glyph,
     /// The seat's computer player takes over at a difficulty, or hands back (255).
     Autopilot(u8),
+    /// Stand still and attack nothing until the next order (the computer
+    /// players' version of a player's stop-spam between last hits).
+    Stand,
 }
 
 pub const CMD_VALUES: usize = 5;
@@ -59,6 +62,7 @@ impl Cmd {
             Cmd::Buyback => [13, 0, 0, 0, 0],
             Cmd::Glyph => [14, 0, 0, 0, 0],
             Cmd::Autopilot(d) => [15, d as i32, 0, 0, 0],
+            Cmd::Stand => [16, 0, 0, 0, 0],
         }
     }
 
@@ -80,6 +84,7 @@ impl Cmd {
             13 => Cmd::Buyback,
             14 => Cmd::Glyph,
             15 => Cmd::Autopilot(small(v[1])?),
+            16 => Cmd::Stand,
             _ => return None,
         })
     }
@@ -138,6 +143,7 @@ pub fn apply(w: &mut World, ctx: &Ctx, player: usize, cmd: Cmd) {
                 }
                 Cmd::Stop => Order::Idle,
                 Cmd::Hold => Order::Hold,
+                Cmd::Stand => Order::Stand,
                 Cmd::Cast(s, t, p) => {
                     if !crate::ability::can_start(w, ctx, hero, s as usize, t, p) {
                         return;
@@ -163,8 +169,10 @@ pub fn apply(w: &mut World, ctx: &Ctx, player: usize, cmd: Cmd) {
                 _ => return,
             };
             let u = w.get_mut(hero).expect("checked live");
-            // a new order cancels a swing that has not landed and a channel
-            if !matches!(u.act, Act::Cast { .. }) {
+            // a new order cancels a swing that has not landed and a channel;
+            // the same attack order again keeps the swing it is in
+            let same_swing = matches!((u.act, order), (Act::Swing { t, .. }, Order::Attack(o)) if t == o);
+            if !matches!(u.act, Act::Cast { .. }) && !same_swing {
                 u.act = Act::None;
             }
             u.order = order;
@@ -469,6 +477,14 @@ fn act_one(w: &mut World, ctx: &Ctx, id: Uid) {
                 }
             }
         }
+        Order::Stand => {
+            if let Some(u) = w.get_mut(id) {
+                u.target = NO_UNIT;
+                if u.anim == crate::world::ANIM_WALK {
+                    u.anim = crate::world::ANIM_STAND;
+                }
+            }
+        }
         Order::Hold => {
             let s = stats::of(ctx, w, id);
             if let Some(e) = nearest_enemy(w, ctx, id, s.range + 100) {
@@ -617,6 +633,7 @@ mod tests {
             Cmd::Buyback,
             Cmd::Glyph,
             Cmd::Autopilot(2),
+            Cmd::Stand,
         ] {
             assert_eq!(Cmd::decode(c.encode()), Some(c));
         }
