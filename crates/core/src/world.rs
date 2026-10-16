@@ -356,6 +356,28 @@ pub const EV_HORN: u8 = 13;
 pub const EV_CAST: u8 = 14;
 pub const EV_RESPAWN: u8 = 15;
 
+/// A moment of an ability worth drawing (round 2, T3): a cast begun, a
+/// spell let go, a missile or a blast landing, a passive firing. Only the
+/// scene reads marks; no rule does and the checksum leaves them out, so
+/// they cannot make two browsers disagree. Each lives `MARK_TICKS`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Mark {
+    pub kind: u8,
+    pub ability: u16,
+    pub src: Uid,
+    pub tgt: Uid,
+    /// Where it happens, and where it came from (a beam's or wave's start).
+    pub at: P,
+    pub from: P,
+    pub tick: u32,
+}
+
+pub const MK_CAST: u8 = 1;
+pub const MK_FIRE: u8 = 2;
+pub const MK_LAND: u8 = 3;
+pub const MK_PROC: u8 = 4;
+pub const MARK_TICKS: u32 = 4 * crate::rules::TPS as u32;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct World {
     pub tick: u32,
@@ -384,6 +406,8 @@ pub struct World {
     /// Each side's courier, and the player it now carries for (-1 none).
     pub couriers: [Uid; 2],
     pub carrying: [i32; 2],
+    /// Recent moments of abilities, for the scene only (`Mark`).
+    pub marks: Vec<Mark>,
 }
 
 /// The world with the rules and terrain it plays on.
@@ -474,6 +498,7 @@ impl World {
             horn_at: (ctx.rules.t.horn * TPS) as u32,
             couriers: [NO_UNIT; 2],
             carrying: [-1; 2],
+            marks: Vec::new(),
         };
         w.place_buildings(ctx);
         w
@@ -643,6 +668,23 @@ impl World {
         self.events.push(Event { kind, a, b, at });
     }
 
+    /// Notes a moment of ability `k` for the scene: where it happens (a
+    /// unit's place when `tgt` is one), and where it came from.
+    pub fn mark(&mut self, kind: u8, k: usize, src: Uid, tgt: Uid, at: P) {
+        let from = self.get(src).map(|u| u.pos()).unwrap_or(at);
+        let at = self.get(tgt).map(|u| u.pos()).unwrap_or(at);
+        let tick = self.tick;
+        self.marks.push(Mark {
+            kind,
+            ability: k as u16,
+            src,
+            tgt,
+            at,
+            from,
+            tick,
+        });
+    }
+
     /// Living units for which `keep` holds, within `r` of `at`.
     pub fn near(&self, at: P, r: i32, mut keep: impl FnMut(&Unit) -> bool) -> Vec<Uid> {
         let r2 = (r as i64) * (r as i64);
@@ -747,6 +789,8 @@ impl World {
     /// One tick of the match.
     pub fn step(&mut self, ctx: &Ctx, orders: &[(u8, crate::orders::Cmd)]) {
         self.events.clear();
+        let now = self.tick;
+        self.marks.retain(|m| m.tick + MARK_TICKS > now);
         if self.winner.is_some() {
             self.tick += 1;
             return;

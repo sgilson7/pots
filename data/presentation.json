@@ -31,9 +31,9 @@
   45
  ],
  "sky": [
-  132,
-  160,
-  196
+  159,
+  212,
+  255
  ],
  "fog": [
   96,
@@ -45,14 +45,14 @@
   16000
  ],
  "light": [
-  255,
-  246,
-  230
+  150,
+  141,
+  128
  ],
  "ink": [
-  46,
-  36,
-  52
+  43,
+  33,
+  64
  ],
  "ink_size": [
   3,
@@ -60,15 +60,570 @@
   6
  ],
  "bands": [
-  45,
-  0,
-  85,
-  70
+  40,
+  30,
+  75,
+  55
  ],
  "ambient": [
-  74,
-  72,
-  80
+  50,
+  53,
+  62
  ],
- "max_ticks_per_frame": 6
+ "ground": [
+  40,
+  34,
+  30
+ ],
+ "max_ticks_per_frame": 6,
+ "fx": {
+  "storm_bolt": {
+   "color": "fx_gold",
+   "cast": true,
+   "land": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 60
+    },
+    {
+     "kind": "flash",
+     "r": 120,
+     "dur": 35
+    }
+   ]
+  },
+  "great_cleave": {
+   "color": "fx_gold",
+   "proc": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 30
+    }
+   ]
+  },
+  "warcry": {
+   "color": "fx_gold",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 70
+    },
+    {
+     "kind": "rise",
+     "r": 120,
+     "dur": 80
+    }
+   ]
+  },
+  "gods_strength": {
+   "color": "fx_blood",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "flash",
+     "r": 200,
+     "dur": 60
+    },
+    {
+     "kind": "rise",
+     "r": 140,
+     "dur": 100
+    }
+   ]
+  },
+  "crystal_nova": {
+   "color": "fx_frost",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 60
+    },
+    {
+     "kind": "flash",
+     "r": 150,
+     "dur": 40
+    }
+   ],
+   "zone": "flash"
+  },
+  "frostbite": {
+   "color": "fx_frost",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "beam",
+     "r": 60,
+     "dur": 30
+    },
+    {
+     "kind": "flash",
+     "r": 100,
+     "dur": 50
+    }
+   ]
+  },
+  "brilliance_aura": {
+   "color": "fx_frost"
+  },
+  "freezing_field": {
+   "color": "fx_frost",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "ring",
+     "key": "outer",
+     "dur": 80
+    }
+   ],
+   "land": [
+    {
+     "kind": "flash",
+     "key": "blast",
+     "dur": 40
+    },
+    {
+     "kind": "ring",
+     "key": "blast",
+     "dur": 40
+    }
+   ],
+   "zone": "flash"
+  },
+  "dragon_slave": {
+   "color": "fx_fire",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "wave",
+     "r": 180,
+     "dur": 90
+    }
+   ]
+  },
+  "light_strike_array": {
+   "color": "fx_fire",
+   "cast": true,
+   "land": [
+    {
+     "kind": "sky",
+     "key": "radius",
+     "dur": 40
+    },
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 50
+    },
+    {
+     "kind": "flash",
+     "r": 160,
+     "dur": 40
+    }
+   ],
+   "zone": "warn"
+  },
+  "fiery_soul": {
+   "color": "fx_fire",
+   "proc": [
+    {
+     "kind": "rise",
+     "r": 100,
+     "dur": 60
+    }
+   ]
+  },
+  "laguna_blade": {
+   "color": "fx_fire",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "beam",
+     "r": 30,
+     "dur": 40
+    }
+   ],
+   "land": [
+    {
+     "kind": "beam",
+     "r": 120,
+     "dur": 50
+    },
+    {
+     "kind": "flash",
+     "r": 140,
+     "dur": 50
+    }
+   ],
+   "zone": "warn"
+  },
+  "frost_arrows": {
+   "color": "fx_frost",
+   "fire": [
+    {
+     "kind": "rise",
+     "r": 80,
+     "dur": 40
+    }
+   ],
+   "proc": [
+    {
+     "kind": "flash",
+     "r": 70,
+     "dur": 30
+    }
+   ]
+  },
+  "silence": {
+   "color": "fx_hex",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 60
+    },
+    {
+     "kind": "flash",
+     "r": 140,
+     "dur": 40
+    }
+   ]
+  },
+  "trueshot_aura": {
+   "color": "fx_heal"
+  },
+  "marksmanship": {
+   "color": "fx_heal"
+  },
+  "meat_hook": {
+   "color": "fx_steel",
+   "cast": true,
+   "land": [
+    {
+     "kind": "flash",
+     "r": 110,
+     "dur": 40
+    }
+   ]
+  },
+  "rot": {
+   "color": "fx_rot",
+   "zone": "cloud"
+  },
+  "flesh_heap": {
+   "color": "fx_blood"
+  },
+  "dismember": {
+   "color": "fx_blood",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "flash",
+     "r": 120,
+     "dur": 40
+    }
+   ]
+  },
+  "fissure": {
+   "color": "fx_earth",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "spikes",
+     "r": 90,
+     "dur": 70
+    },
+    {
+     "kind": "ring",
+     "r": 160,
+     "dur": 50
+    }
+   ]
+  },
+  "enchant_totem": {
+   "color": "fx_earth",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "flash",
+     "r": 150,
+     "dur": 50
+    }
+   ],
+   "proc": [
+    {
+     "kind": "ring",
+     "r": 150,
+     "dur": 40
+    },
+    {
+     "kind": "flash",
+     "r": 110,
+     "dur": 30
+    }
+   ]
+  },
+  "aftershock": {
+   "color": "fx_earth",
+   "proc": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 50
+    }
+   ]
+  },
+  "echo_slam": {
+   "color": "fx_earth",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 70
+    },
+    {
+     "kind": "ring",
+     "key": "echo_radius",
+     "dur": 90
+    },
+    {
+     "kind": "flash",
+     "r": 200,
+     "dur": 40
+    }
+   ]
+  },
+  "blade_fury": {
+   "color": "fx_steel",
+   "fire": [
+    {
+     "kind": "spin",
+     "key": "radius",
+     "dur": 60
+    }
+   ],
+   "zone": "spin"
+  },
+  "healing_ward": {
+   "color": "fx_heal",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "rise",
+     "r": 120,
+     "dur": 60
+    }
+   ],
+   "zone": "heal"
+  },
+  "blade_dance": {
+   "color": "fx_blood",
+   "proc": [
+    {
+     "kind": "flash",
+     "r": 120,
+     "dur": 30
+    }
+   ]
+  },
+  "omnislash": {
+   "color": "fx_steel",
+   "cast": true,
+   "land": [
+    {
+     "kind": "beam",
+     "r": 50,
+     "dur": 25
+    },
+    {
+     "kind": "flash",
+     "r": 100,
+     "dur": 25
+    }
+   ],
+   "zone": "none"
+  },
+  "earth_spike": {
+   "color": "fx_hex",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "spikes",
+     "r": 80,
+     "dur": 70
+    }
+   ],
+   "zone": "none"
+  },
+  "hex": {
+   "color": "fx_hex",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "flash",
+     "r": 150,
+     "dur": 50
+    },
+    {
+     "kind": "rise",
+     "r": 100,
+     "dur": 60
+    }
+   ]
+  },
+  "mana_drain": {
+   "color": "fx_arcane",
+   "cast": true
+  },
+  "finger_of_death": {
+   "color": "fx_hex",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "beam",
+     "r": 40,
+     "dur": 30
+    }
+   ],
+   "land": [
+    {
+     "kind": "beam",
+     "r": 130,
+     "dur": 50
+    },
+    {
+     "kind": "flash",
+     "r": 150,
+     "dur": 50
+    }
+   ],
+   "zone": "warn"
+  },
+  "shrapnel": {
+   "color": "fx_gold",
+   "cast": true,
+   "zone": "rain"
+  },
+  "headshot": {
+   "color": "fx_gold",
+   "proc": [
+    {
+     "kind": "flash",
+     "r": 90,
+     "dur": 30
+    }
+   ]
+  },
+  "take_aim": {
+   "color": "fx_gold"
+  },
+  "assassinate": {
+   "color": "fx_fire",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "beam",
+     "r": 20,
+     "dur": 60
+    }
+   ],
+   "land": [
+    {
+     "kind": "flash",
+     "r": 150,
+     "dur": 50
+    }
+   ]
+  },
+  "arc_lightning": {
+   "color": "fx_storm",
+   "cast": true,
+   "land": [
+    {
+     "kind": "beam",
+     "r": 50,
+     "dur": 35
+    },
+    {
+     "kind": "flash",
+     "r": 90,
+     "dur": 35
+    }
+   ],
+   "zone": "none"
+  },
+  "lightning_bolt": {
+   "color": "fx_storm",
+   "cast": true,
+   "land": [
+    {
+     "kind": "sky",
+     "r": 120,
+     "dur": 40
+    },
+    {
+     "kind": "flash",
+     "r": 130,
+     "dur": 40
+    }
+   ],
+   "zone": "none"
+  },
+  "static_field": {
+   "color": "fx_storm",
+   "proc": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 50
+    }
+   ]
+  },
+  "thundergods_wrath": {
+   "color": "fx_storm",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "flash",
+     "r": 200,
+     "dur": 50
+    }
+   ],
+   "land": [
+    {
+     "kind": "sky",
+     "r": 150,
+     "dur": 50
+    },
+    {
+     "kind": "flash",
+     "r": 150,
+     "dur": 50
+    }
+   ],
+   "zone": "none"
+  },
+  "warden_bash": {
+   "color": "fx_gold",
+   "proc": [
+    {
+     "kind": "ring",
+     "r": 160,
+     "dur": 40
+    },
+    {
+     "kind": "flash",
+     "r": 120,
+     "dur": 30
+    }
+   ]
+  }
+ }
 }

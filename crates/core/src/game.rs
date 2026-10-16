@@ -800,6 +800,11 @@ impl Game {
             l.ambient[1] * ONE / 100,
             l.ambient[2] * ONE / 100,
         ]);
+        out.extend_from_slice(&[
+            l.ground[0] * ONE / 100,
+            l.ground[1] * ONE / 100,
+            l.ground[2] * ONE / 100,
+        ]);
         // uQ: one Q16 step; uEps: a length too small to divide by
         out.push(1);
         out.push(ONE / 10_000);
@@ -875,9 +880,99 @@ impl Game {
                 }
                 self.stage = None;
             }
+            "cast" => {
+                // cast:<ability id>,<ticks>: its hero, at full levels and mana,
+                // casts it at three enemy creeps beside an enemy hero, with an
+                // ally at its side; the picture is `ticks` after the order
+                let (id, t) = arg.split_once(',').unwrap_or((arg, "30"));
+                let ticks: u32 = t.parse().map_err(|_| format!("\"{t}\" is not a number."))?;
+                let w = self.cast_world(id, ticks)?;
+                let hero = w.players[0].hero;
+                self.begin(w, 0, None, false);
+                if let Some(u) = self.m.as_ref().and_then(|m| m.world.get(hero)) {
+                    self.view.target = [u.pos()[0] + 250, u.pos()[1]];
+                }
+                if let Some(m) = self.m.as_mut() {
+                    m.paused = true;
+                }
+                self.stage = None;
+            }
             _ => return Err(format!("There is no stage \"{kind}\".")),
         }
         Ok(())
+    }
+
+    /// The `cast:` stage's world: ability `id`'s hero casts it `ticks`
+    /// before the picture. Tests read it too.
+    pub fn cast_world(&self, id: &str, ticks: u32) -> Result<World, String> {
+        let k = self
+            .rules
+            .abilities
+            .iter()
+            .position(|a| a.id == id)
+            .ok_or_else(|| format!("There is no ability \"{id}\"."))?;
+        let (roster, slot) = (0..self.rules.heroes.len())
+            .find_map(|r| {
+                self.rules.unit_abilities[self.rules.heroes[r]]
+                    .iter()
+                    .position(|&a| a == k)
+                    .map(|s| (r, s))
+            })
+            .ok_or_else(|| format!("No hero casts \"{id}\"."))?;
+        let ctx = self.ctx();
+        let mut w = self.new_world(self.seed);
+        let n = self.rules.heroes.len();
+        let spot = [self.rules.map.size / 2 - 900, self.rules.map.size / 2 - 900];
+        let put = |w: &mut World, player: usize, r: usize, at: P| {
+            w.players[player].present = true;
+            let h = w.add_hero(&ctx, player, r);
+            let u = w.get_mut(h).expect("just added");
+            u.x = at[0] * SUB;
+            u.y = at[1] * SUB;
+            u.path.clear();
+            h
+        };
+        let me = put(&mut w, 0, roster, spot);
+        put(&mut w, 1, (roster + 2) % n, [spot[0] - 120, spot[1] + 260]);
+        let foe = put(&mut w, 5, (roster + 1) % n, [spot[0] + 650, spot[1] + 120]);
+        let def = self.rules.unit("creep_melee_moon").ok_or("no Moonward creep")?;
+        let mut creeps = Vec::new();
+        for i in 0..3 {
+            creeps.push(w.spawn(&ctx, def, 1, [spot[0] + 420, spot[1] - 160 + i * 160]));
+        }
+        {
+            let ults: Vec<bool> = self.rules.unit_abilities[self.rules.heroes[roster]]
+                .iter()
+                .map(|&a| self.rules.abilities[a].ultimate)
+                .collect();
+            let u = w.get_mut(me).expect("added");
+            for (s, ult) in ults.iter().enumerate() {
+                u.abil[s].level = if *ult { 3 } else { 4 };
+            }
+            u.facing = 0;
+        }
+        // level 16, so the ultimate's mana is in the pool, then one tick so
+        // the side sees its targets
+        crate::combat::give_xp(&mut w, &ctx, me, 100_000);
+        w.step(&ctx, &[]);
+        let max = crate::stats::of(&ctx, &w, me).max_mana;
+        w.get_mut(me).expect("added").mana = max * 1000;
+        let t = if self.rules.abilities[k].on == "ally" {
+            w.players[1].hero
+        } else {
+            creeps[1]
+        };
+        let at = w.get(t).map(|u| u.pos()).unwrap_or(spot);
+        let cmd = match self.rules.abilities[k].target {
+            crate::rules::Target::Passive => Cmd::Attack(creeps[1]),
+            _ => Cmd::Cast(slot as u8, t, at),
+        };
+        let _ = foe;
+        w.step(&ctx, &[(0, cmd)]);
+        for _ in 1..ticks {
+            w.step(&ctx, &[]);
+        }
+        Ok(w)
     }
 
     fn stage_scene(&self, stage: &Stage) -> render::Finished {
@@ -1151,7 +1246,7 @@ impl Game {
                 if k < 0 || k as usize >= self.rules.items.len() {
                     return Err(format!("no item {k}"));
                 }
-                self.shop_pick = k as i32;
+                self.shop_pick = k;
             }
             "score.toggle" => self.score = !self.score,
             n if n.starts_with("online.") => crate::online::act(self, n, value)?,
@@ -1187,7 +1282,7 @@ pub fn numbers() -> String {
         "mat_values": MAT_VALUES,
         "view_values": 16,
         "mesh_count": MESH_COUNT,
-        "uniforms": [["uLightDir", 3], ["uSky", 3], ["uFog", 3], ["uFogRange", 2], ["uLight", 3], ["uInk", 3], ["uInkSize", 3], ["uBands", 4], ["uAmbient", 3], ["uQ", 1], ["uEps", 1], ["uPasses", 4], ["uGlow", 2]],
+        "uniforms": [["uLightDir", 3], ["uSky", 3], ["uFog", 3], ["uFogRange", 2], ["uLight", 3], ["uInk", 3], ["uInkSize", 3], ["uBands", 4], ["uAmbient", 3], ["uGround", 3], ["uQ", 1], ["uEps", 1], ["uPasses", 4], ["uGlow", 2]],
         "ui_every_ms": 100,
         "minimap": crate::draw::assets(),
     })

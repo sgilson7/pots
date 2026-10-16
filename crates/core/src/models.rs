@@ -132,6 +132,7 @@ fn mesh_named(s: &str) -> Option<Mesh> {
         "blob" => Mesh::Blob,
         "card" => Mesh::Card,
         "tri" => Mesh::Tri,
+        "taper" => Mesh::Taper,
         _ => return None,
     })
 }

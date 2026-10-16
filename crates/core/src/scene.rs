@@ -173,9 +173,17 @@ pub struct Look {
     pub ink: [i32; 3],
     /// Outline width: least, growth per scene unit, most; hundredths.
     pub ink_size: [i32; 3],
-    /// Lit bands: thresholds and brightness, hundredths.
+    /// Soft light (round 2), hundredths: how far light wraps past the
+    /// terminator, where the gentle ramp starts and ends, and how much of
+    /// that ramp is mixed in (0 smooth, 100 two-toned).
     pub bands: [i32; 4],
+    /// The fill from the sky above, hundredths of each colour.
     pub ambient: [i32; 3],
+    /// The bounce from the ground below, hundredths of each colour.
+    pub ground: [i32; 3],
+    /// How each ability looks while it happens (`marks`), by ability id.
+    #[serde(default)]
+    pub fx: crate::marks::Book,
     pub max_ticks_per_frame: i32,
 }
 
@@ -457,6 +465,7 @@ pub fn units(f: &Frame, b: &mut Batch) {
         }
         if u.alive {
             bar(f, b, u, x, y, h + fx::mul(model.height, scale));
+            crate::marks::draw_status(f, b, u, sub_to_scene(x, y, h));
         }
     }
 }
@@ -541,9 +550,8 @@ pub fn effects(f: &Frame, b: &mut Batch) {
                 continue;
             }
         }
-        let big = if ms.model >= 1000 { size * 2 } else { size };
-        let a = Affine::translate(sub_to_scene(ms.x, ms.y, h)).then(&Affine::scale(v3(big, big, big)));
-        b.push(LAYER_INKED, Mesh::Octa, &a, col, 4);
+        let _ = (col, size);
+        crate::marks::draw_missile(f, b, sub_to_scene(ms.x, ms.y, h), ms);
     }
     for z in &f.w.zones {
         let k = z.ability as usize;
@@ -558,6 +566,9 @@ pub fn effects(f: &Frame, b: &mut Batch) {
                 continue;
             }
         }
+        if crate::marks::draw_zone(f, b, z) {
+            continue;
+        }
         let col = ability_color(f, k);
         let r = z.radius.max(60) * 2 * ONE / GAME_UNITS_PER_SCENE;
         let h = ground_at(f.ctx.terrain, z.at) + ONE / 12;
@@ -565,6 +576,7 @@ pub fn effects(f: &Frame, b: &mut Batch) {
         let a = Affine::translate(to_scene(z.at, h)).then(&Affine::scale(v3(r, ONE / 6, r)));
         b.tint(Mesh::Cyl, &a, col, ONE * 2 / 5);
     }
+    crate::marks::draw_marks(f, b);
     if let Some((spot, kind)) = f.w.rune {
         let at = f.ctx.rules.map.runes[spot];
         let seen = f.team == NEUTRAL

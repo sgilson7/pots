@@ -15,7 +15,8 @@ use crate::fx;
 use crate::rules::{Kind, Target, P, SUB, TPS};
 use crate::stats;
 use crate::world::{
-    dist2, other, within, Act, Ctx, Hit, Missile, Mod, Order, Uid, World, Zone, EV_CAST, M, NEUTRAL, NO_UNIT,
+    dist2, other, within, Act, Ctx, Hit, Missile, Mod, Order, Uid, World, Zone, EV_CAST, M, MK_CAST, MK_FIRE,
+    MK_LAND, MK_PROC, NEUTRAL, NO_UNIT,
 };
 
 fn tag(ability: usize) -> u16 {
@@ -206,6 +207,9 @@ pub fn begin(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
         u.abil[slot].on = !u.abil[slot].on;
         let on = u.abil[slot].on;
         toggled(w, ctx, id, k, level, on);
+        if on {
+            w.mark(MK_FIRE, k, id, NO_UNIT, [0, 0]);
+        }
         return;
     }
     let tick = w.tick;
@@ -222,6 +226,7 @@ pub fn begin(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
     u.path.clear();
     u.anim = crate::world::ANIM_CAST;
     u.anim_at = tick;
+    w.mark(MK_CAST, k, id, t, at);
 }
 
 /// The cast point has passed: spend, start the cooldown, and act.
@@ -242,6 +247,7 @@ pub fn fire(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
     }
     let here = w.get(id).expect("checked").pos();
     w.event(EV_CAST, k as i32, 0, here);
+    w.mark(MK_FIRE, k, id, t, at);
     effect(w, ctx, id, slot, k, level, t, at);
     on_cast(w, ctx, id);
     crate::item::charge_wands(w, ctx, id);
@@ -262,6 +268,7 @@ fn on_cast(w: &mut World, ctx: &Ctx, id: Uid) {
             })
             .unwrap_or(0);
         let n = (stacks + 1).min(a.v("stacks", lv));
+        w.mark(MK_PROC, k, id, id, [0, 0]);
         w.remove_mods(id, tag(k));
         for _ in 0..n {
             add(
@@ -281,6 +288,7 @@ fn on_cast(w: &mut World, ctx: &Ctx, id: Uid) {
         // Static Field: every cast takes a share of each nearby enemy's current health
         let a = &ctx.rules.abilities[k];
         let here = w.get(id).expect("checked").pos();
+        w.mark(MK_PROC, k, id, id, here);
         let team = w.get(id).expect("checked").team;
         for v in enemies_near(w, ctx, team, here, a.v("radius", lv), false) {
             let hp = w.get(v).map(|u| u.hp).unwrap_or(0);
@@ -290,6 +298,7 @@ fn on_cast(w: &mut World, ctx: &Ctx, id: Uid) {
     if let Some((_, k, lv)) = has_logic(ctx, w, id, "aftershock") {
         let a = &ctx.rules.abilities[k];
         let here = w.get(id).expect("checked").pos();
+        w.mark(MK_PROC, k, id, id, here);
         let team = w.get(id).expect("checked").team;
         for v in enemies_near(w, ctx, team, here, a.v("radius", lv), false) {
             stun(w, ctx, id, v, a.v("stun", lv), tag(k));
@@ -698,6 +707,7 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
         "arc_lightning" => {
             let mut hit = vec![t];
             let mut at_p = w.live(t).map(|v| v.pos()).unwrap_or(at);
+            w.mark(MK_LAND, k, id, t, at_p);
             combat::damage(w, ctx, id, t, a.v("damage", lv), Dmg::Magic);
             for _ in 1..a.v("bounces", lv).max(1) {
                 let next = enemies_near(w, ctx, team, at_p, a.v("radius", lv), false)
@@ -705,6 +715,7 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
                     .filter(|v| !hit.contains(v))
                     .min_by_key(|v| w.get(*v).map(|u| dist2(u.pos(), at_p)).unwrap_or(i64::MAX));
                 let Some(n) = next else { break };
+                w.mark(MK_LAND, k, *hit.last().expect("one struck"), n, at_p);
                 combat::damage(w, ctx, id, n, a.v("damage", lv), Dmg::Magic);
                 at_p = w.get(n).map(|u| u.pos()).unwrap_or(at_p);
                 hit.push(n);
@@ -714,6 +725,7 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
         // Lightning Bolt: a strike from above with a brief stun
         "lightning_bolt" => {
             let p = w.live(t).map(|v| v.pos()).unwrap_or(at);
+            w.mark(MK_LAND, k, id, t, p);
             combat::damage(w, ctx, id, t, a.v("damage", lv), Dmg::Magic);
             stun(w, ctx, id, t, a.v("stun", lv), tg);
             zone(w, id, p, 120, k, lv, 0, w.tick + 10, 1);
@@ -727,6 +739,7 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
                 .map(|u| u.id)
                 .collect();
             for f in foes {
+                w.mark(MK_LAND, k, id, f, here);
                 combat::damage(w, ctx, id, f, a.v("damage", lv), Dmg::Magic);
                 let p = w.get(f).map(|u| u.pos()).unwrap_or(here);
                 zone(w, id, p, 120, k, lv, 0, w.tick + 10, 1);
@@ -790,6 +803,7 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
     let src_alive = w.live(z.src).is_some();
     match a.logic.as_str() {
         "light_strike" => {
+            w.mark(MK_LAND, k, z.src, NO_UNIT, z.at);
             for v in enemies_near(w, ctx, z.team, z.at, z.radius, false) {
                 combat::damage(w, ctx, z.src, v, a.v("damage", lv), Dmg::Magic);
                 stun(w, ctx, z.src, v, a.v("stun", lv), tg);
@@ -799,6 +813,7 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
         "laguna" | "finger" => {
             let t = z.a as u32;
             if w.live(t).is_some() {
+                w.mark(MK_LAND, k, z.src, t, z.at);
                 let kind = Dmg::Magic;
                 combat::damage(w, ctx, z.src, t, a.v("damage", lv), kind);
             }
@@ -873,6 +888,7 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
             match target {
                 Some(t) => {
                     let p = w.get(t).expect("listed").pos();
+                    w.mark(MK_LAND, k, z.src, t, p);
                     let now = w.tick;
                     if let Some(u) = w.get_mut(z.src) {
                         u.x = p[0] * SUB;
@@ -955,6 +971,7 @@ pub fn channel_tick(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, _at:
                     here[0] + fx::cos(ang) * r / fx::ONE,
                     here[1] + fx::sin(ang) * r / fx::ONE,
                 ];
+                w.mark(MK_LAND, k, id, NO_UNIT, p);
                 for v in enemies_near(w, ctx, team, p, a.v("blast", lv), false) {
                     combat::damage(w, ctx, id, v, a.v("damage", lv), Dmg::Magic);
                 }
@@ -1038,6 +1055,7 @@ fn hooked(w: &mut World, ctx: &Ctx, src: Uid, v: Uid, k: usize, lv: i32) {
     let Some(s) = w.get(src) else { return };
     let (team, sp) = (s.team, s.pos());
     let enemy = w.get(v).map(|u| u.team != team).unwrap_or(false);
+    w.mark(MK_LAND, k, src, v, sp);
     if enemy {
         combat::damage(w, ctx, src, v, a.v("damage", lv), Dmg::Pure);
     }
@@ -1060,6 +1078,7 @@ pub fn missile_arrives(w: &mut World, ctx: &Ctx, m: &Missile) {
     };
     let k = ability as usize;
     let a = &ctx.rules.abilities[k];
+    w.mark(MK_LAND, k, m.src, m.t, [m.x / SUB, m.y / SUB]);
     match a.logic.as_str() {
         "bolt_stun" => {
             let at = w.get(m.t).map(|u| u.pos()).unwrap_or([m.x / SUB, m.y / SUB]);
@@ -1083,6 +1102,7 @@ pub fn before_attack(w: &mut World, ctx: &Ctx, src: Uid, _t: Uid, raw: i32) -> O
     if let Some((_, k, lv)) = has_logic(ctx, w, src, "crit") {
         let a = &ctx.rules.abilities[k];
         if combat::prd(w, src, 0, a.v("chance", lv)) {
+            w.mark(MK_PROC, k, src, NO_UNIT, [0, 0]);
             let v = raw * a.v("multiplier", lv) / 100;
             out = Some(out.map(|o: i32| o.max(v)).unwrap_or(v));
         }
@@ -1096,6 +1116,7 @@ pub fn before_attack(w: &mut World, ctx: &Ctx, src: Uid, _t: Uid, raw: i32) -> O
     if let Some(m) = totem {
         let base = out.unwrap_or(raw);
         out = Some(base * (100 + m.a) / 100);
+        w.mark(MK_PROC, m.tag as usize - 1, src, NO_UNIT, [0, 0]);
         if let Some(u) = w.get_mut(src) {
             u.mods.retain(|x| !(x.kind == M::Tag && x.tag == m.tag));
         }
@@ -1119,6 +1140,7 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
     if let Some((_, k, lv)) = has_logic(ctx, w, src, "cleave") {
         let a = &ctx.rules.abilities[k];
         let pct = a.v("pct", lv);
+        w.mark(MK_PROC, k, src, dst, dst_pos);
         for v in enemies_near(w, ctx, team, dst_pos, a.v("radius", lv), true) {
             if v != dst {
                 combat::damage(w, ctx, src, v, raw * pct / 100, Dmg::Physical);
@@ -1134,12 +1156,14 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
             if let Some(u) = w.get_mut(src) {
                 u.mana -= cost;
             }
+            w.mark(MK_PROC, k, src, dst, dst_pos);
             slow(w, src, dst, a.v("slow", lv), 0, a.v("duration", lv), tag(k));
         }
     }
     if let Some((_, k, lv)) = has_logic(ctx, w, src, "headshot") {
         let a = &ctx.rules.abilities[k];
         if combat::prd(w, src, 1, a.v("chance", lv)) {
+            w.mark(MK_PROC, k, src, dst, dst_pos);
             combat::damage(w, ctx, src, dst, a.v("damage", lv), Dmg::Physical);
             stun(w, ctx, src, dst, a.v("stun", lv), tag(k));
         }
@@ -1147,6 +1171,7 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
     if let Some((_, k, lv)) = has_logic(ctx, w, src, "bash") {
         let a = &ctx.rules.abilities[k];
         if combat::prd(w, src, 1, a.v("chance", lv)) {
+            w.mark(MK_PROC, k, src, dst, dst_pos);
             combat::damage(w, ctx, src, dst, a.v("damage", lv), Dmg::Magic);
             stun(w, ctx, src, dst, a.v("stun", lv), tag(k));
         }

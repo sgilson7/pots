@@ -27,10 +27,13 @@ pub enum Mesh {
     /// a flat triangle on the ground, apex at the origin, base one unit
     /// ahead (−z) and one unit across: one slice of a sight cone
     Tri = 10,
+    /// an upright cylinder whose top is narrower than its base (TAPER):
+    /// round towers' stone courses
+    Taper = 11,
 }
 
 impl Mesh {
-    pub const ALL: [Mesh; 11] = [
+    pub const ALL: [Mesh; 12] = [
         Mesh::Cube,
         Mesh::Wedge,
         Mesh::Octa,
@@ -42,6 +45,7 @@ impl Mesh {
         Mesh::Blob,
         Mesh::Card,
         Mesh::Tri,
+        Mesh::Taper,
     ];
 
     pub fn from_name(s: &str) -> Option<Mesh> {
@@ -119,7 +123,8 @@ pub fn vertices(mesh: Mesh) -> Vec<i32> {
         }
         Mesh::Sphere | Mesh::Blob => {
             // latitude and longitude bands; each vertex's normal is itself
-            let (lat, lon) = if mesh == Mesh::Sphere { (10, 16) } else { (5, 8) };
+            // round 2: finer, so a big head's outline is smooth (T3)
+            let (lat, lon) = if mesh == Mesh::Sphere { (12, 20) } else { (5, 8) };
             let at = |i: i32, j: i32| {
                 let lat = fx::HALF * i / lat - fx::QUARTER;
                 let lon = fx::TURN * j / lon;
@@ -160,30 +165,55 @@ pub fn vertices(mesh: Mesh) -> Vec<i32> {
                 push_quad(&mut o, b, a, d, c);
             }
         }
-        Mesh::Cyl | Mesh::Cone => {
-            // sides, with a flat normal round each band; a cap top and bottom
-            const SIDES: i32 = 14;
-            let cone = mesh == Mesh::Cone;
-            let rim = |j: i32, y: i32| {
-                let a = fx::TURN * j / SIDES;
-                v3(fx::mul(fx::cos(a), H), y, fx::mul(-fx::sin(a), H))
+        Mesh::Cyl | Mesh::Cone | Mesh::Taper => {
+            // smooth sides (each vertex's normal points out from the axis,
+            // tilted for a slope), and a flat cap top and bottom
+            const SIDES: i32 = 20;
+            let top = match mesh {
+                Mesh::Cone => 0,
+                Mesh::Taper => fx::mul(H, TAPER),
+                _ => H,
             };
-            let apex = v3(0, H, 0);
+            // the side's slope: how far the normal leans up
+            let lean = fx::div(H - top, ONE);
+            let rim = |j: i32, r: i32, y: i32| {
+                let a = fx::TURN * j / SIDES;
+                v3(fx::mul(fx::cos(a), r), y, fx::mul(-fx::sin(a), r))
+            };
+            let normal = |j: i32| {
+                let a = fx::TURN * j / SIDES;
+                v3(fx::cos(a), lean, -fx::sin(a)).norm()
+            };
+            let mut side = |p: V3, n: V3| o.extend_from_slice(&[p.x, p.y, p.z, n.x, n.y, n.z]);
             for j in 0..SIDES {
-                let (a, b) = (rim(j, -H), rim(j + 1, -H));
-                if cone {
-                    push_tri(&mut o, a, b, apex);
-                } else {
-                    let (c, d) = (rim(j + 1, H), rim(j, H));
-                    push_quad(&mut o, a, b, c, d);
-                    push_tri(&mut o, d, c, apex);
+                let (a, b) = (rim(j, H, -H), rim(j + 1, H, -H));
+                let (c, d) = (rim(j + 1, top, H), rim(j, top, H));
+                let (na, nb) = (normal(j), normal(j + 1));
+                side(a, na);
+                side(b, nb);
+                side(c, nb);
+                if top > 0 {
+                    side(a, na);
+                    side(c, nb);
+                    side(d, na);
                 }
+            }
+            for j in 0..SIDES {
+                let (a, b) = (rim(j, H, -H), rim(j + 1, H, -H));
                 push_tri(&mut o, b, a, v3(0, -H, 0));
+                if top > 0 {
+                    let (c, d) = (rim(j + 1, top, H), rim(j, top, H));
+                    push_tri(&mut o, d, c, v3(0, H, 0));
+                }
             }
         }
     }
     o
 }
+
+/// The taper mesh's top radius over its bottom, Q16 (tools/modelport.py
+/// uses the same 0.8).
+pub const TAPER: i32 = ONE * 4 / 5;
 
 #[cfg(test)]
 mod tests {
@@ -211,6 +241,7 @@ mod tests {
             (Mesh::Blob, V3::ZERO),
             (Mesh::Cyl, V3::ZERO),
             (Mesh::Cone, v3(0, -H / 2, 0)),
+            (Mesh::Taper, V3::ZERO),
         ] {
             for [a, b, c, n] in tris(m) {
                 let centroid = v3(

@@ -121,8 +121,36 @@
  {
   "name": "picking an item buys it",
   "file": "crates/core/src/game.rs",
-  "find": "                self.shop_pick = k as i32;",
-  "replace": "                self.shop_pick = k as i32;\n                self.command(Cmd::Buy(k as u16));",
+  "find": "                self.shop_pick = k;",
+  "replace": "                self.shop_pick = k;\n                self.command(Cmd::Buy(k as u16));",
   "test": "picking_an_item_in_the_shop_changes_nothing_in_the_match"
+ },
+ {
+  "name": "marks count in the online checksum",
+  "file": "crates/core/src/world.rs",
+  "find": "        mix(self.tick as i64);",
+  "replace": "        mix(self.tick as i64);\n        mix(self.marks.len() as i64);",
+  "test": "marks_leave_the_online_checksum_alone"
+ },
+ {
+  "name": "a landing missile leaves no mark",
+  "file": "crates/core/src/ability.rs",
+  "find": "    w.mark(MK_LAND, k, m.src, m.t, [m.x / SUB, m.y / SUB]);\n",
+  "replace": "",
+  "test": "a_thrown_hammer_is_cast_then_lands"
+ },
+ {
+  "name": "the cast stage orders before the side can see",
+  "file": "crates/core/src/game.rs",
+  "find": "        crate::combat::give_xp(&mut w, &ctx, me, 100_000);\n        w.step(&ctx, &[]);",
+  "replace": "        crate::combat::give_xp(&mut w, &ctx, me, 100_000);",
+  "test": "every_active_ability_is_cast_and_let_go_where_it_can_be_seen"
+ },
+ {
+  "name": "cleave leaves no mark",
+  "file": "crates/core/src/ability.rs",
+  "find": "        let pct = a.v(\"pct\", lv);\n        w.mark(MK_PROC, k, src, dst, dst_pos);",
+  "replace": "        let pct = a.v(\"pct\", lv);",
+  "test": "an_attack_passive_shows_when_it_fires"
  }
 ]

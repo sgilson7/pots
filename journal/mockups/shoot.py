@@ -4,6 +4,7 @@
     ../../.venv/bin/python shoot.py abilities [id ...]  a still and a GIF of each ability
     ../../.venv/bin/python shoot.py lineups             the hero lineups
     ../../.venv/bin/python shoot.py scene <name>        a whole scene
+    ../../.venv/bin/python shoot.py export              every model's parts, into tools/art2_models.json
     ../../.venv/bin/python shoot.py notes               every NOTES table, into ../art2/notes.json
 
 Serves this folder on a free port, opens index.html in Chromium on the
@@ -98,6 +99,13 @@ def main(kind, names):
             import json
             (OUT / "notes.json").write_text(json.dumps(notes, indent=1, ensure_ascii=False))
             print("saved notes:", len(notes["models"]), "models,", len(notes["abilities"]), "abilities")
+        elif kind == "export":
+            import json
+            open_("lineup=hero_ironvow")
+            data = page.evaluate("""async () => { const m = await import('./export.js'); return m.exportAll(window.build, window.MODEL_IDS); }""")
+            dest = HERE.parents[1] / "tools" / "art2_models.json"
+            dest.write_text(json.dumps(data, separators=(",", ":")))
+            print("exported", len(data), "models to", dest)
         elif kind == "scene":
             (OUT / "scenes").mkdir(parents=True, exist_ok=True)
             for n in names:
