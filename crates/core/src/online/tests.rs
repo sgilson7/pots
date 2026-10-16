@@ -401,3 +401,29 @@ fn browsers_on_a_fast_wire_keep_to_the_clock() {
     assert!(ran <= 600 + 10, "the match ran {ran} ticks in 600 ticks of time");
     assert!(ran >= 600 - 10, "the match ran {ran} ticks in 600 ticks of time");
 }
+
+#[test]
+fn a_player_back_before_the_host_noticed_the_drop_gets_the_seat() {
+    let mut room = Room::new(2, 1, 0, 23);
+    pick_and_start(&mut room);
+    for _ in 0..300 {
+        room.step(false);
+    }
+    let seat = room.games[1].online.my_seat.unwrap();
+    // the page reloads at once: no leave, no silence long enough to notice
+    let token = room.games[1].online.token.clone();
+    let code = room.games[0].online.room.clone();
+    let mut fresh = Game::new(&files(), 4242).unwrap();
+    fresh.act("online.join", &format!("{code}.{token}")).unwrap();
+    room.games[1] = fresh;
+    room.connect(1);
+    for _ in 0..900 {
+        room.step(false);
+    }
+    let back = &room.games[1];
+    assert_eq!(back.online.my_seat, Some(seat), "the same seat");
+    assert!(back.online.status != "online.full", "not turned away");
+    assert!(!back.online.catching && back.m.is_some(), "in the match");
+    let (compared, agree) = room.checksums_agree();
+    assert!(compared > 0 && agree, "and agreeing ({compared})");
+}

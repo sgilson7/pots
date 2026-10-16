@@ -89,5 +89,12 @@
   "find": "s.clock_us > s.heard_us[k] + SILENT_US && s.clock_us > SILENT_US",
   "replace": "now > s.heard[k] + 300 && now > 300",
   "test": "a_browser_that_falls_silent_is_handed_to_the_computer_without_a_long_wait"
+ },
+ {
+  "name": "a known token is not recognised before the drop is noticed",
+  "file": "crates/core/src/online.rs",
+  "find": "o.seats[k].human && !token.is_empty() && o.tokens[k] == token",
+  "replace": "o.seats[k].human && o.seats[k].away && o.tokens[k] == token",
+  "test": "a_player_back_before_the_host_noticed_the_drop_gets_the_seat"
  }
 ]

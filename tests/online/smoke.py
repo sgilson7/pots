@@ -7,7 +7,8 @@ class Q(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a): pass
 srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(Q, directory=str(ROOT / "dist")))
 threading.Thread(target=srv.serve_forever, daemon=True).start()
-base = f"http://127.0.0.1:{srv.server_address[1]}/index.html"
+import os
+base = os.environ.get("BASE") or f"http://127.0.0.1:{srv.server_address[1]}/index.html"
 ARGS = ["--use-angle=metal", "--enable-gpu", "--ignore-gpu-blocklist", "--disable-features=WebRtcHideLocalIpsWithMdns",
         "--disable-background-timer-throttling", "--disable-backgrounding-occluded-windows", "--disable-renderer-backgrounding"]
 def probe(pg):

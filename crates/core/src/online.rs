@@ -511,28 +511,19 @@ fn host_receives(g: &mut Game, peer: &str, msg: Msg) {
                 );
                 return;
             }
-            // a returning player: the same token as a seat's
-            let back = o.peers.iter().position(|p| p.token == token);
-            if let Some(k) = back {
-                o.peers[k].id = peer.to_string();
-            }
             if o.tokens.len() < PLAYERS {
                 o.tokens = vec![String::new(); PLAYERS];
             }
-            let seat = (0..PLAYERS).find(|&k| {
-                o.seats[k].human
-                    && o.seats[k].away
-                    && o.peers.iter().all(|p| p.seat != Some(k))
-                    && o.tokens[k] == token
-            });
-            let seat = match seat {
-                Some(s) => Some(s),
-                None if !o.started => {
-                    // the first open seat, alternating sides
-                    [5, 1, 6, 2, 7, 3, 8, 4, 9, 0]
-                        .into_iter()
-                        .find(|&k| !o.seats[k].human)
-                }
+            // a known token is that seat's player, whether a second
+            // connection, a reload, or a return after a drop the host may
+            // not have noticed yet
+            let known = (0..PLAYERS).find(|&k| o.seats[k].human && !token.is_empty() && o.tokens[k] == token);
+            let seat = match known {
+                Some(k) => Some(k),
+                // the first open seat, alternating sides
+                None if !o.started => [5, 1, 6, 2, 7, 3, 8, 4, 9, 0]
+                    .into_iter()
+                    .find(|&k| !o.seats[k].human),
                 None => None,
             };
             let Some(seat) = seat else {
@@ -546,7 +537,7 @@ fn host_receives(g: &mut Game, peer: &str, msg: Msg) {
                 );
                 return;
             };
-            o.peers.retain(|p| p.id != peer);
+            o.peers.retain(|p| p.id != peer && p.seat != Some(seat));
             o.tokens[seat] = token.clone();
             o.peers.push(Peer {
                 id: peer.to_string(),
@@ -554,8 +545,7 @@ fn host_receives(g: &mut Game, peer: &str, msg: Msg) {
                 token: token.clone(),
                 name: name.clone(),
             });
-            let returning = o.seats[seat].away;
-            if !returning {
+            if known.is_none() {
                 o.seats[seat] = Seat {
                     name: display_name(&name),
                     human: true,
@@ -573,7 +563,16 @@ fn host_receives(g: &mut Game, peer: &str, msg: Msg) {
                 false,
             );
             broadcast_lobby(o);
-            if returning && o.started {
+            if known.is_some() && o.started {
+                if !o.seats[seat].away {
+                    // the drop was not noticed: the computer takes the seat now,
+                    // in every browser, until the player has caught up
+                    o.seats[seat].away = true;
+                    if let Some(s) = o.s.as_mut() {
+                        s.away[seat] = true;
+                    }
+                    hand_to_bot(g, seat);
+                }
                 welcome_back(g, peer, seat);
             }
         }
