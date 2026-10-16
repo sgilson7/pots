@@ -137,7 +137,7 @@ button.learn.stats { align-self: center; padding: 6px 10px; font-size: 13px; }
 body[data-screen="match"] #minimap { display: block; }
 #minimap canvas { position: absolute; inset: 0; }
 body[data-screen="match"] .bottombar { padding-left: 290px; }
-.shop { position: absolute; right: 14px; bottom: 186px; width: min(480px, calc(100vw - 28px)); max-height: calc(100vh - 260px); overflow: auto; }
+.shop { position: absolute; right: 14px; bottom: 186px; width: min(820px, calc(100vw - 28px)); max-height: calc(100vh - 260px); overflow: auto; }
 .shop-head { display: flex; align-items: center; justify-content: space-between; }
 .tabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .tabs button { padding: 4px 10px; font-size: 13px; }
@@ -147,6 +147,39 @@ body[data-screen="match"] .bottombar { padding-left: 290px; }
 .shop-item:hover:not(:disabled) { border-color: var(--accent); }
 .shop-item .icon { width: 52px; height: 52px; }
 .shop-item .cost { font-size: 13px; color: var(--accent); font-variant-numeric: tabular-nums; }
+/* the build tree: the picked item on top, its parts below, joined by lines */
+.shop-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(250px, 300px); gap: 12px; align-items: start; }
+@media (max-width: 720px) { .shop-body { grid-template-columns: minmax(0, 1fr); } }
+.shop-item.dim .icon { opacity: .5; }
+.shop-item.dim .cost { color: var(--muted); }
+.shop-item.picked { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.build { display: grid; gap: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-solid); }
+.build.empty { color: var(--muted); font-size: 14px; }
+.build-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; align-items: center; }
+.build-head .icon { width: 52px; height: 52px; grid-row: span 2; }
+.build-head strong { font-family: var(--hud-font); font-size: 18px; }
+.buy-button { justify-self: start; padding: 4px 12px; font-size: 14px; border-color: var(--accent); color: var(--accent); }
+.buy-button:disabled { border-color: var(--line); color: var(--muted); }
+.tree { display: flex; justify-content: center; overflow-x: auto; padding-bottom: 4px; }
+.tree-node { display: flex; flex-direction: column; align-items: center; }
+.tree-kids { display: flex; gap: 6px; padding-top: 14px; position: relative; }
+.tree-kids::before { content: ""; position: absolute; top: 0; left: 50%; height: 7px; border-left: 2px solid var(--line); }
+.tree-kids > * { position: relative; padding-top: 7px; }
+.tree-kids > *::before { content: ""; position: absolute; top: -7px; left: 50%; height: 14px; border-left: 2px solid var(--line); }
+.tree-kids > *::after { content: ""; position: absolute; top: -7px; left: -3px; right: -3px; border-top: 2px solid var(--line); }
+.tree-kids > *:first-child::after { left: 50%; }
+.tree-kids > *:last-child::after { right: 50%; }
+.tree-kids > *:only-child::after { display: none; }
+.tree-item { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.tree-item .icon { width: 36px; height: 36px; }
+.tree-item.top .icon { width: 44px; height: 44px; }
+.tree-item .cost, .tree-recipe .cost { font-size: 11px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.tree-item:hover { border-color: var(--accent); }
+.tree-item.owned { border-color: var(--good); }
+.tree-item.owned .cost { color: var(--good); }
+.tree-recipe { display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 44px; padding: 3px 5px; border: 1px dashed var(--line); border-radius: 8px; font-size: 11px; color: var(--muted); }
+.build-label { font-family: var(--hud-font); text-transform: uppercase; font-size: 12px; color: var(--muted); }
+.builds-into { display: flex; flex-wrap: wrap; gap: 6px; }
 .scoreboard { position: absolute; left: 50%; top: 80px; transform: translateX(-50%); width: min(720px, calc(100vw - 28px)); }
 .scoreboard .row { display: grid; grid-template-columns: minmax(0, 3fr) repeat(4, minmax(0, 1fr)); gap: 8px; padding: 4px 8px; border-left: 4px solid transparent; font-variant-numeric: tabular-nums; }
 .scoreboard .row.head { color: var(--muted); font-family: var(--hud-font); text-transform: uppercase; font-size: 13px; }

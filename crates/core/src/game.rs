@@ -130,6 +130,8 @@ pub struct Game {
     pub learn: bool,
     pub shop: bool,
     pub shop_tab: String,
+    /// The item whose build tree the shop shows, or -1.
+    pub shop_pick: i32,
     pub score: bool,
     pub menu: bool,
     last_us: i64,
@@ -230,6 +232,7 @@ impl Game {
             learn: false,
             shop: false,
             shop_tab: "basics".into(),
+            shop_pick: -1,
             score: false,
             menu: false,
             last_us: -1,
@@ -1143,6 +1146,13 @@ impl Game {
             "glyph" => self.command(Cmd::Glyph),
             "shop.toggle" => self.shop = !self.shop,
             "shop.tab" => self.shop_tab = value.to_string(),
+            "shop.pick" => {
+                let k = num()?;
+                if k < 0 || k as usize >= self.rules.items.len() {
+                    return Err(format!("no item {k}"));
+                }
+                self.shop_pick = k as i32;
+            }
             "score.toggle" => self.score = !self.score,
             n if n.starts_with("online.") => crate::online::act(self, n, value)?,
             other => return Err(format!("Unknown action \"{other}\".")),

@@ -166,6 +166,65 @@ fn price_with(w: &World, ctx: &Ctx, id: Uid, k: usize, used: &mut [bool; 6], top
     total
 }
 
+/// One piece of an item's build tree: the item, whether a carried copy
+/// covers it, its recipe's own cost (0 for none), and its parts.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Piece {
+    pub item: usize,
+    pub owned: bool,
+    pub recipe: i32,
+    pub parts: Vec<Piece>,
+}
+
+/// Item `k`'s build tree for this player, with the carried parts that
+/// buying it would use marked owned. It walks the parts in the same order
+/// as `price`, so the tree and the price agree.
+pub fn tree(w: &World, ctx: &Ctx, player: usize, k: usize) -> Piece {
+    let mut used = [false; 6];
+    tree_with(w, ctx, w.players[player].hero, k, &mut used, true)
+}
+
+fn tree_with(w: &World, ctx: &Ctx, id: Uid, k: usize, used: &mut [bool; 6], top: bool) -> Piece {
+    let it = &ctx.rules.items[k];
+    if !top {
+        if let Some(u) = w.get(id) {
+            for (i, slot) in u.items.iter().enumerate() {
+                if !used[i] && slot.item as usize == k + 1 {
+                    used[i] = true;
+                    return Piece {
+                        item: k,
+                        owned: true,
+                        recipe: 0,
+                        parts: Vec::new(),
+                    };
+                }
+            }
+        }
+    }
+    let recipe = if !it.parts.is_empty() && it.recipe {
+        it.cost
+    } else {
+        0
+    };
+    let parts = ctx.rules.item_parts[k]
+        .iter()
+        .map(|&p| tree_with(w, ctx, id, p, used, false))
+        .collect();
+    Piece {
+        item: k,
+        owned: false,
+        recipe,
+        parts,
+    }
+}
+
+/// The items item `k` is a part of.
+pub fn builds_into(ctx: &Ctx, k: usize) -> Vec<usize> {
+    (0..ctx.rules.items.len())
+        .filter(|&j| ctx.rules.item_parts[j].contains(&k) && ctx.rules.items[j].shop != "none")
+        .collect()
+}
+
 /// What item `k` costs this player now, with carried parts counted.
 pub fn price(w: &World, ctx: &Ctx, player: usize, k: usize) -> i32 {
     let mut used = [false; 6];

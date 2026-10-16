@@ -42,13 +42,29 @@ def run(page, check, engine):
     # the shop: open, buy the first item it lists, see the gold drop
     page.keyboard.press("KeyB")
     page.wait_for_selector(".shop")
-    check(page.locator(".shop-item:not(.off)").count() > 0, "the base shop sells to a hero at the fountain")
+    check(page.locator(".shop-item:not(.dim)").count() > 0, "the base shop sells to a hero at the fountain")
     gold = int(page.inner_text(".gold").strip().split()[0])
-    page.locator(".shop-item:not(.off)").first.click()
+    # a click picks the item and shows its tree; the tree's button buys it
+    page.locator(".shop-item:not(.dim)").first.click()
+    page.wait_for_selector(".build .buy-button:not([disabled])")
+    page.locator(".build .buy-button").click()
     page.wait_for_function(
         "(g) => { const p = JSON.parse(document.body.dataset.probe || '{}'); return p.gold < g; }", arg=gold, timeout=20000
     )
     check(probe(page)["gold"] < gold, "buying an item at the base shop spends gold")
+    # a built item's tree shows its parts under it
+    found = False
+    for i in range(page.locator(".shop .tabs button").count()):
+        page.locator(".shop .tabs button").nth(i).click()
+        for j in range(page.locator(".shop-item").count()):
+            page.locator(".shop-item").nth(j).click()
+            page.wait_for_selector(".build")
+            if page.locator(".build .tree-kids .tree-item").count() > 0:
+                found = True
+                break
+        if found:
+            break
+    check(found, "the build tree of a built item shows the parts it is made from")
     check(page.locator(".inventory .slot:not(.empty)").count() >= 1, "the bought item is in the inventory")
     # learn the first ability with its button
     page.click("button.learn[data-v='0']")

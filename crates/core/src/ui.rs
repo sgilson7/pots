@@ -954,9 +954,18 @@ fn shop(g: &Game, w: &World, me: usize) -> Node {
                 text("span", "cost", price.to_string()),
             ],
         );
-        b.a = "buy".into();
+        // a click picks the item and shows its build tree; buying is the
+        // tree's button, as in DotA 2 and League
+        b.a = "shop.pick".into();
         b.v = k.to_string();
-        b.off = w.players[me].gold < price || !here;
+        let mut c = String::from("shop-item");
+        if w.players[me].gold < price || !here {
+            c.push_str(" dim");
+        }
+        if g.shop_pick == k as i32 {
+            c.push_str(" picked");
+        }
+        b.c = c;
         let mut tip = item_tip(g, k, Some(price));
         if it.shop == "secret" {
             tip.lines.push(s.ui("tip.secret"));
@@ -978,9 +987,126 @@ fn shop(g: &Game, w: &World, me: usize) -> Node {
                 ],
             ),
             with(node("div", "tabs"), tabs),
-            with(node("div", "shop-grid"), items),
+            with(
+                node("div", "shop-body"),
+                vec![with(node("div", "shop-grid"), items), build_panel(g, w, me)],
+            ),
         ],
     )
+}
+
+/// The picked item's build tree: the item and its price with a Buy
+/// button, every part below it (carried ones marked), the recipe's cost,
+/// and what the item builds into.
+fn build_panel(g: &Game, w: &World, me: usize) -> Node {
+    let s = &g.strings;
+    let ctx = g.ctx();
+    let Some(k) = usize::try_from(g.shop_pick)
+        .ok()
+        .filter(|&k| k < g.rules.items.len())
+    else {
+        return keyed(text("div", "build empty", s.ui("shop.choose")), "build");
+    };
+    let it = &g.rules.items[k];
+    let price = crate::item::price(w, &ctx, me, k);
+    let courier = crate::courier::at_base(w, &ctx, w.players[me].team);
+    let here = crate::item::near_shop(w, &ctx, me, &it.shop) || (it.shop == "home" && courier);
+    let mut buy = button(
+        "buy-button",
+        s.ui("shop.buy").replace("{v}", &price.to_string()),
+        "buy",
+        k.to_string(),
+    );
+    buy.off = w.players[me].gold < price || !here || it.shop == "none";
+    let head = with(
+        node("div", "build-head"),
+        vec![
+            Node {
+                t: "img",
+                c: "icon".into(),
+                i: art(&it.icon),
+                ..Node::default()
+            },
+            text("strong", "", s.item(&it.id).name),
+            buy,
+        ],
+    );
+    let tree = crate::item::tree(w, &ctx, me, k);
+    let mut kids = vec![head];
+    if !tree.parts.is_empty() {
+        kids.push(with(node("div", "tree"), vec![piece(g, &tree, true)]));
+    }
+    let into = crate::item::builds_into(&ctx, k);
+    if !into.is_empty() {
+        let row: Vec<Node> = into
+            .iter()
+            .map(|&j| {
+                let mut b = with(
+                    node("button", "tree-item"),
+                    vec![Node {
+                        t: "img",
+                        c: "icon".into(),
+                        i: art(&g.rules.items[j].icon),
+                        ..Node::default()
+                    }],
+                );
+                b.a = "shop.pick".into();
+                b.v = j.to_string();
+                b.tip = Some(item_tip(g, j, None));
+                keyed(b, format!("bi{j}"))
+            })
+            .collect();
+        kids.push(text("span", "build-label", s.ui("shop.builds_into")));
+        kids.push(with(node("div", "builds-into"), row));
+    }
+    keyed(with(node("div", "build"), kids), "build")
+}
+
+/// One node of a build tree and the parts under it.
+fn piece(g: &Game, p: &crate::item::Piece, top: bool) -> Node {
+    let it = &g.rules.items[p.item];
+    let mut c = String::from("tree-item");
+    if p.owned {
+        c.push_str(" owned");
+    }
+    if top {
+        c.push_str(" top");
+    }
+    let mut b = with(
+        node("button", ""),
+        vec![
+            Node {
+                t: "img",
+                c: "icon".into(),
+                i: art(&it.icon),
+                ..Node::default()
+            },
+            text("span", "cost", g.rules.item_total(p.item).to_string()),
+        ],
+    );
+    b.c = c;
+    b.a = "shop.pick".into();
+    b.v = p.item.to_string();
+    let mut tip = item_tip(g, p.item, None);
+    if p.owned {
+        tip.lines.push(g.strings.ui("shop.carried"));
+    }
+    b.tip = Some(tip);
+    let mut parts: Vec<Node> = p.parts.iter().map(|q| piece(g, q, false)).collect();
+    if p.recipe > 0 {
+        parts.push(with(
+            node("div", "tree-recipe"),
+            vec![
+                text("span", "", g.strings.ui("shop.recipe")),
+                text("span", "cost", p.recipe.to_string()),
+            ],
+        ));
+    }
+    let mut n = with(node("div", "tree-node"), vec![b]);
+    if !parts.is_empty() {
+        n.n.push(with(node("div", "tree-kids"), parts));
+    }
+    n
 }
 
 fn scoreboard(g: &Game, w: &World) -> Node {

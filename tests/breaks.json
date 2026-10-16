@@ -96,5 +96,33 @@
   "find": "o.seats[k].human && !token.is_empty() && o.tokens[k] == token",
   "replace": "o.seats[k].human && o.seats[k].away && o.tokens[k] == token",
   "test": "a_player_back_before_the_host_noticed_the_drop_gets_the_seat"
+ },
+ {
+  "name": "the tree never marks a carried part",
+  "file": "crates/core/src/item.rs",
+  "find": "                        owned: true,",
+  "replace": "                        owned: false,",
+  "test": "a_carried_part_is_marked_once_and_taken_off_the_price"
+ },
+ {
+  "name": "the tree leaves out the recipe",
+  "file": "crates/core/src/item.rs",
+  "find": "    let recipe = if !it.parts.is_empty() && it.recipe {\n        it.cost",
+  "replace": "    let recipe = if !it.parts.is_empty() && it.recipe {\n        0",
+  "test": "a_built_item_s_tree_lists_its_parts_and_recipe"
+ },
+ {
+  "name": "the tree stops at the first level",
+  "file": "crates/core/src/item.rs",
+  "find": "        .map(|&p| tree_with(w, ctx, id, p, used, false))",
+  "replace": "        .map(|&p| Piece { item: p, owned: false, recipe: 0, parts: Vec::new() })",
+  "test": "a_tree_goes_down_through_parts_that_are_built_themselves"
+ },
+ {
+  "name": "picking an item buys it",
+  "file": "crates/core/src/game.rs",
+  "find": "                self.shop_pick = k as i32;",
+  "replace": "                self.shop_pick = k as i32;\n                self.command(Cmd::Buy(k as u16));",
+  "test": "picking_an_item_in_the_shop_changes_nothing_in_the_match"
  }
 ]
