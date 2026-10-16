@@ -18,9 +18,11 @@ What exists, by part:
 
 Recorded at the end of this round; the counts come from the commands, not from memory.
 
-- `./scripts/check.sh`: see the last line of this section.
-- `python3 scripts/break_tests.py`: see below.
-- Online: in-process tests (five browsers over a lagged, lossy wire; a drop and rejoin; a silent browser) pass; the two-browser smoke test over the real relays passes, including a rejoin; the five-runner test is described in `notes/ONLINE-RUN.md`.
+- `./scripts/check.sh`: **BUILDER CHECK PASSED** (format, clippy, every core and boundary test, release build, import audit, art checks, notebook form, browser check in Chromium, Firefox and WebKit), before the publish of `67ed47e`.
+- Live: `BUILDER_ORIGIN=https://sgilson7.github.io/pots tests/browser/check.py`: **BROWSER CHECK PASSED in chromium, firefox, webkit**, on build `67ed47e`.
+- `./scripts/count-tests.sh`: 96 passed, 0 failed, 4 ignored (the ignored are diagnostics in `diag_bots.rs`).
+- `python3 scripts/break_tests.py`: 14 of 14 breaks caught.
+- Online: in-process tests (five browsers over a lagged, lossy wire; a fast wire with a drop keeps to the clock; a drop and rejoin; a silent browser; a return before the drop is noticed) pass. On the live site, two browsers met through the relays and a dropped one rejoined, three times in three. The five-runner test's second run: five browsers, ten minutes, 30 ticks a second, a drop and a rejoin, no checksum disagreement over 200 ticks (`notes/ONLINE-RUN.md`).
 
 ## Open for the person
 
@@ -38,6 +40,13 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 1. Arcade, mission 1 ("First steps"): walk to the middle lane, wait for creeps, and land last hits as their health drops. Count: the goal line says how many you have.
 2. A custom match, 4 allies and 5 enemies on Normal: buy boots at the base shop (B), learn abilities (the + under each), and play to a tower.
 3. Online with a second computer on another network: host, send the link, both pick, start. Close one browser mid-match and reopen its link.
+
+## Mistakes so far, by system
+
+- **Online:** the browsers chased each other's one-tick lead and ran at twice the clock (R1.24); silence was counted in ticks that had stopped (R1.25); a returning player's token was ignored before the drop was noticed (R1.29); the test reopened a stale address (R1.30). Each now has a test.
+- **Rules:** a unit at no health regenerated before the death check (R1.15); the damage table was Warcraft III's until the review (R1.4).
+- **Bots:** they barely last-hit (R1.27) until creeps preferred creeps and the farm routine was measured.
+- **Checks:** a verdict that compared nothing (R1.23); two pairs of mechanisms that cover each other, so a single break was not seen (R1.24, R1.26).
 
 ## What the next session must not assume
 

@@ -106,13 +106,17 @@ footer { color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--rul
 <div class="wrap">
 
 <div class="journal-head">
-  <div class="eyebrow">Protection of the Spheres · design journal · last entry 15 October 2026</div>
+  <div class="eyebrow">Protection of the Spheres · design journal · last entry 16 October 2026</div>
   <h1>Protection of the Spheres</h1>
   <p class="lede">A browser game that plays like the Warcraft III map Defense of the Ancients, with heroes of its own. One tab for each round of work. New rounds are added as new tabs.</p>
   <div class="tabbar" role="tablist" aria-label="Journal entries">
     <button role="tab" id="t-brief" aria-controls="p-brief" aria-selected="false" tabindex="-1"><small>1 · 15 Oct</small><span>Brief and plan</span></button>
     <button role="tab" id="t-lit" aria-controls="p-lit" aria-selected="false" tabindex="-1"><small>2 · 16 Oct</small><span>Literature review</span></button>
     <button role="tab" id="t-look" aria-controls="p-look" aria-selected="false" tabindex="-1"><small>3 · 16 Oct</small><span>Models, map and interface</span></button>
+    <button role="tab" id="t-arcade" aria-controls="p-arcade" aria-selected="false" tabindex="-1"><small>4 · 16 Oct</small><span>Arcade mode</span></button>
+    <button role="tab" id="t-online" aria-controls="p-online" aria-selected="false" tabindex="-1"><small>5 · 16 Oct</small><span>Online mode</span></button>
+    <button role="tab" id="t-runners" aria-controls="p-runners" aria-selected="false" tabindex="-1"><small>6 · 16 Oct</small><span>The five-runner test</span></button>
+    <button role="tab" id="t-live" aria-controls="p-live" aria-selected="false" tabindex="-1"><small>7 · 16 Oct</small><span>Published</span></button>
     <!--TABS-->
   </div>
 </div>
@@ -295,6 +299,139 @@ footer { color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--rul
   </div>
 </section>
 <footer>Pictures made with <code>tools/shots.py</code> from the built game (<code>?tile=lineup:…</code>, <code>overview</code>, <code>match:&lt;seconds&gt;</code>).</footer>
+</div>
+
+<!-- ======================================================= TAB 4 -->
+<div class="panel-tab" role="tabpanel" id="p-arcade" aria-labelledby="t-arcade" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 4 · 16 October 2026 · arcade mode</div>
+  <h2>Ten missions, a custom match, and computer players</h2>
+  <p class="lede">The ladder starts with one quiet enemy in one lane and ends with five unfair ones. A custom match sets each side's size and skill apart, as the brief asks: 0 to 4 allies, 1 to 5 enemies, and five skill levels for each side.</p>
+</header>
+<section>
+  <div class="section-head"><div class="eyebrow">The ladder</div><h2>What each mission teaches</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>#</th><th>Mission</th><th>Sides</th><th>Goal</th></tr></thead>
+    <tbody>
+      <tr><td class="num">1</td><td>First steps</td><td>you alone · 1 passive enemy</td><td>15 last hits in 7 minutes</td></tr>
+      <tr><td class="num">2</td><td>The tower</td><td>you alone · 1 easy</td><td>destroy a tower</td></tr>
+      <tr><td class="num">3</td><td>Spells and stuns</td><td>you alone · 1 easy</td><td>kill the enemy hero twice</td></tr>
+      <tr><td class="num">4</td><td>Shopping</td><td>1 ally · 2 easy</td><td>destroy two towers</td></tr>
+      <tr><td class="num">5</td><td>Two lanes</td><td>1 ally · 2 easy</td><td>break the Sphere</td></tr>
+      <tr><td class="num">6</td><td>Ganks</td><td>2 allies · 3 normal</td><td>break the Sphere</td></tr>
+      <tr><td class="num">7</td><td>The Warden</td><td>3 allies · 3 normal</td><td>defeat the boss</td></tr>
+      <tr><td class="num">8–10</td><td>Five against five</td><td>4 allies · 5 normal, hard, unfair</td><td>break the Sphere</td></tr>
+    </tbody>
+  </table></div>
+</section>
+<section>
+  <div class="section-head"><div class="eyebrow">In play</div><h2>The HUD, the shop, the tips</h2></div>
+  <div class="grid2">
+    <figure><img src="img/arc_hud.jpg" alt="The HUD with Cinder chosen: portrait, bars, stats, four ability icons, and a tip for Flame Wave listing its damage at each level, mana and cooldown"><figcaption>Every ability shows its TikZ icon, its level pips and, on hover, every level's numbers with the current one in brackets.</figcaption></figure>
+    <figure><img src="img/arc_shop.jpg" alt="The shop open on its weapons tab, a grid of item icons with prices, and a tip for an item listing its effect, damage, and the parts it is built from"><figcaption>The shop: tabs as DotA's, each item's price for what you still need, and its recipe in the tip.</figcaption></figure>
+    <figure><img src="img/arc_pick.jpg" alt="Choosing a hero: ten portraits and the chosen hero's abilities with a tip"><figcaption>Ten portraits drawn in TikZ, no text in any.</figcaption></figure>
+  </div>
+</section>
+<section>
+  <div class="section-head"><div class="eyebrow">Computer players</div><h2>Behavior trees, and what measuring them found</h2></div>
+  <p>Each computer player runs one tree from <code>data/ai.json</code>: a priority list of rules (go home when low, use a potion, buy the build's next item, retreat from a tower, cast on an enemy hero, finish a weak one, take a rune, help the creeps siege, harass, last-hit). Skill is a separate table, so the same tree plays at five levels: how often it decides, how well it times last hits, how often it denies and casts, when it retreats.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Found</th><th>Why</th><th>Changed</th></tr></thead>
+    <tbody>
+      <tr><td>Ten bots landed 90 last hits in 20 minutes</td><td>Enemy creeps attacked heroes before creeps, so bots walked home hurt a quarter of the time; an idle hero hit whatever was near; each new order cut its own swing short</td><td>Creeps prefer creeps (the review's rule); bots stand still between last hits, count the walk, the swing and incoming damage, keep a swing that has begun, stay out of tower reach. Now about 300.</td></tr>
+      <tr><td>Bots filled six slots with potions and stopped buying</td><td>They never drank them</td><td>They use salves, tangos and clarities, and sell the cheapest item to make room</td></tr>
+      <tr><td>A match between bots is long</td><td>Both sides hold their lanes</td><td>A siege rule after minute 8. Matches end around minute 40 to 60; open (R1.28)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+</div>
+
+<!-- ======================================================= TAB 5 -->
+<div class="panel-tab" role="tabpanel" id="p-online" aria-labelledby="t-online" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 5 · 16 October 2026 · online mode</div>
+  <h2>Ten browsers, rollback, and coming back</h2>
+  <p class="lede">A host opens a room and shares its code or link; up to nine others join. Empty seats are played by the computer. Browsers meet through public Nostr relays and then talk to each other directly.</p>
+</header>
+<section>
+  <div class="grid2">
+    <figure><img src="img/on_form.jpg" alt="The online screen: your name, host a room, join a room by code"><figcaption>Host or join. Nothing loads from another site until one of these is pressed.</figcaption></figure>
+    <figure><img src="img/on_lobby.jpg" alt="The lobby: the room code with copy buttons, five Sunward seats, a hero grid with a tip, five Moonward seats, and Start"><figcaption>The lobby, after Galactic Survivors and Ape Race: the code large, both sides' seats, the hero grid, computer skill, Start.</figcaption></figure>
+  </div>
+</section>
+<section>
+  <div class="section-head"><div class="eyebrow">How it works</div><h2>Rollback over orders</h2></div>
+  <div class="grid3">
+    <div class="card"><h3>Every browser runs the match</h3><p>The rules are deterministic: the same seed and orders give the same match bit for bit. Only orders cross the network, never the world.</p></div>
+    <div class="card"><h3>Guess, then correct</h3><p>A browser's own orders act two ticks later. Another seat's late order is guessed as "nothing new", which is right on most ticks; when it arrives, the world is restored to before that tick and run again.</p></div>
+    <div class="card"><h3>Coming back</h3><p>The address keeps a seat token. When a player drops, the computer takes the seat in every browser. On return the host sends every order so far; the browser replays the match at speed and takes the seat back.</p></div>
+  </div>
+  <div class="note"><strong>What it cannot do yet.</strong><p>If the host's browser leaves, the match ends. Two players both behind strict networks cannot connect, because there is no relay server for the traffic itself (TURN). Every online test so far ran on one machine.</p></div>
+</section>
+</div>
+
+<!-- ======================================================= TAB 6 -->
+<div class="panel-tab" role="tabpanel" id="p-runners" aria-labelledby="t-runners" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 6 · 16 October 2026 · the five-runner test</div>
+  <h2>Five browsers play one match, and an agent watches</h2>
+  <p class="lede"><code>tests/online/runners.py</code> starts five separate Chromium processes, each recorded on video. One hosts; four join by the room link; each picks a hero, hands it to the computer and also clicks and presses keys, so its own orders travel the network. The five human seats and five computer seats make a 5v5. Midway one browser is closed without warning and reopened on its link. A separate agent read the log every 45 seconds while it ran and wrote <code>notes/ONLINE-RUN.md</code>.</p>
+</header>
+<section>
+  <div class="section-head"><div class="eyebrow">Two runs</div><h2>What the first run found, and the second showed</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Measure</th><th>First run</th><th>Second run</th></tr></thead>
+    <tbody>
+      <tr><td>All five in one match</td><td>4 minutes, then four</td><td>the full 10 minutes</td></tr>
+      <tr><td>Speed</td><td>30 ticks a second, then 60 after the drop</td><td>30, one 2-second catch-up after the drop</td></tr>
+      <tr><td>Freeze at the drop</td><td>about 11 seconds</td><td>about 2 seconds</td></tr>
+      <tr><td>Rejoin</td><td>failed</td><td>in the match 2.2 s after reopening, caught up in 4.3 s</td></tr>
+      <tr><td>Checksums compared</td><td>314 ticks, none differed (the script's own end check compared nothing)</td><td>200 ticks and 448 live sums, none differed; the end check compared six ticks all five held</td></tr>
+      <tr><td>Rollbacks</td><td colspan="2">rare: one machine has almost no lag, so the in-process test with lag and loss carries that part</td></tr>
+    </tbody>
+  </table></div>
+  <p>Between the runs: the browsers no longer chase each other's one-tick lead; silence is timed by the clock, not by ticks that have stopped; the returning player's log goes in pieces; a transport error no longer replaces a running match's status. After the second run, the analyst found that other joiners still marked the returning seat as away; the host now tells everyone.</p>
+</section>
+<section>
+  <div class="section-head"><div class="eyebrow">The same moment, four browsers</div><h2>Seven minutes in, after the drop</h2></div>
+  <div class="grid2">
+    <figure><img src="img/run_r1-0435.jpg" alt="Runner 1's screen"><figcaption>Runner 1, the host.</figcaption></figure>
+    <figure><img src="img/run_r3-0435.jpg" alt="Runner 3's screen"><figcaption>Runner 3.</figcaption></figure>
+    <figure><img src="img/run_r4-0435.jpg" alt="Runner 4's screen, back in the match"><figcaption>Runner 4, back after its drop.</figcaption></figure>
+    <figure><img src="img/run_r5-0435.jpg" alt="Runner 5's screen"><figcaption>Runner 5. The clock, score and kill feed agree on every screen.</figcaption></figure>
+  </div>
+</section>
+</div>
+
+<!-- ======================================================= TAB 7 -->
+<div class="panel-tab" role="tabpanel" id="p-live" aria-labelledby="t-live" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 7 · 16 October 2026 · published</div>
+  <h2>Live, and what to try first</h2>
+  <p class="lede">The game is at <a href="https://sgilson7.github.io/pots/">sgilson7.github.io/pots</a>; the code at <a href="https://github.com/sgilson7/pots">github.com/sgilson7/pots</a>. The full check passed before publishing, and the browser check passed again on the live address in Chromium, Firefox and WebKit. Two browsers met and played online on the live address, and a dropped one came back, three times in three.</p>
+</header>
+<section>
+  <div class="section-head"><div class="eyebrow">Try by hand</div><h2>Three things worth ten minutes</h2></div>
+  <ol class="steps">
+    <li><div><h3>Mission 1</h3><p>Walk to the middle lane and land last hits as creeps drop low. The goal line counts them.</p></div></li>
+    <li><div><h3>A custom 5v5</h3><p>Buy at the base shop (B), learn abilities with the plus under each, and push a tower with your allies.</p></div></li>
+    <li><div><h3>Online on two networks</h3><p>Host on one computer, send the link to another on a different network, both pick, start; close one browser mid-match and reopen its link.</p></div></li>
+  </ol>
+</section>
+<section>
+  <div class="section-head"><div class="eyebrow">Yours to decide</div><h2>Open questions, by number</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>#</th><th>Question</th></tr></thead>
+    <tbody>
+      <tr><td>R1.2</td><td>Are the names and looks of heroes, items and creeps far enough from DotA's?</td></tr>
+      <tr><td>R1.10</td><td>Keep a free courier for each side from the start?</td></tr>
+      <tr><td>R1.12</td><td>Lane creep armor: Unarmored (playdota) or Medium (Dota 2 port)?</td></tr>
+      <tr><td>R1.16</td><td>Is it acceptable that the match ends if the host's browser leaves?</td></tr>
+      <tr><td>R1.18</td><td>The 143 icons: keep, or redraw some?</td></tr>
+      <tr><td>R1.21</td><td>Public relays and STUN, no TURN server: acceptable?</td></tr>
+    </tbody>
+  </table></div>
+</section>
 </div>
 
 <!--PANELS-->
