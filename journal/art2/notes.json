@@ -1,0 +1,261 @@
+{
+ "models": {
+  "hero_ironvow": "A round little knight in a steel dome helm with a crest in his side's colour, big pauldrons and a cape; the greatsword over his shoulder is taller than he is.",
+  "hero_rime": "A frost hermit in a bell-shaped robe and a deep hood rimmed with white fur, silver hair at her cheeks; the crystal on her staff glows.",
+  "hero_cinder": "A fire dancer in a red dress and gold sash, flames rising off the back of her red hair, both hands alight.",
+  "hero_thistle": "A hooded archer with a peaked leaf hood and pale skin; the tall bow in her left hand and the frost-tipped arrows in her quiver are her outline.",
+  "hero_gristle": "A huge round butcher, stitched down one side, in an apron and a cook's band, with a hook on a chain in one hand and a cleaver in the other.",
+  "hero_tectus": "A stone ox-calf with a wide muzzle and a gold nose ring, curled horns and moss on his back, carrying a totem club with a glowing band.",
+  "hero_kestrel": "A bladedancer behind a round white mask with slit eyes and red stripes, a tall orange topknot, baggy trousers and a curved sword.",
+  "hero_hexwright": "A slight warlock in a long ragged violet robe and a horned hood, with glowing pink eyes and a staff of three bone claws round a pink light.",
+  "hero_longwick": "A gnome with a big round nose, a white beard, goggles on his cap and a long rifle nearly twice his height.",
+  "hero_tempest": "An old storm caller with a beard down his chest, bushy brows and a crown of cloud puffs round a spark, his hands crackling blue.",
+  "creep_melee_sun": "Sunward spearman: read by the gold dome helm, the round gold shield and the upright spear.",
+  "creep_ranged_sun": "Sunward slinger: read by the tall pointed orange cap and the sling held out.",
+  "creep_siege_sun": "Sunward ballista: a round wooden cart on four wheels with a gold bow and a bolt laid on top, and a face on its front.",
+  "creep_melee_moon": "Moonward thrall: a hunched lilac brute read by its bone horn nubs and three bone claws on each hand.",
+  "creep_ranged_moon": "Moonward caster: a hooded violet robe read by the glowing violet spark held over its head.",
+  "creep_siege_moon": "Moonward catapult: a slate cart read by its raised bone arm with a rock in the cup.",
+  "tower_sun": "Sunward tower: a sandstone spire of rounded courses with a floating sun-gold orb in a ring of rays.",
+  "tower_moon": "Moonward tower: the same spire in slate with a floating, turning violet crystal.",
+  "barracks_melee_sun": "Sunward melee barracks: a sandstone dome with a round shield and crossed spears over the door.",
+  "barracks_ranged_sun": "Sunward ranged barracks: a sandstone drum under a cone roof with a target and arrow over the door.",
+  "barracks_melee_moon": "Moonward melee barracks: the dome with shield and spears, in slate and violet.",
+  "barracks_ranged_moon": "Moonward ranged barracks: the drum, cone roof and target, in slate and violet.",
+  "sphere_sun": "The Sunward Sphere: a huge glowing gold orb over a four-pillar pedestal, held in two turning rings.",
+  "sphere_moon": "The Moonward Sphere: the same in violet, the largest and brightest thing in its base.",
+  "fountain_sun": "Sunward fountain: a round basin of water with arcing spouts round a pillar topped by a gold light.",
+  "fountain_moon": "Moonward fountain: the basin and spouts with a violet light.",
+  "shop": "The shop: a market stall under a round red-and-cream striped canopy, pots and potions on the counter.",
+  "hound": "Ridge hound: a sandy pup with big pointed ears, a cream ruff and a curled tail.",
+  "mossback": "Mossback: a tortoise under a high brown domed shell with a moss cap and a pink flower.",
+  "imp": "Bramble imp: the smallest neutral, a green sprite with wide pointed ears, thorns and a leaf on its head.",
+  "golem": "Stone golem: a big round boulder body with moss shoulders, huge fists and small glowing mint eyes.",
+  "golem_small": "Small stone golem: the same golem at about two-thirds size, so the pair reads as a set.",
+  "shaman": "Hornet shaman: a gold-and-black striped bee-folk with antennae, curled horns, little wings and a honey-orb staff.",
+  "hornet": "Giant hornet: a round striped flying bug with buzzing wings, read by its hover and stinger.",
+  "drake": "Elder drake: a green round dragon with horns, an orange crest, open orange wings and a spade tail.",
+  "drake_young": "Young drake: a paler, smaller drake with stubby wings, so it reads as the elder's young.",
+  "warden": "The Warden: a huge round violet beast with curled horns, tusks, a studded stone collar and spikes down its back.",
+  "critter": "The hex critter: a tiny green toad with a pale belly and a smile; plainly harmless.",
+  "courier": "The courier: a small grey mule with long ears and saddlebags in the side's colour, a pennant on its back.",
+  "observer_ward": "Observer ward: a big gold-irised eye on a leafy stalk that slowly looks around.",
+  "sentry_ward": "Sentry ward: a blue flame in a little iron cage on three slate legs.",
+  "healing_ward": "Healing totem: a short carved pole with a smiling face, green bands and a pulsing green light.",
+  "fissure_rock": "Fissure rock: a cluster of rounded slate stones with a glowing crack and a tuft of moss.",
+  "tree_sun": "Sunward pine: three plump stacked cones of green on a short trunk.",
+  "tree_moon": "Moonward frost tree: round pale-blue crowns capped with snow on a twisted lilac trunk.",
+  "rune_haste": "Haste rune: a red tall thin diamond with two swept fins.",
+  "rune_double": "Double damage rune: two blue orbs side by side.",
+  "rune_illusion": "Illusion rune: three gold orbs circling a white centre.",
+  "rune_invis": "Invisibility rune: a half see-through lilac ring.",
+  "rune_regen": "Regeneration rune: a rounded green plus."
+ },
+ "abilities": {
+  "storm_bolt": {
+   "see": "Ironvow winds up and hurls a spinning gold hammer in an arc. It lands with a gold ring that opens over everyone it stuns, and little stars circle each stunned head until the stun ends.",
+   "tell": "The hammer is in flight for half a second, so the target can see it coming; the ring shows the area; the stars show who is stunned and for how long.",
+   "T": 3
+  },
+  "great_cleave": {
+   "see": "Ironvow swings his blade at one creep and a flat gold crescent sweeps out from it, flashing the creeps on either side a moment later.",
+   "tell": "Wide Arc has no cast: it shows on each melee hit, and the crescent marks the cleave's reach round the target. The creeps beside it flash and squash less than the one struck, because they take a share.",
+   "T": 2.6
+  },
+  "warcry": {
+   "see": "Ironvow throws both arms up and shouts; three gold rings run out over the ground, and each ally inside gains a gold ring at their feet and a small turning gold shield over the head.",
+   "tell": "The shield and ring stay for the buff's six seconds (shortened here); an ally outside the shout, on the right, gets neither. The rings are drawn at half the game's 700 reach.",
+   "T": 3.2
+  },
+  "gods_strength": {
+   "see": "Ironvow raises both arms and flares red; he grows by a fifth, a red haze and rising embers wrap him, and his next swing lands with a large burst on the creep.",
+   "tell": "The size, the red tint and the embers last as long as the oath (25 seconds in the game, shortened here), so anyone can see that his hits are doubled before he lands one.",
+   "T": 3.6
+  },
+  "crystal_nova": {
+   "see": "Rime points her staff, a frost spark lands at a spot, and a blue burst throws up a ring of ice spikes over the area. Each enemy inside flashes, turns pale blue and keeps a ring of ice crystals at its feet.",
+   "tell": "The pale tint and the crystals at the feet are the slow; they stay for its four or five seconds (shortened here). The enemy on the right was outside the area and has neither. The area is drawn at half the game's 400 radius.",
+   "T": 3.4
+  },
+  "frostbite": {
+   "see": "Rime flicks a snowflake at one enemy and a shell of ice with crystal spikes closes round it. It stops dead inside, pale blue, flashing as the cold hurts it, until the ice shatters into bits.",
+   "tell": "The ice shell is the whole cue: while it stands the enemy cannot move or attack (1.5 to 3 seconds on heroes, 10 on creeps; about 1.7 here). A soft blue pulse inside shows the damage ticking.",
+   "T": 3.4
+  },
+  "brilliance_aura": {
+   "see": "Every allied hero, Rime included, has a faint blue ring at their feet and small blue diamonds that spiral up into a soft sparkle over the head.",
+   "tell": "It never switches off and has no cast; the blue diamonds mean extra mana coming in. The game's aura covers the whole map, so the cue shows on allies far from Rime too.",
+   "T": 3
+  },
+  "freezing_field": {
+   "see": "Rime lifts both arms and floats a little; a ring of frost marks the field round her while snow swirls and small ice blasts burst at random spots between the inner and outer rings. Enemies in the field turn pale blue with ice at their feet and flash when a blast lands on them.",
+   "tell": "The rings show where blasts can land (none land in the clear middle), and the floating pose shows she is still channelling: an interrupt ends the snow and the rings at once. Drawn at half the game's size; it lasts its full four seconds here.",
+   "T": 4.4
+  },
+  "dragon_slave": {
+   "see": "Cinder thrusts both hands forward and a wall of flame rolls out along the ground, widest near her and narrower at its far end, leaving a scorched strip behind it. Each enemy it passes flashes and glows orange for a moment.",
+   "tell": "The wave and the scorch mark show the line exactly; the enemy standing off the line is untouched. Drawn at about seven tenths of its 1075 length.",
+   "T": 3
+  },
+  "light_strike_array": {
+   "see": "Cinder raises a hand and an orange ring appears on the ground, filling from the centre for half a second. Then a column of fire slams down inside it, and everyone still in the circle flashes and is stunned under circling stars.",
+   "tell": "The filling circle is the warning; it is the whole half second an enemy has to step out. The stars last the 1.6-second stun.",
+   "T": 3.4
+  },
+  "fiery_soul": {
+   "see": "Each time Cinder casts, a small flame jumps off her and joins a ring of flames circling her waist, up to three. With three she glows warmer, leaves embers at her feet and throws fireballs much faster.",
+   "tell": "The number of circling flames is the number of stacks, so an enemy can count them; they all go out together when the seven seconds run out (shortened here).",
+   "T": 4.2
+  },
+  "laguna_blade": {
+   "see": "Cinder raises both hands as fire gathers in them and a red ring turns under her target. Then a thick lance of white-hot fire joins her hands to the target, which flashes, squashes and is left on a scorch mark glowing red.",
+   "tell": "The red ring under the target is the warning: it marks who is about to be hit (the delay is a quarter second; the ring is held longer here so it can be seen). The lance cannot miss once the ring shows.",
+   "T": 3.2
+  },
+  "frost_arrows": {
+   "see": "While Rimed Arrows is on, Thistle's bow glows blue and a blue ring sits under her. Each arrow has a glowing frost tip and bursts into a puff of ice on the hit; the target turns paler blue, gains ice at its feet and its walk slows.",
+   "tell": "The blue bow is the switched-on state, visible before she shoots. The tint and the ice at the feet are the slow, which lasts 1.5 seconds after each hit (7 on creeps).",
+   "T": 3.6
+  },
+  "silence": {
+   "see": "Thistle points and a violet spark falls on a spot, opening a violet dome over the area. Each enemy inside gets a white bubble over the head with a violet 'no' sign in it, and droops a little.",
+   "tell": "The bubble is the silence: while it shows, that enemy cannot cast, for three to six seconds (shortened here). The hero on the right was outside the dome and has none.",
+   "T": 3.4
+  },
+  "trueshot_aura": {
+   "see": "A wide green circle surrounds Thistle. She and each ranged ally inside it have a green ring and rising motes at their feet and a small green arrowhead bobbing over the head, and their shots glow green.",
+   "tell": "Only ranged allies show the arrowhead: Ironvow, who fights in melee, stands inside the circle without one. The circle is drawn at about a third of the game's 900 radius.",
+   "T": 3
+  },
+  "marksmanship": {
+   "see": "Thistle has a green glint under her hood and green leaves drifting up around her; she draws and looses quickly, each shot sparkling at the bow.",
+   "tell": "Steady Hand is a lasting passive with no moment of its own: the green glint and leaves just say she has it learned. Its effect, more agility, shows as quicker shots and more damage, not as an event.",
+   "T": 3
+  },
+  "meat_hook": {
+   "see": "Gristle flings his hook and its chain runs out in a straight line. It clangs into the first unit in its path, which flails as it is reeled all the way back to his belly and lands with a red splash.",
+   "tell": "The chain is the line: anyone it reaches first is caught, ally or enemy, so the throw can be read and dodged. Only an enemy takes the damage (the splash).",
+   "T": 3.6
+  },
+  "rot": {
+   "see": "While Carrion Cloud is on, a swirl of green fumes and bubbles circles Gristle over a green stain on the ground. Enemies inside turn sickly green with green at their feet, and everyone in it, Gristle included, flashes once a second.",
+   "tell": "The green stain marks the 250 radius (drawn at about 1.9 m) and stays as long as the toggle is on. Gristle's own flash is the cost: he takes the same damage.",
+   "T": 3
+  },
+  "flesh_heap": {
+   "see": "An enemy hero falls inside the faint red circle round Gristle. A red soul drifts from the body into his belly, he swells with a pink flash and a little heart pops up, and he stays a touch bigger.",
+   "tell": "The soul flying to him marks each strength gain; it comes only from enemy heroes dying within the circle (450, drawn at about 2.2 m). The magic resistance part has no cue of its own.",
+   "T": 3.6
+  },
+  "dismember": {
+   "see": "Gristle wraps both arms round the enemy in front of him and leans in, chomping. The enemy is lifted off the ground under stun stars, a red ring marks it, red beads stream from it to him, and it flashes red once a second.",
+   "tell": "The held, lifted enemy and the stars mean the channel is running, up to three seconds on heroes; if Gristle is stunned the hold breaks at once. Each red flash is one tick of damage.",
+   "T": 3.8
+  },
+  "fissure": {
+   "see": "Tectus brings his club down and a glowing crack runs straight out from his feet; stone blocks shove up out of it one after another. Enemies on the line hop as it reaches them and sit dazed with stars over their heads.",
+   "tell": "The crack draws the line before the rocks rise, the rocks stay as a wall for the blocking time, and the stars mark who is stunned. The line is about 7 m here against 12 in the game (shrunk to fit); the rocks' 8 s are cut to about 2.",
+   "T": 3.6
+  },
+  "enchant_totem": {
+   "see": "Tectus hoists his club over his head and it fills with swirling teal light, which stays on it. His next swing lands with a teal shockwave and the enemy is squashed and shoved back.",
+   "tell": "The glowing club means the charge is waiting; it goes out when the blow lands (or after 14 s, cut short here).",
+   "T": 3.2
+  },
+  "aftershock": {
+   "see": "Whenever Tectus casts a spell, a teal ring jolts out from his feet with a ring of dust. Enemies near him bounce and get stars; one standing farther off is untouched.",
+   "tell": "It needs no button: the ring comes with every spell he casts, and its edge is the 3 m reach. The stun is short, so the stars soon go.",
+   "T": 2.8
+  },
+  "echo_slam": {
+   "see": "Tectus hops and slams the ground; a wide teal shockwave sweeps out. Each enemy it hits gives off its own small ring, and beads of teal light arc from each enemy to every other one, flashing them again as they land.",
+   "tell": "The big ring is the 5 m reach. The number of bead arcs shows the extra damage: the more enemies stand together, the more each is hit again.",
+   "T": 4
+  },
+  "blade_fury": {
+   "see": "Kestrel spins in place inside a whirl of steel and orange blade-light, drifting as he spins. A pale shimmer wraps him, and enemies inside the orange circle flicker white over and over.",
+   "tell": "The whirl itself is the cue: while it turns he cannot be hurt by spells (the shimmer) and everything inside the 2.5 m circle takes damage. It stops after 5 s (cut to 2.7 here).",
+   "T": 3.6
+  },
+  "healing_ward": {
+   "see": "Kestrel points and a little totem drops onto the ground with a bounce. A soft green circle spreads round it, pulsing outward, and green crosses rise off allies inside; when Kestrel walks on, the totem trots after him.",
+   "tell": "The green circle is the 5 m healing area (shown at 3 m), the pulse is each heal, and the totem's presence is the timer; it pops after 25 s (cut to about 3).",
+   "T": 4
+  },
+  "blade_dance": {
+   "see": "Kestrel's ordinary cut leaves a thin steel arc. On a critical hit he leans into the swing and a wide orange arc tears across the enemy, with a gold star burst, a ground ring and the enemy squashed and knocked back.",
+   "tell": "Size and colour tell a critical from a plain hit: thin steel is normal, the big orange arc with the star is double damage. It comes on its own at random.",
+   "T": 3
+  },
+  "omnislash": {
+   "see": "Kestrel raises his sword and vanishes into an orange streak, blinking from enemy to enemy. Each arrival leaves a crossed slash on its target, which flashes and flinches; after the last strike he returns.",
+   "tell": "The orange streak jumping between nearby enemies is the whole cue, and the count of crossed slashes is the count of strikes (five here, eight at the top level), one every 0.4 s.",
+   "T": 4.2
+  },
+  "earth_spike": {
+   "see": "Hexwright thrusts his staff and a pink seam runs along the ground; stone thorns punch up along it, front to back. Enemies on the line are tossed into the air, land and sit stunned under stars.",
+   "tell": "The thorns rising in order show the line and its speed; being thrown up means you were caught. The line is 6 m here (7 in the game).",
+   "T": 3.2
+  },
+  "hex": {
+   "see": "Hexwright flicks a pink spark at an enemy hero; it bursts in a cloud of lilac smoke and the hero is gone, replaced by a little hopping critter with pink sparkles round it. Another puff, and the hero is back.",
+   "tell": "The critter is the status: while it hops, that hero can do nothing. The two puffs mark the start and end (3.5 s at the top level, 2.2 s here).",
+   "T": 3.8
+  },
+  "mana_drain": {
+   "see": "Hexwright holds out his staff and a violet tether links it to an enemy. Blue beads stream along it from the enemy to the staff, the blue ball over the enemy's head shrinks, and the staff's light swells.",
+   "tell": "The tether is the channel: it holds while he stands still and the enemy stays within 8 m. The beads' direction shows which way the mana goes. It lasts 4 s (2.7 here).",
+   "T": 3.6
+  },
+  "finger_of_death": {
+   "see": "Hexwright raises his staff and its light swells while a pink sigil turns and tightens under the target. Then a thick pink beam joins staff and target, and the target is squashed flat in a puff of pink smoke.",
+   "tell": "The sigil under your feet is the warning that it is coming at you; the beam is the hit. In the game the delay is a quarter of a second; it is lengthened here so it can be seen.",
+   "T": 3.4
+  },
+  "shrapnel": {
+   "see": "Longwick fires a shell straight up. A pulsing brass ring marks where it will come down; a moment later brass shot rains into the circle with puffs of dust. Enemies walking through it plod, with a pale blue ring at their feet.",
+   "tell": "The ring appears before anything falls, so there is time to step out. Inside, the rain is the damage and the blue foot-ring is the slow. It rains 8 s in the game (2 here).",
+   "T": 4
+  },
+  "headshot": {
+   "see": "Longwick's normal shots leave a thin grey streak. When a shot procs, the streak is thick brass, a brass star pops at the target's head, its head snaps back and stars flicker round it for a moment.",
+   "tell": "The brass streak and head star mark the extra damage; the brief stars are the mini-stun, which in the game is a fifth of a second or less.",
+   "T": 3
+  },
+  "take_aim": {
+   "see": "A faint white circle marks Longwick's ordinary reach; a brass circle grows out past it, and his scope glints. He then shoots an enemy standing between the two circles.",
+   "tell": "Nothing is cast: the brass circle is the range bonus (2.6 m at the top level, shown larger here), and it is the circle a player sees when choosing what to shoot.",
+   "T": 3.4
+  },
+  "assassinate": {
+   "see": "Longwick crouches over his rifle. A thin red line joins the barrel to the target and a red crosshair closes on it; then a bang, a smoke puff at the muzzle, and a glowing round streaks across and bursts on the target, which reels.",
+   "tell": "The red line and crosshair are the warning, and they are visible to the target for the whole 1.7 s aim; when the crosshair has closed, the shot is on its way.",
+   "T": 3.8
+  },
+  "arc_lightning": {
+   "see": "Tempest points and a yellow-blue bolt snaps from his hand to the nearest enemy, then forks on to the next and the next, each a beat later; every enemy it touches flashes and jitters.",
+   "tell": "The chain of bolts shows exactly who was hit and in what order. It jumps only between enemies close together (5 m), up to fifteen times at the top level.",
+   "T": 2.8
+  },
+  "lightning_bolt": {
+   "see": "Tempest throws a hand up; a grey cloud gathers over the target and a thick zigzag bolt drops out of it with a white glare, leaving a scorch mark. The target flinches and is dazed for a moment, and a faint blue circle shows the spot is now seen.",
+   "tell": "A bolt from the sky (not from his hand) is this spell; the brief stars are the short stun, and the blue circle is the sight it leaves behind.",
+   "T": 2.8
+  },
+  "static_field": {
+   "see": "With each spell Tempest casts, a thin blue-and-yellow ring of static sweeps out from him, and every enemy it passes gets a little zap overhead and a jolt. One enemy outside the ring is left alone.",
+   "tell": "The sweeping ring is the reach (10 m in the game, drawn at 4.6 m here); a zap means that enemy lost a share of its current health, so it hurts most on healthy targets.",
+   "T": 2.8
+  },
+  "thundergods_wrath": {
+   "see": "Tempest lifts both arms and his cloud crown blazes. The sky flashes and a bolt drops on every enemy hero at the same instant, near or far; the enemy creep standing among them is not touched.",
+   "tell": "Bolts landing on all enemy heroes together, with no travel, is the cue: it reaches the whole map, so a hero anywhere is struck. Only heroes are hit.",
+   "T": 3.6
+  },
+  "warden_bash": {
+   "see": "The Warden swats at a hero; the first blow is an ordinary hit. The second comes down harder: a lilac shockwave, a gold star burst and dust, the hero squashed flat and then dazed under stars.",
+   "tell": "The shockwave and the long stars mark a bash (a 15 % chance each attack); the stars stay for the full 1.65 s stun, long enough to see who is stuck.",
+   "T": 3.2
+  }
+ }
+}

@@ -288,7 +288,8 @@ fn hero_tip(g: &Game, roster: usize) -> Tip {
     }
 }
 
-fn ability_tip(g: &Game, k: usize, level: i32) -> Tip {
+/// An ability's tip, as the HUD shows it (`level` 0 marks no level).
+pub fn ability_tip(g: &Game, k: usize, level: i32) -> Tip {
     let a = &g.rules.abilities[k];
     let named = g.strings.ability(&a.id);
     let look = |key: &str| -> Option<Vec<i32>> {

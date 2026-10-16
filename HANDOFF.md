@@ -14,6 +14,19 @@ What exists, by part:
 - **Online** (`online.rs`, `web/online.js`, `web/net/`): rooms by code through public Nostr relays, a host-centred star of up to ten browsers, rollback over orders, the computer taking a dropped seat, rejoining by the room link with a seat token.
 - **3D**: every model in `data/models.json` (from `tools/modelgen.py`), drawn by the WebGL renderer after Gatecrasher's; icons for every item, ability and hero drawn in TikZ with no text, all with hover tips.
 
+## Round 2 (16 October 2026): the new look, mockups only (T1)
+
+The person asked for a cuter, rounder style after Chumbles (Long Time Comin') and Mage Tower Battle's mockups, a mockup and picture of every model, and an animation with a picture, GIF and description for every ability, in a new journal tab. Done as mockups; **the game itself is unchanged**.
+
+- Analysis: `notes/ART-STYLE.md` (what is blocky now, measured; the eight rules of the new look; what the renderer and core must gain to draw it).
+- Mockups: `journal/mockups/` (three.js r160 vendored with SHA256SUMS; `kit.js` style kit, `heroes.js`, `world.js`, `fx_a.js`, `fx_b.js`, `scenes.js`). `shoot.py` makes every picture into `journal/art2/`; `tab8.py` writes journal tab 8 from those pictures, the mockups' NOTES, and the core's own ability tips (`cargo run -q -p pots_core --example tips > journal/art2/tips.json`; `ui::ability_tip` is now public for it).
+- 50 model stills, 2 hero lineups, 2 lane scenes, 41 ability stills and GIFs. Weakest, by the agents' own reading: Thousand Cuts' still, Keen Edge's pale star, Thornburst and Rift Stomp (rocks hide the line), Steady Hand and Clear Mind (subtle), Hoarfrost Burst (whitish), Gutting Hook (the dragged unit jumps back at the loop seam), the drakes' wings.
+- Next round, if the person approves: port to `tools/modelgen.py`, new meshes (capsule, torus arcs, finer sphere), soft lighting, effect records from the core and a status layer (`notes/ART-STYLE.md`, "Porting").
+
+Checked: `./scripts/check.sh` passed after these changes (**BUILDER CHECK PASSED**, browser check in Chromium, Firefox and WebKit); `./scripts/count-tests.sh` 96 passed, 0 failed, 4 ignored. The journal tab was looked at in Chromium at 1280 and 400 px wide, with no sideways scroll.
+
+Open for the person from round 2: **R2.5** (bring the game camera down from 56° so faces show?), **R2.6** (does the style suit; which models or animations to redo, by id), **R2.7** (did "voxel" mean this rounded look or small cubes?).
+
 ## What passed
 
 Recorded at the end of this round; the counts come from the commands, not from memory.
