@@ -9,7 +9,7 @@
 //! the items over when it reaches them.
 
 use crate::rules::P;
-use crate::world::{within, Ctx, ItemSlot, Mod, Order, Uid, World, M, NO_UNIT};
+use crate::world::{within, Ctx, ItemSlot, Mod, Order, Uid, World, M};
 
 /// Within this distance the courier hands items over.
 pub const REACH: i32 = 250;
@@ -26,7 +26,7 @@ pub fn at_base(w: &World, ctx: &Ctx, team: u8) -> bool {
         return false;
     };
     let shop = home_shop(ctx, team);
-    within(c.pos(), shop, ctx.rules.t.shop_range) && w.carrying[team.min(1) as usize] == NO_UNIT as i32
+    within(c.pos(), shop, ctx.rules.t.shop_range) && w.carrying[team.min(1) as usize] < 0
 }
 
 fn home_shop(ctx: &Ctx, team: u8) -> P {

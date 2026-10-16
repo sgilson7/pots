@@ -1,24 +1,68 @@
-"""The project's own browser interactions, run by check.py in every engine.
+"""The game's own browser interactions, run by check.py in every engine.
 
 check.py has already loaded the page, waited for it to report ready, and let
-it idle. Drive the tool here the way a person would, and assert what the page
-shows with `check(condition, "what this shows")`. Assert the effect a person
-would see (the text drawn, the file saved), not the markup that should cause it.
+it idle. This plays the start of an arcade match the way a person would and
+asserts what the page shows.
 
-Expected values in these checks are worked out by hand from the brief (C4),
-never copied from the tool's own output. Wait on a selector or a data-*
-attribute the page sets, never on a fixed time: on CI the page may draw with
-a CPU and run slowly.
+Expected values are worked out from the brief and the literature review
+(C4), never copied from the game's own output: a hero starts with 603 gold
+(DotA 6.72: 853 less the hero's 250), level one, and one point to spend.
+Waits are on selectors and data-* attributes, never fixed times.
 """
 
 import json
 import pathlib
 
-STRINGS = json.loads((pathlib.Path(__file__).resolve().parents[2] / "data" / "strings.json").read_text())
+ROOT = pathlib.Path(__file__).resolve().parents[2]
+STRINGS = json.loads((ROOT / "data" / "strings.json").read_text())
+
+
+def probe(page):
+    return json.loads(page.get_attribute("body", "data-probe") or "{}")
 
 
 def run(page, check, engine):
-    check(page.inner_text("#title") == STRINGS["title"], "the title from data/strings.json is drawn")
-    check(page.inner_text("#intro p") == STRINGS["intro"], "the intro from data/strings.json is drawn")
-    check(page.get_attribute("body", "data-screen") == "start", "the core's start screen is shown")
-    check(page.inner_text("#message") == "", "no error message is shown")
+    check(page.inner_text(".game-title").lower() == STRINGS["ui"]["title"].lower(), "the title from data/strings.json is drawn")
+    check(page.get_attribute("body", "data-screen") == "title", "the core's title screen is shown")
+    page.click("[data-a='screen'][data-v='arcade']")
+    page.wait_for_selector("body[data-screen='arcade']")
+    first = STRINGS["missions"]["first_steps"]["name"]
+    check(first.lower() in page.inner_text(".missions").lower(), "the first arcade mission is listed by its name")
+    page.click("[data-a='mission'][data-v='0']")
+    page.wait_for_selector("body[data-screen='pick']")
+    page.click("[data-a='pick'][data-v='0']")
+    page.click("[data-a='start']")
+    page.wait_for_selector("body[data-screen='match']")
+    page.wait_for_selector(".gold")
+    check(page.inner_text(".gold").strip().startswith("603"), "a hero starts with 603 gold")
+    page.wait_for_function("() => JSON.parse(document.body.dataset.probe || '{}').tick > 30")
+    start = probe(page)
+    check(start["alive"] and start["level"] == 1, "the hero stands on the map at level one")
+    check(page.locator("button.learn").count() >= 4, "a learn button waits under each ability at level one")
+    # the shop: open, buy the first item it lists, see the gold drop
+    page.keyboard.press("KeyB")
+    page.wait_for_selector(".shop")
+    check(page.locator(".shop-item:not(.off)").count() > 0, "the base shop sells to a hero at the fountain")
+    gold = int(page.inner_text(".gold").strip().split()[0])
+    page.locator(".shop-item:not(.off)").first.click()
+    page.wait_for_function(
+        "(g) => { const p = JSON.parse(document.body.dataset.probe || '{}'); return p.gold < g; }", arg=gold, timeout=20000
+    )
+    check(probe(page)["gold"] < gold, "buying an item at the base shop spends gold")
+    check(page.locator(".inventory .slot:not(.empty)").count() >= 1, "the bought item is in the inventory")
+    # learn the first ability with its button
+    page.click("button.learn[data-v='0']")
+    page.wait_for_selector(".abilities .pip.on")
+    check(page.locator(".abilities .pip.on").count() == 1, "learning the first ability lights one pip")
+    # walk: a right-click on the ground somewhere off the hero
+    box = page.locator("#view").bounding_box()
+    page.keyboard.press("Escape")
+    page.mouse.click(box["x"] + box["width"] * 0.75, box["y"] + box["height"] * 0.3, button="right")
+    page.wait_for_function(
+        "([x, y]) => { const p = JSON.parse(document.body.dataset.probe || '{}'); return p.x !== x || p.y !== y; }",
+        arg=[start["x"], start["y"]],
+        timeout=20000,
+    )
+    moved = probe(page)
+    check((moved["x"], moved["y"]) != (start["x"], start["y"]), "a right-click on the ground walks the hero")
+    check(page.inner_text("#notice") == "", "no error message is shown")

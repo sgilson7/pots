@@ -1,0 +1,81 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{xcolor}
+\definecolor{arcane}{HTML}{8752C4}
+\definecolor{arcanetab}{HTML}{9A62D6}
+\definecolor{armaments}{HTML}{6E7FA0}
+\definecolor{attributes}{HTML}{3FA79A}
+\definecolor{basics}{HTML}{C9A46A}
+\definecolor{blood}{HTML}{C2303C}
+\definecolor{bone}{HTML}{EFE6CF}
+\definecolor{caster}{HTML}{C24FA6}
+\definecolor{cloth}{HTML}{E9DCC0}
+\definecolor{cloud}{HTML}{EEF4FA}
+\definecolor{common}{HTML}{8DB05A}
+\definecolor{consumables}{HTML}{E36A8A}
+\definecolor{earth}{HTML}{9A6838}
+\definecolor{ember}{HTML}{D8421E}
+\definecolor{fire}{HTML}{EE7F22}
+\definecolor{flame}{HTML}{FF9A1F}
+\definecolor{flamehot}{HTML}{FFE15A}
+\definecolor{frost}{HTML}{4F9BDB}
+\definecolor{gold}{HTML}{F4BF3A}
+\definecolor{golddark}{HTML}{B9821F}
+\definecolor{heal}{HTML}{6ED36A}
+\definecolor{ice}{HTML}{C9EEFF}
+\definecolor{icedeep}{HTML}{6FC2EE}
+\definecolor{ink}{HTML}{2B1631}
+\definecolor{iron}{HTML}{5C6470}
+\definecolor{leaf}{HTML}{5DB04A}
+\definecolor{leather}{HTML}{8E5A36}
+\definecolor{life}{HTML}{E2364A}
+\definecolor{mana}{HTML}{3E7BE0}
+\definecolor{moss}{HTML}{6E8F45}
+\definecolor{night}{HTML}{3A2E5C}
+\definecolor{paper}{HTML}{FFF8EC}
+\definecolor{protect}{HTML}{2F6BB5}
+\definecolor{relictab}{HTML}{E8B330}
+\definecolor{rot}{HTML}{62A43A}
+\definecolor{secret}{HTML}{3D3F86}
+\definecolor{shade}{HTML}{5A4560}
+\definecolor{skin}{HTML}{F1C6A0}
+\definecolor{skingrey}{HTML}{A8A2B4}
+\definecolor{skinpale}{HTML}{E6D7C3}
+\definecolor{snow}{HTML}{FFFFFF}
+\definecolor{spark}{HTML}{FFF27A}
+\definecolor{steel}{HTML}{C9D2DC}
+\definecolor{steeldark}{HTML}{7D8896}
+\definecolor{steelrim}{HTML}{7F8C9C}
+\definecolor{stone}{HTML}{A99A86}
+\definecolor{stonedark}{HTML}{73665A}
+\definecolor{storm}{HTML}{9CCBEB}
+\definecolor{support}{HTML}{48B7C9}
+\definecolor{venom}{HTML}{9BD13B}
+\definecolor{violet}{HTML}{B57BF0}
+\definecolor{weapons}{HTML}{B8402F}
+\definecolor{wood}{HTML}{B57A45}
+\definecolor{wooddark}{HTML}{7E4F2A}
+\newlength{\Ink}\setlength{\Ink}{2.2pt}
+\tikzset{inked/.style={draw=ink,line width=\Ink,line join=round,line cap=round}}
+\begin{document}
+\begin{tikzpicture}
+\useasboundingbox (0,0) rectangle (2,2);
+\clip (0,0) rectangle (2,2);
+\filldraw[inked,fill=frost] (1,1) circle (0.9);
+\filldraw[inked,fill=frost!34!paper] (1,1) circle (0.74);
+\draw[draw=frost!45!paper,line width=2pt,line cap=round,line join=round] (0.615,1.724) -- (0.565,1.695) -- (0.518,1.663) -- (0.473,1.628) -- (0.43,1.59) -- (0.391,1.549) -- (0.354,1.505) -- (0.32,1.459) -- (0.29,1.41);
+\draw[draw=icedeep,line width=3pt,line cap=round,line join=round] plot[smooth, tension=0.6] coordinates {(1.6,0.7) (1.594,0.725) (1.577,0.75) (1.548,0.773) (1.509,0.795) (1.46,0.816) (1.401,0.834) (1.336,0.849) (1.263,0.862) (1.185,0.871) (1.104,0.877) (1.021,0.88) (0.937,0.879) (0.855,0.875) (0.775,0.867) (0.7,0.856) (0.631,0.842) (0.568,0.825) (0.515,0.806) (0.47,0.785) (0.436,0.762) (0.413,0.737) (0.401,0.713) (0.401,0.687) (0.413,0.663) (0.436,0.638) (0.47,0.615) (0.515,0.594) (0.568,0.575) (0.631,0.558) (0.7,0.544) (0.775,0.533) (0.855,0.525) (0.937,0.521) (1.021,0.52) (1.104,0.523) (1.185,0.529) (1.263,0.538) (1.336,0.551) (1.401,0.566) (1.46,0.584) (1.509,0.605) (1.548,0.627) (1.577,0.65) (1.594,0.675) (1.6,0.7)};
+\filldraw[inked,fill=snow] (1,0.7) ellipse (0.18 and 0.08);
+\filldraw[inked,fill=ice] (0.63,0.894) -- (0.503,1.031) -- (0.443,1.345) -- (0.49,1.426) -- (0.571,1.379) -- (0.673,1.076) -- cycle;
+\filldraw[inked,fill=snow] (0.63,0.894) -- (0.503,1.031) -- (0.563,1.104) -- cycle;
+\filldraw[inked,fill=ice] (0.965,1.087) -- (0.832,1.242) -- (0.78,1.587) -- (0.835,1.673) -- (0.921,1.618) -- (1.02,1.284) -- cycle;
+\filldraw[inked,fill=snow] (0.965,1.087) -- (0.832,1.242) -- (0.901,1.319) -- cycle;
+\filldraw[inked,fill=ice] (1.387,0.968) -- (1.224,1.091) -- (1.098,1.416) -- (1.133,1.512) -- (1.229,1.477) -- (1.398,1.172) -- cycle;
+\filldraw[inked,fill=snow] (1.387,0.968) -- (1.224,1.091) -- (1.275,1.181) -- cycle;
+\filldraw[inked,fill=ice] (1.597,0.75) -- (1.465,0.857) -- (1.371,1.132) -- (1.403,1.21) -- (1.482,1.178) -- (1.613,0.919) -- cycle;
+\filldraw[inked,fill=snow] (1.597,0.75) -- (1.465,0.857) -- (1.51,0.93) -- cycle;
+\filldraw[inked,fill=ice] (0.734,0.607) -- (0.622,0.711) -- (0.553,0.964) -- (0.586,1.033) -- (0.655,0.999) -- (0.758,0.759) -- cycle;
+\filldraw[inked,fill=snow] (0.734,0.607) -- (0.622,0.711) -- (0.666,0.775) -- cycle;
+\filldraw[inked,fill=ice] (1.299,0.538) -- (1.175,0.628) -- (1.077,0.87) -- (1.101,0.942) -- (1.174,0.917) -- (1.304,0.691) -- cycle;
+\filldraw[inked,fill=snow] (1.299,0.538) -- (1.175,0.628) -- (1.212,0.696) -- cycle;
+\end{tikzpicture}
+\end{document}

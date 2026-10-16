@@ -20,4 +20,7 @@ A tiny example, left commented out so a new project ships with no art:
     # PICTURES["icons/badge"] = badge
 """
 
+# This game's pictures live in art_abilities.py, art_items_a.py,
+# art_items_b.py and art_heroes.py (found by art.py), drawn in the style pack
+# styles/pots with the shared badge set up in icons.py.
 PICTURES = {}

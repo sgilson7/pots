@@ -1119,6 +1119,19 @@ impl Game {
             "buy" => self.command(Cmd::Buy(num()? as u16)),
             "sell" => self.command(Cmd::Sell(num()? as u8)),
             "buyback" => self.command(Cmd::Buyback),
+            "autopilot" => {
+                // the computer plays this player's hero, at normal skill, or hands it back
+                let on = self
+                    .m
+                    .as_ref()
+                    .map(|m| m.world.players[m.me].bot.is_some())
+                    .unwrap_or(false);
+                self.command(Cmd::Autopilot(if on { 255 } else { 2 }));
+                self.menu = false;
+                if let Some(m) = self.m.as_mut() {
+                    m.paused = false;
+                }
+            }
             "glyph" => self.command(Cmd::Glyph),
             "shop.toggle" => self.shop = !self.shop,
             "shop.tab" => self.shop_tab = value.to_string(),

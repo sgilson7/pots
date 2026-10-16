@@ -153,7 +153,11 @@ def test_style(t):
 
 def test_driver(t, pack):
     proj = t / "proj"
-    shutil.copytree(ART, proj / "tools" / "art", ignore=shutil.ignore_patterns("__pycache__", "src"))
+    # The copy starts with no pictures: the project's own picture modules
+    # (pictures.py entries, art_*.py) draw with the project's style pack, not
+    # the test pack, and their PNGs are not in the temporary project.
+    shutil.copytree(ART, proj / "tools" / "art", ignore=shutil.ignore_patterns("__pycache__", "src", "art_*.py", "icons.py"))
+    (proj / "tools" / "art" / "pictures.py").write_text("PICTURES = {}\n")
     (proj / "data").mkdir()
     cfg = json.loads((ROOT / "data" / "art.json").read_text())
     cfg["style"] = str(pack)

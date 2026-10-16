@@ -27,7 +27,7 @@ THIN = 1.2       # pt, interior detail lines
 
 def field_of(rim):
     """The badge's field colour: the rim role washed toward paper."""
-    return f"{rim}!28!paper"
+    return f"{rim}!34!paper"
 
 
 # ---- the badge --------------------------------------------------------------
@@ -303,8 +303,10 @@ def axe(fig, x, y, s=1.0, rot=0.0, head="steel", haft="wood"):
     """A one-bladed axe, haft up the y axis, head to the right."""
     with fig.frame(x, y, s=s, rot=rot):
         fig.rect(-0.05, -0.55, 0.05, 0.5, haft, r=0.03)
-        fig.blob([(0.02, 0.36), (0.3, 0.5), (0.46, 0.3), (0.48, 0.0), (0.3, -0.18), (0.02, 0.04)], head, tension=0.35)
-        fig.stroke([(0.44, 0.38), (0.48, 0.0), (0.38, -0.12)], width=THIN, role="snow", smooth=True)
+        edge = [(0.2 + 0.32 * math.cos(math.radians(a)), 0.18 + 0.4 * math.sin(math.radians(a)))
+                for a in range(-70, 71, 14)]
+        fig.poly([(0.0, 0.08)] + edge + [(0.0, 0.32)], head)
+        fig.stroke([(0.04, 0.12), (0.04, 0.28)], width=THIN, role="steeldark")
 
 
 def hammer(fig, x, y, s=1.0, rot=0.0, head="steel", haft="wood", band="gold"):

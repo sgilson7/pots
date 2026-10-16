@@ -50,7 +50,9 @@ def _load(name, key):
 def owners():
     """ability id -> unit id that has it."""
     out = {}
-    for unit, row in _load("units.json", "units").items():
+    units = _load("units.json", "units")
+    rows = units.items() if isinstance(units, dict) else ((r["id"], r) for r in units)
+    for unit, row in rows:
         for a in row.get("abilities", []):
             out.setdefault(a, unit)
     return out

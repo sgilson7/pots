@@ -581,6 +581,12 @@ fn hud(g: &Game) -> Node {
         };
         kids.push(keyed(text("div", "goal-line", line), "goal"));
     }
+    if m.online && !g.online.status.is_empty() && g.online.status != "online.playing" {
+        kids.push(keyed(text("div", "net-line", s.ui(&g.online.status)), "net"));
+    }
+    if p.bot.is_some() && hero != NO_UNIT {
+        kids.push(keyed(text("div", "net-line", s.ui("hud.autopilot")), "autopilot"));
+    }
     if let Some(aim) = g.aim {
         let key = match aim {
             Aim::AttackMove => "hud.aim_attack",
@@ -663,6 +669,16 @@ fn hud(g: &Game) -> Node {
                         node("div", "menu-buttons"),
                         vec![
                             button("primary", s.ui("menu.resume"), "resume", ""),
+                            button(
+                                "",
+                                s.ui(if p.bot.is_some() {
+                                    "menu.autopilot_off"
+                                } else {
+                                    "menu.autopilot_on"
+                                }),
+                                "autopilot",
+                                "",
+                            ),
                             button("", s.ui("menu.quit"), "quit", ""),
                         ],
                     ),
@@ -995,4 +1011,214 @@ fn scoreboard(g: &Game, w: &World) -> Node {
 /// For a unit on screen, whether it is invisible to the viewer: used by the HUD.
 pub fn hidden(w: &World, id: Uid) -> bool {
     w.get(id).map(|u| u.has(M::Invisible)).unwrap_or(true)
+}
+
+/// The online screens: the form to host or join, and the lobby.
+pub fn online_view(g: &Game) -> Node {
+    let s = &g.strings;
+    let o = &g.online;
+    let status = if o.status.is_empty() {
+        String::new()
+    } else {
+        s.ui(&o.status)
+    };
+    if g.screen == "online" {
+        let mut name = node("input", "text-input");
+        name.a = "online.name".into();
+        name.v = o.name.clone();
+        name.x = s.ui("online.name_hint");
+        name.k = "name".into();
+        let mut code = node("input", "text-input code");
+        code.a = "online.code".into();
+        code.v = o.typed.clone();
+        code.x = s.ui("online.code_hint");
+        code.k = "code".into();
+        return with(
+            node("div", "menu online"),
+            vec![
+                with(
+                    node("header", "menu-head"),
+                    vec![
+                        text("h1", "", s.ui("online.title")),
+                        button("back", s.ui("back"), "screen", "title"),
+                    ],
+                ),
+                with(
+                    node("div", "online-body"),
+                    vec![
+                        with(
+                            node("section", "panel"),
+                            vec![
+                                text("h2", "", s.ui("online.you")),
+                                name,
+                                text("p", "fine", s.ui("online.relays")),
+                            ],
+                        ),
+                        with(
+                            node("section", "panel"),
+                            vec![
+                                text("h2", "", s.ui("online.host_title")),
+                                text("p", "", s.ui("online.host_text")),
+                                button("primary", s.ui("online.host"), "online.host", ""),
+                            ],
+                        ),
+                        with(
+                            node("section", "panel"),
+                            vec![
+                                text("h2", "", s.ui("online.join_title")),
+                                code,
+                                button("primary", s.ui("online.join"), "online.join", ""),
+                            ],
+                        ),
+                    ],
+                ),
+                text("p", "status-line", status),
+            ],
+        );
+    }
+    // the lobby
+    let host = o.role == crate::online::Role::Host;
+    let bots = difficulty_name(g, o.bots);
+    let mut sides = Vec::new();
+    for (team, range, label) in [(0usize, 0..5, "online.sunward"), (1, 5..10, "online.moonward")] {
+        let mut rows = vec![text(
+            "h2",
+            if team == 0 {
+                "side-title sun"
+            } else {
+                "side-title moon"
+            },
+            s.ui(label),
+        )];
+        for k in range {
+            let seat = o.seats.get(k).cloned().unwrap_or_default();
+            let mine = o.my_seat == Some(k);
+            let mut kids = Vec::new();
+            if seat.pick >= 0 {
+                let id = &g.rules.units[g.rules.heroes[seat.pick as usize]].id;
+                kids.push(Node {
+                    t: "img",
+                    c: "portrait".into(),
+                    i: art(&format!("heroes/{id}")),
+                    ..Node::default()
+                });
+            } else {
+                kids.push(node("span", "portrait empty"));
+            }
+            let who = if seat.human {
+                let mut n = seat.name.clone();
+                if seat.away {
+                    n = s.ui("online.away").replace("{v}", &n);
+                }
+                n
+            } else {
+                s.ui("online.open_seat").replace("{v}", &bots)
+            };
+            kids.push(text("strong", "", who));
+            if seat.pick >= 0 {
+                kids.push(text(
+                    "span",
+                    "fine",
+                    s.hero(&g.rules.units[g.rules.heroes[seat.pick as usize]].id).name,
+                ));
+            }
+            if !seat.human && !o.started {
+                kids.push(button("sit", s.ui("online.sit"), "online.sit", k.to_string()));
+            }
+            let c = if mine {
+                "seat mine"
+            } else if seat.human {
+                "seat taken"
+            } else {
+                "seat"
+            };
+            rows.push(keyed(with(node("div", c), kids), format!("seat{k}")));
+        }
+        sides.push(with(node("section", "panel seats"), rows));
+    }
+    // the hero choice, as in the arcade
+    let mut cards = Vec::new();
+    let mine = o
+        .my_seat
+        .and_then(|k| o.seats.get(k))
+        .map(|s| s.pick)
+        .unwrap_or(-1);
+    for (k, &u) in g.rules.heroes.iter().enumerate() {
+        let id = &g.rules.units[u].id;
+        let taken = o.seats.iter().any(|s| s.pick == k as i32) && mine != k as i32;
+        let mut card = with(
+            node(
+                "button",
+                if mine == k as i32 {
+                    "hero-mini chosen"
+                } else {
+                    "hero-mini"
+                },
+            ),
+            vec![Node {
+                t: "img",
+                c: "portrait".into(),
+                i: art(&format!("heroes/{id}")),
+                ..Node::default()
+            }],
+        );
+        card.a = "pick".into();
+        card.v = k.to_string();
+        card.off = taken || o.started;
+        card.tip = Some(hero_tip(g, k));
+        cards.push(keyed(card, format!("hm{k}")));
+    }
+    let mut head = vec![
+        text("h1", "", s.ui("online.lobby")),
+        with(
+            node("div", "room-code"),
+            vec![
+                text("span", "label", s.ui("online.room")),
+                text("strong", "code", o.room.clone()),
+                button("", s.ui("online.copy_code"), "copy", o.room.clone()),
+                button(
+                    "",
+                    s.ui("online.copy_link"),
+                    "copy.link",
+                    format!("room={}", o.room),
+                ),
+            ],
+        ),
+        button("back", s.ui("online.leave"), "online.leave", ""),
+    ];
+    if host {
+        let mut start = button("primary", s.ui("online.start"), "online.start", "");
+        start.off = o.started;
+        head.insert(2, start);
+    }
+    let mut setup = vec![
+        text("h2", "", s.ui("online.your_hero")),
+        with(node("div", "hero-mini-grid"), cards),
+    ];
+    if host {
+        setup.push(with(
+            node("div", "stepper"),
+            vec![
+                text("span", "label", s.ui("online.bot_skill")),
+                button("step", "−", "online.bots", "-"),
+                text("span", "value", bots.clone()),
+                button("step", "+", "online.bots", "+"),
+            ],
+        ));
+    }
+    setup.push(text("p", "status-line", status));
+    with(
+        node("div", "menu lobby"),
+        vec![
+            with(node("header", "menu-head"), head),
+            with(
+                node("div", "lobby-body"),
+                vec![
+                    sides.remove(0),
+                    with(node("section", "panel"), setup),
+                    sides.remove(0),
+                ],
+            ),
+        ],
+    )
 }

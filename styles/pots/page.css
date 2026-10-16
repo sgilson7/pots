@@ -1,0 +1,17 @@
+/* Optional page tokens for the Protection of the Spheres style pack. A page
+   that wants its chrome to sit with the icons may import this file; nothing
+   in the game reads it yet. */
+:root {
+  --art-ink: #2B1631;
+  --art-paper: #FFF8EC;
+  --art-frost: #4F9BDB;
+  --art-fire: #EE7F22;
+  --art-earth: #9A6838;
+  --art-steel: #7F8C9C;
+  --art-blood: #C2303C;
+  --art-arcane: #8752C4;
+  --art-storm: #9CCBEB;
+  --art-rot: #62A43A;
+  --art-gold: #F4BF3A;
+  --art-ink-width: 2px;
+}

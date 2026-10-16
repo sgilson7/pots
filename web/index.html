@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- Reference default. connect-src 'self' keeps fetches on this origin;
+  <!-- Reference default. connect-src 'self' and the relays in web/net/config.js (the online feature, BRIEF.md);
        'wasm-unsafe-eval' lets the page compile its own WebAssembly module;
        form-action 'none' blocks form posts. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' wss://nos.lol wss://nostr.mom wss://relay.damus.io wss://relay.primal.net wss://nostr-01.yakihonne.com wss://nostr.sathoarder.com wss://relay.mostro.network; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>Protection of the Spheres</title>
   <link rel="stylesheet" href="style.css">
 </head>

@@ -1,0 +1,76 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{xcolor}
+\definecolor{arcane}{HTML}{8752C4}
+\definecolor{arcanetab}{HTML}{9A62D6}
+\definecolor{armaments}{HTML}{6E7FA0}
+\definecolor{attributes}{HTML}{3FA79A}
+\definecolor{basics}{HTML}{C9A46A}
+\definecolor{blood}{HTML}{C2303C}
+\definecolor{bone}{HTML}{EFE6CF}
+\definecolor{caster}{HTML}{C24FA6}
+\definecolor{cloth}{HTML}{E9DCC0}
+\definecolor{cloud}{HTML}{EEF4FA}
+\definecolor{common}{HTML}{8DB05A}
+\definecolor{consumables}{HTML}{E36A8A}
+\definecolor{earth}{HTML}{9A6838}
+\definecolor{ember}{HTML}{D8421E}
+\definecolor{fire}{HTML}{EE7F22}
+\definecolor{flame}{HTML}{FF9A1F}
+\definecolor{flamehot}{HTML}{FFE15A}
+\definecolor{frost}{HTML}{4F9BDB}
+\definecolor{gold}{HTML}{F4BF3A}
+\definecolor{golddark}{HTML}{B9821F}
+\definecolor{heal}{HTML}{6ED36A}
+\definecolor{ice}{HTML}{C9EEFF}
+\definecolor{icedeep}{HTML}{6FC2EE}
+\definecolor{ink}{HTML}{2B1631}
+\definecolor{iron}{HTML}{5C6470}
+\definecolor{leaf}{HTML}{5DB04A}
+\definecolor{leather}{HTML}{8E5A36}
+\definecolor{life}{HTML}{E2364A}
+\definecolor{mana}{HTML}{3E7BE0}
+\definecolor{moss}{HTML}{6E8F45}
+\definecolor{night}{HTML}{3A2E5C}
+\definecolor{paper}{HTML}{FFF8EC}
+\definecolor{protect}{HTML}{2F6BB5}
+\definecolor{relictab}{HTML}{E8B330}
+\definecolor{rot}{HTML}{62A43A}
+\definecolor{secret}{HTML}{3D3F86}
+\definecolor{shade}{HTML}{5A4560}
+\definecolor{skin}{HTML}{F1C6A0}
+\definecolor{skingrey}{HTML}{A8A2B4}
+\definecolor{skinpale}{HTML}{E6D7C3}
+\definecolor{snow}{HTML}{FFFFFF}
+\definecolor{spark}{HTML}{FFF27A}
+\definecolor{steel}{HTML}{C9D2DC}
+\definecolor{steeldark}{HTML}{7D8896}
+\definecolor{steelrim}{HTML}{7F8C9C}
+\definecolor{stone}{HTML}{A99A86}
+\definecolor{stonedark}{HTML}{73665A}
+\definecolor{storm}{HTML}{9CCBEB}
+\definecolor{support}{HTML}{48B7C9}
+\definecolor{venom}{HTML}{9BD13B}
+\definecolor{violet}{HTML}{B57BF0}
+\definecolor{weapons}{HTML}{B8402F}
+\definecolor{wood}{HTML}{B57A45}
+\definecolor{wooddark}{HTML}{7E4F2A}
+\newlength{\Ink}\setlength{\Ink}{2.2pt}
+\tikzset{inked/.style={draw=ink,line width=\Ink,line join=round,line cap=round}}
+\begin{document}
+\begin{tikzpicture}
+\useasboundingbox (0,0) rectangle (2,2);
+\clip (0,0) rectangle (2,2);
+\filldraw[inked,fill=blood] (1,1) circle (0.9);
+\filldraw[inked,fill=blood!34!paper] (1,1) circle (0.74);
+\draw[draw=blood!45!paper,line width=2pt,line cap=round,line join=round] (0.615,1.724) -- (0.565,1.695) -- (0.518,1.663) -- (0.473,1.628) -- (0.43,1.59) -- (0.391,1.549) -- (0.354,1.505) -- (0.32,1.459) -- (0.29,1.41);
+\filldraw[inked,fill=snow] (0.36,1.3) -- (0.993,0.918) -- (1.5,0.38) -- (0.867,0.762) -- cycle;
+\filldraw[inked,fill=snow] (0.6,1.62) -- (1.189,1.311) -- (1.66,0.84) -- (1.071,1.149) -- cycle;
+\filldraw[inked,fill=snow] (0.34,0.86) -- (0.741,0.679) -- (1.02,0.34) -- (0.619,0.521) -- cycle;
+\filldraw[inked,fill=steel] (0.836,1.006) -- (0.919,0.908) -- (1.489,1.386) -- (1.521,1.497) -- (1.406,1.484) -- cycle;
+\draw[draw=steeldark,line width=1.2pt,line cap=round,line join=round] (0.902,0.978) -- (1.435,1.425);
+\filldraw[inked,fill=gold,rounded corners=0.024cm] (0.706,1.074) -- (0.963,0.768) -- (1.018,0.814) -- (0.761,1.121) -- cycle;
+\filldraw[inked,fill=leather] (0.668,0.834) -- (0.719,0.772) -- (0.86,0.891) -- (0.809,0.952) -- cycle;
+\filldraw[inked,fill=gold] (0.669,0.782) circle (0.056);
+\filldraw[inked,fill=snow] (1.52,1.56) -- (1.493,1.467) -- (1.4,1.44) -- (1.493,1.413) -- (1.52,1.32) -- (1.547,1.413) -- (1.64,1.44) -- (1.547,1.467) -- cycle;
+\end{tikzpicture}
+\end{document}

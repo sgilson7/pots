@@ -1,0 +1,77 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{xcolor}
+\definecolor{arcane}{HTML}{8752C4}
+\definecolor{arcanetab}{HTML}{9A62D6}
+\definecolor{armaments}{HTML}{6E7FA0}
+\definecolor{attributes}{HTML}{3FA79A}
+\definecolor{basics}{HTML}{C9A46A}
+\definecolor{blood}{HTML}{C2303C}
+\definecolor{bone}{HTML}{EFE6CF}
+\definecolor{caster}{HTML}{C24FA6}
+\definecolor{cloth}{HTML}{E9DCC0}
+\definecolor{cloud}{HTML}{EEF4FA}
+\definecolor{common}{HTML}{8DB05A}
+\definecolor{consumables}{HTML}{E36A8A}
+\definecolor{earth}{HTML}{9A6838}
+\definecolor{ember}{HTML}{D8421E}
+\definecolor{fire}{HTML}{EE7F22}
+\definecolor{flame}{HTML}{FF9A1F}
+\definecolor{flamehot}{HTML}{FFE15A}
+\definecolor{frost}{HTML}{4F9BDB}
+\definecolor{gold}{HTML}{F4BF3A}
+\definecolor{golddark}{HTML}{B9821F}
+\definecolor{heal}{HTML}{6ED36A}
+\definecolor{ice}{HTML}{C9EEFF}
+\definecolor{icedeep}{HTML}{6FC2EE}
+\definecolor{ink}{HTML}{2B1631}
+\definecolor{iron}{HTML}{5C6470}
+\definecolor{leaf}{HTML}{5DB04A}
+\definecolor{leather}{HTML}{8E5A36}
+\definecolor{life}{HTML}{E2364A}
+\definecolor{mana}{HTML}{3E7BE0}
+\definecolor{moss}{HTML}{6E8F45}
+\definecolor{night}{HTML}{3A2E5C}
+\definecolor{paper}{HTML}{FFF8EC}
+\definecolor{protect}{HTML}{2F6BB5}
+\definecolor{relictab}{HTML}{E8B330}
+\definecolor{rot}{HTML}{62A43A}
+\definecolor{secret}{HTML}{3D3F86}
+\definecolor{shade}{HTML}{5A4560}
+\definecolor{skin}{HTML}{F1C6A0}
+\definecolor{skingrey}{HTML}{A8A2B4}
+\definecolor{skinpale}{HTML}{E6D7C3}
+\definecolor{snow}{HTML}{FFFFFF}
+\definecolor{spark}{HTML}{FFF27A}
+\definecolor{steel}{HTML}{C9D2DC}
+\definecolor{steeldark}{HTML}{7D8896}
+\definecolor{steelrim}{HTML}{7F8C9C}
+\definecolor{stone}{HTML}{A99A86}
+\definecolor{stonedark}{HTML}{73665A}
+\definecolor{storm}{HTML}{9CCBEB}
+\definecolor{support}{HTML}{48B7C9}
+\definecolor{venom}{HTML}{9BD13B}
+\definecolor{violet}{HTML}{B57BF0}
+\definecolor{weapons}{HTML}{B8402F}
+\definecolor{wood}{HTML}{B57A45}
+\definecolor{wooddark}{HTML}{7E4F2A}
+\newlength{\Ink}\setlength{\Ink}{2.2pt}
+\tikzset{inked/.style={draw=ink,line width=\Ink,line join=round,line cap=round}}
+\begin{document}
+\begin{tikzpicture}
+\useasboundingbox (0,0) rectangle (2,2);
+\clip (0,0) rectangle (2,2);
+\filldraw[inked,fill=blood] (1,1) circle (0.9);
+\filldraw[inked,fill=blood!34!paper] (1,1) circle (0.74);
+\draw[draw=blood!45!paper,line width=2pt,line cap=round,line join=round] (0.615,1.724) -- (0.565,1.695) -- (0.518,1.663) -- (0.473,1.628) -- (0.43,1.59) -- (0.391,1.549) -- (0.354,1.505) -- (0.32,1.459) -- (0.29,1.41);
+\draw[draw=heal,line width=3pt,line cap=round,line join=round] plot[smooth, tension=0.6] coordinates {(1.56,0.48) (1.555,0.499) (1.538,0.519) (1.512,0.537) (1.475,0.554) (1.429,0.57) (1.375,0.584) (1.313,0.596) (1.245,0.606) (1.173,0.613) (1.097,0.618) (1.02,0.62) (0.941,0.619) (0.865,0.616) (0.79,0.61) (0.72,0.601) (0.655,0.59) (0.597,0.577) (0.547,0.562) (0.506,0.546) (0.474,0.528) (0.452,0.509) (0.441,0.49) (0.441,0.47) (0.452,0.451) (0.474,0.432) (0.506,0.414) (0.547,0.398) (0.597,0.383) (0.655,0.37) (0.72,0.359) (0.79,0.35) (0.865,0.344) (0.941,0.341) (1.02,0.34) (1.097,0.342) (1.173,0.347) (1.245,0.354) (1.313,0.364) (1.375,0.376) (1.429,0.39) (1.475,0.406) (1.512,0.423) (1.538,0.441) (1.555,0.461) (1.56,0.48)};
+\filldraw[inked,fill=wood,rounded corners=0.05cm] (0.8,0.43) -- (1.2,0.43) -- (1.2,1.28) -- (0.8,1.28) -- cycle;
+\filldraw[inked,fill=wooddark,rounded corners=0.03cm] (0.74,0.38) -- (1.26,0.38) -- (1.26,0.5) -- (0.74,0.5) -- cycle;
+\filldraw[inked,fill=ink] (0.92,1.06) ellipse (0.05 and 0.06);
+\filldraw[inked,fill=ink] (1.08,1.06) ellipse (0.05 and 0.06);
+\filldraw[inked,fill=ink] (0.9,0.82) -- (1.1,0.82) -- (1.1,0.92) -- (0.9,0.92) -- cycle;
+\draw[draw=ink,line width=1.2pt,line cap=round,line join=round] (0.8,0.68) -- (1.2,0.68);
+\filldraw[inked,fill=life] plot[smooth cycle, tension=0.5] coordinates {(0.8,1.32) (1,1.5) (1.2,1.32)};
+\filldraw[inked,fill=heal] (1.408,1.6) -- (1.552,1.6) -- (1.552,1.432) -- (1.72,1.432) -- (1.72,1.288) -- (1.552,1.288) -- (1.552,1.12) -- (1.408,1.12) -- (1.408,1.288) -- (1.24,1.288) -- (1.24,1.432) -- (1.408,1.432) -- cycle;
+\filldraw[inked,fill=heal] (0.452,1.34) -- (0.548,1.34) -- (0.548,1.228) -- (0.66,1.228) -- (0.66,1.132) -- (0.548,1.132) -- (0.548,1.02) -- (0.452,1.02) -- (0.452,1.132) -- (0.34,1.132) -- (0.34,1.228) -- (0.452,1.228) -- cycle;
+\end{tikzpicture}
+\end{document}

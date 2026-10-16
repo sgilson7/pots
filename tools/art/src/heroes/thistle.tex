@@ -1,0 +1,85 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{xcolor}
+\definecolor{arcane}{HTML}{8752C4}
+\definecolor{arcanetab}{HTML}{9A62D6}
+\definecolor{armaments}{HTML}{6E7FA0}
+\definecolor{attributes}{HTML}{3FA79A}
+\definecolor{basics}{HTML}{C9A46A}
+\definecolor{blood}{HTML}{C2303C}
+\definecolor{bone}{HTML}{EFE6CF}
+\definecolor{caster}{HTML}{C24FA6}
+\definecolor{cloth}{HTML}{E9DCC0}
+\definecolor{cloud}{HTML}{EEF4FA}
+\definecolor{common}{HTML}{8DB05A}
+\definecolor{consumables}{HTML}{E36A8A}
+\definecolor{earth}{HTML}{9A6838}
+\definecolor{ember}{HTML}{D8421E}
+\definecolor{fire}{HTML}{EE7F22}
+\definecolor{flame}{HTML}{FF9A1F}
+\definecolor{flamehot}{HTML}{FFE15A}
+\definecolor{frost}{HTML}{4F9BDB}
+\definecolor{gold}{HTML}{F4BF3A}
+\definecolor{golddark}{HTML}{B9821F}
+\definecolor{heal}{HTML}{6ED36A}
+\definecolor{ice}{HTML}{C9EEFF}
+\definecolor{icedeep}{HTML}{6FC2EE}
+\definecolor{ink}{HTML}{2B1631}
+\definecolor{iron}{HTML}{5C6470}
+\definecolor{leaf}{HTML}{5DB04A}
+\definecolor{leather}{HTML}{8E5A36}
+\definecolor{life}{HTML}{E2364A}
+\definecolor{mana}{HTML}{3E7BE0}
+\definecolor{moss}{HTML}{6E8F45}
+\definecolor{night}{HTML}{3A2E5C}
+\definecolor{paper}{HTML}{FFF8EC}
+\definecolor{protect}{HTML}{2F6BB5}
+\definecolor{relictab}{HTML}{E8B330}
+\definecolor{rot}{HTML}{62A43A}
+\definecolor{secret}{HTML}{3D3F86}
+\definecolor{shade}{HTML}{5A4560}
+\definecolor{skin}{HTML}{F1C6A0}
+\definecolor{skingrey}{HTML}{A8A2B4}
+\definecolor{skinpale}{HTML}{E6D7C3}
+\definecolor{snow}{HTML}{FFFFFF}
+\definecolor{spark}{HTML}{FFF27A}
+\definecolor{steel}{HTML}{C9D2DC}
+\definecolor{steeldark}{HTML}{7D8896}
+\definecolor{steelrim}{HTML}{7F8C9C}
+\definecolor{stone}{HTML}{A99A86}
+\definecolor{stonedark}{HTML}{73665A}
+\definecolor{storm}{HTML}{9CCBEB}
+\definecolor{support}{HTML}{48B7C9}
+\definecolor{venom}{HTML}{9BD13B}
+\definecolor{violet}{HTML}{B57BF0}
+\definecolor{weapons}{HTML}{B8402F}
+\definecolor{wood}{HTML}{B57A45}
+\definecolor{wooddark}{HTML}{7E4F2A}
+\newlength{\Ink}\setlength{\Ink}{2.2pt}
+\tikzset{inked/.style={draw=ink,line width=\Ink,line join=round,line cap=round}}
+\begin{document}
+\begin{tikzpicture}
+\useasboundingbox (0,0) rectangle (2,2);
+\clip (0,0) rectangle (2,2);
+\filldraw[inked,fill=frost] (1,1) circle (0.9);
+\filldraw[inked,fill=frost!34!paper] (1,1) circle (0.74);
+\draw[draw=frost!45!paper,line width=2pt,line cap=round,line join=round] (0.615,1.724) -- (0.565,1.695) -- (0.518,1.663) -- (0.473,1.628) -- (0.43,1.59) -- (0.391,1.549) -- (0.354,1.505) -- (0.32,1.459) -- (0.29,1.41);
+\begin{scope}
+\clip (1,1) circle (0.74);
+\filldraw[inked,fill=leather,rounded corners=0.04cm] (0.409,0.459) -- (0.591,0.541) -- (0.339,1.107) -- (0.156,1.026) -- cycle;
+\filldraw[inked,fill=wood] (0.192,1.02) -- (0.229,1.036) -- (0.098,1.328) -- (0.062,1.312) -- cycle;
+\filldraw[inked,fill=ice] (0.033,1.277) -- (0.143,1.326) -- (0.039,1.411) -- cycle;
+\filldraw[inked,fill=wood] (0.283,1.06) -- (0.32,1.077) -- (0.214,1.314) -- (0.178,1.298) -- cycle;
+\filldraw[inked,fill=ice] (0.149,1.263) -- (0.259,1.312) -- (0.155,1.397) -- cycle;
+\filldraw[inked,fill=moss] plot[smooth cycle, tension=0.4] coordinates {(0.28,0) (0.28,0.44) (0.46,0.56) (1.54,0.56) (1.72,0.44) (1.72,0)};
+\filldraw[inked,fill=leaf] plot[smooth cycle, tension=0.5] coordinates {(0.56,0.44) (0.58,0.9) (0.72,1.3) (1,1.66) (1.24,1.36) (1.4,1) (1.44,0.44)};
+\filldraw[inked,fill=shade] plot[smooth cycle, tension=0.6] coordinates {(0.74,0.8) (0.78,1.08) (1,1.24) (1.22,1.08) (1.26,0.8) (1,0.64)};
+\filldraw[inked,fill=skin] plot[smooth cycle, tension=0.6] coordinates {(0.8,0.84) (0.82,0.96) (1.18,0.96) (1.2,0.84) (1,0.66)};
+\filldraw[inked,fill=ice] (0.9,0.98) ellipse (0.05 and 0.03);
+\filldraw[inked,fill=ice] (1.1,0.98) ellipse (0.05 and 0.03);
+\draw[draw=moss,line width=1.2pt,line cap=round,line join=round] (0.72,1.3) -- (1,1.62);
+\filldraw[inked,fill=leaf] plot[smooth cycle, tension=0.5] coordinates {(1.265,0.613) (1.266,0.51) (1.21,0.434) (1.145,0.405) (1.138,0.476) (1.176,0.562)};
+\draw[draw=ink,line width=1.2pt,line cap=round,line join=round] (1.145,0.405) -- (1.249,0.586);
+\end{scope}
+\draw[inked] (1,1) circle (0.74);
+\end{tikzpicture}
+\end{document}
