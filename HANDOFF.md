@@ -25,7 +25,17 @@ The person asked for a cuter, rounder style after Chumbles (Long Time Comin') an
 
 Checked: `./scripts/check.sh` passed after these changes (**BUILDER CHECK PASSED**, browser check in Chromium, Firefox and WebKit); `./scripts/count-tests.sh` 96 passed, 0 failed, 4 ignored. The journal tab was looked at in Chromium at 1280 and 400 px wide, with no sideways scroll.
 
-Open for the person from round 2: **R2.5** (bring the game camera down from 56° so faces show?), **R2.6** (does the style suit; which models or animations to redo, by id), **R2.7** (did "voxel" mean this rounded look or small cubes?).
+The person answered "looks amazing" (R2.5 to R2.7 closed).
+
+## Round 2, continued (16 October 2026): the look in the game, build trees, the locked cursor (T2, T3, T4)
+
+- **The look in the game (T3).** `data/models.json` is now written by `tools/modelport.py` from the mockups (`journal/mockups/shoot.py export` writes `tools/art2_models.json` first); heads tip back 12° for the 56° camera. New `Taper` mesh, smooth 20-sided cylinders and cones, 12 × 20 spheres. Soft light in `data/shaders/scene.frag` (wrap, a gentle ramp, a sky fill and a ground bounce; numbers in `data/presentation.json` `bands`, `ambient`, `ground`). The map's colours are the mockups' pastel ones.
+- **Ability effects (T3).** The rules leave `World::marks` (cast, fire, land, proc), kept four seconds and left out of the checksum. `crates/core/src/marks.rs` draws them, the missiles, the zones and every unit's status (stun stars, silence bubble, slow frost, ice for a root, buff rings, damage-over-time puffs, spinning blades, channel tethers), each ability's look in `data/presentation.json` `fx`. The `cast:<ability>,<ticks>` stage (`Game::cast_world`) shows any ability; `tests/marks.rs` casts all 41.
+- **Build trees (T2).** A click in the shop picks the item and shows its tree (`item::tree`, `ui::build_panel`); the tree's Buy button buys. Picking is the page's state, never an order.
+- **The locked cursor (T4).** In a match the page draws its own cursor; a click on the battlefield locks the pointer to the window and the core moves the drawn cursor (`Game::nudge`); every edge pans the camera, including the bottom and left under the HUD and the minimap (R2.15).
+- **The page's DOM sync** now keeps a node whose own part did not change (R2.17).
+
+Open for the person from round 2: **R2.16** (try the locked cursor by hand: automated browsers cannot lock the pointer).
 
 ## What passed
 

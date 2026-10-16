@@ -71,8 +71,16 @@ impl Game {
         self.inner.frame((now_ms * 1000.0) as i64)
     }
 
-    pub fn pointer(&mut self, x: f64, y: f64, inside: bool) {
-        self.inner.pointer_move(x as i32, y as i32, inside)
+    pub fn pointer(&mut self, x: f64, y: f64, over_view: bool) {
+        self.inner.pointer_move(x as i32, y as i32, over_view)
+    }
+
+    pub fn nudge(&mut self, dx: f64, dy: f64) -> Vec<i32> {
+        self.inner.nudge(dx as i32, dy as i32).to_vec()
+    }
+
+    pub fn pointer_out(&mut self) {
+        self.inner.pointer_out()
     }
 
     pub fn click(&mut self, button: i32, x: f64, y: f64) {

@@ -168,6 +168,35 @@ groups_html = "\n".join(
 
 REQUEST = "I'd like to make the game more cutsy / better art style, everything is too blocky for my liking. take a look at the voxel, sphere inspired design of chumbles in long time comin, and the work currently being done on mage tower battle in the journal for inspirations of how to redesign the characters, specifically the 3d models for everything. make a new tab for these changes and make a mock up of every 3d model with the new art style, with a screenshot for each one, and then animations for every ability in the game so you can tell when they are occurring, also in the art style, with a screen shot / gif for each one and a description. do the artsttyle update analysis, make the mockups, then create the design journal tab for my review"
 
+ASKS = [
+    ("T2", "Build trees in the shop", "looks amazing, only thing I'd like for you to add is build trees in the shop, so for the more complicated items, you can tell what pieces they are made out of, like in league or dota. take care to not break the online implementation at all, and make sure to play the 5v5 with runners to test it after the changes are made.",
+     "A click on an item now picks it and shows its tree: the item on top, its parts below, their parts below those, the recipe's cost, the parts you already carry ringed in green and taken off the price, and what the item builds into. The Buy button buys. Picking is the page's own state and never an order, so online play cannot see it; a test runs two matches, one with picking, and compares them."),
+    ("T3", "The new look, in the game", "add all of these asks to the journal tab you just made, then begin work keep working until the new version is live.",
+     "The game now draws the models from this tab: they are exported from the mockups and converted to the game's shapes, so the two cannot drift. The light is soft, with a sky fill and a warm bounce in place of the hard bands; spheres and cylinders are smoother; heads tip back a little so faces show from the game's camera. Every ability leaves marks the scene draws: the glow in the caster's hands, missiles, a warning ring before a delayed blast, the blast, beams and waves, clouds, and a mark on whoever is held (stars, a crossed bubble, frost, ice, a ring for a buff). The marks are kept out of the online checksum."),
+    ("T4", "A locked, drawn cursor", "when you're playing you should have a stylized locked cursor so your mouse cant leave the window, cause current  mouse movement of the camera constantly goes off the page, and doesn't work well down and to the left",
+     "In a match the game draws its own cursor: a gold arrow, red over an enemy, a ring while aiming. A click on the battlefield locks the pointer to the window; the drawn cursor stops at every edge, and every edge pans. The bottom and left were broken for a reason of their own: the bar and the minimap cover those edges, and the page stopped reporting the pointer over them. Esc lets go."),
+]
+GAME_PICS = [
+    ("game_heroes_1", "The first five heroes, drawn by the game itself."), ("game_heroes_2", "The other five."),
+    ("game_creeps", "Lane creeps in the game."), ("game_buildings", "Towers, barracks and the Spheres in the game."),
+    ("game_lane", "A lane early in a match between computer players."), ("game_shop", "The build tree of the Reaping Axe: one of its parts is itself built from two."),
+    ("game_storm_bolt", "Vow Hammer landing: the gold ring and the stun stars."), ("game_light_strike_array", "Pillar of Flame's warning before it lands."),
+    ("game_laguna_blade", "Searing Lance."), ("game_frostbite", "Ice Shackle: the target frozen in ice."),
+    ("game_arc_lightning", "Forked Spark leaping between creeps."), ("game_silence", "Hush: crossed bubbles over the silenced."),
+    ("game_rot", "Carrion Cloud round Gristle."), ("game_blade_fury", "Whirling Edge."),
+]
+for n, _ in GAME_PICS:
+    if not (ART / "game" / f"{n}.jpg").exists():
+        missing.append(f"game picture {n}")
+NEXT = f'''<section>
+  <div class="section-head"><div class="eyebrow">After your review</div><h2>Your next asks, and the version built from them</h2></div>
+  <p>You answered this tab with three more asks. Each is a numbered row in <code>TRIAGE.md</code>, and each is built.</p>
+  {"".join(f'<div class="card"><h3>{e(t)} · {e(title)}</h3><blockquote>{e(q)}</blockquote><p>{e(done)}</p></div>' for t, title, q, done in ASKS)}
+  <div class="section-head"><div class="eyebrow">In the game</div><h2>Drawn by the game, not the mockups</h2></div>
+  <p>Screenshots of the built game (<code>tools/shots.py</code>, <code>?tile=lineup:…</code>, <code>match:…</code> and the new <code>cast:&lt;ability&gt;,&lt;ticks&gt;</code> stage, which sets up a hero, an ally, an enemy hero and three creeps and casts one ability).</p>
+  <div class="mgrid">{"".join(f'<figure class="mcard"><button class="zoom" data-full="art2/game/{n}.jpg" data-cap="{e(c)}"><img loading="lazy" src="art2/game/{n}.jpg" alt="{e(c)}"></button><figcaption><span>{e(c)}</span></figcaption></figure>' for n, c in GAME_PICS)}</div>
+</section>'''
+
 PANEL = f'''<!-- ======================================================= TAB 8 -->
 <div class="panel-tab" role="tabpanel" id="p-art" aria-labelledby="t-art" hidden>
 <header style="display:grid;gap:12px">
@@ -259,6 +288,8 @@ PANEL = f'''<!-- ======================================================= TAB 8 -
   <p>Each animation loops and shows the four beats. The rule under each is the game's own tip, printed by the core (<code>cargo run -p pots_core --example tips</code>). Click an animation for its sharpest frame. Big areas are drawn smaller to fit, and long effects are shortened; the description says where.</p>
   {ability_sections()}
 </section>
+
+{NEXT}
 
 <section>
   <div class="section-head"><div class="eyebrow">Next round</div><h2>What the game needs to draw this</h2></div>

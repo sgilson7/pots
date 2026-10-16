@@ -152,5 +152,12 @@
   "find": "        let pct = a.v(\"pct\", lv);\n        w.mark(MK_PROC, k, src, dst, dst_pos);",
   "replace": "        let pct = a.v(\"pct\", lv);",
   "test": "an_attack_passive_shows_when_it_fires"
+ },
+ {
+  "name": "the HUD stops the edge pan",
+  "file": "crates/core/src/game.rs",
+  "find": "        self.pointer_in = true;\n        self.pointer_view = over_view;",
+  "replace": "        self.pointer_in = over_view;\n        self.pointer_view = over_view;",
+  "test": "the_bottom_left_corner_pans_down_and_left_over_the_hud"
  }
 ]

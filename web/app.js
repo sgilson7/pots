@@ -84,6 +84,25 @@ function hideTip() {
   tipBox().hidden = true;
 }
 
+// A node's own part, without its children: when only the children change,
+// the element is kept and its children are matched (so the HUD's clock
+// ticking does not rebuild the shop inside it, T2).
+function ownOf(n) {
+  const rest = Object.assign({}, n);
+  delete rest.n;
+  return JSON.stringify(rest);
+}
+
+// The children an element gets: an icon or a text beside children becomes
+// a child of its own, so the keyed children below keep them.
+function kidsOf(n) {
+  const kids = n.n || [];
+  const extra = [];
+  if (n.i && n.t !== "img") extra.push({ t: "img", c: "slot-icon", i: n.i, k: "icon" });
+  if (n.x && kids.length) extra.push({ t: "span", c: "label", x: n.x, k: "label" });
+  return extra.concat(kids);
+}
+
 // Builds one node; its JSON is kept on the element so an unchanged node is reused.
 function build(n) {
   const node = document.createElement(n.t);
@@ -92,12 +111,7 @@ function build(n) {
     node.src = n.i;
     node.alt = "";
   }
-  // an icon or a text beside children becomes a child of its own, so the
-  // keyed children below keep them
   const kids = n.n || [];
-  const extra = [];
-  if (n.i && n.t !== "img") extra.push({ t: "img", c: "slot-icon", i: n.i, k: "icon" });
-  if (n.x && kids.length) extra.push({ t: "span", c: "label", x: n.x, k: "label" });
   if (n.x && !kids.length) node.textContent = n.x;
   for (const [k, v] of n.s || []) node.style.setProperty(k, v);
   if (n.a) {
@@ -113,7 +127,9 @@ function build(n) {
     node.dataset.term = n.term;
     node.title = hints.get(n.term);
   }
-  if (extra.length || kids.length) sync(node, extra.concat(kids));
+  const all = kidsOf(n);
+  if (all.length) sync(node, all);
+  node.own = ownOf(n);
   return node;
 }
 
@@ -126,6 +142,11 @@ function sync(parent, kids) {
     const json = JSON.stringify(k);
     const prev = byKey.get(key);
     if (prev && prev.json === json) return prev;
+    if (prev && prev.own === ownOf(k) && (k.n || []).length) {
+      sync(prev, kidsOf(k));
+      prev.json = json;
+      return prev;
+    }
     const made = build(k);
     made.jsonKey = key;
     made.json = json;
@@ -143,6 +164,8 @@ function drawUi(force) {
   document.title = v.title;
   document.body.dataset.screen = v.screen;
   document.body.dataset.cursor = v.cursor;
+  // the lock is the match's: leaving the match lets go of the pointer
+  if (v.screen !== "match" && document.pointerLockElement) document.exitPointerLock();
   el("notice").textContent = v.notice;
   sync(el("ui"), [v.root]);
 }
@@ -173,31 +196,90 @@ function wireInput(canvas) {
     if (!tipBox().hidden) moveTip(e);
   });
   el("ui").addEventListener("mouseleave", hideTip);
-  const local = (e) => {
-    const r = canvas.getBoundingClientRect();
-    return [e.clientX - r.left, e.clientY - r.top];
+  // The pointer (T4). In a match the page draws its own cursor; a click on
+  // the battlefield locks the real pointer to the window, so it cannot
+  // leave it, and the drawn cursor moves by the mouse's movement and stops
+  // at the window's edges, where the core pans the camera. Under the lock
+  // every mouse event comes to the body, so the page sends each one on to
+  // whatever lies under the drawn cursor. Esc lets go, as browsers do.
+  const miniCanvas = el("minimap-top");
+  const cursor = el("cursor");
+  const pos = { x: 0, y: 0, over: null };
+  const locked = () => document.pointerLockElement === document.body;
+  const inMatch = () => document.body.dataset.screen === "match";
+  const local = (node, x, y) => {
+    const r = node.getBoundingClientRect();
+    return [x - r.left, y - r.top];
   };
-  canvas.addEventListener("mousemove", (e) => {
-    const [x, y] = local(e);
-    game.pointer(x, y, true);
+  function point(x, y, target) {
+    pos.x = x;
+    pos.y = y;
+    cursor.style.setProperty("--x", `${x}px`);
+    cursor.style.setProperty("--y", `${y}px`);
+    const [cx, cy] = local(canvas, x, y);
+    game.pointer(cx, cy, target === canvas);
+    if (locked() && target !== pos.over) {
+      // the drawn cursor entered another element: tips open as they would
+      if (pos.over) pos.over.dispatchEvent(new MouseEvent("mouseout", { bubbles: true, clientX: x, clientY: y }));
+      if (target) target.dispatchEvent(new MouseEvent("mouseover", { bubbles: true, clientX: x, clientY: y }));
+    }
+    if (locked() && target) target.dispatchEvent(new MouseEvent("mousemove", { bubbles: true, clientX: x, clientY: y }));
+    pos.over = target;
+  }
+  function press(e, target, x, y) {
+    if (target === canvas) {
+      const [cx, cy] = local(canvas, x, y);
+      game.click(e.button, cx, cy);
+      drawUi(true);
+    } else if (target === miniCanvas) {
+      const [mx, my] = local(miniCanvas, x, y);
+      game.minimap_click(e.button, mx, my);
+    }
+  }
+  document.addEventListener("mousemove", (e) => {
+    if (locked()) {
+      // the core moves the drawn cursor and stops it at the edges
+      const [x, y] = game.nudge(e.movementX, e.movementY);
+      point(x, y, document.elementFromPoint(x, y));
+    } else {
+      point(e.clientX, e.clientY, e.target);
+    }
   });
-  canvas.addEventListener("mouseleave", () => game.pointer(0, 0, false));
-  canvas.addEventListener("mousedown", (e) => {
-    const [x, y] = local(e);
-    game.click(e.button, x, y);
-    drawUi(true);
+  document.documentElement.addEventListener("mouseleave", () => {
+    if (!locked()) game.pointer_out();
   });
-  canvas.addEventListener("contextmenu", (e) => e.preventDefault());
-  canvas.addEventListener("wheel", (e) => {
+  document.addEventListener("mousedown", (e) => {
+    if (locked()) {
+      e.preventDefault();
+      const target = document.elementFromPoint(pos.x, pos.y);
+      press(e, target, pos.x, pos.y);
+      return;
+    }
+    if (e.target !== canvas && e.target !== miniCanvas) return;
+    press(e, e.target, e.clientX, e.clientY);
+    if (e.target === canvas && inMatch() && document.body.requestPointerLock) {
+      const ask = document.body.requestPointerLock();
+      if (ask && ask.catch) ask.catch(() => {});
+    }
+  });
+  document.addEventListener("click", (e) => {
+    // under the lock the click is the body's: hand it to the element under the cursor
+    if (!locked() || e.target !== document.body) return;
+    const target = document.elementFromPoint(pos.x, pos.y);
+    if (target && target !== canvas && target !== miniCanvas) target.click();
+  });
+  document.addEventListener("pointerlockchange", () => {
+    document.body.dataset.locked = String(locked());
+  });
+  document.addEventListener("contextmenu", (e) => {
+    if (inMatch()) e.preventDefault();
+  });
+  document.addEventListener("wheel", (e) => {
+    const target = locked() ? document.elementFromPoint(pos.x, pos.y) : e.target;
+    if (target !== canvas) return;
     e.preventDefault();
     game.wheel(e.deltaY);
   }, { passive: false });
-  const miniCanvas = el("minimap-top");
-  miniCanvas.addEventListener("mousedown", (e) => {
-    const r = miniCanvas.getBoundingClientRect();
-    game.minimap_click(e.button, e.clientX - r.left, e.clientY - r.top);
-  });
-  miniCanvas.addEventListener("contextmenu", (e) => e.preventDefault());
   const typing = (e) => e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement;
   window.addEventListener("keydown", (e) => {
     if (typing(e)) return;

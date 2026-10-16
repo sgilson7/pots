@@ -123,6 +123,8 @@ pub struct Game {
     pub dpr: i32,
     pub pointer: (i32, i32),
     pub pointer_in: bool,
+    /// Whether the pointer is over the 3D view itself, not the HUD on it.
+    pub pointer_view: bool,
     pub hover: Uid,
     pub selected: Uid,
     pub held: Vec<String>,
@@ -225,6 +227,7 @@ impl Game {
             dpr: 100,
             pointer: (0, 0),
             pointer_in: false,
+            pointer_view: false,
             hover: NO_UNIT,
             selected: NO_UNIT,
             held: Vec::new(),
@@ -558,12 +561,34 @@ impl Game {
             .unwrap_or(NO_UNIT)
     }
 
-    pub fn pointer_move(&mut self, x: i32, y: i32, inside: bool) {
+    /// The pointer moved to (x, y) in the window; `over_view` when it is on
+    /// the 3D view rather than the HUD, the minimap or a panel. The edge of
+    /// the window pans the camera whatever is under the pointer, so the
+    /// bottom and left edges, under the HUD and the minimap, pan too (T4).
+    pub fn pointer_move(&mut self, x: i32, y: i32, over_view: bool) {
         self.pointer = (x, y);
-        self.pointer_in = inside;
+        self.pointer_in = true;
+        self.pointer_view = over_view;
         if self.screen == "match" {
-            self.hover = self.unit_at(x, y);
+            self.hover = if over_view { self.unit_at(x, y) } else { NO_UNIT };
         }
+    }
+
+    /// The locked pointer moved by (dx, dy): the drawn cursor moves as far,
+    /// and stops at the window's edges. Returns where it now is; the page
+    /// then reports what lies there with `pointer_move`.
+    pub fn nudge(&mut self, dx: i32, dy: i32) -> [i32; 2] {
+        let x = (self.pointer.0 + dx).clamp(0, self.width - 1);
+        let y = (self.pointer.1 + dy).clamp(0, self.height - 1);
+        self.pointer = (x, y);
+        [x, y]
+    }
+
+    /// The pointer left the window.
+    pub fn pointer_out(&mut self) {
+        self.pointer_in = false;
+        self.pointer_view = false;
+        self.hover = NO_UNIT;
     }
 
     pub fn command(&mut self, c: Cmd) {
