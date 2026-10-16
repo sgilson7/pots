@@ -37,8 +37,8 @@ with sync_playwright() as p:
     host.click("[data-a='online.start']")
     time.sleep(20)
     if "--rejoin" in sys.argv:
-        url = pgs[1].url
-        print("joiner hash:", pgs[1].evaluate("location.hash"), "host hash:", host.evaluate("location.hash"))
+        url = pgs[1].evaluate("location.href")
+        print("joiner hash:", pgs[1].evaluate("location.hash"), "joiner token:", probe(pgs[1])["net"].get("token"), "host tokens:", probe(host)["net"].get("tokens"))
         print("dropping the joiner; its link is", url)
         bs[1].close()
         time.sleep(15)
@@ -47,13 +47,19 @@ with sync_playwright() as p:
         pgs[1] = bs[1].new_page(viewport={"width": 1280, "height": 720})
         pgs[1].on("console", lambda m: logs[1].append(f"{m.type}: {m.text}"))
         pgs[1].goto(url)
+        seen = []
+        for _ in range(24):
+            time.sleep(0.25)
+            n = probe(pgs[1]).get("net", {})
+            seen.append((n.get("token"), n.get("status"), n.get("seat")))
+        print("token over time:", seen)
         for _ in range(40):
             time.sleep(1)
             n = probe(pgs[1]).get("net", {})
             if n.get("started") and not n.get("catching"):
                 break
-        print("rejoined:", json.dumps(probe(pgs[1]).get("net", {}))[:400])
-        print("host at the rejoin:", json.dumps(probe(host).get("net", {}))[:500])
+        print("rejoined:", json.dumps({k: probe(pgs[1]).get("net", {}).get(k) for k in ("seat","status","catching","confirmed","token")}))
+        print("host at the rejoin:", json.dumps({k: probe(host).get("net", {}).get(k) for k in ("seats","tokens","away","peers")}))
     time.sleep(20)
     for k, pg in enumerate(pgs):
         print(k, json.dumps(probe(pg))[:600])

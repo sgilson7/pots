@@ -162,7 +162,7 @@ def main():
                     r.poke()
             if dropped_url is None and now >= drop_at:
                 victim = runners[DROP_RUNNER]
-                dropped_url = victim.page.url
+                dropped_url = victim.page.evaluate("location.href")
                 log(event="drop", runner=DROP_RUNNER + 1, url=dropped_url)
                 victim.close()
                 victim.page = None
