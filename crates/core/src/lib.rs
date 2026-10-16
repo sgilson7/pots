@@ -1,13 +1,29 @@
-//! tool_core: every application rule of the tool.
+//! pots_core: every rule of Protection of the Spheres.
 //!
 //! Builder requirement: this crate performs no input or output. It takes
 //! values and returns values, so `cargo test` reaches every rule without a
 //! browser. `tests/boundary.rs` enforces that, along with the dependency
 //! allowlist and the reference ban on floats, hash maps and clocks.
-//!
-//! Replace the placeholder rule in `page.rs` with the rules your brief
-//! describes. Keep `api.rs` as the one door the shim calls through.
 
+pub mod ability;
+pub mod ai;
 pub mod api;
+pub mod combat;
+pub mod courier;
+pub mod fx;
+pub mod geom;
 pub mod glossary;
-pub mod page;
+pub mod item;
+pub mod lanes;
+pub mod map;
+pub mod mesh;
+pub mod models;
+pub mod orders;
+pub mod path;
+pub mod render;
+pub mod rng;
+pub mod rules;
+pub mod scene;
+pub mod stats;
+pub mod vision;
+pub mod world;

@@ -12,6 +12,6 @@
 # Needs: cargo install cargo-mutants --locked
 set -euo pipefail
 cd "$(dirname "$0")/.."
-cargo mutants --package tool_core --jobs 4 "$@"
+cargo mutants --package pots_core --jobs 4 "$@"
 echo "Missed mutants, if any, are listed in mutants.out/missed.txt."
 echo "Each one is either a missing test or a boundary the brief has not decided."

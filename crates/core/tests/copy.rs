@@ -15,7 +15,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use tool_core::glossary;
+use pots_core::glossary;
 
 /// (file name, word, reason): a ruled-out word that is right in one file.
 const ALLOWED: &[(&str, &str, &str)] = &[];

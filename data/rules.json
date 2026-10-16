@@ -1,0 +1,301 @@
+{
+ "tables": {
+  "xp_levels": [
+   200,
+   500,
+   900,
+   1400,
+   2000,
+   2700,
+   3500,
+   4400,
+   5400,
+   6500,
+   7700,
+   9000,
+   10400,
+   11900,
+   13500,
+   15200,
+   17000,
+   18900,
+   20900,
+   23000,
+   25200,
+   27500,
+   29900,
+   32400
+  ],
+  "max_level": 25,
+  "starting_gold": 603,
+  "periodic_gold": 1,
+  "periodic_every": 88,
+  "horn": 60,
+  "wave_every": 30,
+  "siege_every": 7,
+  "creeps_melee": 3,
+  "creeps_ranged": 1,
+  "creep_upgrade_every": 450,
+  "creep_upgrade_max": 30,
+  "neutral_every": 60,
+  "neutral_first": 30,
+  "rune_every": 120,
+  "boss_respawn": [
+   600,
+   600
+  ],
+  "day_length": 360,
+  "hp_per_str": 19,
+  "hp_regen_per_str": 3,
+  "mana_per_int": 13,
+  "mana_regen_per_int": 4,
+  "armor_per_agi": 14,
+  "as_per_agi": 1,
+  "hero_base_hp": 150,
+  "max_move_speed": 522,
+  "min_move_speed": 100,
+  "max_attack_speed": 400,
+  "min_attack_speed": -80,
+  "armor_factor": 600,
+  "xp_radius": 1200,
+  "respawn_per_level": 4,
+  "buyback_base": 100,
+  "buyback_per_level_sq": 150,
+  "buyback_per_minute": 15,
+  "buyback_cooldown": 300,
+  "kill_gold_base": 200,
+  "kill_gold_per_level": 5,
+  "streak_gold": [
+   50,
+   100,
+   150,
+   200,
+   250,
+   300,
+   350,
+   400
+  ],
+  "death_gold_per_level": 30,
+  "deny_below": 50,
+  "shop_range": 600,
+  "fountain_regen": 4,
+  "fountain_range": 825,
+  "uphill_miss": 25,
+  "tree_regrow": 300,
+  "creep_aggro_range": 500,
+  "creep_aggro_time": 2,
+  "stat_bonus": 2,
+  "stat_bonus_max": 10,
+  "glyph_time": 4,
+  "glyph_cooldown": 300,
+  "first_blood_gold": 200,
+  "assist_gold": [
+   [
+    95,
+    9
+   ],
+   [
+    20,
+    8
+   ],
+   [
+    10,
+    6
+   ],
+   [
+    0,
+    6
+   ],
+   [
+    0,
+    6
+   ]
+  ],
+  "assist_radius": 1000,
+  "deny_xp_melee": 36,
+  "deny_xp_ranged": 18,
+  "hero_magic_resist": 25,
+  "fountain_mana": 1400,
+  "extra_melee_at": [
+   999,
+   1999,
+   2999
+  ],
+  "extra_ranged_at": [
+   2699
+  ],
+  "boss_growth_every": 300,
+  "boss_growth_hp": 500,
+  "boss_growth_damage": 10,
+  "tower_team_gold": [
+   0,
+   160,
+   190,
+   220,
+   250
+  ],
+  "backdoor_calm": 15,
+  "backdoor_radius": 900,
+  "backdoor_regen": 9000,
+  "buyback_round": 50,
+  "hero_kill_xp": [
+   100,
+   120,
+   160,
+   220,
+   300,
+   400,
+   500,
+   600,
+   700,
+   800,
+   900,
+   1000,
+   1100,
+   1200,
+   1300,
+   1400,
+   1500,
+   1600,
+   1700,
+   1800,
+   1900,
+   2000,
+   2100,
+   2200,
+   2300
+  ],
+  "hero_kill_bonus": [
+   [
+    120,
+    20
+   ],
+   [
+    90,
+    15
+   ],
+   [
+    30,
+    7
+   ],
+   [
+    15,
+    6
+   ],
+   [
+    10,
+    5
+   ]
+  ]
+ },
+ "damage": {
+  "attack": [
+   "normal",
+   "pierce",
+   "siege",
+   "chaos",
+   "hero",
+   "magic"
+  ],
+  "armor": [
+   "unarmored",
+   "light",
+   "normal",
+   "heavy",
+   "fortified",
+   "hero"
+  ],
+  "percent": [
+   [
+    100,
+    100,
+    150,
+    125,
+    70,
+    75
+   ],
+   [
+    150,
+    200,
+    75,
+    75,
+    35,
+    50
+   ],
+   [
+    100,
+    100,
+    50,
+    125,
+    150,
+    75
+   ],
+   [
+    100,
+    100,
+    100,
+    100,
+    40,
+    100
+   ],
+   [
+    100,
+    100,
+    100,
+    100,
+    50,
+    100
+   ],
+   [
+    100,
+    100,
+    100,
+    100,
+    100,
+    100
+   ]
+  ]
+ },
+ "heroes": [
+  {
+   "unit": "ironvow",
+   "after": "Sven"
+  },
+  {
+   "unit": "rime",
+   "after": "Crystal Maiden"
+  },
+  {
+   "unit": "cinder",
+   "after": "Lina"
+  },
+  {
+   "unit": "thistle",
+   "after": "Drow Ranger"
+  },
+  {
+   "unit": "gristle",
+   "after": "Pudge"
+  },
+  {
+   "unit": "tectus",
+   "after": "Earthshaker"
+  },
+  {
+   "unit": "kestrel",
+   "after": "Juggernaut"
+  },
+  {
+   "unit": "hexwright",
+   "after": "Lion"
+  },
+  {
+   "unit": "longwick",
+   "after": "Sniper"
+  },
+  {
+   "unit": "tempest",
+   "after": "Zeus"
+  }
+ ]
+}

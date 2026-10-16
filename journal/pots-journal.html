@@ -1,0 +1,203 @@
+<title>Protection of the Spheres Journal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus+SC&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column under a tab bar; each tab is one round of work. Tables, model sheets and the map break out to the full 1040px. */
+:root {
+  --bg: #eceee9;
+  --surface: #f9faf7;
+  --fg: #1c221f;
+  --muted: #56605a;
+  --rule: #cfd4cc;
+  --accent: #2c56c4;
+  --accent-soft: #dfe6f8;
+  --sun: #b35f0e;
+  --sun-soft: #f6e6d4;
+  --moon: #5a4bb8;
+  --moon-soft: #e6e3f6;
+  --ok: #24724c;
+  --ok-soft: #dcefe3;
+  --font-display: "Marcellus SC", "Trajan Pro", Georgia, serif;
+  --font-body: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121614; --surface: #1a1f1c; --fg: #e4e8e3; --muted: #9aa49d; --rule: #2d3530;
+    --accent: #8eaaff; --accent-soft: #1f2a48;
+    --sun: #f0a75a; --sun-soft: #3a2814; --moon: #b0a6ff; --moon-soft: #29243f;
+    --ok: #74d3a1; --ok-soft: #173326;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121614; --surface: #1a1f1c; --fg: #e4e8e3; --muted: #9aa49d; --rule: #2d3530;
+  --accent: #8eaaff; --accent-soft: #1f2a48;
+  --sun: #f0a75a; --sun-soft: #3a2814; --moon: #b0a6ff; --moon-soft: #29243f;
+  --ok: #74d3a1; --ok-soft: #173326;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6; }
+.wrap {
+  max-width: 1040px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 44px 80px;
+  display: grid; gap: 48px;
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; margin: 0; line-height: 1.15; text-wrap: balance; }
+h1 { font-size: clamp(32px, 6vw, 54px); letter-spacing: .01em; }
+h2 { font-size: clamp(24px, 3.6vw, 32px); }
+h3 { font-size: 20px; }
+p { margin: 0; max-width: 68ch; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 18px; color: var(--muted); max-width: 66ch; }
+section { display: grid; gap: 18px; }
+.section-head { display: grid; gap: 6px; border-top: 2px solid var(--fg); padding-top: 14px; }
+.section-head .eyebrow { color: var(--accent); }
+.note { background: var(--accent-soft); border-radius: 10px; padding: 16px 18px; display: grid; gap: 6px; max-width: 76ch; }
+code { font-family: var(--font-mono); font-size: .88em; background: var(--surface); border: 1px solid var(--rule); padding: 0 5px; border-radius: 4px; }
+blockquote { margin: 0; padding: 14px 18px; border-left: 3px solid var(--accent); background: var(--surface); font-size: 15px; color: var(--muted); max-width: 80ch; }
+
+.table-scroll { overflow-x: auto; border: 1px solid var(--rule); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.chip { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; white-space: nowrap; display: inline-block; }
+.chip.sun { background: var(--sun-soft); color: var(--sun); }
+.chip.moon { background: var(--moon-soft); color: var(--moon); }
+.chip.ok { background: var(--ok-soft); color: var(--ok); }
+.chip.acc { background: var(--accent-soft); color: var(--accent); }
+
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--rule); counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 4px 16px; padding: 16px 0; border-bottom: 1px solid var(--rule); counter-increment: s; }
+.steps li::before { content: counter(s); font-family: var(--font-display); font-size: 26px; color: var(--accent); line-height: 1.1; }
+.steps li > div { display: grid; gap: 6px; min-width: 0; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 18px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card ul { margin: 0; padding-left: 18px; display: grid; gap: 5px; }
+.card .src { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+figure { margin: 0; display: grid; gap: 8px; }
+figure img { display: block; width: 100%; border-radius: 10px; border: 1px solid var(--rule); background: #0d1210; }
+figcaption { font-size: 14px; color: var(--muted); }
+
+.journal-head { display: grid; gap: 14px; }
+.tabbar { display: flex; gap: 4px; overflow-x: auto; border-bottom: 1px solid var(--rule); scrollbar-width: thin; }
+.tabbar button { font: inherit; font-size: 14px; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 10px 12px 12px; border-bottom: 3px solid transparent; white-space: nowrap; display: grid; gap: 2px; text-align: left; }
+.tabbar button small { font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; }
+.tabbar button span { font-family: var(--font-display); font-size: 17px; color: var(--fg); }
+.tabbar button[aria-selected="true"] { border-bottom-color: var(--accent); }
+.tabbar button[aria-selected="true"] small { color: var(--accent); }
+.tabbar button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.panel-tab { display: grid; gap: 48px; }
+.panel-tab[hidden] { display: none; }
+footer { color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--rule); padding-top: 16px; }
+@media (max-width: 760px) { .grid2, .grid3 { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<div class="wrap">
+
+<div class="journal-head">
+  <div class="eyebrow">Protection of the Spheres · design journal · last entry 15 October 2026</div>
+  <h1>Protection of the Spheres</h1>
+  <p class="lede">A browser game that plays like the Warcraft III map Defense of the Ancients, with heroes of its own. One tab for each round of work. New rounds are added as new tabs.</p>
+  <div class="tabbar" role="tablist" aria-label="Journal entries">
+    <button role="tab" id="t-brief" aria-controls="p-brief" aria-selected="false" tabindex="-1"><small>1 · 15 Oct</small><span>Brief and plan</span></button>
+    <!--TABS-->
+  </div>
+</div>
+
+<!-- ======================================================= TAB 1 -->
+<div class="panel-tab" role="tabpanel" id="p-brief" aria-labelledby="t-brief" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 1 · 15 October 2026 · brief and plan</div>
+  <h2>What was asked, and the order of work</h2>
+  <p class="lede">The project is a copy of Builder's template in the <code>OGDota</code> folder. The repository will be <code>sgilson7/pots</code>, served at <code>sgilson7.github.io/pots</code>. The plan is approved in advance, so this entry records what I will do. It does not ask permission.</p>
+</header>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Your words</div><h2>The description, as given</h2></div>
+  <blockquote>my friend wants a game that plays as similarly as possible to the original mod for warcraft3, defense of the ancients … it should support 5v5 online multiplayer in the browser … they should be distinct from the warcraft champs but with the same abilities … a basic arcade missio mode … 0-4 ai teammates vs 1-5 ai enemies … the difficulty of the AI controlled independently, all done via behavior trees like vagrancy … rollback netcode, and allowing people to reconnect mid-game … build out the mvp for the game with 10 characters …</blockquote>
+  <p>The full text is in <code>BRIEF.md</code>, word for word.</p>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Order of work</div><h2>Seven rounds, each a tab</h2></div>
+  <ol class="steps">
+    <li><div><h3>Brief and plan</h3><p>This tab. Brief, glossary and decisions written in the project folder.</p></div></li>
+    <li><div><h3>Literature review</h3><p>How DotA Allstars worked, from wikis, archived forum posts, Reddit and Warcraft III mechanics references, with a source for each number the game copies.</p></div></li>
+    <li><div><h3>Models, map and interface</h3><p>A 3D model for every hero, creep, tower, building, neutral and the boss; the map; the in-match HUD and the menus. Rendered from the game's own renderer, so what you see here is what the game draws.</p></div></li>
+    <li><div><h3>Arcade mode</h3><p>The mission ladder against computer players, team sizes and computer skill set separately.</p></div></li>
+    <li><div><h3>Online mode</h3><p>Rooms by code, rollback netcode, rejoining a match in progress, menus after Galactic Survivors and Ape Race.</p></div></li>
+    <li><div><h3>The five-runner test</h3><p>Five headless browsers join one online match and play it. The run is recorded, and a separate agent reads the record while it runs.</p></div></li>
+    <li><div><h3>Publish</h3><p>The repository, GitHub Pages, a tile on sgilson7.github.io, and the browser check on both live addresses.</p></div></li>
+  </ol>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">How Builder carries it</div><h2>Where each part lives</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Layer</th><th>For this game</th></tr></thead>
+    <tbody>
+      <tr><td>Core (Rust)</td><td>The whole match, at a fixed tick in integer maths with a seeded random source: movement and pathing around trees, attacks and the attack-type table, armor, abilities, items and recipes, creep waves, neutral camps, the boss, runes, gold and experience, death and respawn, vision and fog, and every computer player's behavior tree. It also builds the camera, the 3D scene list and the HUD description. Same seed and same inputs give the same match on every machine, which is what rollback needs.</td></tr>
+      <tr><td>Shim (wasm)</td><td>Passes orders in and the scene out. Decides nothing.</td></tr>
+      <tr><td>Page</td><td>WebGL draws the scene the core lists. The HUD, shop and menus are built from the core's view model. Mouse and keyboard become orders.</td></tr>
+      <tr><td>Online</td><td>Browsers connect to each other directly and exchange orders, tick by tick. Each browser runs the match itself, guesses what late orders were, and rolls back and replays when the real order arrives. A rejoining browser receives the match state and the orders since.</td></tr>
+      <tr><td>Data</td><td>Heroes, abilities, items, creeps, the map layout, missions, behavior trees and every string, in JSON. Item and ability icons drawn in TikZ.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Decided without asking</div><h2>Choices the brief left open</h2></div>
+  <div class="grid2">
+    <div class="card"><h3>Names</h3><p>Every hero, item, creep, building and the boss has an original name and look. Abilities keep their behaviour and numbers. The two sides are the Sunward and the Moonward, each guarding a Sphere. You read the names before they are final.</p></div>
+    <div class="card"><h3>The DotA version</h3><p>The game follows the 6.6x versions (2009 to 2011), the era most sources describe and most players remember. Where sources disagree, the review says which version a number comes from.</p></div>
+    <div class="card"><h3>Online without a server</h3><p>GitHub Pages serves files only, so browsers find each other through a public signaling service and then talk directly. That service is the one request to another site, and it loads only when a player opens online play.</p></div>
+    <div class="card"><h3>Computer players online</h3><p>Empty seats in an online room are filled by computer players. They run inside the match itself, so every browser computes the same choices.</p></div>
+  </div>
+</section>
+
+<footer>Kept by the coding agent. The project's notebook (<code>SECOND-ORDER.md</code>) records each decision in more detail, numbered, as it is made.</footer>
+</div>
+
+<!--PANELS-->
+
+</div>
+
+<script>
+(function () {
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var KEY = 'pots-journal-tab';
+  function show(id, focus) {
+    tabs.forEach(function (t) {
+      var on = t.id === id;
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      if (on && focus) t.focus();
+    });
+    try { localStorage.setItem(KEY + tabs.length, id); } catch (e) {}
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { show(t.id, false); window.scrollTo(0, 0); });
+    t.addEventListener('keydown', function (e) {
+      var j = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : null;
+      if (j === null) return;
+      e.preventDefault();
+      show(tabs[(j + tabs.length) % tabs.length].id, true);
+    });
+  });
+  var start = tabs[tabs.length - 1].id;
+  try { var saved = localStorage.getItem(KEY + tabs.length); if (saved && document.getElementById(saved)) start = saved; } catch (e) {}
+  show(start, false);
+})();
+</script>

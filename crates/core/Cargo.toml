@@ -1,5 +1,5 @@
 [package]
-name = "tool_core"
+name = "pots_core"
 version = "0.1.0"
 edition = "2021"
 description = "Every application rule of the tool. No input or output."

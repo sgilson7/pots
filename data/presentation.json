@@ -1,0 +1,11 @@
+{
+ "reach_x": 2800,
+ "reach_south": 1500,
+ "reach_north": 3400,
+ "fog_pct": 52,
+ "bar_hero": [180, 22],
+ "bar_unit": [110, 16],
+ "bar_building": [300, 26],
+ "missile": 30,
+ "unit_scale": 200
+}
