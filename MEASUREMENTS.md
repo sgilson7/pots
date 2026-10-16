@@ -15,6 +15,10 @@ The state measured rather than recalled, so later changes can be compared with i
 | Bot last hits | `cargo test -p pots_core --test bots -- --nocapture` | 295–301 last hits over ten normal bots in 20 minutes (was 90 before the farm rework) | 16 Oct 2026 |
 | Online, in one process | `cargo test -p pots_core --lib online` | five copies, messages late by up to 6 frames and a tenth of fast ones lost: identical checksums; rollbacks happen; ticks keep to the clock | 16 Oct 2026 |
 | Online, two browsers | `.venv/bin/python tests/online/smoke.py` | met through the public relays in about a second; 1200 ticks with identical checksums | 16 Oct 2026 |
+| Core tests, round 2 | `./scripts/count-tests.sh` | 110 passed, 0 failed, 4 ignored | 16 Oct 2026 |
+| Model parts, round 2 | `python3 tools/modelport.py` | 2448 parts over 50 models (546 in round 1); worst rebuild error of a part's transform 1.5 % | 16 Oct 2026 |
+| Frame rate, round 2 | `.venv/bin/python tests/browser/fps.py 100` | a custom 5v5 on this Mac (Metal): 60 frames a second at 5 s and at 100 s, camera on the middle of the map (the browser's cap) | 16 Oct 2026 |
+| WebAssembly size, round 2 | printed by `./scripts/build.sh` | 1336 KB (1289 KB before the ability marks) | 16 Oct 2026 |
 
 ## Not measured
 
