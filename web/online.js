@@ -80,7 +80,19 @@ export function pump(g) {
 export function handles(name, value) {
   if (name !== "copy" && name !== "copy.link") return false;
   const text = name === "copy" ? value : `${location.origin}${location.pathname}#${value}`;
-  if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+  // older browsers, and pages not served over https, have no clipboard API
+  const fallback = () => {
+    const box = document.createElement("textarea");
+    box.value = text;
+    box.setAttribute("readonly", "");
+    box.className = "offscreen";
+    document.body.append(box);
+    box.select();
+    document.execCommand("copy");
+    box.remove();
+  };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).catch(fallback);
+  else fallback();
   return true;
 }
 

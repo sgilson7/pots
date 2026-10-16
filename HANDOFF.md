@@ -41,6 +41,10 @@ Still open from round 2: R2.18 (rejoining failed in two of four five-runner runs
 
 Open for the person from round 2: **R2.16** (try the locked cursor by hand: automated browsers cannot lock the pointer).
 
+## Copy buttons (16 October 2026, T5)
+
+The lobby's Copy code and Copy link had never worked: the page's copy function was not called (R2.20). The page now copies inside the click, the core shows "Copied.", and `tests/actions.rs` presses every button on every screen and fails on an action the core does not know. Check: BUILDER CHECK PASSED; break tests 24 of 24.
+
 ## What passed
 
 Recorded at the end of this round; the counts come from the commands, not from memory.

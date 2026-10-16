@@ -1274,6 +1274,8 @@ impl Game {
                 self.shop_pick = k;
             }
             "score.toggle" => self.score = !self.score,
+            // the page puts the code or link on the clipboard; the core says so
+            "copy" | "copy.link" => self.notice = self.strings.ui("online.copied"),
             n if n.starts_with("online.") => crate::online::act(self, n, value)?,
             other => return Err(format!("Unknown action \"{other}\".")),
         }

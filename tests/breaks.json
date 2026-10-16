@@ -159,5 +159,12 @@
   "find": "        self.pointer_in = true;\n        self.pointer_view = over_view;",
   "replace": "        self.pointer_in = over_view;\n        self.pointer_view = over_view;",
   "test": "the_bottom_left_corner_pans_down_and_left_over_the_hud"
+ },
+ {
+  "name": "the copy buttons do nothing",
+  "file": "crates/core/src/game.rs",
+  "find": "            \"copy\" | \"copy.link\" => self.notice = self.strings.ui(\"online.copied\"),\n",
+  "replace": "",
+  "test": "every_button_on_every_screen_names_an_action_the_core_accepts"
  }
 ]

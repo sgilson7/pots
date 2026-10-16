@@ -249,3 +249,6 @@ body[data-stage="still"] #ui, body[data-stage="still"] #notice:empty { display: 
 .gold-pop { position: absolute; left: var(--x); top: var(--y); transform: translate(-50%, -100%); color: var(--accent); font-family: var(--hud-font); font-size: 20px; font-weight: 700; text-shadow: 0 2px 3px #000; animation: rise 1.5s ease-out forwards; }
 @keyframes rise { from { opacity: 1; margin-top: 0; } to { opacity: 0; margin-top: -40px; } }
 @media (prefers-reduced-motion: reduce) { .gold-pop { animation: none; } }
+
+/* the copy fallback's text box: selectable, never seen */
+.offscreen { position: fixed; left: -100vw; opacity: 0; }

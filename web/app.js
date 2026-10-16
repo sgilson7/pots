@@ -171,6 +171,8 @@ function drawUi(force) {
 }
 
 function act(name, value) {
+  // the clipboard must be written inside the click, before anything else
+  online.handles(name, value);
   const r = JSON.parse(game.act(name, value));
   if (r.error) el("notice").textContent = r.error;
   online.after(game, name);
