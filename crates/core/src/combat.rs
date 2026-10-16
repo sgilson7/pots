@@ -11,8 +11,8 @@
 use crate::rules::{Kind, SUB, TPS};
 use crate::stats;
 use crate::world::{
-    self, dist2, other, Act, Ctx, Hit, Uid, World, EV_CRIT, EV_DENY, EV_FIRST_BLOOD, EV_GOLD, EV_KILL, EV_MISS,
-    EV_TOWER, EV_WIN, M, NEUTRAL, NO_UNIT,
+    self, dist2, other, Act, Ctx, Hit, Uid, World, EV_CRIT, EV_DENY, EV_FIRST_BLOOD, EV_GOLD, EV_KILL,
+    EV_MISS, EV_TOWER, EV_WIN, M, NEUTRAL, NO_UNIT,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -69,7 +69,15 @@ pub fn prd(w: &mut World, id: Uid, key: usize, pct: i32) -> bool {
 }
 
 /// Applies damage in thousandths of a hit point. Returns the damage dealt.
-pub fn damage_milli(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, amount: i32, kind: Dmg, attack: bool) -> i32 {
+pub fn damage_milli(
+    w: &mut World,
+    ctx: &Ctx,
+    src: Uid,
+    dst: Uid,
+    amount: i32,
+    kind: Dmg,
+    attack: bool,
+) -> i32 {
     let Some(v) = w.live(dst) else { return 0 };
     if v.has(M::Invulnerable) {
         return 0;
@@ -91,7 +99,8 @@ pub fn damage_milli(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, amount: i32, k
     v.hp -= amount;
     // the regeneration rune ends on damage
     if src != dst {
-        v.mods.retain(|m| !(m.tag == 9000 && matches!(m.kind, M::Regen | M::ManaRegen)));
+        v.mods
+            .retain(|m| !(m.tag == 9000 && matches!(m.kind, M::Regen | M::ManaRegen)));
     }
     v.hit_at = tick;
     v.last_attacker = src;
@@ -140,7 +149,9 @@ pub fn roll(w: &mut World, ctx: &Ctx, src: Uid) -> i32 {
 /// An attack's hit lands: evasion, uphill miss, the type table, armor,
 /// lifesteal and on-hit effects.
 pub fn attack_lands(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32, crit: bool) {
-    let (Some(a), Some(v)) = (w.get(src), w.live(dst)) else { return };
+    let (Some(a), Some(v)) = (w.get(src), w.live(dst)) else {
+        return;
+    };
     let (atk_def, def_def) = (a.def as usize, v.def as usize);
     let (a_pos, v_pos) = (a.pos(), v.pos());
     let v_glyph = v.has(M::Glyph);
@@ -160,12 +171,20 @@ pub fn attack_lands(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32, crit
         w.event(EV_MISS, 0, 0, v_pos);
         return;
     }
-    let mut pct = ctx.rules.type_percent(ctx.rules.unit_attack[atk_def], ctx.rules.unit_armor[def_def]);
+    let mut pct = ctx
+        .rules
+        .type_percent(ctx.rules.unit_attack[atk_def], ctx.rules.unit_armor[def_def]);
     // an illusion deals and takes its share of damage
-    if let Some(m) = w.get(src).and_then(|u| u.mods.iter().find(|m| m.kind == M::Illusion)) {
+    if let Some(m) = w
+        .get(src)
+        .and_then(|u| u.mods.iter().find(|m| m.kind == M::Illusion))
+    {
         pct = pct * m.a / 100;
     }
-    if let Some(m) = w.get(dst).and_then(|u| u.mods.iter().find(|m| m.kind == M::Illusion)) {
+    if let Some(m) = w
+        .get(dst)
+        .and_then(|u| u.mods.iter().find(|m| m.kind == M::Illusion))
+    {
         pct = pct * m.b / 100;
     }
     let armor = stats::of(ctx, w, dst).armor;
@@ -195,7 +214,10 @@ pub fn swing(w: &mut World, ctx: &Ctx, src: Uid, t: Uid) {
     let point = (d.attack_point * TPS * 100 / (100 * speed)).max(1) as u32;
     let tick = w.tick;
     let u = w.get_mut(src).expect("checked");
-    u.act = Act::Swing { t, hit_at: tick + point };
+    u.act = Act::Swing {
+        t,
+        hit_at: tick + point,
+    };
     u.attack_ready = tick + s.attack_ticks() as u32;
     u.anim = world::ANIM_ATTACK;
     u.anim_at = tick;
@@ -287,7 +309,12 @@ pub fn missiles(w: &mut World, ctx: &Ctx) {
 
 /// Bounty and experience for every unit that died this tick.
 pub fn deaths(w: &mut World, ctx: &Ctx) {
-    let dead: Vec<Uid> = w.units.iter().filter(|u| u.alive && u.hp <= 0).map(|u| u.id).collect();
+    let dead: Vec<Uid> = w
+        .units
+        .iter()
+        .filter(|u| u.alive && u.hp <= 0)
+        .map(|u| u.id)
+        .collect();
     for id in dead {
         if crate::ability::cheats_death(w, ctx, id) {
             continue;
@@ -336,7 +363,12 @@ pub fn give_xp(w: &mut World, ctx: &Ctx, id: Uid, xp: i32) {
 fn kill(w: &mut World, ctx: &Ctx, id: Uid) {
     let Some(v) = w.get(id) else { return };
     let killer = v.last_attacker;
-    let (team, kind, def, at) = (v.team, ctx.rules.units[v.def as usize].kind, v.def as usize, v.pos());
+    let (team, kind, def, at) = (
+        v.team,
+        ctx.rules.units[v.def as usize].kind,
+        v.def as usize,
+        v.pos(),
+    );
     let level = v.level();
     let tier = v.tier;
     let illusion = v.has(M::Illusion);
@@ -405,7 +437,10 @@ fn kill(w: &mut World, ctx: &Ctx, id: Uid) {
         if !near.is_empty() && kind == Kind::Creep {
             let n = near.len() as i32;
             for h in near {
-                let ranged = w.get(h).map(|u| ctx.rules.units[u.def as usize].missile > 0).unwrap_or(false);
+                let ranged = w
+                    .get(h)
+                    .map(|u| ctx.rules.units[u.def as usize].missile > 0)
+                    .unwrap_or(false);
                 let xp = if ranged { t.deny_xp_ranged } else { t.deny_xp_melee };
                 give_xp(w, ctx, h, xp / n);
             }
@@ -451,9 +486,16 @@ fn kill_hero(w: &mut World, ctx: &Ctx, id: Uid, killer: Uid, level: i32, at: cra
     if denied {
         return;
     }
-    let (k_owner, k_hero) = w.get(killer).map(|k| (k.owner, k.hero.is_some() && !k.has(M::Illusion))).unwrap_or((-1, false));
+    let (k_owner, k_hero) = w
+        .get(killer)
+        .map(|k| (k.owner, k.hero.is_some() && !k.has(M::Illusion)))
+        .unwrap_or((-1, false));
     // the hero whose player made the kill (a summon or illusion counts for its owner)
-    let killer_hero = if k_owner >= 0 { Some(w.players[k_owner as usize].hero) } else { None };
+    let killer_hero = if k_owner >= 0 {
+        Some(w.players[k_owner as usize].hero)
+    } else {
+        None
+    };
     let _ = k_hero;
     let mut gold = t.kill_gold_base + level * t.kill_gold_per_level;
     if streak >= 3 {
@@ -467,7 +509,9 @@ fn kill_hero(w: &mut World, ctx: &Ctx, id: Uid, killer: Uid, level: i32, at: cra
     }
     // the other enemy heroes near the death share the assist gold
     let near: Vec<Uid> = w
-        .near(at, t.assist_radius, |u| u.team == other(team) && u.hero.is_some() && !u.has(M::Illusion))
+        .near(at, t.assist_radius, |u| {
+            u.team == other(team) && u.hero.is_some() && !u.has(M::Illusion)
+        })
         .into_iter()
         .filter(|h| Some(*h) != killer_hero)
         .collect();
@@ -514,7 +558,11 @@ fn kill_hero(w: &mut World, ctx: &Ctx, id: Uid, killer: Uid, level: i32, at: cra
     }
     if !sharers.is_empty() {
         let n = sharers.len();
-        let base = t.hero_kill_xp.get((level - 1).max(0) as usize).copied().unwrap_or(0);
+        let base = t
+            .hero_kill_xp
+            .get((level - 1).max(0) as usize)
+            .copied()
+            .unwrap_or(0);
         let [b0, b1] = t.hero_kill_bonus[n.min(t.hero_kill_bonus.len()) - 1];
         let each = base / n as i32 + b0 + b1 * level;
         for h in sharers {

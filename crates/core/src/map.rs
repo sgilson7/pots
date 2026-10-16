@@ -64,8 +64,7 @@ pub fn inside(p: P, poly: &[P]) -> bool {
     for i in 0..n {
         let (a, b) = (poly[i], poly[j]);
         if (a[1] > p[1]) != (b[1] > p[1]) {
-            let x = a[0] as i64
-                + (b[0] - a[0]) as i64 * (p[1] - a[1]) as i64 / (b[1] - a[1]) as i64;
+            let x = a[0] as i64 + (b[0] - a[0]) as i64 * (p[1] - a[1]) as i64 / (b[1] - a[1]) as i64;
             if (p[0] as i64) < x {
                 c = !c;
             }
@@ -128,12 +127,18 @@ impl Terrain {
     /// The centre of tree cell i, in map units.
     pub fn tree_centre(&self, i: usize) -> P {
         let (cx, cy) = (i as i32 % self.tw, i as i32 / self.tw);
-        [cx * self.tree_cell + self.tree_cell / 2, cy * self.tree_cell + self.tree_cell / 2]
+        [
+            cx * self.tree_cell + self.tree_cell / 2,
+            cy * self.tree_cell + self.tree_cell / 2,
+        ]
     }
 
     pub fn path_centre(&self, i: usize) -> P {
         let (cx, cy) = (i as i32 % self.pw, i as i32 / self.pw);
-        [cx * self.path_cell + self.path_cell / 2, cy * self.path_cell + self.path_cell / 2]
+        [
+            cx * self.path_cell + self.path_cell / 2,
+            cy * self.path_cell + self.path_cell / 2,
+        ]
     }
 
     /// The tree cell holding path cell i.

@@ -9,7 +9,9 @@ use pots_core::rules::Rules;
 use pots_core::world::{self, Ctx, World};
 
 pub fn data(name: &str) -> String {
-    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../data").join(name);
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../data")
+        .join(name);
     std::fs::read_to_string(&root).unwrap_or_else(|e| panic!("read {}: {e}", root.display()))
 }
 
@@ -35,7 +37,11 @@ pub struct Fixture {
 pub fn fixture() -> Fixture {
     let rules = rules();
     let (terrain, trees) = world::setup(&rules);
-    Fixture { rules, terrain, trees }
+    Fixture {
+        rules,
+        terrain,
+        trees,
+    }
 }
 
 impl Fixture {

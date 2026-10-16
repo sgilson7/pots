@@ -164,7 +164,7 @@ pub fn think(w: &mut World, ctx: &Ctx) {
         let d = &ai.difficulty[(diff as usize).min(ai.difficulty.len() - 1)];
         let reaction = d.reaction.max(1) as u32;
         // seats decide on staggered ticks so ten bots do not share one tick
-        if (w.tick + p as u32 * 7) % reaction != 0 {
+        if !(w.tick + p as u32 * 7).is_multiple_of(reaction) {
             continue;
         }
         if w.players[p].hero == NO_UNIT {
@@ -213,13 +213,19 @@ fn look(w: &World, ctx: &Ctx, p: usize) -> Option<Look> {
         team: u.team,
         here: u.pos(),
         hp_pct: if s.max_hp > 0 { u.hp / 10 / s.max_hp } else { 0 },
-        mana_pct: if s.max_mana > 0 { u.mana / 10 / s.max_mana } else { 0 },
+        mana_pct: if s.max_mana > 0 {
+            u.mana / 10 / s.max_mana
+        } else {
+            0
+        },
         level: u.level(),
     })
 }
 
 fn visible_enemy_heroes(w: &World, ctx: &Ctx, l: &Look, r: i32) -> Vec<Uid> {
-    w.near(l.here, r, |u| u.team == other(l.team) && u.hero.is_some() && !u.has(M::Illusion) && w.sees(ctx, l.team, u))
+    w.near(l.here, r, |u| {
+        u.team == other(l.team) && u.hero.is_some() && !u.has(M::Illusion) && w.sees(ctx, l.team, u)
+    })
 }
 
 fn enemy_towers_near(w: &World, ctx: &Ctx, team: u8, at: P, pad: i32) -> Vec<Uid> {
@@ -247,11 +253,17 @@ fn holds(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Loo
         Cond::EnemyHeroNear(r) => !visible_enemy_heroes(w, ctx, l, *r).is_empty(),
         Cond::EnemyHeroWeak([pct, r]) => visible_enemy_heroes(w, ctx, l, *r).iter().any(|&e| {
             let s = stats::of(ctx, w, e);
-            w.get(e).map(|u| s.max_hp > 0 && u.hp / 10 / s.max_hp < *pct).unwrap_or(false)
+            w.get(e)
+                .map(|u| s.max_hp > 0 && u.hp / 10 / s.max_hp < *pct)
+                .unwrap_or(false)
         }),
         Cond::EnemiesNear([n, r]) => visible_enemy_heroes(w, ctx, l, *r).len() as i32 >= *n,
         Cond::AlliesNear([n, r]) => {
-            w.near(l.here, *r, |u| u.team == l.team && u.hero.is_some() && u.id != l.hero).len() as i32 >= *n
+            w.near(l.here, *r, |u| {
+                u.team == l.team && u.hero.is_some() && u.id != l.hero
+            })
+            .len() as i32
+                >= *n
         }
         Cond::Outnumbered(r) => {
             let foes = visible_enemy_heroes(w, ctx, l, *r).len();
@@ -260,16 +272,34 @@ fn holds(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Loo
         }
         Cond::UnderEnemyTower => !enemy_towers_near(w, ctx, l.team, l.here, 100).is_empty(),
         Cond::TowerTargetsMe => w.units.iter().any(|u| {
-            u.alive && u.team == other(l.team) && u.target == l.hero && ctx.rules.units[u.def as usize].kind == Kind::Tower
+            u.alive
+                && u.team == other(l.team)
+                && u.target == l.hero
+                && ctx.rules.units[u.def as usize].kind == Kind::Tower
         }),
         Cond::EnemyCreepsNear(r) => !w
-            .near(l.here, *r, |u| u.team == other(l.team) && ctx.rules.units[u.def as usize].kind == Kind::Creep)
+            .near(l.here, *r, |u| {
+                u.team == other(l.team) && ctx.rules.units[u.def as usize].kind == Kind::Creep
+            })
             .is_empty(),
-        Cond::HasPoints => w.get(l.hero).and_then(|u| u.hero.as_ref()).map(|h| h.points > 0).unwrap_or(false),
+        Cond::HasPoints => w
+            .get(l.hero)
+            .and_then(|u| u.hero.as_ref())
+            .map(|h| h.points > 0)
+            .unwrap_or(false),
         Cond::CanBuy => next_purchase(w, ctx, ai, p).is_some(),
-        Cond::AtFountain => within(l.here, ctx.rules.map.sides[l.team as usize].fountain, ctx.rules.t.fountain_range),
+        Cond::AtFountain => within(
+            l.here,
+            ctx.rules.map.sides[l.team as usize].fountain,
+            ctx.rules.t.fountain_range,
+        ),
         Cond::NeedsFountain(x) => {
-            l.hp_pct < *x && !within(l.here, ctx.rules.map.sides[l.team as usize].fountain, ctx.rules.t.fountain_range)
+            l.hp_pct < *x
+                && !within(
+                    l.here,
+                    ctx.rules.map.sides[l.team as usize].fountain,
+                    ctx.rules.t.fountain_range,
+                )
         }
         Cond::LevelAtLeast(n) => l.level >= *n,
         Cond::AbilityReady => (0..4).any(|s| useful_cast(w, ctx, l, s).is_some()),
@@ -282,8 +312,12 @@ fn holds(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Loo
 
 fn decide(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize) {
     let Some(l) = look(w, ctx, p) else { return };
-    let tree_name = build_of(ctx, ai, w, p).map(|b| b.tree.clone()).unwrap_or_else(hero_tree);
-    let Some(tree) = ai.trees.get(&tree_name).or_else(|| ai.trees.get("hero")) else { return };
+    let tree_name = build_of(ctx, ai, w, p)
+        .map(|b| b.tree.clone())
+        .unwrap_or_else(hero_tree);
+    let Some(tree) = ai.trees.get(&tree_name).or_else(|| ai.trees.get("hero")) else {
+        return;
+    };
     let held = w.players[p].brain.rule;
     let mut trace = vec![0u8; tree.rules.len()];
     let mut chosen = None;
@@ -358,29 +392,51 @@ fn useful_cast(w: &World, ctx: &Ctx, l: &Look, slot: usize) -> Option<(Uid, P)> 
 fn lane_spot(w: &World, ctx: &Ctx, l: &Look, lane: u8) -> P {
     let names = ["top", "mid", "bot"];
     let side = &ctx.rules.map.sides[l.team as usize];
-    let path = side.lanes.get(names[lane as usize % 3]).cloned().unwrap_or_default();
+    let path = side
+        .lanes
+        .get(names[lane as usize % 3])
+        .cloned()
+        .unwrap_or_default();
     // the allied creep of this lane farthest along its waypoints
     let front = w
         .units
         .iter()
-        .filter(|u| u.alive && u.team == l.team && ctx.rules.units[u.def as usize].kind == Kind::Creep && u.lane == lane)
-        .max_by_key(|u| (u.waypoint, -dist2(u.pos(), *path.get(u.waypoint as usize).unwrap_or(&u.pos())) as i64 / 1024))
+        .filter(|u| {
+            u.alive
+                && u.team == l.team
+                && ctx.rules.units[u.def as usize].kind == Kind::Creep
+                && u.lane == lane
+        })
+        .max_by_key(|u| {
+            (
+                u.waypoint,
+                -dist2(u.pos(), *path.get(u.waypoint as usize).unwrap_or(&u.pos())) / 1024,
+            )
+        })
         .map(|u| u.pos());
     match front {
         Some(f) => {
             // stand back toward home from the front by 300 units
             let home = side.fountain;
             let d = crate::world::dist(f, home).max(1);
-            [f[0] + (home[0] - f[0]) * 300 / d, f[1] + (home[1] - f[1]) * 300 / d]
+            [
+                f[0] + (home[0] - f[0]) * 300 / d,
+                f[1] + (home[1] - f[1]) * 300 / d,
+            ]
         }
         // no creeps: the first allied tower of the lane
         None => w
             .units
             .iter()
             .filter(|u| {
-                u.alive && u.team == l.team && ctx.rules.units[u.def as usize].kind == Kind::Tower && u.lane_name == lane
+                u.alive
+                    && u.team == l.team
+                    && ctx.rules.units[u.def as usize].kind == Kind::Tower
+                    && u.lane_name == lane
             })
-            .min_by_key(|u| crate::world::dist2(u.pos(), ctx.rules.map.sides[other(l.team) as usize].fountain))
+            .min_by_key(|u| {
+                crate::world::dist2(u.pos(), ctx.rules.map.sides[other(l.team) as usize].fountain)
+            })
             .map(|u| u.pos())
             .unwrap_or(side.spawn),
     }
@@ -388,7 +444,10 @@ fn lane_spot(w: &World, ctx: &Ctx, l: &Look, lane: u8) -> P {
 
 fn act(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Look, action: &str) {
     let hero = l.hero;
-    let busy = w.get(hero).map(|u| matches!(u.act, Act::Cast { .. } | Act::Channel { .. })).unwrap_or(true);
+    let busy = w
+        .get(hero)
+        .map(|u| matches!(u.act, Act::Cast { .. } | Act::Channel { .. }))
+        .unwrap_or(true);
     if busy && action != "wait" {
         return;
     }
@@ -405,16 +464,28 @@ fn act(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Look,
             let Some(b) = build_of(ctx, ai, w, p) else { return };
             let i = w.players[p].brain.next_skill as usize;
             let slot = b.skills.get(i).copied().unwrap_or(4);
-            let before = w.get(hero).and_then(|u| u.hero.as_ref()).map(|h| h.points).unwrap_or(0);
+            let before = w
+                .get(hero)
+                .and_then(|u| u.hero.as_ref())
+                .map(|h| h.points)
+                .unwrap_or(0);
             orders::apply(w, ctx, p, Cmd::Learn(slot));
-            let after = w.get(hero).and_then(|u| u.hero.as_ref()).map(|h| h.points).unwrap_or(0);
+            let after = w
+                .get(hero)
+                .and_then(|u| u.hero.as_ref())
+                .map(|h| h.points)
+                .unwrap_or(0);
             if after < before {
                 w.players[p].brain.next_skill += 1;
             } else {
                 // the build's next skill is not allowed yet: take the first that is
                 for s in 0..5u8 {
                     orders::apply(w, ctx, p, Cmd::Learn(s));
-                    let now = w.get(hero).and_then(|u| u.hero.as_ref()).map(|h| h.points).unwrap_or(0);
+                    let now = w
+                        .get(hero)
+                        .and_then(|u| u.hero.as_ref())
+                        .map(|h| h.points)
+                        .unwrap_or(0);
                     if now < before {
                         break;
                     }
@@ -443,7 +514,12 @@ fn act(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Look,
                             && crate::world::dist2(u.pos(), home) < mine - 600 * 600
                     })
                     .min_by_key(|u| crate::world::dist2(u.pos(), l.here))
-                    .map(|u| [u.pos()[0] + (home[0] - u.pos()[0]).signum() * 200, u.pos()[1] + (home[1] - u.pos()[1]).signum() * 200])
+                    .map(|u| {
+                        [
+                            u.pos()[0] + (home[0] - u.pos()[0]).signum() * 200,
+                            u.pos()[1] + (home[1] - u.pos()[1]).signum() * 200,
+                        ]
+                    })
                     .unwrap_or(home)
             };
             orders::apply(w, ctx, p, Cmd::Move(to));
@@ -468,7 +544,9 @@ fn act(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Look,
             }
             let foes = visible_enemy_heroes(w, ctx, l, 1200);
             // the weakest enemy hero in reach
-            let pick = foes.into_iter().min_by_key(|&e| w.get(e).map(|u| u.hp).unwrap_or(i32::MAX));
+            let pick = foes
+                .into_iter()
+                .min_by_key(|&e| w.get(e).map(|u| u.hp).unwrap_or(i32::MAX));
             if let Some(e) = pick {
                 orders::apply(w, ctx, p, Cmd::Attack(e));
             }

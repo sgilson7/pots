@@ -16,10 +16,10 @@
    "cooldown": 0,
    "mana": 0,
    "range": 165,
-   "charges": 4,
+   "charges": 3,
    "stacks": true,
    "icon": "items/tango",
-   "after": "Tango",
+   "_after": "Tango",
    "target": "point"
   },
   {
@@ -41,7 +41,7 @@
    "charges": 1,
    "stacks": true,
    "icon": "items/salve",
-   "after": "Healing Salve",
+   "_after": "Healing Salve",
    "target": "unit"
   },
   {
@@ -63,7 +63,7 @@
    "charges": 1,
    "stacks": true,
    "icon": "items/clarity",
-   "after": "Clarity Potion",
+   "_after": "Clarity Potion",
    "target": "unit"
   },
   {
@@ -75,19 +75,22 @@
    "tab": "consumables",
    "bonus": {},
    "logic": "tp",
-   "values": {},
+   "values": {
+    "channel": 300,
+    "offset": 525
+   },
    "cooldown": 6500,
    "mana": 75,
    "range": 99999,
    "charges": 1,
    "stacks": true,
    "icon": "items/tp",
-   "after": "Scroll of Town Portal",
+   "_after": "Scroll of Town Portal",
    "target": "point"
   },
   {
    "id": "observer",
-   "cost": 200,
+   "cost": 150,
    "parts": [],
    "recipe": false,
    "shop": "home",
@@ -103,7 +106,7 @@
    "charges": 2,
    "stacks": false,
    "icon": "items/observer",
-   "after": "Observer Wards",
+   "_after": "Observer Wards",
    "target": "point"
   },
   {
@@ -117,7 +120,7 @@
    "logic": "ward_sentry",
    "values": {
     "duration": 18000,
-    "true_sight": 850
+    "true_sight": 800
    },
    "cooldown": 0,
    "mana": 0,
@@ -125,7 +128,7 @@
    "charges": 2,
    "stacks": false,
    "icon": "items/sentry",
-   "after": "Sentry Wards",
+   "_after": "Sentry Wards",
    "target": "point"
   },
   {
@@ -148,7 +151,7 @@
    "charges": 3,
    "stacks": false,
    "icon": "items/bottle",
-   "after": "Bottle",
+   "_after": "Bottle",
    "target": "none"
   },
   {
@@ -171,7 +174,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/branch",
-   "after": "Ironwood Branch"
+   "_after": "Ironwood Branch"
   },
   {
    "id": "gauntlets",
@@ -191,7 +194,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/gauntlets",
-   "after": "Gauntlets of Strength"
+   "_after": "Gauntlets of Strength"
   },
   {
    "id": "slippers",
@@ -211,7 +214,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/slippers",
-   "after": "Slippers of Agility"
+   "_after": "Slippers of Agility"
   },
   {
    "id": "mantle",
@@ -231,7 +234,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/mantle",
-   "after": "Mantle of Intelligence"
+   "_after": "Mantle of Intelligence"
   },
   {
    "id": "circlet",
@@ -253,7 +256,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/circlet",
-   "after": "Circlet of Nobility"
+   "_after": "Circlet of Nobility"
   },
   {
    "id": "belt",
@@ -273,7 +276,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/belt",
-   "after": "Belt of Giant Strength"
+   "_after": "Belt of Giant Strength"
   },
   {
    "id": "elvenskin",
@@ -293,7 +296,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/elvenskin",
-   "after": "Band of Elvenskin"
+   "_after": "Band of Elvenskin"
   },
   {
    "id": "robe",
@@ -313,7 +316,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/robe",
-   "after": "Robe of the Magi"
+   "_after": "Robe of the Magi"
   },
   {
    "id": "ogre_club",
@@ -333,7 +336,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/ogre_club",
-   "after": "Ogre Axe"
+   "_after": "Ogre Axe"
   },
   {
    "id": "alacrity",
@@ -353,7 +356,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/alacrity",
-   "after": "Blade of Alacrity"
+   "_after": "Blade of Alacrity"
   },
   {
    "id": "wizardry",
@@ -373,7 +376,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/wizardry",
-   "after": "Staff of Wizardry"
+   "_after": "Staff of Wizardry"
   },
   {
    "id": "ultimate_orb",
@@ -395,7 +398,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/ultimate_orb",
-   "after": "Ultimate Orb"
+   "_after": "Ultimate Orb"
   },
   {
    "id": "ring_protection",
@@ -415,7 +418,25 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/ring_protection",
-   "after": "Ring of Protection"
+   "_after": "Ring of Protection"
+  },
+  {
+   "id": "stout_shield",
+   "cost": 250,
+   "parts": [],
+   "recipe": false,
+   "shop": "home",
+   "tab": "basics",
+   "bonus": {},
+   "logic": "",
+   "values": {},
+   "cooldown": 0,
+   "mana": 0,
+   "range": 0,
+   "charges": 0,
+   "stacks": false,
+   "icon": "items/stout_shield",
+   "_after": "Stout Shield"
   },
   {
    "id": "blades",
@@ -435,7 +456,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/blades",
-   "after": "Blades of Attack"
+   "_after": "Blades of Attack"
   },
   {
    "id": "quarterstaff",
@@ -456,7 +477,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/quarterstaff",
-   "after": "Quarterstaff"
+   "_after": "Quarterstaff"
   },
   {
    "id": "chainmail",
@@ -476,7 +497,28 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/chainmail",
-   "after": "Chainmail"
+   "_after": "Chainmail"
+  },
+  {
+   "id": "helm_iron_will",
+   "cost": 950,
+   "parts": [],
+   "recipe": false,
+   "shop": "home",
+   "tab": "armaments",
+   "bonus": {
+    "armor": 500,
+    "hp_regen": 300
+   },
+   "logic": "",
+   "values": {},
+   "cooldown": 0,
+   "mana": 0,
+   "range": 0,
+   "charges": 0,
+   "stacks": false,
+   "icon": "items/helm_iron_will",
+   "_after": "Helm of Iron Will"
   },
   {
    "id": "broadsword",
@@ -496,7 +538,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/broadsword",
-   "after": "Broadsword"
+   "_after": "Broadsword"
   },
   {
    "id": "claymore",
@@ -516,7 +558,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/claymore",
-   "after": "Claymore"
+   "_after": "Claymore"
   },
   {
    "id": "platemail",
@@ -536,7 +578,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/platemail",
-   "after": "Platemail"
+   "_after": "Platemail"
   },
   {
    "id": "javelin",
@@ -549,18 +591,21 @@
     "damage": 21
    },
    "logic": "",
-   "values": {},
+   "values": {
+    "chance": 20,
+    "damage": 40
+   },
    "cooldown": 0,
    "mana": 0,
    "range": 0,
    "charges": 0,
    "stacks": false,
    "icon": "items/javelin",
-   "after": "Javelin"
+   "_after": "Javelin"
   },
   {
    "id": "mithril",
-   "cost": 1610,
+   "cost": 1600,
    "parts": [],
    "recipe": false,
    "shop": "home",
@@ -576,7 +621,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/mithril",
-   "after": "Mithril Hammer"
+   "_after": "Mithril Hammer"
   },
   {
    "id": "gloves",
@@ -596,11 +641,11 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/gloves",
-   "after": "Gloves of Haste"
+   "_after": "Gloves of Haste"
   },
   {
    "id": "boots",
-   "cost": 500,
+   "cost": 450,
    "parts": [],
    "recipe": false,
    "shop": "home",
@@ -616,7 +661,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/boots",
-   "after": "Boots of Speed"
+   "_after": "Boots of Speed"
   },
   {
    "id": "ring_regen",
@@ -636,7 +681,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/ring_regen",
-   "after": "Ring of Regeneration"
+   "_after": "Ring of Regeneration"
   },
   {
    "id": "sobi",
@@ -656,11 +701,11 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/sobi",
-   "after": "Sage's Mask"
+   "_after": "Sage's Mask"
   },
   {
    "id": "void_stone",
-   "cost": 900,
+   "cost": 875,
    "parts": [],
    "recipe": false,
    "shop": "home",
@@ -676,7 +721,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/void_stone",
-   "after": "Void Stone"
+   "_after": "Void Stone"
   },
   {
    "id": "ring_health",
@@ -696,7 +741,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/ring_health",
-   "after": "Ring of Health"
+   "_after": "Ring of Health"
   },
   {
    "id": "vitality",
@@ -716,7 +761,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/vitality",
-   "after": "Vitality Booster"
+   "_after": "Vitality Booster"
   },
   {
    "id": "energy",
@@ -734,7 +779,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/energy",
-   "after": "Energy Booster"
+   "_after": "Energy Booster"
   },
   {
    "id": "point_booster",
@@ -754,7 +799,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/point_booster",
-   "after": "Point Booster"
+   "_after": "Point Booster"
   },
   {
    "id": "magic_stick",
@@ -767,7 +812,8 @@
    "logic": "wand",
    "values": {
     "per_charge": 15,
-    "max": 10
+    "max": 10,
+    "radius": 1200
    },
    "cooldown": 1300,
    "mana": 0,
@@ -775,7 +821,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/magic_stick",
-   "after": "Magic Stick",
+   "_after": "Magic Stick",
    "target": "none"
   },
   {
@@ -787,14 +833,16 @@
    "tab": "arcane",
    "bonus": {},
    "logic": "blink",
-   "values": {},
-   "cooldown": 1400,
+   "values": {
+    "damage_lock": 300
+   },
+   "cooldown": 1200,
    "mana": 75,
    "range": 1200,
    "charges": 0,
    "stacks": false,
    "icon": "items/blink",
-   "after": "Blink Dagger",
+   "_after": "Blink Dagger",
    "target": "point"
   },
   {
@@ -815,7 +863,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/hyperstone",
-   "after": "Hyperstone"
+   "_after": "Hyperstone"
   },
   {
    "id": "demon_edge",
@@ -835,7 +883,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/demon_edge",
-   "after": "Demon Edge"
+   "_after": "Demon Edge"
   },
   {
    "id": "eaglesong",
@@ -855,7 +903,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/eaglesong",
-   "after": "Eaglesong"
+   "_after": "Eaglesong"
   },
   {
    "id": "reaver",
@@ -875,7 +923,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/reaver",
-   "after": "Reaver"
+   "_after": "Reaver"
   },
   {
    "id": "mystic",
@@ -895,7 +943,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/mystic",
-   "after": "Mystic Staff"
+   "_after": "Mystic Staff"
   },
   {
    "id": "relic",
@@ -915,7 +963,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/relic",
-   "after": "Sacred Relic"
+   "_after": "Sacred Relic"
   },
   {
    "id": "talisman",
@@ -935,7 +983,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/talisman",
-   "after": "Talisman of Evasion"
+   "_after": "Talisman of Evasion"
   },
   {
    "id": "mask_death",
@@ -955,13 +1003,14 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/mask_death",
-   "after": "Mask of Death"
+   "_after": "Mask of Death"
   },
   {
    "id": "magic_wand",
    "cost": 150,
    "parts": [
     "magic_stick",
+    "branch",
     "branch",
     "branch"
    ],
@@ -976,7 +1025,8 @@
    "logic": "wand",
    "values": {
     "per_charge": 15,
-    "max": 15
+    "max": 15,
+    "radius": 1200
    },
    "cooldown": 1300,
    "mana": 0,
@@ -984,12 +1034,12 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/magic_wand",
-   "after": "Magic Wand",
+   "_after": "Magic Wand",
    "target": "none"
   },
   {
    "id": "bracer",
-   "cost": 175,
+   "cost": 190,
    "parts": [
     "circlet",
     "gauntlets"
@@ -998,6 +1048,7 @@
    "shop": "home",
    "tab": "common",
    "bonus": {
+    "damage": 3,
     "str": 6,
     "agi": 3,
     "int": 3
@@ -1010,7 +1061,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/bracer",
-   "after": "Bracer"
+   "_after": "Bracer"
   },
   {
    "id": "wraith_band",
@@ -1023,6 +1074,7 @@
    "shop": "home",
    "tab": "common",
    "bonus": {
+    "damage": 3,
     "str": 3,
     "agi": 6,
     "int": 3
@@ -1035,7 +1087,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/wraith_band",
-   "after": "Wraith Band"
+   "_after": "Wraith Band"
   },
   {
    "id": "null_talisman",
@@ -1048,6 +1100,7 @@
    "shop": "home",
    "tab": "common",
    "bonus": {
+    "damage": 3,
     "str": 3,
     "agi": 3,
     "int": 6
@@ -1060,7 +1113,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/null_talisman",
-   "after": "Null Talisman"
+   "_after": "Null Talisman"
   },
   {
    "id": "power_treads",
@@ -1074,7 +1127,7 @@
    "shop": "home",
    "tab": "common",
    "bonus": {
-    "move_speed": 60,
+    "move_speed": 55,
     "attack_speed": 30,
     "str": 8
    },
@@ -1086,7 +1139,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/power_treads",
-   "after": "Power Treads"
+   "_after": "Power Treads"
   },
   {
    "id": "phase_boots",
@@ -1100,22 +1153,26 @@
    "shop": "home",
    "tab": "common",
    "bonus": {
-    "move_speed": 60,
+    "move_speed": 55,
     "damage": 24
    },
    "logic": "",
-   "values": {},
+   "values": {
+    "move_pct": 16,
+    "duration": 400,
+    "cooldown": 800
+   },
    "cooldown": 0,
    "mana": 0,
    "range": 0,
    "charges": 0,
    "stacks": false,
    "icon": "items/phase_boots",
-   "after": "Phase Boots"
+   "_after": "Phase Boots"
   },
   {
    "id": "travel_boots",
-   "cost": 2200,
+   "cost": 2000,
    "parts": [
     "boots"
    ],
@@ -1133,8 +1190,35 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/travel_boots",
-   "after": "Boots of Travel",
+   "_after": "Boots of Travel",
    "target": "point"
+  },
+  {
+   "id": "oblivion_staff",
+   "cost": 0,
+   "parts": [
+    "quarterstaff",
+    "robe",
+    "sobi"
+   ],
+   "recipe": false,
+   "shop": "home",
+   "tab": "common",
+   "bonus": {
+    "int": 6,
+    "attack_speed": 15,
+    "damage": 10,
+    "mana_regen_pct": 75
+   },
+   "logic": "",
+   "values": {},
+   "cooldown": 0,
+   "mana": 0,
+   "range": 0,
+   "charges": 0,
+   "stacks": false,
+   "icon": "items/oblivion_staff",
+   "_after": "Oblivion Staff"
   },
   {
    "id": "perseverance",
@@ -1159,7 +1243,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/perseverance",
-   "after": "Perseverance"
+   "_after": "Perseverance"
   },
   {
    "id": "midas",
@@ -1184,7 +1268,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/midas",
-   "after": "Hand of Midas",
+   "_after": "Hand of Midas",
    "target": "unit"
   },
   {
@@ -1211,7 +1295,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/buckler",
-   "after": "Buckler"
+   "_after": "Buckler"
   },
   {
    "id": "headdress",
@@ -1237,7 +1321,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/headdress",
-   "after": "Headdress"
+   "_after": "Headdress"
   },
   {
    "id": "mekansm",
@@ -1260,7 +1344,10 @@
     "heal": 250,
     "armor": 2,
     "radius": 750,
-    "duration": 2500
+    "duration": 2500,
+    "aura_regen": 400,
+    "aura_radius": 750,
+    "lockout": 2500
    },
    "cooldown": 4500,
    "mana": 150,
@@ -1268,7 +1355,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/mekansm",
-   "after": "Mekansm",
+   "_after": "Mekansm",
    "target": "none"
   },
   {
@@ -1276,7 +1363,8 @@
    "cost": 0,
    "parts": [
     "ring_health",
-    "vitality"
+    "vitality",
+    "stout_shield"
    ],
    "recipe": false,
    "shop": "home",
@@ -1286,14 +1374,18 @@
     "hp_regen": 600
    },
    "logic": "",
-   "values": {},
+   "values": {
+    "block_chance": 70,
+    "block_melee": 40,
+    "block_ranged": 20
+   },
    "cooldown": 0,
    "mana": 0,
    "range": 0,
    "charges": 0,
    "stacks": false,
    "icon": "items/vanguard",
-   "after": "Vanguard"
+   "_after": "Vanguard"
   },
   {
    "id": "bkb",
@@ -1311,7 +1403,11 @@
    },
    "logic": "bkb",
    "values": {
-    "duration": 1000
+    "duration": 1000,
+    "min_duration": 400,
+    "min_cooldown": 5000,
+    "step_duration": 100,
+    "step_cooldown": 500
    },
    "cooldown": 8000,
    "mana": 0,
@@ -1319,7 +1415,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/bkb",
-   "after": "Black King Bar",
+   "_after": "Black King Bar",
    "target": "none"
   },
   {
@@ -1334,18 +1430,21 @@
    "tab": "protect",
    "bonus": {
     "str": 40,
-    "hp": 300,
-    "hp_regen": 1500
+    "hp": 300
    },
-   "logic": "",
-   "values": {},
+   "logic": "heart",
+   "values": {
+    "regen_pct": 2,
+    "delay": 600,
+    "melee_delay": 400
+   },
    "cooldown": 0,
    "mana": 0,
    "range": 0,
    "charges": 0,
    "stacks": false,
    "icon": "items/heart",
-   "after": "Heart of Tarrasque"
+   "_after": "Heart of Tarrasque"
   },
   {
    "id": "shivas",
@@ -1363,10 +1462,13 @@
    },
    "logic": "shivas",
    "values": {
-    "radius": 720,
+    "radius": 719,
     "damage": 200,
     "slow": 40,
-    "duration": 400
+    "duration": 400,
+    "speed": 300,
+    "aura_radius": 900,
+    "aura_attack_slow": 40
    },
    "cooldown": 3000,
    "mana": 100,
@@ -1374,7 +1476,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/shivas",
-   "after": "Shiva's Guard",
+   "_after": "Shiva's Guard",
    "target": "none"
   },
   {
@@ -1396,7 +1498,8 @@
    "values": {
     "radius": 900,
     "armor": 5,
-    "attack_speed": 15
+    "attack_speed": 20,
+    "enemy_armor": 5
    },
    "cooldown": 0,
    "mana": 0,
@@ -1404,7 +1507,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/assault",
-   "after": "Assault Cuirass"
+   "_after": "Assault Cuirass"
   },
   {
    "id": "linkens",
@@ -1425,14 +1528,16 @@
     "damage": 10
    },
    "logic": "",
-   "values": {},
+   "values": {
+    "block_cooldown": 1700
+   },
    "cooldown": 0,
    "mana": 0,
    "range": 0,
    "charges": 0,
    "stacks": false,
    "icon": "items/linkens",
-   "after": "Linken's Sphere"
+   "_after": "Linken's Sphere"
   },
   {
    "id": "battlefury",
@@ -1461,14 +1566,40 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/battlefury",
-   "after": "Battle Fury"
+   "_after": "Battle Fury"
+  },
+  {
+   "id": "crystalys",
+   "cost": 500,
+   "parts": [
+    "broadsword",
+    "blades"
+   ],
+   "recipe": true,
+   "shop": "home",
+   "tab": "weapons",
+   "bonus": {
+    "damage": 30
+   },
+   "logic": "crit",
+   "values": {
+    "chance": 20,
+    "multiplier": 175
+   },
+   "cooldown": 0,
+   "mana": 0,
+   "range": 0,
+   "charges": 0,
+   "stacks": false,
+   "icon": "items/crystalys",
+   "_after": "Crystalys"
   },
   {
    "id": "daedalus",
-   "cost": 1250,
+   "cost": 1000,
    "parts": [
     "demon_edge",
-    "claymore"
+    "crystalys"
    ],
    "recipe": true,
    "shop": "home",
@@ -1487,7 +1618,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/daedalus",
-   "after": "Buriza-do Kyanon"
+   "_after": "Buriza-do Kyanon"
   },
   {
    "id": "mkb",
@@ -1517,7 +1648,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/mkb",
-   "after": "Monkey King Bar"
+   "_after": "Monkey King Bar"
   },
   {
    "id": "basher",
@@ -1546,7 +1677,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/basher",
-   "after": "Cranium Basher"
+   "_after": "Cranium Basher"
   },
   {
    "id": "butterfly",
@@ -1573,7 +1704,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/butterfly",
-   "after": "Butterfly"
+   "_after": "Butterfly"
   },
   {
    "id": "desolator",
@@ -1591,7 +1722,7 @@
    "logic": "corrupt",
    "values": {
     "armor": 7,
-    "duration": 700
+    "duration": 1500
    },
    "cooldown": 0,
    "mana": 0,
@@ -1599,7 +1730,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/desolator",
-   "after": "Stygian Desolator"
+   "_after": "Stygian Desolator"
   },
   {
    "id": "maelstrom",
@@ -1612,13 +1743,15 @@
    "shop": "home",
    "tab": "weapons",
    "bonus": {
-    "damage": 24
+    "damage": 24,
+    "attack_speed": 25
    },
    "logic": "lightning",
    "values": {
     "chance": 25,
     "damage": 120,
-    "bounces": 4
+    "bounces": 4,
+    "radius": 500
    },
    "cooldown": 0,
    "mana": 0,
@@ -1626,11 +1759,11 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/maelstrom",
-   "after": "Maelstrom"
+   "_after": "Maelstrom"
   },
   {
    "id": "mjollnir",
-   "cost": 900,
+   "cost": 600,
    "parts": [
     "maelstrom",
     "hyperstone"
@@ -1646,7 +1779,14 @@
    "values": {
     "chance": 25,
     "damage": 160,
-    "bounces": 8
+    "bounces": 8,
+    "radius": 500,
+    "shield_chance": 20,
+    "shield_damage": 200,
+    "shield_duration": 2000,
+    "shield_cooldown": 3500,
+    "shield_mana": 50,
+    "shield_range": 600
    },
    "cooldown": 0,
    "mana": 0,
@@ -1654,7 +1794,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/mjollnir",
-   "after": "Mjollnir"
+   "_after": "Mjollnir"
   },
   {
    "id": "radiance",
@@ -1679,7 +1819,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/radiance",
-   "after": "Radiance"
+   "_after": "Radiance"
   },
   {
    "id": "rapier",
@@ -1702,28 +1842,52 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/rapier",
-   "after": "Divine Rapier"
+   "_after": "Divine Rapier"
+  },
+  {
+   "id": "helm_dominator",
+   "cost": 0,
+   "parts": [
+    "helm_iron_will",
+    "mask_death"
+   ],
+   "recipe": false,
+   "shop": "home",
+   "tab": "weapons",
+   "bonus": {
+    "armor": 500,
+    "damage": 20,
+    "lifesteal": 15
+   },
+   "logic": "",
+   "values": {},
+   "cooldown": 0,
+   "mana": 0,
+   "range": 0,
+   "charges": 0,
+   "stacks": false,
+   "icon": "items/helm_dominator",
+   "_after": "Helm of the Dominator"
   },
   {
    "id": "satanic",
    "cost": 1100,
    "parts": [
     "reaver",
-    "mask_death",
-    "claymore"
+    "helm_dominator"
    ],
    "recipe": true,
    "shop": "home",
    "tab": "weapons",
    "bonus": {
     "str": 25,
-    "damage": 21,
+    "damage": 20,
     "armor": 500,
     "lifesteal": 25
    },
    "logic": "satanic",
    "values": {
-    "lifesteal": 75,
+    "lifesteal": 175,
     "duration": 350
    },
    "cooldown": 3500,
@@ -1732,12 +1896,12 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/satanic",
-   "after": "Satanic",
+   "_after": "Satanic",
    "target": "none"
   },
   {
    "id": "sange",
-   "cost": 1000,
+   "cost": 600,
    "parts": [
     "belt",
     "ogre_club"
@@ -1750,18 +1914,22 @@
     "damage": 10
    },
    "logic": "",
-   "values": {},
+   "values": {
+    "maim_chance": 15,
+    "maim_slow": 20,
+    "maim_duration": 400
+   },
    "cooldown": 0,
    "mana": 0,
    "range": 0,
    "charges": 0,
    "stacks": false,
    "icon": "items/sange",
-   "after": "Sange"
+   "_after": "Sange"
   },
   {
    "id": "yasha",
-   "cost": 1000,
+   "cost": 600,
    "parts": [
     "elvenskin",
     "alacrity"
@@ -1782,7 +1950,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/yasha",
-   "after": "Yasha"
+   "_after": "Yasha"
   },
   {
    "id": "sange_yasha",
@@ -1797,23 +1965,27 @@
    "bonus": {
     "str": 16,
     "agi": 16,
-    "damage": 12,
-    "attack_speed": 15,
+    "damage": 16,
+    "attack_speed": 16,
     "move_pct": 12
    },
    "logic": "",
-   "values": {},
+   "values": {
+    "maim_chance": 16,
+    "maim_slow": 30,
+    "maim_duration": 400
+   },
    "cooldown": 0,
    "mana": 0,
    "range": 0,
    "charges": 0,
    "stacks": false,
    "icon": "items/sange_yasha",
-   "after": "Sange and Yasha"
+   "_after": "Sange and Yasha"
   },
   {
    "id": "manta",
-   "cost": 800,
+   "cost": 900,
    "parts": [
     "yasha",
     "ultimate_orb"
@@ -1832,20 +2004,23 @@
    "values": {
     "duration": 2000,
     "dealt": 33,
-    "taken": 350
+    "taken": 350,
+    "ranged_dealt": 28,
+    "ranged_taken": 400,
+    "ranged_cooldown": 5000
    },
-   "cooldown": 5000,
+   "cooldown": 3500,
    "mana": 165,
    "range": 0,
    "charges": 0,
    "stacks": false,
    "icon": "items/manta",
-   "after": "Manta Style",
+   "_after": "Manta Style",
    "target": "none"
   },
   {
    "id": "dagon",
-   "cost": 1300,
+   "cost": 1250,
    "parts": [
     "wizardry",
     "null_talisman"
@@ -1869,24 +2044,24 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/dagon",
-   "after": "Dagon",
+   "_after": "Dagon",
    "target": "unit"
   },
   {
    "id": "euls",
-   "cost": 0,
+   "cost": 500,
    "parts": [
     "wizardry",
     "void_stone",
     "sobi"
    ],
-   "recipe": false,
+   "recipe": true,
    "shop": "home",
    "tab": "caster",
    "bonus": {
     "int": 10,
     "mana_regen_pct": 150,
-    "move_speed": 30
+    "move_speed": 35
    },
    "logic": "euls",
    "values": {
@@ -1898,12 +2073,12 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/euls",
-   "after": "Eul's Scepter of Divinity",
+   "_after": "Eul's Scepter of Divinity",
    "target": "unit"
   },
   {
    "id": "force_staff",
-   "cost": 1000,
+   "cost": 900,
    "parts": [
     "wizardry",
     "ring_regen"
@@ -1917,7 +2092,8 @@
    },
    "logic": "force",
    "values": {
-    "distance": 600
+    "distance": 600,
+    "time": 30
    },
    "cooldown": 2000,
    "mana": 25,
@@ -1925,19 +2101,15 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/force_staff",
-   "after": "Force Staff",
+   "_after": "Force Staff",
    "target": "unit"
   },
   {
    "id": "orchid",
    "cost": 775,
    "parts": [
-    "quarterstaff",
-    "robe",
-    "sobi",
-    "quarterstaff",
-    "robe",
-    "sobi"
+    "oblivion_staff",
+    "oblivion_staff"
    ],
    "recipe": true,
    "shop": "home",
@@ -1946,11 +2118,12 @@
     "int": 25,
     "attack_speed": 30,
     "damage": 30,
-    "mana_regen_pct": 225
+    "mana_regen_pct": 150
    },
    "logic": "orchid",
    "values": {
-    "duration": 500
+    "duration": 500,
+    "amp": 30
    },
    "cooldown": 1800,
    "mana": 100,
@@ -1958,7 +2131,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/orchid",
-   "after": "Orchid Malevolence",
+   "_after": "Orchid Malevolence",
    "target": "unit"
   },
   {
@@ -1988,7 +2161,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/sheep",
-   "after": "Guinsoo's Scythe of Vyse",
+   "_after": "Guinsoo's Scythe of Vyse",
    "target": "unit"
   },
   {
@@ -2017,7 +2190,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/aghanims",
-   "after": "Aghanim's Scepter"
+   "_after": "Aghanim's Scepter"
   },
   {
    "id": "aegis",
@@ -2029,7 +2202,8 @@
    "bonus": {},
    "logic": "",
    "values": {
-    "delay": 500
+    "delay": 500,
+    "expires": 36000
    },
    "cooldown": 0,
    "mana": 0,
@@ -2037,7 +2211,7 @@
    "charges": 0,
    "stacks": false,
    "icon": "items/aegis",
-   "after": "Aegis of the Immortal"
+   "_after": "Aegis of the Immortal"
   }
  ]
 }

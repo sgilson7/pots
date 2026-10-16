@@ -18,7 +18,11 @@ use std::path::{Path, PathBuf};
 use pots_core::glossary;
 
 /// (file name, word, reason): a ruled-out word that is right in one file.
-const ALLOWED: &[(&str, &str, &str)] = &[];
+const ALLOWED: &[(&str, &str, &str)] = &[(
+    "data/strings.json.ui.title.fine",
+    "defense",
+    "the name of the Warcraft III map the game follows, Defense of the Ancients",
+)];
 
 fn root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("..").join("..")

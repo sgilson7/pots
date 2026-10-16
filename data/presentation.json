@@ -3,9 +3,72 @@
  "reach_south": 1500,
  "reach_north": 3400,
  "fog_pct": 52,
- "bar_hero": [180, 22],
- "bar_unit": [110, 16],
- "bar_building": [300, 26],
+ "bar_hero": [
+  180,
+  22
+ ],
+ "bar_unit": [
+  110,
+  16
+ ],
+ "bar_building": [
+  300,
+  26
+ ],
  "missile": 30,
- "unit_scale": 200
+ "unit_scale": 200,
+ "cam_distance": 5200,
+ "cam_pitch": 56,
+ "cam_fov": 52,
+ "pan_speed": 2400,
+ "edge": 2,
+ "zoom_min": 3200,
+ "zoom_max": 6200,
+ "zoom_step": 300,
+ "light_dir": [
+  -35,
+  80,
+  45
+ ],
+ "sky": [
+  132,
+  160,
+  196
+ ],
+ "fog": [
+  96,
+  112,
+  128
+ ],
+ "fog_range": [
+  9000,
+  16000
+ ],
+ "light": [
+  255,
+  246,
+  230
+ ],
+ "ink": [
+  46,
+  36,
+  52
+ ],
+ "ink_size": [
+  3,
+  1,
+  6
+ ],
+ "bands": [
+  45,
+  0,
+  85,
+  70
+ ],
+ "ambient": [
+  74,
+  72,
+  80
+ ],
+ "max_ticks_per_frame": 6
 }

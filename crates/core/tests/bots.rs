@@ -25,8 +25,16 @@ fn ten_bots_play_twenty_minutes_without_a_fault() {
     let per_tick = start.elapsed().as_micros() as f64 / w.tick as f64;
     let kills: i32 = w.players.iter().map(|p| p.kills).sum();
     let lh: i32 = w.players.iter().map(|p| p.last_hits).sum();
-    let levels: Vec<i32> = w.players.iter().map(|p| w.get(p.hero).map(|u| u.level()).unwrap_or(0)).collect();
-    let towers = w.units.iter().filter(|u| u.alive && ctx.rules.units[u.def as usize].kind == pots_core::rules::Kind::Tower).count();
+    let levels: Vec<i32> = w
+        .players
+        .iter()
+        .map(|p| w.get(p.hero).map(|u| u.level()).unwrap_or(0))
+        .collect();
+    let towers = w
+        .units
+        .iter()
+        .filter(|u| u.alive && ctx.rules.units[u.def as usize].kind == pots_core::rules::Kind::Tower)
+        .count();
     println!(
         "tick {} ({} s), {:.0} us a tick, kills {kills}, last hits {lh}, levels {levels:?}, towers standing {towers}, units {}",
         w.tick,

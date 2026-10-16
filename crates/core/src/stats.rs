@@ -58,8 +58,8 @@ pub fn attrs_x100(ctx: &Ctx, w: &World, id: Uid) -> [i32; 3] {
     let level = u.level();
     let bonus = u.hero.as_ref().map(|h| h.bonus).unwrap_or(0) * ctx.rules.t.stat_bonus * 100;
     let mut out = [0; 3];
-    for k in 0..3 {
-        out[k] = a.base[k] * 100 + a.gain[k] * (level - 1) + bonus;
+    for (k, v) in out.iter_mut().enumerate() {
+        *v = a.base[k] * 100 + a.gain[k] * (level - 1) + bonus;
     }
     for s in &u.items {
         if s.item == 0 {
@@ -124,7 +124,10 @@ pub fn of(ctx: &Ctx, w: &World, id: Uid) -> Stats {
     }
     if d.kind == Kind::Creep {
         s.max_hp += d.upgrade_hp * u.upgrade;
-        s.damage = [d.damage[0] + d.upgrade_damage * u.upgrade, d.damage[1] + d.upgrade_damage * u.upgrade];
+        s.damage = [
+            d.damage[0] + d.upgrade_damage * u.upgrade,
+            d.damage[1] + d.upgrade_damage * u.upgrade,
+        ];
     }
     let mut move_pct_item = 0;
     let mut mana_regen_pct = 0;
@@ -237,6 +240,14 @@ pub fn regen(w: &mut World, ctx: &Ctx) {
     }
     for (src, dst, per_sec) in dots {
         // damage over time is magical, in hundredths a second
-        crate::combat::damage_milli(w, ctx, src, dst, per_sec * 10 / TPS, crate::combat::Dmg::Magic, false);
+        crate::combat::damage_milli(
+            w,
+            ctx,
+            src,
+            dst,
+            per_sec * 10 / TPS,
+            crate::combat::Dmg::Magic,
+            false,
+        );
     }
 }

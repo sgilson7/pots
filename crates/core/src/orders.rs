@@ -333,7 +333,11 @@ pub fn engage(w: &mut World, ctx: &Ctx, id: Uid, t: Uid, may_move: bool) -> bool
         }
     }
     let s = stats::of(ctx, w, id);
-    if s.range <= 0 || w.get(id).map(|u| u.has(M::Hex) || u.has(M::Disarm)).unwrap_or(true) {
+    if s.range <= 0
+        || w.get(id)
+            .map(|u| u.has(M::Hex) || u.has(M::Disarm))
+            .unwrap_or(true)
+    {
         return false;
     }
     if in_range(w, ctx, id, t, s.range) {
@@ -379,7 +383,10 @@ fn act_one(w: &mut World, ctx: &Ctx, id: Uid) {
     }
     if u.disabled() {
         let u = w.get_mut(id).expect("checked");
-        if matches!(u.act, Act::Channel { .. } | Act::Swing { .. } | Act::Cast { .. } | Act::Backswing { .. }) {
+        if matches!(
+            u.act,
+            Act::Channel { .. } | Act::Swing { .. } | Act::Cast { .. } | Act::Backswing { .. }
+        ) {
             let was = u.act;
             u.act = Act::None;
             if let Act::Channel { slot, .. } = was {
@@ -396,7 +403,13 @@ fn act_one(w: &mut World, ctx: &Ctx, id: Uid) {
             }
             return;
         }
-        Act::Cast { slot, t, at, fire_at, item } => {
+        Act::Cast {
+            slot,
+            t,
+            at,
+            fire_at,
+            item,
+        } => {
             if w.tick >= fire_at {
                 w.get_mut(id).expect("checked").act = Act::None;
                 if item {
@@ -543,7 +556,11 @@ fn separate(w: &mut World, ctx: &Ctx) {
             let d = fx::isqrt(d2 as u64) as i64;
             let overlap = rr - d;
             // a building pushes fully; two walkers share the push
-            let share = if db.kind.is_building() || db.speed == 0 { 1 } else { 2 };
+            let share = if db.kind.is_building() || db.speed == 0 {
+                1
+            } else {
+                2
+            };
             let (ux, uy) = if d == 0 {
                 // exactly on top: separate by slot order
                 (if i < j { SUB as i64 } else { -(SUB as i64) }, 0)
@@ -551,7 +568,11 @@ fn separate(w: &mut World, ctx: &Ctx) {
                 (dx as i64 * SUB as i64 / d, dy as i64 * SUB as i64 / d)
             };
             let amount = (overlap / share).min(4 * SUB as i64);
-            push.push((i, (ux * amount / SUB as i64) as i32, (uy * amount / SUB as i64) as i32));
+            push.push((
+                i,
+                (ux * amount / SUB as i64) as i32,
+                (uy * amount / SUB as i64) as i32,
+            ));
         }
     }
     let walk = crate::world::Walk {

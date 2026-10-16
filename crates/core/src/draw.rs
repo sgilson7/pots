@@ -256,11 +256,11 @@ mod tests {
 
     fn example() -> Vec<i32> {
         DrawList::new()
-            .clear(Color::Paper)
-            .rect(10, 20, 30, 40, Color::Muted)
-            .shape(Shape::Diamond, 100, 50, Scale::Tile, Color::Accent, Color::Ink, 2)
-            .line(&[(0, 0), (5, 6)], Color::Ink, 1)
-            .text(320, 20, 16, Color::Ink, Align::Center, "Hé")
+            .clear(Color::Grass)
+            .rect(10, 20, 30, 40, Color::Lane)
+            .shape(Shape::Diamond, 100, 50, Scale::Tile, Color::Sun, Color::Frame, 2)
+            .line(&[(0, 0), (5, 6)], Color::Frame, 1)
+            .text(320, 20, 16, Color::Frame, Align::Center, "Hé")
             .finish()
     }
 
@@ -269,11 +269,11 @@ mod tests {
         assert_eq!(
             example(),
             vec![
-                0, 0, //
-                1, 10, 20, 30, 40, 2, //
-                2, 1, 100, 50, 1, 3, 1, 2, //
-                3, 1, 1, 2, 0, 0, 5, 6, //
-                4, 320, 20, 16, 1, 1, 2, 72, 233,
+                0, 1, //
+                1, 10, 20, 30, 40, 3, //
+                2, 1, 100, 50, 1, 6, 10, 2, //
+                3, 10, 1, 2, 0, 0, 5, 6, //
+                4, 320, 20, 16, 10, 1, 2, 72, 233,
             ]
         );
     }

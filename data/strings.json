@@ -1,4 +1,821 @@
 {
-  "title": "A new Builder tool",
-  "intro": "Replace this text in data/strings.json, and replace the placeholder rule in crates/core/src/page.rs with the rules your brief describes."
+ "ui": {
+  "title": "Protection of the Spheres",
+  "title.tagline": "Two sides, three lanes, one Sphere each. Push the creeps, take the towers, break the other side's Sphere.",
+  "title.arcade": "Arcade",
+  "title.online": "Online",
+  "title.heroes": "Heroes",
+  "title.help": "How to play",
+  "title.fine": "A browser game in the manner of the Warcraft III map Defense of the Ancients. Every hero and item here is original.",
+  "back": "Back",
+  "close": "Close",
+  "arcade.title": "Arcade",
+  "arcade.ladder": "Missions",
+  "arcade.sides": "You and {allies} allies ({ally}) against {enemies} enemies ({enemy})",
+  "arcade.custom": "Custom match",
+  "arcade.custom.text": "Choose the size of each side and how well each side's computer players play.",
+  "arcade.allies": "Allies",
+  "arcade.enemies": "Enemies",
+  "arcade.ally_skill": "Ally skill",
+  "arcade.enemy_skill": "Enemy skill",
+  "arcade.custom.start": "Choose a hero",
+  "pick.title": "Choose your hero",
+  "heroes.title": "Heroes",
+  "pick.start": "Start the match",
+  "pick.hint": "Choose a hero to see their abilities.",
+  "attr.str": "Strength hero",
+  "attr.agi": "Agility hero",
+  "attr.int": "Intelligence hero",
+  "tip.mana": "Mana: {mana}",
+  "tip.cooldown": "Cooldown: {cooldown:s} s",
+  "tip.passive": "Passive",
+  "tip.toggle": "Turned on and off",
+  "tip.ultimate": "Ultimate",
+  "tip.price": "Costs {v} gold",
+  "tip.recipe": " + recipe ({v} gold)",
+  "tip.built_from": "Built from {v}",
+  "tip.sell": "Sells for {v} gold",
+  "tip.secret": "Sold only at the secret shop.",
+  "tip.courier": "Your courier brings it from the base.",
+  "bonus.str": "+{v} strength",
+  "bonus.agi": "+{v} agility",
+  "bonus.int": "+{v} intelligence",
+  "bonus.damage": "+{v} damage",
+  "bonus.attack_speed": "+{v} attack speed",
+  "bonus.move_speed": "+{v} movement speed",
+  "bonus.move_pct": "+{v}% movement speed",
+  "bonus.hp": "+{v} health",
+  "bonus.mana": "+{v} mana",
+  "bonus.evasion": "{v}% evasion",
+  "bonus.lifesteal": "{v}% lifesteal",
+  "bonus.mana_regen_pct": "+{v}% mana regeneration",
+  "bonus.armor": "+{v} armor",
+  "bonus.hp_regen": "+{v} health regeneration",
+  "hud.day": "Day",
+  "hud.night": "Night",
+  "hud.kda": "{k} / {d} / {a} · last hits {lh} · denies {dn}",
+  "hud.level": "Level {v}",
+  "hud.aim": "Choose a target. Right-click to cancel.",
+  "hud.aim_attack": "Attack-move: choose a point or a unit.",
+  "hud.learn": "Learn: press Q, W, E or R, or T for the attribute bonus.",
+  "hud.stats_bonus": "+ attributes",
+  "hud.stats_bonus.title": "Attribute bonus",
+  "hud.stats_bonus.text": "Adds to strength, agility and intelligence. Any level may take it.",
+  "hud.shop": "Shop (B)",
+  "hud.score": "Score (Tab)",
+  "hud.glyph": "Glyph",
+  "hud.buyback": "Buy back for {v} gold",
+  "hud.respawn": "Back in {v} s",
+  "hud.courier": "{v} items on the courier",
+  "stat.damage": "Damage",
+  "stat.armor": "Armor",
+  "stat.speed": "Speed",
+  "stat.str": "Str",
+  "stat.agi": "Agi",
+  "stat.int": "Int",
+  "shop.title": "Shop",
+  "score.hero": "Hero",
+  "score.level": "Level",
+  "score.kda": "Kills / deaths / assists",
+  "score.lh": "Last hits / denies",
+  "score.gold": "Gold",
+  "score.bot": "{v} (computer)",
+  "feed.kill": "{killer} killed {victim}",
+  "feed.creeps": "The creeps",
+  "feed.first_blood": "First blood",
+  "feed.tower_lost": "One of your towers fell",
+  "feed.tower_taken": "Your side took a tower",
+  "feed.boss": "The Warden has fallen",
+  "feed.rune": "A rune was taken",
+  "result.won": "Victory",
+  "result.lost": "Defeat",
+  "result.again": "Play again",
+  "result.arcade": "Arcade",
+  "result.title": "Main menu",
+  "menu.title": "Paused",
+  "menu.resume": "Resume",
+  "menu.quit": "Leave the match",
+  "help.title": "How to play",
+  "help.1": "Right-click the ground to walk there. Right-click an enemy to attack it.",
+  "help.2": "Gold comes from the killing blow. Land the last hit on enemy creeps to earn it.",
+  "help.3": "Below half health your own creeps can be denied: kill them yourself so the enemy gets no gold.",
+  "help.4": "Q, W, E and R use your abilities. A targeted ability waits for a click; right-click cancels.",
+  "help.5": "Each level gives one point. Press O, then an ability key, or click the plus under an ability.",
+  "help.6": "Press B for the shop. Away from the base, your courier carries what you buy.",
+  "help.7": "Towers fall in order down each lane. The Sphere can be hurt only after both towers beside it fall.",
+  "help.8": "Attacking an enemy hero near enemy creeps or a tower turns them on you. Spells do not.",
+  "help.9": "Space centres the camera on your hero. Move the pointer to the screen's edge to look around.",
+  "help.10": "A rune appears in the river every second minute. Walk over it to take it.",
+  "help.11": "The Warden waits in a pit by the river. Defeat it for a shield that saves its holder from one death.",
+  "help.12": "Press A, then click, to attack-move. Press S to stop and H to hold position.",
+  "online.title": "Online"
+ },
+ "missions": {
+  "first_steps": {
+   "name": "First steps",
+   "title": "Land {target} last hits within {minutes} minutes",
+   "text": "One quiet enemy and one lane. Watch a creep's health and strike as it drops low enough for one hit."
+  },
+  "the_tower": {
+   "name": "The tower",
+   "title": "Destroy {target} enemy tower",
+   "text": "Push your creeps into the enemy tower. Let them take its first shots, and step back when it turns on you."
+  },
+  "spells": {
+   "name": "Spells and stuns",
+   "title": "Kill the enemy hero {target} times",
+   "text": "Use your abilities on the enemy hero. A stun followed by attacks wins most fights early on."
+  },
+  "shopping": {
+   "name": "Shopping",
+   "title": "Destroy {target} enemy towers",
+   "text": "Buy as you go. Boots first, then an item that suits your hero. Your courier brings what you buy away from the base."
+  },
+  "two_lanes": {
+   "name": "Two lanes",
+   "title": "Break the enemy Sphere",
+   "text": "An ally joins you against two enemies. Win your lane, then push together."
+  },
+  "ganks": {
+   "name": "Ganks",
+   "title": "Break the enemy Sphere",
+   "text": "Three against three. Leave your lane to catch an enemy hero alone with your allies."
+  },
+  "the_warden": {
+   "name": "The Warden",
+   "title": "Defeat the Warden {target} time",
+   "text": "Gather your side and fight the Warden in its pit by the river. Its shield saves the holder from one death."
+  },
+  "full_five": {
+   "name": "Five against five",
+   "title": "Break the enemy Sphere",
+   "text": "A full match against computer players of normal skill."
+  },
+  "hard_five": {
+   "name": "Hard five",
+   "title": "Break the enemy Sphere",
+   "text": "A full match against skilled computer players."
+  },
+  "unfair": {
+   "name": "Unfair",
+   "title": "Break the enemy Sphere",
+   "text": "The enemy's computer players react at once and land almost every last hit."
+  }
+ },
+ "difficulty": {
+  "passive": "Passive",
+  "easy": "Easy",
+  "normal": "Normal",
+  "hard": "Hard",
+  "unfair": "Unfair"
+ },
+ "heroes": {
+  "ironvow": {
+   "name": "Ironvow",
+   "title": "The Sworn Blade",
+   "text": "A plate knight who swore his greatsword to a cause and never set it down. He opens fights with a stun and wins them by cutting through packed enemies."
+  },
+  "rime": {
+   "name": "Rime",
+   "title": "Hermit of the Frost",
+   "text": "A frost hermit who left the cold peaks with a crystal staff. She slows and freezes enemies from behind her allies and keeps their mana flowing."
+  },
+  "cinder": {
+   "name": "Cinder",
+   "title": "The Ember Dancer",
+   "text": "A fire dancer with burning hands who turns every spell into speed. She lands heavy magic damage in quick bursts and finishes heroes from range."
+  },
+  "thistle": {
+   "name": "Thistle",
+   "title": "The Silent Bow",
+   "text": "A hooded archer whose arrows carry frost. She slows enemies with each shot, silences their casters and grows stronger the longer she attacks."
+  },
+  "gristle": {
+   "name": "Gristle",
+   "title": "The Stitched Butcher",
+   "text": "A stitched butcher who drags his prey in with a hook. He pulls a lone enemy out of position and holds it while he feeds."
+  },
+  "tectus": {
+   "name": "Tectus",
+   "title": "Hornbreaker",
+   "text": "A horned stone ox-man who speaks through the ground. He splits the earth to trap enemies and punishes groups that stand together."
+  },
+  "kestrel": {
+   "name": "Kestrel",
+   "title": "The Masked Edge",
+   "text": "A masked bladedancer with a curved sword. He spins through fights immune to spells and ends them with a flurry of strikes no one can stop."
+  },
+  "hexwright": {
+   "name": "Hexwright",
+   "title": "The Gaunt Curse",
+   "text": "A gaunt warlock with a clawed staff and a long list of grudges. He locks down one enemy after another and kills with a single bolt."
+  },
+  "longwick": {
+   "name": "Longwick",
+   "title": "The Patient Rifle",
+   "text": "A gnome marksman with a rifle twice his height. He shoots from farther than anyone else and picks off wounded heroes across the map."
+  },
+  "tempest": {
+   "name": "Tempest",
+   "title": "Keeper of Storms",
+   "text": "An old storm caller crowned with cloud. His lightning chains through enemies, and his last word strikes every enemy hero at once."
+  }
+ },
+ "abilities": {
+  "storm_bolt": {
+   "name": "Vow Hammer",
+   "text": "Hurls a hammer at an enemy. Enemies within {radius} of the target take {damage} magic damage and are stunned for {stun:s} seconds."
+  },
+  "great_cleave": {
+   "name": "Wide Arc",
+   "text": "Melee attacks also hit enemies within {radius} of the target for {pct:%} of their damage."
+  },
+  "warcry": {
+   "name": "Rallying Shout",
+   "text": "Allied heroes within {radius} gain {armor} armor and {move_pct:%} move speed for {duration:s} seconds."
+  },
+  "gods_strength": {
+   "name": "Iron Oath",
+   "text": "Raises attack damage by {damage_pct:%} for {duration:s} seconds."
+  },
+  "crystal_nova": {
+   "name": "Hoarfrost Burst",
+   "text": "Blasts enemies within {radius} of a point for {damage} magic damage. They are slowed by {slow:%} move speed and {attack_slow} attack speed for {duration:s} seconds."
+  },
+  "frostbite": {
+   "name": "Ice Shackle",
+   "text": "Freezes an enemy in place for {duration:s} seconds. It cannot move or attack, and it loses {damage} health over that time."
+  },
+  "brilliance_aura": {
+   "name": "Clear Mind",
+   "text": "Allied heroes anywhere on the map regain {regen:s} extra mana a second."
+  },
+  "freezing_field": {
+   "name": "Winter's Ring",
+   "text": "Channels for up to {duration:s} seconds. Every {interval:s} seconds, an ice blast lands between {inner} and {outer} from Rime and hits enemies within {blast} of it."
+  },
+  "dragon_slave": {
+   "name": "Flame Wave",
+   "text": "Sends a wave of fire {length} forward. Each enemy it passes through takes {damage} magic damage."
+  },
+  "light_strike_array": {
+   "name": "Pillar of Flame",
+   "text": "After {delay:s} seconds, fire strikes the ground. Enemies within {radius} take {damage} magic damage and are stunned for {stun:s} seconds."
+  },
+  "fiery_soul": {
+   "name": "Kindled Step",
+   "text": "Each spell Cinder casts gives her {attack_speed} attack speed and {move_pct:%} move speed for {duration:s} seconds. Stacks up to {stacks} times."
+  },
+  "laguna_blade": {
+   "name": "Searing Lance",
+   "text": "After {delay:s} seconds, a lance of fire strikes one enemy for {damage} magic damage."
+  },
+  "frost_arrows": {
+   "name": "Rimed Arrows",
+   "text": "While on, each attack on an enemy costs mana and slows it by {slow:%} for {duration:s} seconds."
+  },
+  "silence": {
+   "name": "Hush",
+   "text": "Silences enemies within {radius} of a point for {duration:s} seconds. Silenced units cannot cast spells."
+  },
+  "trueshot_aura": {
+   "name": "Hunter's Eye",
+   "text": "Ranged allies within {radius} gain {pct:%} of their base attack damage."
+  },
+  "marksmanship": {
+   "name": "Steady Hand",
+   "text": "Gives Thistle {agi} agility."
+  },
+  "meat_hook": {
+   "name": "Gutting Hook",
+   "text": "Throws a hook in a line. The first unit it hits is dragged back to Gristle, and an enemy takes {damage} pure damage."
+  },
+  "rot": {
+   "name": "Carrion Cloud",
+   "text": "While on, enemies within {radius} take {dps} magic damage a second and are slowed by {slow:%}. Gristle takes the same damage."
+  },
+  "flesh_heap": {
+   "name": "Grave Bulk",
+   "text": "Gives {resist:%} magic resistance. Each enemy hero that dies within {radius} of Gristle adds {str:s} strength for the rest of the game."
+  },
+  "dismember": {
+   "name": "Butcher's Feast",
+   "text": "Channels on an enemy for up to {duration:s} seconds. The enemy is stunned and takes {dps} magic damage a second."
+  },
+  "fissure": {
+   "name": "Rift Stomp",
+   "text": "Splits the ground in a line {length} long. Enemies in it take {damage} magic damage and are stunned for {stun:s} seconds. Rocks block the line for {duration:s} seconds."
+  },
+  "enchant_totem": {
+   "name": "Horn Charge",
+   "text": "Tectus's next attack within {duration:s} seconds deals {damage_pct:%} extra damage."
+  },
+  "aftershock": {
+   "name": "Ground Tremor",
+   "text": "Each spell Tectus casts deals {damage} magic damage to enemies within {radius} and stuns them for {stun:s} seconds."
+  },
+  "echo_slam": {
+   "name": "Resonant Slam",
+   "text": "Deals {damage} magic damage to enemies within {radius}. Each enemy hit takes {echo} more for every other enemy hit."
+  },
+  "blade_fury": {
+   "name": "Whirling Edge",
+   "text": "Kestrel spins for {duration:s} seconds, dealing {dps} magic damage a second to enemies within {radius}. Spells cannot affect him while he spins, and he cannot attack."
+  },
+  "healing_ward": {
+   "name": "Mending Totem",
+   "text": "Places a totem that follows Kestrel for {duration:s} seconds. Allies within {radius} of it regain {heal_pct:%} of their maximum health a second."
+  },
+  "blade_dance": {
+   "name": "Keen Edge",
+   "text": "Each attack has a {chance:%} chance to deal {multiplier:x} damage."
+  },
+  "omnislash": {
+   "name": "Thousand Cuts",
+   "text": "Kestrel leaps between enemies within {radius} up to {jumps} times, one strike every {interval:s} seconds. Each strike deals {min} to {max} physical damage, and he cannot be harmed until it ends."
+  },
+  "earth_spike": {
+   "name": "Thornburst",
+   "text": "Spikes erupt in a line {length} long. Enemies hit take {damage} magic damage and are stunned for {stun:s} seconds."
+  },
+  "hex": {
+   "name": "Toadcurse",
+   "text": "Turns an enemy into a harmless critter for {duration:s} seconds. It cannot attack or cast spells."
+  },
+  "mana_drain": {
+   "name": "Soul Siphon",
+   "text": "Channels on an enemy for up to {duration:s} seconds, taking {drain} mana a second from it. The link breaks if the enemy moves farther than {break} away or runs out of mana."
+  },
+  "finger_of_death": {
+   "name": "Final Verdict",
+   "text": "After {delay:s} seconds, deals {damage} magic damage to one enemy."
+  },
+  "shrapnel": {
+   "name": "Scattershot",
+   "text": "After {delay:s} seconds, shot rains on an area for {duration:s} seconds. Enemies within {radius} take {dps} magic damage a second and are slowed by {slow:%}."
+  },
+  "headshot": {
+   "name": "Clean Shot",
+   "text": "Each attack has a {chance:%} chance to deal {damage} extra physical damage and stun the target for {stun:s} seconds."
+  },
+  "take_aim": {
+   "name": "Long Sight",
+   "text": "Adds {range} to Longwick's attack range."
+  },
+  "assassinate": {
+   "name": "Deadeye",
+   "text": "Takes careful aim, then fires at one enemy. The shot deals {damage} magic damage and stuns for {stun:s} seconds."
+  },
+  "arc_lightning": {
+   "name": "Forked Spark",
+   "text": "Strikes an enemy for {damage} magic damage, then leaps to the nearest enemy within {radius}. It hits up to {bounces} enemies."
+  },
+  "lightning_bolt": {
+   "name": "Skyfall Bolt",
+   "text": "Strikes an enemy for {damage} magic damage and stuns it for {stun:s} seconds."
+  },
+  "static_field": {
+   "name": "Charged Air",
+   "text": "Each spell Tempest casts takes {pct:%} of the current health of each enemy within {radius} as magic damage."
+  },
+  "thundergods_wrath": {
+   "name": "Stormcall",
+   "text": "Strikes every living enemy hero on the map for {damage} magic damage."
+  },
+  "warden_bash": {
+   "name": "Crushing Blow",
+   "text": "Each attack has a {chance:%} chance to deal {damage} extra magic damage and stun the target for {stun:s} seconds."
+  }
+ },
+ "items": {
+  "tango": {
+   "name": "Sapling Chew",
+   "text": "Eat a tree within {range} to restore {heal} health over {duration:s} seconds. Holds {charges} uses."
+  },
+  "salve": {
+   "name": "Poultice",
+   "text": "Restores {heal} health to an ally over {duration:s} seconds."
+  },
+  "clarity": {
+   "name": "Stillwater Draught",
+   "text": "Restores {mana} mana to an ally over {duration:s} seconds."
+  },
+  "tp": {
+   "name": "Waystone",
+   "text": "Moves your hero to the allied building nearest the chosen point."
+  },
+  "observer": {
+   "name": "Watching Eye",
+   "text": "Places an unseen ward that gives sight of the area around it for {duration:s} seconds. Holds {charges} wards."
+  },
+  "sentry": {
+   "name": "Seeker's Ward",
+   "text": "Places an unseen ward for {duration:s} seconds that reveals unseen enemies within {true_sight}. Holds {charges} wards."
+  },
+  "bottle": {
+   "name": "Fountain Flask",
+   "text": "Restores {heal} health and {mana} mana over {duration:s} seconds. Holds {charges} draughts and refills at your fountain."
+  },
+  "branch": {
+   "name": "Ashwood Twig",
+   "text": ""
+  },
+  "gauntlets": {
+   "name": "Ox Bracers",
+   "text": ""
+  },
+  "slippers": {
+   "name": "Fleetfoot Wraps",
+   "text": ""
+  },
+  "mantle": {
+   "name": "Scholar's Shawl",
+   "text": ""
+  },
+  "circlet": {
+   "name": "Gilded Band",
+   "text": ""
+  },
+  "belt": {
+   "name": "Bull Girdle",
+   "text": ""
+  },
+  "elvenskin": {
+   "name": "Stalker's Sash",
+   "text": ""
+  },
+  "robe": {
+   "name": "Sage Vestments",
+   "text": ""
+  },
+  "ogre_club": {
+   "name": "Brute Maul",
+   "text": ""
+  },
+  "alacrity": {
+   "name": "Quickening Blade",
+   "text": ""
+  },
+  "wizardry": {
+   "name": "Rod of Lore",
+   "text": ""
+  },
+  "ultimate_orb": {
+   "name": "Dawnstone",
+   "text": ""
+  },
+  "ring_protection": {
+   "name": "Warding Ring",
+   "text": ""
+  },
+  "stout_shield": {
+   "name": "Plank Shield",
+   "text": ""
+  },
+  "blades": {
+   "name": "Twin Knives",
+   "text": ""
+  },
+  "quarterstaff": {
+   "name": "Ashen Pole",
+   "text": ""
+  },
+  "chainmail": {
+   "name": "Ringmail Shirt",
+   "text": ""
+  },
+  "helm_iron_will": {
+   "name": "Stalwart Helm",
+   "text": ""
+  },
+  "broadsword": {
+   "name": "Warblade",
+   "text": ""
+  },
+  "claymore": {
+   "name": "Greatblade",
+   "text": ""
+  },
+  "platemail": {
+   "name": "Bastion Plate",
+   "text": ""
+  },
+  "javelin": {
+   "name": "Hunting Spear",
+   "text": ""
+  },
+  "mithril": {
+   "name": "Starsteel Hammer",
+   "text": ""
+  },
+  "gloves": {
+   "name": "Swift Gloves",
+   "text": ""
+  },
+  "boots": {
+   "name": "Road Boots",
+   "text": ""
+  },
+  "ring_regen": {
+   "name": "Mending Ring",
+   "text": ""
+  },
+  "sobi": {
+   "name": "Monk's Veil",
+   "text": ""
+  },
+  "void_stone": {
+   "name": "Hollow Stone",
+   "text": ""
+  },
+  "ring_health": {
+   "name": "Lifebloom Ring",
+   "text": ""
+  },
+  "vitality": {
+   "name": "Vigor Charm",
+   "text": ""
+  },
+  "energy": {
+   "name": "Spark Gem",
+   "text": ""
+  },
+  "point_booster": {
+   "name": "Twinstone",
+   "text": ""
+  },
+  "magic_stick": {
+   "name": "Echo Rod",
+   "text": "Gains a charge each time an enemy hero casts a spell within {radius}, up to {max}. Use it to restore {per_charge} health and mana for each charge."
+  },
+  "blink": {
+   "name": "Skipstone",
+   "text": "Moves your hero up to {range} to the chosen point. It cannot be used for {damage_lock:s} seconds after an enemy hero deals damage to you."
+  },
+  "hyperstone": {
+   "name": "Quickstone",
+   "text": ""
+  },
+  "demon_edge": {
+   "name": "Grim Edge",
+   "text": ""
+  },
+  "eaglesong": {
+   "name": "Hawkcall",
+   "text": ""
+  },
+  "reaver": {
+   "name": "Ruinaxe",
+   "text": ""
+  },
+  "mystic": {
+   "name": "Moonwood Staff",
+   "text": ""
+  },
+  "relic": {
+   "name": "Ember Idol",
+   "text": ""
+  },
+  "talisman": {
+   "name": "Wisp Charm",
+   "text": ""
+  },
+  "mask_death": {
+   "name": "Leech Mask",
+   "text": ""
+  },
+  "magic_wand": {
+   "name": "Echo Wand",
+   "text": "Gains a charge each time an enemy hero casts a spell within {radius}, up to {max}. Use it to restore {per_charge} health and mana for each charge."
+  },
+  "bracer": {
+   "name": "Warrior's Cuff",
+   "text": ""
+  },
+  "wraith_band": {
+   "name": "Ranger's Cuff",
+   "text": ""
+  },
+  "null_talisman": {
+   "name": "Mystic's Cuff",
+   "text": ""
+  },
+  "power_treads": {
+   "name": "Strider Boots",
+   "text": ""
+  },
+  "phase_boots": {
+   "name": "Drift Boots",
+   "text": ""
+  },
+  "travel_boots": {
+   "name": "Wayfarer Boots",
+   "text": "Moves your hero to the allied building nearest the chosen point."
+  },
+  "oblivion_staff": {
+   "name": "Lull Staff",
+   "text": ""
+  },
+  "perseverance": {
+   "name": "Endurance Stone",
+   "text": ""
+  },
+  "midas": {
+   "name": "Gilded Palm",
+   "text": "Kills an enemy or neutral creep. You gain {gold} gold and {xp_pct:%} of its usual experience."
+  },
+  "buckler": {
+   "name": "Guard's Targe",
+   "text": ""
+  },
+  "headdress": {
+   "name": "Feather Crown",
+   "text": ""
+  },
+  "mekansm": {
+   "name": "Mender's Engine",
+   "text": "Heals allies within {radius} for {heal} health and gives them {armor} armor for {duration:s} seconds."
+  },
+  "vanguard": {
+   "name": "Bulwark",
+   "text": ""
+  },
+  "bkb": {
+   "name": "Spellward Seal",
+   "text": "Makes your hero immune to spells for {duration:s} seconds."
+  },
+  "heart": {
+   "name": "Heart of the Mountain",
+   "text": "Restores {regen_pct:%} of maximum health a second."
+  },
+  "shivas": {
+   "name": "Frostward Mail",
+   "text": "Sends out a wave that deals {damage} magic damage to enemies within {radius}. They are slowed by {slow:%} for {duration:s} seconds."
+  },
+  "assault": {
+   "name": "Siegebreaker Plate",
+   "text": "Allies within {radius} gain {armor} armor and {attack_speed} attack speed."
+  },
+  "linkens": {
+   "name": "Mirror Orb",
+   "text": ""
+  },
+  "battlefury": {
+   "name": "Reaping Axe",
+   "text": "Melee attacks also hit enemies within {radius} of the target for {pct:%} of their damage."
+  },
+  "crystalys": {
+   "name": "Shardblade",
+   "text": "Each attack has a {chance:%} chance to deal {multiplier:x} damage."
+  },
+  "daedalus": {
+   "name": "Ruin Bow",
+   "text": "Each attack has a {chance:%} chance to deal {multiplier:x} damage."
+  },
+  "mkb": {
+   "name": "Thunderclap Staff",
+   "text": "Each attack has a {chance:%} chance to deal {damage} extra physical damage and stun the target for {stun:s} seconds."
+  },
+  "basher": {
+   "name": "Skull Mace",
+   "text": "Melee attacks have a {chance:%} chance to stun the target for {stun:s} seconds. Ranged attacks have a {ranged_chance:%} chance."
+  },
+  "butterfly": {
+   "name": "Mothwing Blade",
+   "text": ""
+  },
+  "desolator": {
+   "name": "Corroding Blade",
+   "text": "Each attack lowers the target's armor by {armor} for {duration:s} seconds."
+  },
+  "maelstrom": {
+   "name": "Stormlash",
+   "text": "Each attack has a {chance:%} chance to release lightning. It deals {damage} magic damage and leaps between enemies within {radius}, hitting up to {bounces}."
+  },
+  "mjollnir": {
+   "name": "Thunder Maul",
+   "text": "Each attack has a {chance:%} chance to release lightning. It deals {damage} magic damage and leaps between enemies within {radius}, hitting up to {bounces}."
+  },
+  "radiance": {
+   "name": "Sunflare",
+   "text": "Burns enemies within {radius} for {dps} magic damage a second."
+  },
+  "rapier": {
+   "name": "Duelist's Sting",
+   "text": ""
+  },
+  "helm_dominator": {
+   "name": "Warlord's Helm",
+   "text": ""
+  },
+  "satanic": {
+   "name": "Blood Pact",
+   "text": "Raises lifesteal by {lifesteal:%} for {duration:s} seconds."
+  },
+  "sange": {
+   "name": "Rendblade",
+   "text": ""
+  },
+  "yasha": {
+   "name": "Galeblade",
+   "text": ""
+  },
+  "sange_yasha": {
+   "name": "Twin Fang",
+   "text": ""
+  },
+  "manta": {
+   "name": "Shadow Mantle",
+   "text": "Splits your hero into illusions that last {duration:s} seconds. They deal {dealt:%} of your damage and take {taken:%} damage."
+  },
+  "dagon": {
+   "name": "Soulfire Rod",
+   "text": "Deals {damage} magic damage to an enemy."
+  },
+  "euls": {
+   "name": "Cyclone Staff",
+   "text": "Lifts a unit into the air for {duration:s} seconds. It cannot act or be harmed until it lands."
+  },
+  "force_staff": {
+   "name": "Gust Rod",
+   "text": "Pushes a unit {distance} in the direction it faces."
+  },
+  "orchid": {
+   "name": "Hushbloom",
+   "text": "Silences an enemy for {duration:s} seconds."
+  },
+  "sheep": {
+   "name": "Toad Staff",
+   "text": "Turns an enemy into a harmless critter for {duration:s} seconds."
+  },
+  "aghanims": {
+   "name": "Oracle Sceptre",
+   "text": ""
+  },
+  "aegis": {
+   "name": "Second Dawn",
+   "text": "Saves the holder from death once. The hero rises in place at full health and mana after {delay:s} seconds."
+  }
+ },
+ "units": {
+  "creep_melee_sun": "Sunward Spearman",
+  "creep_ranged_sun": "Sunward Slinger",
+  "creep_siege_sun": "Sunward Ballista",
+  "creep_melee_mega_sun": "Elite Sunward Spearman",
+  "creep_ranged_mega_sun": "Elite Sunward Slinger",
+  "creep_siege_mega_sun": "Elite Sunward Ballista",
+  "tower1_sun": "Sunward Outer Tower",
+  "tower2_sun": "Sunward Inner Tower",
+  "tower3_sun": "Sunward Base Tower",
+  "tower4_sun": "Sunward Sphere Tower",
+  "barracks_melee_sun": "Sunward Spearman Barracks",
+  "barracks_ranged_sun": "Sunward Slinger Barracks",
+  "sphere_sun": "Sunward Sphere",
+  "fountain_sun": "Sunward Fountain",
+  "creep_melee_moon": "Moonward Thrall",
+  "creep_ranged_moon": "Moonward Caster",
+  "creep_siege_moon": "Moonward Catapult",
+  "creep_melee_mega_moon": "Elite Moonward Thrall",
+  "creep_ranged_mega_moon": "Elite Moonward Caster",
+  "creep_siege_mega_moon": "Elite Moonward Catapult",
+  "tower1_moon": "Moonward Outer Tower",
+  "tower2_moon": "Moonward Inner Tower",
+  "tower3_moon": "Moonward Base Tower",
+  "tower4_moon": "Moonward Sphere Tower",
+  "barracks_melee_moon": "Moonward Thrall Barracks",
+  "barracks_ranged_moon": "Moonward Caster Barracks",
+  "sphere_moon": "Moonward Sphere",
+  "fountain_moon": "Moonward Fountain",
+  "imp": "Bramble Imp",
+  "imp_chief": "Bramble Imp Chief",
+  "hound": "Ridge Hound",
+  "hound_alpha": "Ridge Hound Alpha",
+  "mossback": "Mossback Tortoise",
+  "golem_small": "Small Stone Golem",
+  "golem": "Stone Golem",
+  "hornet": "Giant Hornet",
+  "shaman": "Hornet Shaman",
+  "drake_young": "Young Drake",
+  "drake": "Elder Drake",
+  "warden": "The Warden",
+  "healing_ward": "Mending Totem",
+  "observer_ward": "Watching Eye",
+  "sentry_ward": "Seeker's Ward",
+  "fissure_rock": "Rift Stone",
+  "courier": "Pack Mule",
+  "shop": "Market Stall"
+ },
+ "tabs": {
+  "consumables": "Supplies",
+  "basics": "Basics",
+  "attributes": "Attributes",
+  "armaments": "Arms",
+  "arcane": "Arcana",
+  "secret": "Hidden Shop",
+  "common": "Common",
+  "support": "Support",
+  "protect": "Protection",
+  "weapons": "Weapons",
+  "caster": "Caster"
+ }
 }

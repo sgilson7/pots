@@ -1,0 +1,7 @@
+{
+  "_about": "Ink width in pt for each picture kind in data/art.json sizes. Icons are shown as small as 48 px, so their line is heavy: about 5 px at the 128 px render, 2 px at 48 px.",
+  "default": 1.4,
+  "scene": 1.2,
+  "unit": 1.8,
+  "icon": 2.2
+}

@@ -108,13 +108,29 @@ pub enum Order {
 pub enum Act {
     None,
     /// An attack swing: the hit lands at `hit_at`.
-    Swing { t: Uid, hit_at: u32 },
+    Swing {
+        t: Uid,
+        hit_at: u32,
+    },
     /// A cast: the effect happens at `fire_at`. `item` marks an item use.
-    Cast { slot: u8, t: Uid, at: P, fire_at: u32, item: bool },
+    Cast {
+        slot: u8,
+        t: Uid,
+        at: P,
+        fire_at: u32,
+        item: bool,
+    },
     /// A channel in progress, until `until`.
-    Channel { slot: u8, t: Uid, at: P, until: u32 },
+    Channel {
+        slot: u8,
+        t: Uid,
+        at: P,
+        until: u32,
+    },
     /// The follow-through after an attack's hit; any order cuts it short.
-    Backswing { until: u32 },
+    Backswing {
+        until: u32,
+    },
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -610,7 +626,11 @@ impl World {
         let id = self.spawn(ctx, def, team, at);
         let u = self.get_mut(id).expect("just spawned");
         u.owner = player as i8;
-        u.facing = if team == SUN { crate::fx::deg(45) } else { crate::fx::deg(225) };
+        u.facing = if team == SUN {
+            crate::fx::deg(45)
+        } else {
+            crate::fx::deg(225)
+        };
         self.players[player].hero = id;
         self.players[player].pick = roster as i32;
         self.players[player].present = true;
@@ -645,7 +665,11 @@ impl World {
         if u.has(M::Invisible) {
             // seen only within an enemy true-sight source's radius
             return self.units.iter().any(|s| {
-                s.alive && s.team == team && s.mods.iter().any(|m| m.kind == M::TrueSight && within(s.pos(), u.pos(), m.a))
+                s.alive
+                    && s.team == team
+                    && s.mods
+                        .iter()
+                        .any(|m| m.kind == M::TrueSight && within(s.pos(), u.pos(), m.a))
             });
         }
         true
@@ -654,7 +678,7 @@ impl World {
     /// Is it day? Day comes first.
     pub fn is_day(&self, ctx: &Ctx) -> bool {
         let half = (ctx.rules.t.day_length * TPS) as u32;
-        half == 0 || (self.tick / half) % 2 == 0
+        half == 0 || (self.tick / half).is_multiple_of(2)
     }
 
     /// A short summary of the state, for comparing two copies of a match.
@@ -738,7 +762,7 @@ impl World {
         crate::combat::deaths(self, ctx);
         self.expire_mods();
         self.regrow(ctx);
-        if self.tick % 3 == 0 {
+        if self.tick.is_multiple_of(3) {
             crate::vision::update(self, ctx);
         }
         self.tick += 1;
@@ -752,7 +776,7 @@ impl World {
     }
 
     fn regrow(&mut self, ctx: &Ctx) {
-        if self.tick % TPS as u32 != 0 {
+        if !self.tick.is_multiple_of(TPS as u32) {
             return;
         }
         let t = self.tick;
@@ -763,10 +787,9 @@ impl World {
                     // a tree does not grow back on a unit standing there
                     let c = ctx.terrain.tree_centre(i);
                     let half = ctx.terrain.tree_cell / 2 + 16;
-                    let blocked = self
-                        .units
-                        .iter()
-                        .any(|u| u.alive && (u.pos()[0] - c[0]).abs() < half && (u.pos()[1] - c[1]).abs() < half);
+                    let blocked = self.units.iter().any(|u| {
+                        u.alive && (u.pos()[0] - c[0]).abs() < half && (u.pos()[1] - c[1]).abs() < half
+                    });
                     if !blocked {
                         self.trees[i] = Tree::Standing;
                         grew = true;
@@ -784,7 +807,8 @@ impl World {
     pub fn add_mod(&mut self, id: Uid, m: Mod) {
         if let Some(u) = self.get_mut(id) {
             if m.tag != 0 {
-                u.mods.retain(|o| !(o.tag == m.tag && o.kind == m.kind && o.src == m.src));
+                u.mods
+                    .retain(|o| !(o.tag == m.tag && o.kind == m.kind && o.src == m.src));
             }
             u.mods.push(m);
         }

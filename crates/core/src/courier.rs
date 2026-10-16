@@ -22,7 +22,9 @@ pub fn of(w: &World, team: u8) -> Option<Uid> {
 
 /// Whether the side's courier waits at the base shop now.
 pub fn at_base(w: &World, ctx: &Ctx, team: u8) -> bool {
-    let Some(c) = of(w, team).and_then(|id| w.get(id)) else { return false };
+    let Some(c) = of(w, team).and_then(|id| w.get(id)) else {
+        return false;
+    };
     let shop = home_shop(ctx, team);
     within(c.pos(), shop, ctx.rules.t.shop_range) && w.carrying[team.min(1) as usize] == NO_UNIT as i32
 }
@@ -39,7 +41,9 @@ fn home_shop(ctx: &Ctx, team: u8) -> P {
 }
 
 pub fn spawn(w: &mut World, ctx: &Ctx) {
-    let Some(def) = ctx.rules.unit("courier") else { return };
+    let Some(def) = ctx.rules.unit("courier") else {
+        return;
+    };
     for team in 0..2u8 {
         let at = home_shop(ctx, team);
         let id = w.spawn(ctx, def, team, at);

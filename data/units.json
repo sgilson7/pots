@@ -8,18 +8,19 @@
    "hp_regen": 25,
    "mana": 0,
    "mana_regen": 1,
-   "armor": 100,
+   "armor": -100,
    "armor_type": "hero",
    "attack_type": "hero",
    "damage": [
-    19,
-    21
+    31,
+    33
    ],
    "range": 128,
-   "bat": 180,
+   "bat": 170,
    "attack_point": 40,
+   "backswing": 30,
    "missile": 0,
-   "speed": 290,
+   "speed": 295,
    "turn": 500,
    "radius": 24,
    "acquire": 800,
@@ -33,9 +34,9 @@
    "attrs": {
     "primary": "str",
     "base": [
-     22,
+     23,
      21,
-     16
+     14
     ],
     "gain": [
      270,
@@ -49,131 +50,30 @@
     "warcry",
     "gods_strength"
    ],
-   "after": "Sven"
+   "_after": "Sven"
   },
   {
-   "id": "rime",
+   "id": "tectus",
    "kind": "hero",
-   "model": "hero_rime",
+   "model": "hero_tectus",
    "hp": 0,
    "hp_regen": 25,
    "mana": 0,
    "mana_regen": 1,
-   "armor": 50,
+   "armor": 100,
    "armor_type": "hero",
    "attack_type": "hero",
    "damage": [
-    17,
-    23
+    24,
+    34
    ],
-   "range": 600,
+   "range": 128,
    "bat": 170,
-   "attack_point": 45,
-   "missile": 900,
-   "speed": 280,
-   "turn": 500,
-   "radius": 24,
-   "acquire": 800,
-   "day_vision": 1800,
-   "night_vision": 800,
-   "bounty": [
-    0,
-    0
-   ],
-   "xp": 0,
-   "attrs": {
-    "primary": "int",
-    "base": [
-     16,
-     16,
-     21
-    ],
-    "gain": [
-     170,
-     160,
-     290
-    ]
-   },
-   "abilities": [
-    "crystal_nova",
-    "frostbite",
-    "brilliance_aura",
-    "freezing_field"
-   ],
-   "after": "Crystal Maiden"
-  },
-  {
-   "id": "cinder",
-   "kind": "hero",
-   "model": "hero_cinder",
-   "hp": 0,
-   "hp_regen": 25,
-   "mana": 0,
-   "mana_regen": 1,
-   "armor": 60,
-   "armor_type": "hero",
-   "attack_type": "hero",
-   "damage": [
-    16,
-    30
-   ],
-   "range": 650,
-   "bat": 170,
-   "attack_point": 75,
-   "missile": 1000,
-   "speed": 295,
-   "turn": 500,
-   "radius": 24,
-   "acquire": 800,
-   "day_vision": 1800,
-   "night_vision": 800,
-   "bounty": [
-    0,
-    0
-   ],
-   "xp": 0,
-   "attrs": {
-    "primary": "int",
-    "base": [
-     18,
-     15,
-     22
-    ],
-    "gain": [
-     150,
-     150,
-     320
-    ]
-   },
-   "abilities": [
-    "dragon_slave",
-    "light_strike_array",
-    "fiery_soul",
-    "laguna_blade"
-   ],
-   "after": "Lina"
-  },
-  {
-   "id": "thistle",
-   "kind": "hero",
-   "model": "hero_thistle",
-   "hp": 0,
-   "hp_regen": 25,
-   "mana": 0,
-   "mana_regen": 1,
-   "armor": -100,
-   "armor_type": "hero",
-   "attack_type": "hero",
-   "damage": [
-    7,
-    18
-   ],
-   "range": 625,
-   "bat": 170,
-   "attack_point": 70,
-   "missile": 1250,
+   "attack_point": 47,
+   "backswing": 86,
+   "missile": 0,
    "speed": 300,
-   "turn": 500,
+   "turn": 400,
    "radius": 24,
    "acquire": 800,
    "day_vision": 1800,
@@ -184,25 +84,25 @@
    ],
    "xp": 0,
    "attrs": {
-    "primary": "agi",
+    "primary": "str",
     "base": [
-     17,
-     20,
-     15
+     22,
+     12,
+     16
     ],
     "gain": [
-     190,
-     190,
-     140
+     250,
+     140,
+     180
     ]
    },
    "abilities": [
-    "frost_arrows",
-    "silence",
-    "trueshot_aura",
-    "marksmanship"
+    "fissure",
+    "enchant_totem",
+    "aftershock",
+    "echo_slam"
    ],
-   "after": "Drow Ranger"
+   "_after": "Earthshaker"
   },
   {
    "id": "gristle",
@@ -212,7 +112,7 @@
    "hp_regen": 25,
    "mana": 0,
    "mana_regen": 1,
-   "armor": -100,
+   "armor": 0,
    "armor_type": "hero",
    "attack_type": "hero",
    "damage": [
@@ -222,6 +122,7 @@
    "range": 128,
    "bat": 170,
    "attack_point": 50,
+   "backswing": 117,
    "missile": 0,
    "speed": 285,
    "turn": 500,
@@ -253,79 +154,29 @@
     "flesh_heap",
     "dismember"
    ],
-   "after": "Pudge"
-  },
-  {
-   "id": "tectus",
-   "kind": "hero",
-   "model": "hero_tectus",
-   "hp": 0,
-   "hp_regen": 25,
-   "mana": 0,
-   "mana_regen": 1,
-   "armor": 100,
-   "armor_type": "hero",
-   "attack_type": "hero",
-   "damage": [
-    25,
-    35
-   ],
-   "range": 128,
-   "bat": 170,
-   "attack_point": 47,
-   "missile": 0,
-   "speed": 300,
-   "turn": 500,
-   "radius": 24,
-   "acquire": 800,
-   "day_vision": 1800,
-   "night_vision": 800,
-   "bounty": [
-    0,
-    0
-   ],
-   "xp": 0,
-   "attrs": {
-    "primary": "str",
-    "base": [
-     22,
-     12,
-     16
-    ],
-    "gain": [
-     250,
-     140,
-     180
-    ]
-   },
-   "abilities": [
-    "fissure",
-    "enchant_totem",
-    "aftershock",
-    "echo_slam"
-   ],
-   "after": "Earthshaker"
+   "_after": "Pudge"
   },
   {
    "id": "kestrel",
    "kind": "hero",
    "model": "hero_kestrel",
    "hp": 0,
-   "hp_regen": 25,
+   "hp_regen": 75,
    "mana": 0,
    "mana_regen": 1,
    "armor": 100,
    "armor_type": "hero",
    "attack_type": "hero",
    "damage": [
-    18,
-    22
+    24,
+    28
    ],
    "range": 128,
-   "bat": 160,
+   "bat": 170,
    "attack_point": 33,
+   "backswing": 84,
    "missile": 0,
-   "speed": 300,
+   "speed": 305,
    "turn": 500,
    "radius": 24,
    "acquire": 800,
@@ -344,8 +195,8 @@
      14
     ],
     "gain": [
-     220,
-     275,
+     190,
+     285,
      140
     ]
    },
@@ -355,58 +206,59 @@
     "blade_dance",
     "omnislash"
    ],
-   "after": "Juggernaut"
+   "_after": "Juggernaut"
   },
   {
-   "id": "hexwright",
+   "id": "thistle",
    "kind": "hero",
-   "model": "hero_hexwright",
+   "model": "hero_thistle",
    "hp": 0,
    "hp_regen": 25,
    "mana": 0,
    "mana_regen": 1,
-   "armor": 100,
+   "armor": -100,
    "armor_type": "hero",
    "attack_type": "hero",
    "damage": [
-    11,
-    17
+    18,
+    29
    ],
-   "range": 600,
+   "range": 625,
    "bat": 170,
-   "attack_point": 43,
-   "missile": 1000,
-   "speed": 290,
+   "attack_point": 70,
+   "backswing": 30,
+   "missile": 1250,
+   "speed": 300,
    "turn": 500,
    "radius": 24,
    "acquire": 800,
    "day_vision": 1800,
-   "night_vision": 800,
+   "night_vision": 1700,
    "bounty": [
     0,
     0
    ],
    "xp": 0,
    "attrs": {
-    "primary": "int",
+    "primary": "agi",
     "base": [
-     15,
-     15,
-     18
+     17,
+     22,
+     15
     ],
     "gain": [
-     170,
-     150,
-     300
+     190,
+     190,
+     140
     ]
    },
    "abilities": [
-    "earth_spike",
-    "hex",
-    "mana_drain",
-    "finger_of_death"
+    "frost_arrows",
+    "silence",
+    "trueshot_aura",
+    "marksmanship"
    ],
-   "after": "Lion"
+   "_after": "Drow Ranger"
   },
   {
    "id": "longwick",
@@ -416,7 +268,7 @@
    "hp_regen": 25,
    "mana": 0,
    "mana_regen": 1,
-   "armor": 0,
+   "armor": -100,
    "armor_type": "hero",
    "attack_type": "hero",
    "damage": [
@@ -426,13 +278,14 @@
    "range": 550,
    "bat": 170,
    "attack_point": 17,
+   "backswing": 70,
    "missile": 3000,
    "speed": 290,
    "turn": 500,
    "radius": 24,
    "acquire": 800,
    "day_vision": 1800,
-   "night_vision": 800,
+   "night_vision": 1000,
    "bounty": [
     0,
     0
@@ -457,27 +310,132 @@
     "take_aim",
     "assassinate"
    ],
-   "after": "Sniper"
+   "_after": "Sniper"
   },
   {
-   "id": "grudge",
+   "id": "rime",
    "kind": "hero",
-   "model": "hero_grudge",
+   "model": "hero_rime",
    "hp": 0,
    "hp_regen": 25,
    "mana": 0,
    "mana_regen": 1,
-   "armor": 100,
+   "armor": -100,
    "armor_type": "hero",
    "attack_type": "hero",
    "damage": [
-    24,
-    28
+    17,
+    23
    ],
-   "range": 128,
+   "range": 600,
    "bat": 170,
-   "attack_point": 50,
-   "missile": 0,
+   "attack_point": 55,
+   "backswing": 0,
+   "missile": 900,
+   "speed": 280,
+   "turn": 500,
+   "radius": 24,
+   "acquire": 800,
+   "day_vision": 1800,
+   "night_vision": 800,
+   "bounty": [
+    0,
+    0
+   ],
+   "xp": 0,
+   "attrs": {
+    "primary": "int",
+    "base": [
+     16,
+     16,
+     21
+    ],
+    "gain": [
+     170,
+     160,
+     290
+    ]
+   },
+   "abilities": [
+    "crystal_nova",
+    "frostbite",
+    "brilliance_aura",
+    "freezing_field"
+   ],
+   "_after": "Crystal Maiden"
+  },
+  {
+   "id": "cinder",
+   "kind": "hero",
+   "model": "hero_cinder",
+   "hp": 0,
+   "hp_regen": 25,
+   "mana": 0,
+   "mana_regen": 1,
+   "armor": -100,
+   "armor_type": "hero",
+   "attack_type": "hero",
+   "damage": [
+    13,
+    31
+   ],
+   "range": 625,
+   "bat": 170,
+   "attack_point": 75,
+   "backswing": 78,
+   "missile": 900,
+   "speed": 295,
+   "turn": 500,
+   "radius": 24,
+   "acquire": 800,
+   "day_vision": 1800,
+   "night_vision": 800,
+   "bounty": [
+    0,
+    0
+   ],
+   "xp": 0,
+   "attrs": {
+    "primary": "int",
+    "base": [
+     18,
+     16,
+     27
+    ],
+    "gain": [
+     150,
+     150,
+     320
+    ]
+   },
+   "abilities": [
+    "dragon_slave",
+    "light_strike_array",
+    "fiery_soul",
+    "laguna_blade"
+   ],
+   "_after": "Lina"
+  },
+  {
+   "id": "hexwright",
+   "kind": "hero",
+   "model": "hero_hexwright",
+   "hp": 0,
+   "hp_regen": 25,
+   "mana": 0,
+   "mana_regen": 1,
+   "armor": -100,
+   "armor_type": "hero",
+   "attack_type": "hero",
+   "damage": [
+    20,
+    26
+   ],
+   "range": 600,
+   "bat": 170,
+   "attack_point": 43,
+   "backswing": 74,
+   "missile": 900,
    "speed": 290,
    "turn": 500,
    "radius": 24,
@@ -490,34 +448,87 @@
    ],
    "xp": 0,
    "attrs": {
-    "primary": "str",
+    "primary": "int",
     "base": [
-     25,
-     20,
-     14
+     16,
+     15,
+     22
     ],
     "gain": [
-     280,
-     220,
-     160
+     170,
+     150,
+     300
     ]
    },
    "abilities": [
-    "berserkers_call",
-    "battle_hunger",
-    "counter_helix",
-    "culling_blade"
+    "earth_spike",
+    "hex",
+    "mana_drain",
+    "finger_of_death"
    ],
-   "after": "Axe"
+   "_after": "Lion"
+  },
+  {
+   "id": "tempest",
+   "kind": "hero",
+   "model": "hero_tempest",
+   "hp": 0,
+   "hp_regen": 25,
+   "mana": 0,
+   "mana_regen": 1,
+   "armor": 0,
+   "armor_type": "hero",
+   "attack_type": "hero",
+   "damage": [
+    21,
+    29
+   ],
+   "range": 350,
+   "bat": 170,
+   "attack_point": 63,
+   "backswing": 37,
+   "missile": 1100,
+   "speed": 295,
+   "turn": 500,
+   "radius": 24,
+   "acquire": 800,
+   "day_vision": 1800,
+   "night_vision": 800,
+   "bounty": [
+    0,
+    0
+   ],
+   "xp": 0,
+   "attrs": {
+    "primary": "int",
+    "base": [
+     19,
+     11,
+     20
+    ],
+    "gain": [
+     180,
+     120,
+     270
+    ]
+   },
+   "abilities": [
+    "arc_lightning",
+    "lightning_bolt",
+    "static_field",
+    "thundergods_wrath"
+   ],
+   "_after": "Zeus"
   },
   {
    "id": "creep_melee_sun",
    "kind": "creep",
    "model": "creep_melee_sun",
+   "scale": 100,
    "hp": 550,
    "hp_regen": 50,
    "armor": 200,
-   "armor_type": "normal",
+   "armor_type": "unarmored",
    "attack_type": "normal",
    "damage": [
     19,
@@ -526,11 +537,12 @@
    "range": 100,
    "bat": 100,
    "attack_point": 47,
+   "backswing": 53,
    "speed": 325,
    "radius": 24,
    "acquire": 500,
-   "day_vision": 750,
-   "night_vision": 750,
+   "day_vision": 850,
+   "night_vision": 800,
    "bounty": [
     38,
     48
@@ -538,18 +550,19 @@
    "xp": 62,
    "upgrade_hp": 10,
    "upgrade_damage": 1,
-   "after": "melee lane creep"
+   "_after": "melee lane creep (playdota: Unarmored; Dota 2 port: Medium)"
   },
   {
    "id": "creep_ranged_sun",
    "kind": "creep",
    "model": "creep_ranged_sun",
+   "scale": 100,
    "hp": 300,
-   "hp_regen": 50,
-   "mana": 500,
+   "hp_regen": 200,
+   "mana": 300,
    "mana_regen": 75,
    "armor": 0,
-   "armor_type": "normal",
+   "armor_type": "unarmored",
    "attack_type": "pierce",
    "damage": [
     21,
@@ -558,12 +571,13 @@
    "range": 500,
    "bat": 100,
    "attack_point": 50,
+   "backswing": 67,
    "missile": 900,
    "speed": 325,
    "radius": 24,
-   "acquire": 500,
-   "day_vision": 750,
-   "night_vision": 750,
+   "acquire": 600,
+   "day_vision": 850,
+   "night_vision": 800,
    "bounty": [
     43,
     53
@@ -571,13 +585,14 @@
    "xp": 41,
    "upgrade_hp": 10,
    "upgrade_damage": 2,
-   "after": "ranged lane creep"
+   "_after": "ranged lane creep"
   },
   {
    "id": "creep_siege_sun",
    "kind": "creep",
    "model": "creep_siege_sun",
-   "hp": 550,
+   "scale": 100,
+   "hp": 500,
    "hp_regen": 0,
    "armor": 0,
    "armor_type": "fortified",
@@ -588,13 +603,14 @@
    ],
    "range": 690,
    "bat": 270,
-   "attack_point": 70,
+   "attack_point": 10,
+   "backswing": 190,
    "missile": 1100,
    "speed": 325,
    "radius": 40,
    "acquire": 800,
-   "day_vision": 750,
-   "night_vision": 750,
+   "day_vision": 850,
+   "night_vision": 850,
    "bounty": [
     66,
     80
@@ -602,14 +618,114 @@
    "xp": 88,
    "upgrade_hp": 0,
    "upgrade_damage": 0,
-   "after": "siege creep (catapult)"
+   "_after": "siege creep (catapult)"
+  },
+  {
+   "id": "creep_melee_mega_sun",
+   "kind": "creep",
+   "model": "creep_melee_sun",
+   "scale": 115,
+   "hp": 700,
+   "hp_regen": 50,
+   "armor": 300,
+   "armor_type": "unarmored",
+   "attack_type": "normal",
+   "damage": [
+    36,
+    44
+   ],
+   "range": 100,
+   "bat": 100,
+   "attack_point": 47,
+   "backswing": 53,
+   "speed": 325,
+   "radius": 24,
+   "acquire": 500,
+   "day_vision": 850,
+   "night_vision": 800,
+   "bounty": [
+    18,
+    26
+   ],
+   "xp": 25,
+   "upgrade_hp": 19,
+   "upgrade_damage": 2,
+   "_after": "mega melee lane creep (playdota: Unarmored; Dota 2 port: Medium)"
+  },
+  {
+   "id": "creep_ranged_mega_sun",
+   "kind": "creep",
+   "model": "creep_ranged_sun",
+   "scale": 115,
+   "hp": 475,
+   "hp_regen": 200,
+   "mana": 300,
+   "mana_regen": 75,
+   "armor": 100,
+   "armor_type": "unarmored",
+   "attack_type": "pierce",
+   "damage": [
+    41,
+    46
+   ],
+   "range": 500,
+   "bat": 100,
+   "attack_point": 50,
+   "backswing": 67,
+   "missile": 900,
+   "speed": 325,
+   "radius": 24,
+   "acquire": 600,
+   "day_vision": 850,
+   "night_vision": 800,
+   "bounty": [
+    18,
+    26
+   ],
+   "xp": 25,
+   "upgrade_hp": 18,
+   "upgrade_damage": 3,
+   "_after": "mega ranged lane creep"
+  },
+  {
+   "id": "creep_siege_mega_sun",
+   "kind": "creep",
+   "model": "creep_siege_sun",
+   "scale": 115,
+   "hp": 500,
+   "hp_regen": 0,
+   "armor": 0,
+   "armor_type": "fortified",
+   "attack_type": "siege",
+   "damage": [
+    51,
+    62
+   ],
+   "range": 690,
+   "bat": 270,
+   "attack_point": 10,
+   "backswing": 190,
+   "missile": 1100,
+   "speed": 325,
+   "radius": 40,
+   "acquire": 800,
+   "day_vision": 850,
+   "night_vision": 850,
+   "bounty": [
+    66,
+    80
+   ],
+   "xp": 88,
+   "upgrade_hp": 0,
+   "upgrade_damage": 0,
+   "_after": "mega siege creep (catapult)"
   },
   {
    "id": "tower1_sun",
    "kind": "tower",
    "model": "tower_sun",
    "hp": 1300,
-   "armor": 2000,
+   "armor": 1800,
    "armor_type": "fortified",
    "attack_type": "siege",
    "damage": [
@@ -618,27 +734,28 @@
    ],
    "range": 700,
    "bat": 100,
-   "attack_point": 0,
+   "attack_point": 40,
+   "backswing": 60,
    "missile": 750,
    "speed": 0,
    "radius": 0,
    "footprint": 100,
    "acquire": 700,
    "day_vision": 1900,
-   "night_vision": 900,
+   "night_vision": 800,
    "bounty": [
-    264,
-    264
+    452,
+    470
    ],
    "xp": 0,
-   "after": "tier 1 tower"
+   "_after": "tier 1 tower"
   },
   {
    "id": "tower2_sun",
    "kind": "tower",
    "model": "tower_sun",
    "hp": 1600,
-   "armor": 2000,
+   "armor": 1800,
    "armor_type": "fortified",
    "attack_type": "siege",
    "damage": [
@@ -646,85 +763,89 @@
     140
    ],
    "range": 700,
-   "bat": 100,
-   "attack_point": 0,
+   "bat": 95,
+   "attack_point": 40,
+   "backswing": 60,
    "missile": 750,
    "speed": 0,
    "radius": 0,
    "footprint": 100,
    "acquire": 700,
    "day_vision": 1900,
-   "night_vision": 900,
+   "night_vision": 800,
    "bounty": [
-    264,
-    264
+    502,
+    520
    ],
    "xp": 0,
-   "after": "tier 2 tower"
+   "_after": "tier 2 tower"
   },
   {
    "id": "tower3_sun",
    "kind": "tower",
    "model": "tower_sun",
    "hp": 1600,
-   "armor": 2000,
+   "armor": 2500,
    "armor_type": "fortified",
    "attack_type": "siege",
    "damage": [
-    120,
-    140
+    122,
+    182
    ],
    "range": 700,
-   "bat": 100,
-   "attack_point": 0,
+   "bat": 95,
+   "attack_point": 40,
+   "backswing": 60,
    "missile": 750,
    "speed": 0,
    "radius": 0,
    "footprint": 100,
    "acquire": 700,
    "day_vision": 1900,
-   "night_vision": 900,
+   "night_vision": 800,
    "bounty": [
-    264,
-    264
+    552,
+    570
    ],
    "xp": 0,
-   "after": "tier 3 tower"
+   "_after": "tier 3 tower"
   },
   {
    "id": "tower4_sun",
    "kind": "tower",
    "model": "tower_sun",
    "hp": 1600,
-   "armor": 2000,
+   "armor": 3000,
    "armor_type": "fortified",
    "attack_type": "siege",
    "damage": [
-    120,
-    140
+    122,
+    182
    ],
    "range": 700,
-   "bat": 100,
-   "attack_point": 0,
+   "bat": 95,
+   "attack_point": 40,
+   "backswing": 60,
    "missile": 750,
    "speed": 0,
    "radius": 0,
    "footprint": 100,
    "acquire": 700,
    "day_vision": 1900,
-   "night_vision": 900,
+   "night_vision": 800,
    "bounty": [
-    264,
-    264
+    602,
+    620
    ],
    "xp": 0,
-   "after": "tier 4 tower"
+   "_after": "tier 4 tower"
   },
   {
    "id": "barracks_melee_sun",
    "kind": "barracks",
    "model": "barracks_melee_sun",
    "hp": 1500,
+   "hp_regen": 250,
    "armor": 1500,
    "armor_type": "fortified",
    "speed": 0,
@@ -733,17 +854,18 @@
    "day_vision": 900,
    "night_vision": 600,
    "bounty": [
-    150,
-    200
+    352,
+    370
    ],
-   "after": "melee barracks"
+   "_after": "melee barracks"
   },
   {
    "id": "barracks_ranged_sun",
    "kind": "barracks",
    "model": "barracks_ranged_sun",
-   "hp": 1200,
-   "armor": 1000,
+   "hp": 1500,
+   "hp_regen": 250,
+   "armor": 500,
    "armor_type": "fortified",
    "speed": 0,
    "radius": 0,
@@ -751,10 +873,10 @@
    "day_vision": 900,
    "night_vision": 600,
    "bounty": [
-    150,
-    200
+    352,
+    370
    ],
-   "after": "ranged barracks"
+   "_after": "ranged barracks"
   },
   {
    "id": "sphere_sun",
@@ -762,47 +884,48 @@
    "model": "sphere_sun",
    "hp": 4250,
    "hp_regen": 300,
-   "armor": 1300,
+   "armor": 1500,
    "armor_type": "fortified",
    "speed": 0,
    "radius": 0,
    "footprint": 250,
-   "day_vision": 1200,
-   "night_vision": 900,
-   "after": "the Ancient (World Tree / Frozen Throne)"
+   "day_vision": 1800,
+   "night_vision": 1800,
+   "_after": "the Ancient (World Tree / Frozen Throne)"
   },
   {
    "id": "fountain_sun",
    "kind": "fountain",
    "model": "fountain_sun",
-   "hp": 99999,
+   "hp": 50000,
    "hp_regen": 99900,
-   "armor": 10000,
+   "armor": 0,
    "armor_type": "fortified",
    "attack_type": "chaos",
    "damage": [
-    180,
-    200
+    190,
+    199
    ],
-   "range": 1200,
+   "range": 800,
    "bat": 15,
    "attack_point": 0,
-   "missile": 2000,
+   "missile": 1450,
    "speed": 0,
    "radius": 0,
    "footprint": 150,
-   "day_vision": 1800,
-   "night_vision": 1800,
-   "after": "the fountain"
+   "day_vision": 1300,
+   "night_vision": 1300,
+   "_after": "the fountain"
   },
   {
    "id": "creep_melee_moon",
    "kind": "creep",
    "model": "creep_melee_moon",
+   "scale": 100,
    "hp": 550,
    "hp_regen": 50,
    "armor": 200,
-   "armor_type": "normal",
+   "armor_type": "unarmored",
    "attack_type": "normal",
    "damage": [
     19,
@@ -810,12 +933,13 @@
    ],
    "range": 100,
    "bat": 100,
-   "attack_point": 47,
+   "attack_point": 39,
+   "backswing": 44,
    "speed": 325,
    "radius": 24,
    "acquire": 500,
-   "day_vision": 750,
-   "night_vision": 750,
+   "day_vision": 850,
+   "night_vision": 800,
    "bounty": [
     38,
     48
@@ -823,18 +947,19 @@
    "xp": 62,
    "upgrade_hp": 10,
    "upgrade_damage": 1,
-   "after": "melee lane creep"
+   "_after": "melee lane creep (playdota: Unarmored; Dota 2 port: Medium)"
   },
   {
    "id": "creep_ranged_moon",
    "kind": "creep",
    "model": "creep_ranged_moon",
+   "scale": 100,
    "hp": 300,
-   "hp_regen": 50,
-   "mana": 500,
+   "hp_regen": 200,
+   "mana": 300,
    "mana_regen": 75,
    "armor": 0,
-   "armor_type": "normal",
+   "armor_type": "unarmored",
    "attack_type": "pierce",
    "damage": [
     21,
@@ -842,13 +967,14 @@
    ],
    "range": 500,
    "bat": 100,
-   "attack_point": 50,
+   "attack_point": 53,
+   "backswing": 47,
    "missile": 900,
    "speed": 325,
    "radius": 24,
-   "acquire": 500,
-   "day_vision": 750,
-   "night_vision": 750,
+   "acquire": 600,
+   "day_vision": 850,
+   "night_vision": 800,
    "bounty": [
     43,
     53
@@ -856,13 +982,14 @@
    "xp": 41,
    "upgrade_hp": 10,
    "upgrade_damage": 2,
-   "after": "ranged lane creep"
+   "_after": "ranged lane creep"
   },
   {
    "id": "creep_siege_moon",
    "kind": "creep",
    "model": "creep_siege_moon",
-   "hp": 550,
+   "scale": 100,
+   "hp": 500,
    "hp_regen": 0,
    "armor": 0,
    "armor_type": "fortified",
@@ -874,12 +1001,13 @@
    "range": 690,
    "bat": 270,
    "attack_point": 70,
+   "backswing": 130,
    "missile": 1100,
    "speed": 325,
    "radius": 40,
    "acquire": 800,
-   "day_vision": 750,
-   "night_vision": 750,
+   "day_vision": 850,
+   "night_vision": 850,
    "bounty": [
     66,
     80
@@ -887,14 +1015,114 @@
    "xp": 88,
    "upgrade_hp": 0,
    "upgrade_damage": 0,
-   "after": "siege creep (catapult)"
+   "_after": "siege creep (catapult)"
+  },
+  {
+   "id": "creep_melee_mega_moon",
+   "kind": "creep",
+   "model": "creep_melee_moon",
+   "scale": 115,
+   "hp": 700,
+   "hp_regen": 50,
+   "armor": 300,
+   "armor_type": "unarmored",
+   "attack_type": "normal",
+   "damage": [
+    36,
+    44
+   ],
+   "range": 100,
+   "bat": 100,
+   "attack_point": 39,
+   "backswing": 44,
+   "speed": 325,
+   "radius": 24,
+   "acquire": 500,
+   "day_vision": 850,
+   "night_vision": 800,
+   "bounty": [
+    18,
+    26
+   ],
+   "xp": 25,
+   "upgrade_hp": 19,
+   "upgrade_damage": 2,
+   "_after": "mega melee lane creep (playdota: Unarmored; Dota 2 port: Medium)"
+  },
+  {
+   "id": "creep_ranged_mega_moon",
+   "kind": "creep",
+   "model": "creep_ranged_moon",
+   "scale": 115,
+   "hp": 475,
+   "hp_regen": 200,
+   "mana": 300,
+   "mana_regen": 75,
+   "armor": 100,
+   "armor_type": "unarmored",
+   "attack_type": "pierce",
+   "damage": [
+    41,
+    46
+   ],
+   "range": 500,
+   "bat": 100,
+   "attack_point": 53,
+   "backswing": 47,
+   "missile": 900,
+   "speed": 325,
+   "radius": 24,
+   "acquire": 600,
+   "day_vision": 850,
+   "night_vision": 800,
+   "bounty": [
+    18,
+    26
+   ],
+   "xp": 25,
+   "upgrade_hp": 18,
+   "upgrade_damage": 3,
+   "_after": "mega ranged lane creep"
+  },
+  {
+   "id": "creep_siege_mega_moon",
+   "kind": "creep",
+   "model": "creep_siege_moon",
+   "scale": 115,
+   "hp": 500,
+   "hp_regen": 0,
+   "armor": 0,
+   "armor_type": "fortified",
+   "attack_type": "siege",
+   "damage": [
+    51,
+    62
+   ],
+   "range": 690,
+   "bat": 270,
+   "attack_point": 70,
+   "backswing": 130,
+   "missile": 1100,
+   "speed": 325,
+   "radius": 40,
+   "acquire": 800,
+   "day_vision": 850,
+   "night_vision": 850,
+   "bounty": [
+    66,
+    80
+   ],
+   "xp": 88,
+   "upgrade_hp": 0,
+   "upgrade_damage": 0,
+   "_after": "mega siege creep (catapult)"
   },
   {
    "id": "tower1_moon",
    "kind": "tower",
    "model": "tower_moon",
    "hp": 1300,
-   "armor": 2000,
+   "armor": 1800,
    "armor_type": "fortified",
    "attack_type": "siege",
    "damage": [
@@ -903,27 +1131,28 @@
    ],
    "range": 700,
    "bat": 100,
-   "attack_point": 0,
+   "attack_point": 40,
+   "backswing": 60,
    "missile": 750,
    "speed": 0,
    "radius": 0,
    "footprint": 100,
    "acquire": 700,
    "day_vision": 1900,
-   "night_vision": 900,
+   "night_vision": 800,
    "bounty": [
-    264,
-    264
+    452,
+    470
    ],
    "xp": 0,
-   "after": "tier 1 tower"
+   "_after": "tier 1 tower"
   },
   {
    "id": "tower2_moon",
    "kind": "tower",
    "model": "tower_moon",
    "hp": 1600,
-   "armor": 2000,
+   "armor": 1800,
    "armor_type": "fortified",
    "attack_type": "siege",
    "damage": [
@@ -931,85 +1160,89 @@
     140
    ],
    "range": 700,
-   "bat": 100,
-   "attack_point": 0,
+   "bat": 95,
+   "attack_point": 40,
+   "backswing": 60,
    "missile": 750,
    "speed": 0,
    "radius": 0,
    "footprint": 100,
    "acquire": 700,
    "day_vision": 1900,
-   "night_vision": 900,
+   "night_vision": 800,
    "bounty": [
-    264,
-    264
+    502,
+    520
    ],
    "xp": 0,
-   "after": "tier 2 tower"
+   "_after": "tier 2 tower"
   },
   {
    "id": "tower3_moon",
    "kind": "tower",
    "model": "tower_moon",
    "hp": 1600,
-   "armor": 2000,
+   "armor": 2500,
    "armor_type": "fortified",
    "attack_type": "siege",
    "damage": [
-    120,
-    140
+    122,
+    182
    ],
    "range": 700,
-   "bat": 100,
-   "attack_point": 0,
+   "bat": 95,
+   "attack_point": 40,
+   "backswing": 60,
    "missile": 750,
    "speed": 0,
    "radius": 0,
    "footprint": 100,
    "acquire": 700,
    "day_vision": 1900,
-   "night_vision": 900,
+   "night_vision": 800,
    "bounty": [
-    264,
-    264
+    552,
+    570
    ],
    "xp": 0,
-   "after": "tier 3 tower"
+   "_after": "tier 3 tower"
   },
   {
    "id": "tower4_moon",
    "kind": "tower",
    "model": "tower_moon",
    "hp": 1600,
-   "armor": 2000,
+   "armor": 3000,
    "armor_type": "fortified",
    "attack_type": "siege",
    "damage": [
-    120,
-    140
+    122,
+    182
    ],
    "range": 700,
-   "bat": 100,
-   "attack_point": 0,
+   "bat": 95,
+   "attack_point": 40,
+   "backswing": 60,
    "missile": 750,
    "speed": 0,
    "radius": 0,
    "footprint": 100,
    "acquire": 700,
    "day_vision": 1900,
-   "night_vision": 900,
+   "night_vision": 800,
    "bounty": [
-    264,
-    264
+    602,
+    620
    ],
    "xp": 0,
-   "after": "tier 4 tower"
+   "_after": "tier 4 tower"
   },
   {
    "id": "barracks_melee_moon",
    "kind": "barracks",
    "model": "barracks_melee_moon",
    "hp": 1500,
+   "hp_regen": 250,
    "armor": 1500,
    "armor_type": "fortified",
    "speed": 0,
@@ -1018,17 +1251,18 @@
    "day_vision": 900,
    "night_vision": 600,
    "bounty": [
-    150,
-    200
+    352,
+    370
    ],
-   "after": "melee barracks"
+   "_after": "melee barracks"
   },
   {
    "id": "barracks_ranged_moon",
    "kind": "barracks",
    "model": "barracks_ranged_moon",
-   "hp": 1200,
-   "armor": 1000,
+   "hp": 1500,
+   "hp_regen": 250,
+   "armor": 500,
    "armor_type": "fortified",
    "speed": 0,
    "radius": 0,
@@ -1036,10 +1270,10 @@
    "day_vision": 900,
    "night_vision": 600,
    "bounty": [
-    150,
-    200
+    352,
+    370
    ],
-   "after": "ranged barracks"
+   "_after": "ranged barracks"
   },
   {
    "id": "sphere_moon",
@@ -1047,38 +1281,38 @@
    "model": "sphere_moon",
    "hp": 4250,
    "hp_regen": 300,
-   "armor": 1300,
+   "armor": 1500,
    "armor_type": "fortified",
    "speed": 0,
    "radius": 0,
    "footprint": 250,
-   "day_vision": 1200,
-   "night_vision": 900,
-   "after": "the Ancient (World Tree / Frozen Throne)"
+   "day_vision": 1800,
+   "night_vision": 1800,
+   "_after": "the Ancient (World Tree / Frozen Throne)"
   },
   {
    "id": "fountain_moon",
    "kind": "fountain",
    "model": "fountain_moon",
-   "hp": 99999,
+   "hp": 50000,
    "hp_regen": 99900,
-   "armor": 10000,
+   "armor": 0,
    "armor_type": "fortified",
    "attack_type": "chaos",
    "damage": [
-    180,
-    200
+    190,
+    199
    ],
-   "range": 1200,
+   "range": 800,
    "bat": 15,
    "attack_point": 0,
-   "missile": 2000,
+   "missile": 1450,
    "speed": 0,
    "radius": 0,
    "footprint": 150,
-   "day_vision": 1800,
-   "night_vision": 1800,
-   "after": "the fountain"
+   "day_vision": 1300,
+   "night_vision": 1300,
+   "_after": "the fountain"
   },
   {
    "id": "imp",
@@ -1086,12 +1320,12 @@
    "model": "imp",
    "hp": 240,
    "hp_regen": 50,
-   "armor": 100,
-   "armor_type": "normal",
+   "armor": 0,
+   "armor_type": "heavy",
    "attack_type": "normal",
    "damage": [
     10,
-    12
+    11
    ],
    "range": 100,
    "bat": 135,
@@ -1103,24 +1337,85 @@
    "day_vision": 800,
    "night_vision": 800,
    "bounty": [
-    11,
-    16
+    7,
+    9
    ],
-   "xp": 20,
-   "scale": 100
+   "xp": 25,
+   "scale": 100,
+   "_after": "Kobold"
+  },
+  {
+   "id": "imp_chief",
+   "kind": "neutral",
+   "model": "imp",
+   "hp": 400,
+   "hp_regen": 50,
+   "armor": 0,
+   "armor_type": "heavy",
+   "attack_type": "normal",
+   "damage": [
+    24,
+    27
+   ],
+   "range": 100,
+   "bat": 135,
+   "attack_point": 50,
+   "missile": 0,
+   "speed": 330,
+   "radius": 24,
+   "acquire": 400,
+   "day_vision": 800,
+   "night_vision": 800,
+   "bounty": [
+    23,
+    29
+   ],
+   "xp": 41,
+   "scale": 130,
+   "_after": "Kobold Taskmaster"
   },
   {
    "id": "hound",
    "kind": "neutral",
    "model": "hound",
-   "hp": 400,
+   "hp": 500,
    "hp_regen": 50,
    "armor": 100,
-   "armor_type": "normal",
+   "armor_type": "heavy",
    "attack_type": "normal",
    "damage": [
-    18,
-    22
+    21,
+    24
+   ],
+   "range": 100,
+   "bat": 145,
+   "attack_point": 50,
+   "missile": 0,
+   "speed": 350,
+   "radius": 24,
+   "acquire": 400,
+   "day_vision": 800,
+   "night_vision": 800,
+   "bounty": [
+    22,
+    26
+   ],
+   "xp": 62,
+   "scale": 100,
+   "_after": "Giant Wolf"
+  },
+  {
+   "id": "hound_alpha",
+   "kind": "neutral",
+   "model": "hound",
+   "hp": 600,
+   "hp_regen": 50,
+   "armor": 300,
+   "armor_type": "heavy",
+   "attack_type": "normal",
+   "damage": [
+    30,
+    33
    ],
    "range": 100,
    "bat": 135,
@@ -1132,53 +1427,25 @@
    "day_vision": 800,
    "night_vision": 800,
    "bounty": [
-    18,
-    24
+    37,
+    45
    ],
-   "xp": 36,
-   "scale": 100
+   "xp": 88,
+   "scale": 125,
+   "_after": "Alpha Wolf"
   },
   {
    "id": "mossback",
    "kind": "neutral",
    "model": "mossback",
-   "hp": 600,
+   "hp": 800,
    "hp_regen": 50,
    "armor": 400,
-   "armor_type": "normal",
+   "armor_type": "heavy",
    "attack_type": "normal",
    "damage": [
-    22,
-    26
-   ],
-   "range": 100,
-   "bat": 135,
-   "attack_point": 50,
-   "missile": 0,
-   "speed": 250,
-   "radius": 24,
-   "acquire": 400,
-   "day_vision": 800,
-   "night_vision": 800,
-   "bounty": [
-    24,
-    30
-   ],
-   "xp": 48,
-   "scale": 100
-  },
-  {
-   "id": "golem_small",
-   "kind": "neutral",
-   "model": "golem_small",
-   "hp": 400,
-   "hp_regen": 50,
-   "armor": 300,
-   "armor_type": "normal",
-   "attack_type": "normal",
-   "damage": [
-    16,
-    20
+    29,
+    33
    ],
    "range": 100,
    "bat": 135,
@@ -1190,53 +1457,25 @@
    "day_vision": 800,
    "night_vision": 800,
    "bounty": [
-    16,
-    22
+    54,
+    62
    ],
-   "xp": 36,
-   "scale": 100
+   "xp": 119,
+   "scale": 100,
+   "_after": "Mud Golem"
   },
   {
-   "id": "golem",
+   "id": "golem_small",
    "kind": "neutral",
-   "model": "golem",
-   "hp": 800,
+   "model": "golem_small",
+   "hp": 550,
    "hp_regen": 50,
-   "armor": 400,
-   "armor_type": "normal",
+   "armor": 200,
+   "armor_type": "heavy",
    "attack_type": "normal",
    "damage": [
-    30,
-    36
-   ],
-   "range": 100,
-   "bat": 135,
-   "attack_point": 50,
-   "missile": 0,
-   "speed": 250,
-   "radius": 24,
-   "acquire": 400,
-   "day_vision": 800,
-   "night_vision": 800,
-   "bounty": [
-    36,
-    46
-   ],
-   "xp": 78,
-   "scale": 100
-  },
-  {
-   "id": "hornet",
-   "kind": "neutral",
-   "model": "hornet",
-   "hp": 300,
-   "hp_regen": 50,
-   "armor": 100,
-   "armor_type": "normal",
-   "attack_type": "normal",
-   "damage": [
-    16,
-    20
+    18,
+    21
    ],
    "range": 100,
    "bat": 135,
@@ -1248,24 +1487,55 @@
    "day_vision": 800,
    "night_vision": 800,
    "bounty": [
-    15,
-    20
+    20,
+    24
    ],
-   "xp": 30,
-   "scale": 100
+   "xp": 41,
+   "scale": 100,
+   "_after": "Centaur Outrunner"
   },
   {
-   "id": "shaman",
+   "id": "golem",
    "kind": "neutral",
-   "model": "shaman",
-   "hp": 700,
+   "model": "golem",
+   "hp": 1100,
    "hp_regen": 50,
-   "armor": 100,
-   "armor_type": "normal",
-   "attack_type": "normal",
+   "armor": 400,
+   "armor_type": "heavy",
+   "attack_type": "chaos",
    "damage": [
-    30,
-    36
+    49,
+    55
+   ],
+   "range": 100,
+   "bat": 165,
+   "attack_point": 50,
+   "missile": 0,
+   "speed": 320,
+   "radius": 24,
+   "acquire": 400,
+   "day_vision": 800,
+   "night_vision": 800,
+   "bounty": [
+    66,
+    78
+   ],
+   "xp": 119,
+   "scale": 100,
+   "_after": "Centaur Khan"
+  },
+  {
+   "id": "hornet",
+   "kind": "neutral",
+   "model": "hornet",
+   "hp": 500,
+   "hp_regen": 50,
+   "armor": 0,
+   "armor_type": "heavy",
+   "attack_type": "pierce",
+   "damage": [
+    24,
+    27
    ],
    "range": 500,
    "bat": 135,
@@ -1277,40 +1547,72 @@
    "day_vision": 800,
    "night_vision": 800,
    "bounty": [
-    30,
-    38
+    26,
+    33
    ],
    "xp": 62,
-   "scale": 100
+   "scale": 100,
+   "_after": "Dark Troll"
   },
   {
-   "id": "drake_young",
+   "id": "shaman",
    "kind": "neutral",
-   "model": "drake_young",
+   "model": "shaman",
    "hp": 1100,
    "hp_regen": 50,
-   "armor": 400,
+   "armor": 100,
    "armor_type": "heavy",
-   "attack_type": "chaos",
+   "attack_type": "pierce",
    "damage": [
-    36,
-    42
+    49,
+    54
    ],
-   "range": 300,
+   "range": 500,
    "bat": 135,
    "attack_point": 50,
    "missile": 900,
-   "speed": 270,
+   "speed": 320,
    "radius": 24,
    "acquire": 400,
    "day_vision": 800,
    "night_vision": 800,
    "bounty": [
-    42,
-    50
+    54,
+    62
    ],
-   "xp": 88,
-   "scale": 100
+   "xp": 155,
+   "scale": 100,
+   "_after": "Dark Troll Warlord"
+  },
+  {
+   "id": "drake_young",
+   "kind": "neutral",
+   "model": "drake_young",
+   "hp": 950,
+   "hp_regen": 50,
+   "armor": 200,
+   "armor_type": "heavy",
+   "attack_type": "pierce",
+   "damage": [
+    34,
+    45
+   ],
+   "range": 300,
+   "bat": 180,
+   "attack_point": 50,
+   "missile": 900,
+   "speed": 350,
+   "radius": 24,
+   "acquire": 400,
+   "day_vision": 800,
+   "night_vision": 800,
+   "bounty": [
+    44,
+    56
+   ],
+   "xp": 62,
+   "scale": 100,
+   "_after": "Black Drake"
   },
   {
    "id": "drake",
@@ -1322,24 +1624,25 @@
    "armor_type": "heavy",
    "attack_type": "chaos",
    "damage": [
-    64,
-    72
+    48,
+    81
    ],
    "range": 300,
-   "bat": 135,
+   "bat": 150,
    "attack_point": 50,
    "missile": 900,
-   "speed": 270,
+   "speed": 300,
    "radius": 24,
    "acquire": 400,
    "day_vision": 800,
    "night_vision": 800,
    "bounty": [
-    80,
-    96
+    164,
+    234
    ],
-   "xp": 130,
-   "scale": 100
+   "xp": 155,
+   "scale": 100,
+   "_after": "Black Dragon"
   },
   {
    "id": "warden",
@@ -1347,31 +1650,32 @@
    "model": "warden",
    "hp": 7500,
    "hp_regen": 2000,
-   "armor": 900,
+   "armor": 300,
    "armor_type": "heavy",
-   "attack_type": "hero",
+   "attack_type": "chaos",
    "damage": [
-    75,
-    75
+    65,
+    65
    ],
    "range": 128,
    "bat": 100,
-   "attack_point": 60,
+   "attack_point": 30,
+   "backswing": 30,
    "speed": 270,
    "radius": 60,
    "acquire": 250,
    "day_vision": 1400,
    "night_vision": 1400,
    "bounty": [
-    200,
-    200
+    105,
+    600
    ],
-   "xp": 400,
+   "xp": 1789,
    "magic_resist": 75,
    "abilities": [
     "warden_bash"
    ],
-   "after": "Roshan"
+   "_after": "Roshan"
   },
   {
    "id": "healing_ward",
@@ -1380,7 +1684,7 @@
    "hp": 1,
    "armor": 0,
    "armor_type": "normal",
-   "speed": 420,
+   "speed": 300,
    "radius": 16,
    "day_vision": 500,
    "night_vision": 500,
@@ -1388,33 +1692,33 @@
     0,
     0
    ],
-   "after": "Healing Ward"
+   "_after": "Healing Ward"
   },
   {
    "id": "observer_ward",
    "kind": "ward",
    "model": "observer_ward",
-   "hp": 100,
+   "hp": 200,
    "armor": 0,
    "armor_type": "normal",
    "speed": 0,
    "radius": 16,
    "day_vision": 1600,
    "night_vision": 1600,
-   "after": "Observer Ward"
+   "_after": "Observer Ward"
   },
   {
    "id": "sentry_ward",
    "kind": "ward",
    "model": "sentry_ward",
-   "hp": 100,
+   "hp": 200,
    "armor": 0,
    "armor_type": "normal",
    "speed": 0,
    "radius": 16,
-   "day_vision": 200,
-   "night_vision": 200,
-   "after": "Sentry Ward"
+   "day_vision": 70,
+   "night_vision": 70,
+   "_after": "Sentry Ward"
   },
   {
    "id": "fissure_rock",
@@ -1427,7 +1731,24 @@
    "radius": 60,
    "day_vision": 0,
    "night_vision": 0,
-   "after": "Fissure's wall"
+   "_after": "Fissure's wall"
+  },
+  {
+   "id": "courier",
+   "kind": "summon",
+   "model": "courier",
+   "hp": 75,
+   "armor": 0,
+   "armor_type": "normal",
+   "speed": 350,
+   "radius": 16,
+   "day_vision": 500,
+   "night_vision": 500,
+   "bounty": [
+    0,
+    0
+   ],
+   "_after": "Animal Courier"
   },
   {
    "id": "shop",
@@ -1441,7 +1762,7 @@
    "footprint": 90,
    "day_vision": 0,
    "night_vision": 0,
-   "after": "shops"
+   "_after": "shops"
   }
  ]
 }

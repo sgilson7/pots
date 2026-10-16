@@ -138,7 +138,7 @@ pub struct UnitDef {
     #[serde(default)]
     pub upgrade_damage: i32,
     /// Free text for the person: which DotA unit or hero this follows.
-    #[serde(default)]
+    #[serde(default, rename = "_after")]
     pub after: String,
 }
 
@@ -228,7 +228,7 @@ pub struct AbilityDef {
     /// The hotkey's code (`KeyQ`), for the HUD.
     #[serde(default)]
     pub key: String,
-    #[serde(default)]
+    #[serde(default, rename = "_after")]
     pub after: String,
 }
 
@@ -363,7 +363,7 @@ pub struct ItemDef {
     pub stacks: bool,
     #[serde(default)]
     pub icon: String,
-    #[serde(default)]
+    #[serde(default, rename = "_after")]
     pub after: String,
 }
 
@@ -571,6 +571,7 @@ pub struct HeroPick {
     /// The hero's unit id.
     pub unit: String,
     /// The DotA hero whose abilities it carries (for the person).
+    #[serde(rename = "_after")]
     pub after: String,
 }
 

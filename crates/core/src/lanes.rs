@@ -40,13 +40,13 @@ pub fn clock(w: &mut World, ctx: &Ctx) {
         w.event(EV_HORN, 0, 0, [0, 0]);
     }
     // creep waves
-    if tick >= w.horn_at && (tick - w.horn_at) % (t.wave_every * TPS) as u32 == 0 {
+    if tick >= w.horn_at && (tick - w.horn_at).is_multiple_of((t.wave_every * TPS) as u32) {
         w.waves += 1;
         spawn_waves(w, ctx);
     }
     // periodic gold, from the horn
     let every = (t.periodic_every * TPS / 100).max(1) as u32;
-    if tick > w.horn_at && tick % every == 0 {
+    if tick > w.horn_at && tick.is_multiple_of(every) {
         for p in w.players.iter_mut() {
             if p.present && p.hero != NO_UNIT {
                 p.gold += t.periodic_gold;
@@ -56,13 +56,13 @@ pub fn clock(w: &mut World, ctx: &Ctx) {
     // neutral camps: first half a minute after the horn, then on every minute mark
     let first = w.horn_at + (t.neutral_first * TPS) as u32;
     let minute = (t.neutral_every * TPS) as u32;
-    if tick == first || (tick > first && (tick - w.horn_at) % minute == 0) {
+    if tick == first || (tick > first && (tick - w.horn_at).is_multiple_of(minute)) {
         spawn_camps(w, ctx);
     }
     // runes: every even minute from the horn, unless one still waits
     let rune_every = (t.rune_every * TPS) as u32;
     if tick >= w.horn_at
-        && (tick - w.horn_at) % rune_every == 0
+        && (tick - w.horn_at).is_multiple_of(rune_every)
         && !ctx.rules.map.runes.is_empty()
         && w.rune.is_none()
     {
@@ -71,7 +71,7 @@ pub fn clock(w: &mut World, ctx: &Ctx) {
         w.rune = Some((spot, kind));
     }
     pick_runes(w, ctx);
-    if tick % 15 == 0 {
+    if tick.is_multiple_of(15) {
         protect(w, ctx);
     }
     crate::courier::run(w, ctx);
@@ -128,7 +128,9 @@ fn spawn_waves(w: &mut World, ctx: &Ctx) {
     for team in [SUN, MOON] {
         let side = &ctx.rules.map.sides[team as usize];
         for (li, lane) in LANES.iter().enumerate() {
-            let Some(spawn) = side.creep_spawn.get(*lane) else { continue };
+            let Some(spawn) = side.creep_spawn.get(*lane) else {
+                continue;
+            };
             // mega creeps where the enemy barracks of this lane have fallen:
             // the melee barracks for melee, the ranged for ranged and siege
             let rax_up = |melee: bool| {
@@ -147,23 +149,22 @@ fn spawn_waves(w: &mut World, ctx: &Ctx) {
             let level = if all_down { t.creep_upgrade_max } else { upgrade };
             let extra_melee = t.extra_melee_at.iter().filter(|&&s| elapsed >= s).count();
             let extra_ranged = t.extra_ranged_at.iter().filter(|&&s| elapsed >= s).count();
-            let mut list = Vec::new();
-            for _ in 0..t.creeps_melee as usize + extra_melee {
-                list.push(0);
-            }
-            for _ in 0..t.creeps_ranged as usize + extra_ranged {
-                list.push(1);
-            }
+            let mut list = vec![0; t.creeps_melee as usize + extra_melee];
+            list.extend(std::iter::repeat_n(1, t.creeps_ranged as usize + extra_ranged));
             if siege {
                 list.push(2);
             }
-            for _ in 0..extra_ranged {
-                list.push(2);
-            }
+            list.extend(std::iter::repeat_n(2, extra_ranged));
             for (k, which) in list.into_iter().enumerate() {
                 let base = &side.creeps[which];
-                let name = if mega[which] { base.replacen("creep_", "creep_", 1).replace("_sun", "_mega_sun").replace("_moon", "_mega_moon") } else { base.clone() };
-                let Some(def) = ctx.rules.unit(&name).or_else(|| ctx.rules.unit(base)) else { continue };
+                let name = if mega[which] {
+                    base.replace("_sun", "_mega_sun").replace("_moon", "_mega_moon")
+                } else {
+                    base.clone()
+                };
+                let Some(def) = ctx.rules.unit(&name).or_else(|| ctx.rules.unit(base)) else {
+                    continue;
+                };
                 // a column, two abreast, so the wave does not start stacked
                 let off = [(k as i32 % 2) * 60 - 30, -(k as i32 / 2) * 60];
                 let at = [spawn[0] + off[0], spawn[1] + off[1]];
@@ -187,9 +188,10 @@ fn spawn_waves(w: &mut World, ctx: &Ctx) {
 fn spawn_camps(w: &mut World, ctx: &Ctx) {
     for (k, camp) in ctx.rules.map.camps.iter().enumerate() {
         let tag = k as u8 + 1;
-        let occupied = w.units.iter().any(|u| {
-            u.alive && (u.camp == tag || within(u.pos(), camp.at, CAMP_RADIUS))
-        });
+        let occupied = w
+            .units
+            .iter()
+            .any(|u| u.alive && (u.camp == tag || within(u.pos(), camp.at, CAMP_RADIUS)));
         if occupied || camp.groups.is_empty() {
             continue;
         }
@@ -411,7 +413,11 @@ fn lane_target(w: &World, ctx: &Ctx, id: Uid, r: i32, heroes_last: bool) -> Opti
             continue;
         }
         // heroes count as farther away, so creeps are preferred
-        let key = if heroes_last && v.hero.is_some() { d + (1i64 << 40) } else { d };
+        let key = if heroes_last && v.hero.is_some() {
+            d + (1i64 << 40)
+        } else {
+            d
+        };
         if best.map(|b| key < b.0).unwrap_or(true) {
             best = Some((key, v.id));
         }
@@ -442,7 +448,9 @@ fn creep(w: &mut World, ctx: &Ctx, id: Uid) {
         return;
     }
     let side = &ctx.rules.map.sides[team as usize];
-    let Some(path) = side.lanes.get(LANES[lane.min(2)]) else { return };
+    let Some(path) = side.lanes.get(LANES[lane.min(2)]) else {
+        return;
+    };
     if wp >= path.len() {
         return;
     }
@@ -461,7 +469,10 @@ fn tower(w: &mut World, ctx: &Ctx, id: Uid) {
     }
     let u = w.get(id).expect("listed");
     let current = u.target;
-    if current != NO_UNIT && crate::orders::in_range(w, ctx, id, current, s.range) && w.live(current).is_some() {
+    if current != NO_UNIT
+        && crate::orders::in_range(w, ctx, id, current, s.range)
+        && w.live(current).is_some()
+    {
         let ready = u.attack_ready <= w.tick;
         if ready {
             crate::combat::swing(w, ctx, id, current);
@@ -545,7 +556,13 @@ fn protect(w: &mut World, ctx: &Ctx) {
     let ids: Vec<Uid> = w
         .units
         .iter()
-        .filter(|u| u.alive && matches!(ctx.rules.units[u.def as usize].kind, Kind::Tower | Kind::Barracks | Kind::Sphere))
+        .filter(|u| {
+            u.alive
+                && matches!(
+                    ctx.rules.units[u.def as usize].kind,
+                    Kind::Tower | Kind::Barracks | Kind::Sphere
+                )
+        })
         .map(|u| u.id)
         .collect();
     let calm = (t.backdoor_calm * TPS) as u32;
@@ -561,7 +578,9 @@ fn protect(w: &mut World, ctx: &Ctx) {
         };
         let creeps_near = !w
             .near(u.pos(), t.backdoor_radius, |v| {
-                v.team == other(team) && v.team != NEUTRAL && ctx.rules.units[v.def as usize].kind == Kind::Creep
+                v.team == other(team)
+                    && v.team != NEUTRAL
+                    && ctx.rules.units[v.def as usize].kind == Kind::Creep
             })
             .is_empty();
         let tick = w.tick;

@@ -16,9 +16,14 @@ use crate::models::{pose_parts, Models, Pose};
 use crate::render::{Batch, Camera, Rgb, LAYER_INKED, LAYER_PLAIN};
 use crate::rules::{Kind, P, SUB, TPS};
 use crate::stats;
-use crate::world::{Act, Ctx, Uid, World, ANIM_ATTACK, ANIM_CAST, ANIM_CHANNEL, ANIM_DEATH, ANIM_WALK, M, NEUTRAL, NO_UNIT};
+use crate::world::{
+    Act, Ctx, Uid, World, ANIM_ATTACK, ANIM_CAST, ANIM_CHANNEL, ANIM_DEATH, ANIM_WALK, M, NEUTRAL, NO_UNIT,
+};
 
 pub const GAME_UNITS_PER_SCENE: i32 = 32;
+
+/// The shader style drawn unlit (glows, the Spheres' cores, runes).
+pub const STYLE_GLOW: i32 = 4;
 
 /// Height of each ground level in Q16 scene units.
 pub fn level_height(level: u8) -> i32 {
@@ -31,7 +36,11 @@ pub fn level_height(level: u8) -> i32 {
 
 /// A map point (map units) at a height (Q16 scene units) as a scene point.
 pub fn to_scene(p: P, h: i32) -> V3 {
-    v3(p[0] * ONE / GAME_UNITS_PER_SCENE, h, -p[1] * ONE / GAME_UNITS_PER_SCENE)
+    v3(
+        p[0] * ONE / GAME_UNITS_PER_SCENE,
+        h,
+        -p[1] * ONE / GAME_UNITS_PER_SCENE,
+    )
 }
 
 /// Sixteenths of a map unit to a scene point at ground height.
@@ -115,7 +124,10 @@ impl View {
         }
         let t = fx::div(ground - cam.eye.y, dir.y);
         let hit = cam.eye.add(dir.scale(t));
-        [hit.x * GAME_UNITS_PER_SCENE / ONE, -hit.z * GAME_UNITS_PER_SCENE / ONE]
+        [
+            hit.x * GAME_UNITS_PER_SCENE / ONE,
+            -hit.z * GAME_UNITS_PER_SCENE / ONE,
+        ]
     }
 }
 
@@ -141,6 +153,30 @@ pub struct Look {
     pub missile: i32,
     /// Percent of scene: model scale.
     pub unit_scale: i32,
+    /// The camera: distance in hundredths of a scene unit, pitch and field of view in degrees.
+    pub cam_distance: i32,
+    pub cam_pitch: i32,
+    pub cam_fov: i32,
+    /// Map units a second the camera pans, and the edge band (percent of the screen) that pans it.
+    pub pan_speed: i32,
+    pub edge: i32,
+    pub zoom_min: i32,
+    pub zoom_max: i32,
+    pub zoom_step: i32,
+    /// Lighting: direction in hundredths, colours 0–255.
+    pub light_dir: [i32; 3],
+    pub sky: [i32; 3],
+    pub fog: [i32; 3],
+    /// Fog start and end, map units at the default camera distance.
+    pub fog_range: [i32; 2],
+    pub light: [i32; 3],
+    pub ink: [i32; 3],
+    /// Outline width: least, growth per scene unit, most; hundredths.
+    pub ink_size: [i32; 3],
+    /// Lit bands: thresholds and brightness, hundredths.
+    pub bands: [i32; 4],
+    pub ambient: [i32; 3],
+    pub max_ticks_per_frame: i32,
 }
 
 pub struct Frame<'a> {
@@ -166,6 +202,21 @@ fn visible_cell(f: &Frame, i: usize) -> bool {
     f.w.vision.get(i).map(|v| v & (1 << f.team) != 0).unwrap_or(false)
 }
 
+/// 0 for the Sunward bank of the river, 1 for the Moonward: the sign of
+/// the cross product with the river's first-to-last line.
+pub fn river_side(river: &[P], p: P) -> usize {
+    let (a, b) = match (river.first(), river.last()) {
+        (Some(a), Some(b)) => (*a, *b),
+        _ => return 0,
+    };
+    let cross = (b[0] - a[0]) as i64 * (p[1] - a[1]) as i64 - (b[1] - a[1]) as i64 * (p[0] - a[0]) as i64;
+    if cross < 0 {
+        0
+    } else {
+        1
+    }
+}
+
 /// The ground and trees near the camera.
 pub fn ground(f: &Frame, b: &mut Batch) {
     let t = f.ctx.terrain;
@@ -183,15 +234,19 @@ pub fn ground(f: &Frame, b: &mut Batch) {
     let water = m.named("water");
     let stone = [m.named("stone_sun"), m.named("stone_moon")];
     let path = m.named("path");
-    let size = f.ctx.rules.map.size;
     let tree_models = [m.find("tree_sun"), m.find("tree_moon")];
     for y in y0..=y1 {
         for x in x0..=x1 {
             let i = (y * t.tw + x) as usize;
             let c = t.tree_centre(i);
-            let side = if c[0] + c[1] < size { 0 } else { 1 };
+            // which bank of the river the cell is on, by the river's own line
+            let side = river_side(&f.ctx.rules.map.river, c);
             let lv = t.level[i];
-            let top = if t.mark[i] == map::T_RAMP { level_height(map::HIGH) / 2 } else { level_height(lv) };
+            let top = if t.mark[i] == map::T_RAMP {
+                level_height(map::HIGH) / 2
+            } else {
+                level_height(lv)
+            };
             // a little seeded variation per cell keeps the grass from looking tiled
             let vary = ONE - ((i as i32 * 7919) & 7) * ONE / 120;
             let mut col = match t.mark[i] {
@@ -211,7 +266,13 @@ pub fn ground(f: &Frame, b: &mut Batch) {
             let at = to_scene(c, bottom + h / 2);
             let w = tc * ONE / GAME_UNITS_PER_SCENE;
             let a = Affine::translate(at).then(&Affine::scale(v3(w, h, w)));
-            b.push(LAYER_PLAIN, Mesh::Cube, &a, col, if t.mark[i] == map::T_RIVER { 9 } else { 6 });
+            b.push(
+                LAYER_PLAIN,
+                Mesh::Cube,
+                &a,
+                col,
+                if t.mark[i] == map::T_RIVER { 9 } else { 6 },
+            );
             if let Tree::Standing = f.w.trees[i] {
                 if let Some(mi) = tree_models[side] {
                     let model = &m.list[mi];
@@ -227,7 +288,13 @@ pub fn ground(f: &Frame, b: &mut Batch) {
                         if !seen {
                             col = mulc(col, fog);
                         }
-                        b.push(if p.plain { LAYER_PLAIN } else { LAYER_INKED }, p.mesh, &a, col, p.style);
+                        b.push(
+                            if p.plain { LAYER_PLAIN } else { LAYER_INKED },
+                            p.mesh,
+                            &a,
+                            col,
+                            p.style,
+                        );
                     });
                 }
             }
@@ -245,7 +312,8 @@ fn pose_of(f: &Frame, id: Uid) -> Pose {
         ANIM_WALK => {
             // one stride for every 200 map units walked
             let per_sec = d.speed.max(1);
-            p.walk = ((since as i64 * per_sec as i64 * fx::TURN as i64) / (200 * TPS as i64 * ONE as i64)) as i32;
+            p.walk =
+                ((since as i64 * per_sec as i64 * fx::TURN as i64) / (200 * TPS as i64 * ONE as i64)) as i32;
         }
         ANIM_ATTACK => {
             let point = (d.attack_point * TPS / 100).max(1) * ONE;
@@ -267,7 +335,10 @@ fn pose_of(f: &Frame, id: Uid) -> Pose {
         }
         _ => {}
     }
-    if u.mods.iter().any(|m| m.kind == M::SpellImmune && m.tag != 0) && matches!(u.act, Act::None) && u.has(M::Disarm) {
+    if u.mods.iter().any(|m| m.kind == M::SpellImmune && m.tag != 0)
+        && matches!(u.act, Act::None)
+        && u.has(M::Disarm)
+    {
         // a spinning hero (the Blade Fury of DotA)
         p.whirl = (tick * ONE + f.alpha) / ONE * (fx::TURN / 10);
     }
@@ -279,7 +350,9 @@ fn pose_of(f: &Frame, id: Uid) -> Pose {
 fn drawn_at(f: &Frame, u: &crate::world::Unit) -> (i32, i32, i32) {
     let slot = World::slot(u.id);
     match f.prev.get(slot) {
-        Some(&(id, px, py, pf)) if id == u.id && (px - u.x).abs() < 300 * SUB && (py - u.y).abs() < 300 * SUB => {
+        Some(&(id, px, py, pf))
+            if id == u.id && (px - u.x).abs() < 300 * SUB && (py - u.y).abs() < 300 * SUB =>
+        {
             let x = px + fx::mul(u.x - px, f.alpha);
             let y = py + fx::mul(u.y - py, f.alpha);
             let face = fx::lerp_angle(pf, u.facing, f.alpha);
@@ -359,19 +432,27 @@ pub fn units(f: &Frame, b: &mut Batch) {
                 let tint = if illusion { m.named("illusion") } else { col };
                 b.tint(pt.mesh, &a, tint, ONE / 2);
             } else {
-                b.push(if pt.plain { LAYER_PLAIN } else { LAYER_INKED }, pt.mesh, &a, col, pt.style);
+                b.push(
+                    if pt.plain { LAYER_PLAIN } else { LAYER_INKED },
+                    pt.mesh,
+                    &a,
+                    col,
+                    pt.style,
+                );
             }
         });
         // team ring under every unit that is not a building
         if !d.kind.is_building() && d.kind != Kind::Ward {
             let r = (d.radius + 16) * 2 * ONE / GAME_UNITS_PER_SCENE;
             let ring_col = m.team_named(u.team, "ring");
-            let a = Affine::translate(sub_to_scene(x, y, h + ONE / 30)).then(&Affine::scale(v3(r, ONE / 40, r)));
+            let a =
+                Affine::translate(sub_to_scene(x, y, h + ONE / 30)).then(&Affine::scale(v3(r, ONE / 40, r)));
             b.tint(Mesh::Ring, &a, ring_col, ONE * 3 / 4);
         }
         if u.id == f.hover || u.id == f.selected {
             let r = (d.radius + d.footprint + 40) * 2 * ONE / GAME_UNITS_PER_SCENE;
-            let a = Affine::translate(sub_to_scene(x, y, h + ONE / 20)).then(&Affine::scale(v3(r, ONE / 20, r)));
+            let a =
+                Affine::translate(sub_to_scene(x, y, h + ONE / 20)).then(&Affine::scale(v3(r, ONE / 20, r)));
             b.tint(Mesh::Ring, &a, m.named("select"), ONE);
         }
         if u.alive {
@@ -399,7 +480,10 @@ fn bar(f: &Frame, b: &mut Batch, u: &crate::world::Unit, x: i32, y: i32, top: i3
     let m = f.models;
     let facing = Affine::rot_x(-f.view.pitch);
     let at = sub_to_scene(x, y, top + ONE / 3);
-    let back = Affine::translate(at).then(&facing).then(&Affine::scale(v3(bw + ONE / 16, bh + ONE / 16, ONE)));
+    let back =
+        Affine::translate(at)
+            .then(&facing)
+            .then(&Affine::scale(v3(bw + ONE / 16, bh + ONE / 16, ONE)));
     b.push(LAYER_PLAIN, Mesh::Card, &back, m.named("bar_back"), 0);
     let fill_w = fx::mul(bw, share);
     let offset = (fill_w - bw) / 2;
@@ -419,7 +503,11 @@ fn bar(f: &Frame, b: &mut Batch, u: &crate::world::Unit, x: i32, y: i32, top: i3
         let share = (u.mana as i64 * ONE as i64 / (s.max_mana as i64 * 1000)).clamp(0, ONE as i64) as i32;
         let mw = fx::mul(bw, share);
         let at2 = sub_to_scene(x, y, top + ONE / 3 - bh - ONE / 20);
-        let back = Affine::translate(at2).then(&facing).then(&Affine::scale(v3(bw + ONE / 16, bh / 2 + ONE / 16, ONE)));
+        let back = Affine::translate(at2).then(&facing).then(&Affine::scale(v3(
+            bw + ONE / 16,
+            bh / 2 + ONE / 16,
+            ONE,
+        )));
         b.push(LAYER_PLAIN, Mesh::Card, &back, m.named("bar_back"), 0);
         let fill = Affine::translate(at2)
             .then(&facing)
@@ -443,7 +531,12 @@ pub fn effects(f: &Frame, b: &mut Batch) {
             m.named("shot")
         };
         if f.team != NEUTRAL && ms.team != f.team {
-            let seen = f.ctx.terrain.tree_index(p[0], p[1]).map(|i| visible_cell(f, i)).unwrap_or(false);
+            let seen = f
+                .ctx
+                .terrain
+                .tree_index(p[0], p[1])
+                .map(|i| visible_cell(f, i))
+                .unwrap_or(false);
             if !seen {
                 continue;
             }
@@ -455,7 +548,12 @@ pub fn effects(f: &Frame, b: &mut Batch) {
     for z in &f.w.zones {
         let k = z.ability as usize;
         if f.team != NEUTRAL && z.team != f.team {
-            let seen = f.ctx.terrain.tree_index(z.at[0], z.at[1]).map(|i| visible_cell(f, i)).unwrap_or(false);
+            let seen = f
+                .ctx
+                .terrain
+                .tree_index(z.at[0], z.at[1])
+                .map(|i| visible_cell(f, i))
+                .unwrap_or(false);
             if !seen {
                 continue;
             }
@@ -469,9 +567,20 @@ pub fn effects(f: &Frame, b: &mut Batch) {
     }
     if let Some((spot, kind)) = f.w.rune {
         let at = f.ctx.rules.map.runes[spot];
-        let seen = f.team == NEUTRAL || f.ctx.terrain.tree_index(at[0], at[1]).map(|i| visible_cell(f, i)).unwrap_or(false);
+        let seen = f.team == NEUTRAL
+            || f.ctx
+                .terrain
+                .tree_index(at[0], at[1])
+                .map(|i| visible_cell(f, i))
+                .unwrap_or(false);
         if seen {
-            let name = ["rune_haste", "rune_double", "rune_illusion", "rune_invis", "rune_regen"][kind as usize % 5];
+            let name = [
+                "rune_haste",
+                "rune_double",
+                "rune_illusion",
+                "rune_invis",
+                "rune_regen",
+            ][kind as usize % 5];
             if let Some(mi) = m.find(name) {
                 let h = ground_at(f.ctx.terrain, at);
                 let pose = Pose {
@@ -512,7 +621,9 @@ pub fn unit_under(f: &Frame, aspect: i32, sx: i32, sy: i32) -> Uid {
         let (x, y, _) = drawn_at(f, u);
         let p = [x / SUB, y / SUB];
         let h = ground_at(f.ctx.terrain, p) + ONE;
-        let Some((ux, uy)) = cam.screen(aspect, sub_to_scene(x, y, h)) else { continue };
+        let Some((ux, uy)) = cam.screen(aspect, sub_to_scene(x, y, h)) else {
+            continue;
+        };
         let reach = ((d.radius + d.footprint).max(40) * ONE / 16).max(ONE * 2);
         let (dx, dy) = ((ux - sx) as i64, (uy - sy) as i64);
         let d2 = dx * dx + dy * dy;

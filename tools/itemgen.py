@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Writes data/items.json: the shop, after DotA Allstars 6.6x prices and
+"""Writes data/items.json: the shop, after DotA Allstars 6.72/6.73 prices and
 recipes (notes/LITERATURE.md). Each item has an original name in
 data/strings.json; the id here is a working name.
 Run: python3 tools/itemgen.py
@@ -10,18 +10,22 @@ def it(id, cost, after, tab, parts=(), recipe=False, shop="home", logic="", targ
        charges=0, stacks=False, values=None, **bonus):
     d = {"id": id, "cost": cost, "parts": list(parts), "recipe": recipe, "shop": shop, "tab": tab, "bonus": bonus,
          "logic": logic, "values": values or {}, "cooldown": cooldown, "mana": mana, "range": range,
-         "charges": charges, "stacks": stacks, "icon": f"items/{id}", "after": after}
+         "charges": charges, "stacks": stacks, "icon": f"items/{id}", "_after": after}
     if target:
         d["target"] = target
     I.append(d)
 
+# Pinned to the 6.72/6.73 column [C] of notes/LITERATURE.md section 3.
+# For a recipe item `cost` is the recipe scroll alone; an item built
+# without a scroll has cost 0 and its total is the sum of its parts.
 # consumables
-it("tango", 90, "Tango", "consumables", logic="tango", target="point", range=165, charges=4, stacks=True, values={"heal": 115, "duration": 1600})
+it("tango", 90, "Tango", "consumables", logic="tango", target="point", range=165, charges=3, stacks=True, values={"heal": 115, "duration": 1600})
 it("salve", 100, "Healing Salve", "consumables", logic="salve", target="unit", range=250, charges=1, stacks=True, values={"heal": 400, "duration": 1000})
 it("clarity", 50, "Clarity Potion", "consumables", logic="clarity", target="unit", range=250, charges=1, stacks=True, values={"mana": 100, "duration": 3000})
-it("tp", 135, "Scroll of Town Portal", "consumables", logic="tp", target="point", cooldown=6500, mana=75, range=99999, charges=1, stacks=True)
-it("observer", 200, "Observer Wards", "consumables", logic="ward_observer", target="point", range=500, charges=2, values={"duration": 36000})
-it("sentry", 200, "Sentry Wards", "consumables", logic="ward_sentry", target="point", range=500, charges=2, values={"duration": 18000, "true_sight": 850})
+it("tp", 135, "Scroll of Town Portal", "consumables", logic="tp", target="point", cooldown=6500, mana=75, range=99999, charges=1, stacks=True,
+   values={"channel": 300, "offset": 525})
+it("observer", 150, "Observer Wards", "consumables", logic="ward_observer", target="point", range=500, charges=2, values={"duration": 36000})
+it("sentry", 200, "Sentry Wards", "consumables", logic="ward_sentry", target="point", range=500, charges=2, values={"duration": 18000, "true_sight": 800})
 it("bottle", 600, "Bottle", "consumables", logic="bottle", target="none", cooldown=50, charges=3, values={"heal": 135, "mana": 70, "duration": 300})
 # attributes
 it("branch", 53, "Ironwood Branch", "basics", str=1, agi=1, int=1)
@@ -38,26 +42,30 @@ it("wizardry", 1000, "Staff of Wizardry", "attributes", int=10)
 it("ultimate_orb", 2100, "Ultimate Orb", "attributes", str=10, agi=10, int=10)
 # armaments
 it("ring_protection", 175, "Ring of Protection", "basics", armor=200)
+it("stout_shield", 250, "Stout Shield", "basics")
 it("blades", 450, "Blades of Attack", "armaments", damage=9)
 it("quarterstaff", 900, "Quarterstaff", "armaments", damage=10, attack_speed=10)
 it("chainmail", 550, "Chainmail", "armaments", armor=500)
+it("helm_iron_will", 950, "Helm of Iron Will", "armaments", armor=500, hp_regen=300)
 it("broadsword", 1200, "Broadsword", "armaments", damage=18)
 it("claymore", 1400, "Claymore", "armaments", damage=21)
 it("platemail", 1400, "Platemail", "armaments", armor=1000)
-it("javelin", 1500, "Javelin", "armaments", damage=21)
-it("mithril", 1610, "Mithril Hammer", "armaments", damage=24)
+it("javelin", 1500, "Javelin", "armaments", damage=21, values={"chance": 20, "damage": 40})
+it("mithril", 1600, "Mithril Hammer", "armaments", damage=24)
 it("gloves", 500, "Gloves of Haste", "basics", attack_speed=15)
 # arcane
-it("boots", 500, "Boots of Speed", "basics", move_speed=50)
+it("boots", 450, "Boots of Speed", "basics", move_speed=50)
 it("ring_regen", 350, "Ring of Regeneration", "basics", hp_regen=200)
 it("sobi", 325, "Sage's Mask", "basics", mana_regen_pct=50)
-it("void_stone", 900, "Void Stone", "arcane", mana_regen_pct=100)
+it("void_stone", 875, "Void Stone", "arcane", mana_regen_pct=100)
 it("ring_health", 875, "Ring of Health", "arcane", hp_regen=500)
 it("vitality", 1100, "Vitality Booster", "arcane", hp=250)
 it("energy", 1000, "Energy Booster", "arcane", mana=250)
 it("point_booster", 1200, "Point Booster", "arcane", hp=200, mana=150)
-it("magic_stick", 200, "Magic Stick", "basics", logic="wand", target="none", cooldown=1300, charges=0, values={"per_charge": 15, "max": 10})
-it("blink", 2150, "Blink Dagger", "arcane", logic="blink", target="point", cooldown=1400, mana=75, range=1200)
+it("magic_stick", 200, "Magic Stick", "basics", logic="wand", target="none", cooldown=1300, charges=0,
+   values={"per_charge": 15, "max": 10, "radius": 1200})
+it("blink", 2150, "Blink Dagger", "arcane", logic="blink", target="point", cooldown=1200, mana=75, range=1200,
+   values={"damage_lock": 300})
 # secret shop
 it("hyperstone", 2100, "Hyperstone", "secret", shop="secret", attack_speed=55)
 it("demon_edge", 2400, "Demon Edge", "secret", shop="secret", damage=46)
@@ -68,34 +76,45 @@ it("relic", 3800, "Sacred Relic", "secret", shop="secret", damage=60)
 it("talisman", 1800, "Talisman of Evasion", "secret", shop="secret", evasion=25)
 it("mask_death", 900, "Mask of Death", "armaments", lifesteal=15)
 # recipes
-it("magic_wand", 150, "Magic Wand", "common", parts=["magic_stick", "branch", "branch"], recipe=True, logic="wand", target="none",
-   cooldown=1300, str=3, agi=3, int=3, values={"per_charge": 15, "max": 15})
-it("bracer", 175, "Bracer", "common", parts=["circlet", "gauntlets"], recipe=True, str=6, agi=3, int=3)
-it("wraith_band", 150, "Wraith Band", "common", parts=["circlet", "slippers"], recipe=True, str=3, agi=6, int=3)
-it("null_talisman", 135, "Null Talisman", "common", parts=["circlet", "mantle"], recipe=True, str=3, agi=3, int=6)
-it("power_treads", 0, "Power Treads", "common", parts=["boots", "gloves", "belt"], move_speed=60, attack_speed=30, str=8)
-it("phase_boots", 0, "Phase Boots", "common", parts=["boots", "blades", "blades"], move_speed=60, damage=24)
-it("travel_boots", 2200, "Boots of Travel", "common", parts=["boots"], recipe=True, move_speed=100, logic="tp", target="point", cooldown=6000, mana=75, range=99999)
+it("magic_wand", 150, "Magic Wand", "common", parts=["magic_stick", "branch", "branch", "branch"], recipe=True, logic="wand",
+   target="none", cooldown=1300, str=3, agi=3, int=3, values={"per_charge": 15, "max": 15, "radius": 1200})
+it("bracer", 190, "Bracer", "common", parts=["circlet", "gauntlets"], recipe=True, damage=3, str=6, agi=3, int=3)
+it("wraith_band", 150, "Wraith Band", "common", parts=["circlet", "slippers"], recipe=True, damage=3, str=3, agi=6, int=3)
+it("null_talisman", 135, "Null Talisman", "common", parts=["circlet", "mantle"], recipe=True, damage=3, str=3, agi=3, int=6)
+it("power_treads", 0, "Power Treads", "common", parts=["boots", "gloves", "belt"], move_speed=55, attack_speed=30, str=8)
+it("phase_boots", 0, "Phase Boots", "common", parts=["boots", "blades", "blades"], move_speed=55, damage=24,
+   values={"move_pct": 16, "duration": 400, "cooldown": 800})
+it("travel_boots", 2000, "Boots of Travel", "common", parts=["boots"], recipe=True, move_speed=100, logic="tp", target="point",
+   cooldown=6000, mana=75, range=99999)
+it("oblivion_staff", 0, "Oblivion Staff", "common", parts=["quarterstaff", "robe", "sobi"], int=6, attack_speed=15, damage=10,
+   mana_regen_pct=75)
 it("perseverance", 0, "Perseverance", "common", parts=["ring_health", "void_stone"], hp_regen=500, mana_regen_pct=125, damage=10)
 it("midas", 1400, "Hand of Midas", "common", parts=["gloves"], recipe=True, attack_speed=30, logic="midas", target="unit",
    cooldown=10000, range=600, values={"gold": 190, "xp_pct": 250})
 it("buckler", 200, "Buckler", "support", parts=["chainmail", "branch"], recipe=True, armor=500, str=1, agi=1, int=1)
 it("headdress", 200, "Headdress", "support", parts=["ring_regen", "branch"], recipe=True, hp_regen=300, str=1, agi=1, int=1)
 it("mekansm", 900, "Mekansm", "support", parts=["buckler", "headdress"], recipe=True, armor=500, str=5, agi=5, int=5,
-   logic="mekansm", target="none", cooldown=4500, mana=150, values={"heal": 250, "armor": 2, "radius": 750, "duration": 2500})
-it("vanguard", 0, "Vanguard", "protect", parts=["ring_health", "vitality"], hp=250, hp_regen=600)
+   logic="mekansm", target="none", cooldown=4500, mana=150,
+   values={"heal": 250, "armor": 2, "radius": 750, "duration": 2500, "aura_regen": 400, "aura_radius": 750, "lockout": 2500})
+it("vanguard", 0, "Vanguard", "protect", parts=["ring_health", "vitality", "stout_shield"], hp=250, hp_regen=600,
+   values={"block_chance": 70, "block_melee": 40, "block_ranged": 20})
 it("bkb", 1300, "Black King Bar", "protect", parts=["ogre_club", "mithril"], recipe=True, str=10, damage=24, logic="bkb",
-   target="none", cooldown=8000, values={"duration": 1000})
-it("heart", 1200, "Heart of Tarrasque", "protect", parts=["reaver", "vitality"], recipe=True, str=40, hp=300, hp_regen=1500)
+   target="none", cooldown=8000, values={"duration": 1000, "min_duration": 400, "min_cooldown": 5000, "step_duration": 100,
+   "step_cooldown": 500})
+it("heart", 1200, "Heart of Tarrasque", "protect", parts=["reaver", "vitality"], recipe=True, str=40, hp=300,
+   logic="heart", values={"regen_pct": 2, "delay": 600, "melee_delay": 400})
 it("shivas", 600, "Shiva's Guard", "protect", parts=["platemail", "mystic"], recipe=True, int=30, armor=1500, logic="shivas",
-   target="none", cooldown=3000, mana=100, values={"radius": 720, "damage": 200, "slow": 40, "duration": 400})
+   target="none", cooldown=3000, mana=100, values={"radius": 719, "damage": 200, "slow": 40, "duration": 400, "speed": 300,
+   "aura_radius": 900, "aura_attack_slow": 40})
 it("assault", 1300, "Assault Cuirass", "protect", parts=["platemail", "hyperstone", "chainmail"], recipe=True, armor=1000,
-   attack_speed=35, logic="assault", values={"radius": 900, "armor": 5, "attack_speed": 15})
+   attack_speed=35, logic="assault", values={"radius": 900, "armor": 5, "attack_speed": 20, "enemy_armor": 5})
 it("linkens", 1325, "Linken's Sphere", "protect", parts=["ultimate_orb", "perseverance"], recipe=True, str=15, agi=15, int=15,
-   hp_regen=600, mana_regen_pct=150, damage=10)
+   hp_regen=600, mana_regen_pct=150, damage=10, values={"block_cooldown": 1700})
 it("battlefury", 0, "Battle Fury", "weapons", parts=["claymore", "broadsword", "perseverance"], damage=65, hp_regen=600,
    mana_regen_pct=150, logic="cleave", values={"pct": 35, "radius": 225})
-it("daedalus", 1250, "Buriza-do Kyanon", "weapons", parts=["demon_edge", "claymore"], recipe=True, damage=81, logic="crit",
+it("crystalys", 500, "Crystalys", "weapons", parts=["broadsword", "blades"], recipe=True, damage=30, logic="crit",
+   values={"chance": 20, "multiplier": 175})
+it("daedalus", 1000, "Buriza-do Kyanon", "weapons", parts=["demon_edge", "crystalys"], recipe=True, damage=81, logic="crit",
    values={"chance": 25, "multiplier": 240})
 it("mkb", 0, "Monkey King Bar", "weapons", parts=["demon_edge", "javelin", "javelin"], damage=88, attack_speed=15, logic="bash",
    values={"chance": 35, "ranged_chance": 35, "damage": 100, "stun": 1})
@@ -103,35 +122,41 @@ it("basher", 1000, "Cranium Basher", "weapons", parts=["javelin", "belt"], recip
    values={"chance": 25, "ranged_chance": 10, "damage": 0, "stun": 140})
 it("butterfly", 0, "Butterfly", "weapons", parts=["eaglesong", "talisman", "quarterstaff"], agi=30, damage=30, attack_speed=30, evasion=35)
 it("desolator", 900, "Stygian Desolator", "weapons", parts=["mithril", "mithril"], recipe=True, damage=60, logic="corrupt",
-   values={"armor": 7, "duration": 700})
-it("maelstrom", 600, "Maelstrom", "weapons", parts=["mithril", "gloves"], recipe=True, damage=24, logic="lightning",
-   values={"chance": 25, "damage": 120, "bounces": 4})
-it("mjollnir", 900, "Mjollnir", "weapons", parts=["maelstrom", "hyperstone"], recipe=True, damage=24, attack_speed=80, logic="lightning",
-   values={"chance": 25, "damage": 160, "bounces": 8})
+   values={"armor": 7, "duration": 1500})
+it("maelstrom", 600, "Maelstrom", "weapons", parts=["mithril", "gloves"], recipe=True, damage=24, attack_speed=25, logic="lightning",
+   values={"chance": 25, "damage": 120, "bounces": 4, "radius": 500})
+it("mjollnir", 600, "Mjollnir", "weapons", parts=["maelstrom", "hyperstone"], recipe=True, damage=24, attack_speed=80, logic="lightning",
+   values={"chance": 25, "damage": 160, "bounces": 8, "radius": 500, "shield_chance": 20, "shield_damage": 200,
+   "shield_duration": 2000, "shield_cooldown": 3500, "shield_mana": 50, "shield_range": 600})
 it("radiance", 1350, "Radiance", "weapons", parts=["relic"], recipe=True, damage=60, logic="radiance", values={"radius": 650, "dps": 50})
 it("rapier", 0, "Divine Rapier", "weapons", parts=["relic", "demon_edge"], damage=300)
-it("satanic", 1100, "Satanic", "weapons", parts=["reaver", "mask_death", "claymore"], recipe=True, str=25, damage=21, armor=500,
-   lifesteal=25, logic="satanic", target="none", cooldown=3500, values={"lifesteal": 75, "duration": 350})
-it("sange", 1000, "Sange", "weapons", parts=["belt", "ogre_club"], recipe=True, str=16, damage=10)
-it("yasha", 1000, "Yasha", "weapons", parts=["elvenskin", "alacrity"], recipe=True, agi=16, attack_speed=15, move_pct=10)
-it("sange_yasha", 0, "Sange and Yasha", "weapons", parts=["sange", "yasha"], str=16, agi=16, damage=12, attack_speed=15, move_pct=12)
-it("manta", 800, "Manta Style", "weapons", parts=["yasha", "ultimate_orb"], recipe=True, str=10, agi=26, int=10, attack_speed=15,
-   move_pct=10, logic="manta", target="none", cooldown=5000, mana=165, values={"duration": 2000, "dealt": 33, "taken": 350})
-it("dagon", 1300, "Dagon", "caster", parts=["wizardry", "null_talisman"], recipe=True, int=13, str=3, agi=3, damage=9, logic="dagon",
+it("helm_dominator", 0, "Helm of the Dominator", "weapons", parts=["helm_iron_will", "mask_death"], armor=500, damage=20,
+   lifesteal=15)
+it("satanic", 1100, "Satanic", "weapons", parts=["reaver", "helm_dominator"], recipe=True, str=25, damage=20, armor=500,
+   lifesteal=25, logic="satanic", target="none", cooldown=3500, values={"lifesteal": 175, "duration": 350})
+it("sange", 600, "Sange", "weapons", parts=["belt", "ogre_club"], recipe=True, str=16, damage=10,
+   values={"maim_chance": 15, "maim_slow": 20, "maim_duration": 400})
+it("yasha", 600, "Yasha", "weapons", parts=["elvenskin", "alacrity"], recipe=True, agi=16, attack_speed=15, move_pct=10)
+it("sange_yasha", 0, "Sange and Yasha", "weapons", parts=["sange", "yasha"], str=16, agi=16, damage=16, attack_speed=16, move_pct=12,
+   values={"maim_chance": 16, "maim_slow": 30, "maim_duration": 400})
+it("manta", 900, "Manta Style", "weapons", parts=["yasha", "ultimate_orb"], recipe=True, str=10, agi=26, int=10, attack_speed=15,
+   move_pct=10, logic="manta", target="none", cooldown=3500, mana=165,
+   values={"duration": 2000, "dealt": 33, "taken": 350, "ranged_dealt": 28, "ranged_taken": 400, "ranged_cooldown": 5000})
+it("dagon", 1250, "Dagon", "caster", parts=["wizardry", "null_talisman"], recipe=True, int=13, str=3, agi=3, damage=9, logic="dagon",
    target="unit", cooldown=3500, mana=180, range=600, values={"damage": 400})
-it("euls", 0, "Eul's Scepter of Divinity", "caster", parts=["wizardry", "void_stone", "sobi"], int=10, mana_regen_pct=150, move_speed=30,
-   logic="euls", target="unit", cooldown=3000, mana=75, range=700, values={"duration": 250})
-it("force_staff", 1000, "Force Staff", "caster", parts=["wizardry", "ring_regen"], recipe=True, int=10, hp_regen=300, logic="force",
-   target="unit", cooldown=2000, mana=25, range=800, values={"distance": 600})
-it("orchid", 775, "Orchid Malevolence", "caster", parts=["quarterstaff", "robe", "sobi", "quarterstaff", "robe", "sobi"], recipe=True,
-   int=25, attack_speed=30, damage=30, mana_regen_pct=225, logic="orchid", target="unit", cooldown=1800, mana=100, range=900,
-   values={"duration": 500})
+it("euls", 500, "Eul's Scepter of Divinity", "caster", parts=["wizardry", "void_stone", "sobi"], recipe=True, int=10,
+   mana_regen_pct=150, move_speed=35, logic="euls", target="unit", cooldown=3000, mana=75, range=700, values={"duration": 250})
+it("force_staff", 900, "Force Staff", "caster", parts=["wizardry", "ring_regen"], recipe=True, int=10, hp_regen=300, logic="force",
+   target="unit", cooldown=2000, mana=25, range=800, values={"distance": 600, "time": 30})
+it("orchid", 775, "Orchid Malevolence", "caster", parts=["oblivion_staff", "oblivion_staff"], recipe=True,
+   int=25, attack_speed=30, damage=30, mana_regen_pct=150, logic="orchid", target="unit", cooldown=1800, mana=100, range=900,
+   values={"duration": 500, "amp": 30})
 it("sheep", 0, "Guinsoo's Scythe of Vyse", "caster", parts=["mystic", "ultimate_orb", "void_stone"], int=35, str=10, agi=10,
    mana_regen_pct=150, logic="sheep", target="unit", cooldown=3500, mana=100, range=800, values={"duration": 350})
 it("aghanims", 0, "Aghanim's Scepter", "caster", parts=["point_booster", "ogre_club", "alacrity", "wizardry"], str=10, agi=10, int=10,
    hp=200, mana=150)
 # dropped by the boss, never sold
-it("aegis", 0, "Aegis of the Immortal", "none", shop="none", values={"delay": 500})
+it("aegis", 0, "Aegis of the Immortal", "none", shop="none", values={"delay": 500, "expires": 36000})
 
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ids = {i["id"] for i in I}

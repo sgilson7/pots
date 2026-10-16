@@ -10,7 +10,7 @@
     140
    ],
    "cooldown": [
-    1300
+    1500
    ],
    "range": [
     600
@@ -30,16 +30,13 @@
      325
     ],
     "stun": [
-     125,
-     150,
-     175,
      200
     ]
    },
    "icon": "abilities/storm_bolt",
    "color": "fx_steel",
    "key": "KeyQ",
-   "after": "Storm Bolt"
+   "_after": "Storm Bolt"
   },
   {
    "id": "great_cleave",
@@ -59,13 +56,13 @@
      50
     ],
     "radius": [
-     225
+     200
     ]
    },
    "icon": "abilities/great_cleave",
    "color": "",
    "key": "KeyW",
-   "after": "Great Cleave"
+   "_after": "Great Cleave"
   },
   {
    "id": "warcry",
@@ -77,13 +74,13 @@
     25
    ],
    "cooldown": [
-    3200,
-    2600,
-    2000,
-    1400
+    3600,
+    3000,
+    2400,
+    1800
    ],
    "range": [],
-   "cast_point": 0,
+   "cast_point": 30,
    "values": {
     "radius": [
      700
@@ -98,13 +95,13 @@
      12
     ],
     "duration": [
-     1500
+     600
     ]
    },
    "icon": "abilities/warcry",
    "color": "fx_holy",
    "key": "KeyE",
-   "after": "Warcry"
+   "_after": "Warcry"
   },
   {
    "id": "gods_strength",
@@ -121,12 +118,12 @@
     8000
    ],
    "range": [],
-   "cast_point": 0,
+   "cast_point": 30,
    "values": {
     "damage_pct": [
      100,
-     150,
-     200
+     125,
+     150
     ],
     "duration": [
      2500
@@ -135,7 +132,7 @@
    "icon": "abilities/gods_strength",
    "color": "fx_holy",
    "key": "KeyR",
-   "after": "God's Strength"
+   "_after": "God's Strength"
   },
   {
    "id": "crystal_nova",
@@ -155,10 +152,10 @@
    "range": [
     700
    ],
-   "cast_point": 45,
+   "cast_point": 30,
    "values": {
     "radius": [
-     425
+     400
     ],
     "damage": [
      100,
@@ -173,13 +170,16 @@
      20
     ],
     "duration": [
-     450
+     350,
+     400,
+     450,
+     500
     ]
    },
    "icon": "abilities/crystal_nova",
    "color": "fx_frost",
    "key": "KeyQ",
-   "after": "Crystal Nova"
+   "_after": "Crystal Nova"
   },
   {
    "id": "frostbite",
@@ -194,15 +194,12 @@
     150
    ],
    "cooldown": [
-    1000,
-    900,
-    800,
-    700
+    1000
    ],
    "range": [
     500
    ],
-   "cast_point": 45,
+   "cast_point": 30,
    "values": {
     "duration": [
      150,
@@ -211,16 +208,22 @@
      300
     ],
     "damage": [
-     150,
-     200,
-     250,
-     300
+     105,
+     140,
+     175,
+     210
+    ],
+    "dps": [
+     70
+    ],
+    "creep_duration": [
+     1000
     ]
    },
    "icon": "abilities/frostbite",
    "color": "fx_frost",
    "key": "KeyW",
-   "after": "Frostbite"
+   "_after": "Frostbite"
   },
   {
    "id": "brilliance_aura",
@@ -237,16 +240,16 @@
      99999
     ],
     "regen": [
-     60,
-     120,
-     180,
-     240
+     50,
+     100,
+     150,
+     200
     ]
    },
    "icon": "abilities/brilliance_aura",
    "color": "",
    "key": "KeyE",
-   "after": "Brilliance Aura"
+   "_after": "Brilliance Aura"
   },
   {
    "id": "freezing_field",
@@ -260,13 +263,15 @@
     600
    ],
    "cooldown": [
-    15000
+    15000,
+    12000,
+    9000
    ],
    "range": [],
-   "cast_point": 0,
+   "cast_point": 30,
    "values": {
     "duration": [
-     1000
+     400
     ],
     "interval": [
      10
@@ -275,15 +280,20 @@
      195
     ],
     "outer": [
-     835
+     630
     ],
     "blast": [
-     250
+     190
     ],
     "damage": [
      105,
      170,
      250
+    ],
+    "scepter_damage": [
+     170,
+     250,
+     310
     ],
     "slow": [
      30
@@ -292,13 +302,13 @@
      20
     ],
     "armor": [
-     20
+     0
     ]
    },
    "icon": "abilities/freezing_field",
    "color": "fx_frost",
    "key": "KeyR",
-   "after": "Freezing Field"
+   "_after": "Freezing Field"
   },
   {
    "id": "dragon_slave",
@@ -307,16 +317,16 @@
    "on": "enemy",
    "ultimate": false,
    "mana": [
-    100,
+    90,
+    105,
     125,
-    140,
-    160
+    140
    ],
    "cooldown": [
-    800
+    850
    ],
    "range": [
-    1075
+    800
    ],
    "cast_point": 45,
    "values": {
@@ -324,22 +334,25 @@
      1075
     ],
     "width": [
-     240
+     275
+    ],
+    "end_width": [
+     150
     ],
     "speed": [
      1200
     ],
     "damage": [
-     110,
-     180,
-     250,
-     320
+     100,
+     170,
+     230,
+     280
     ]
    },
    "icon": "abilities/dragon_slave",
    "color": "fx_fire",
    "key": "KeyQ",
-   "after": "Dragon Slave"
+   "_after": "Dragon Slave"
   },
   {
    "id": "light_strike_array",
@@ -357,7 +370,7 @@
     700
    ],
    "range": [
-    625
+    600
    ],
    "cast_point": 45,
    "values": {
@@ -369,21 +382,18 @@
     ],
     "damage": [
      90,
-     160,
-     230,
-     300
+     150,
+     210,
+     280
     ],
     "stun": [
-     160,
-     180,
-     200,
-     220
+     160
     ]
    },
    "icon": "abilities/light_strike_array",
    "color": "fx_fire",
    "key": "KeyW",
-   "after": "Light Strike Array"
+   "_after": "Light Strike Array"
   },
   {
    "id": "fiery_soul",
@@ -397,16 +407,16 @@
    "cast_point": 30,
    "values": {
     "attack_speed": [
-     10,
-     15,
-     20,
-     25
+     30,
+     40,
+     50,
+     60
     ],
     "move_pct": [
+     3,
+     4,
      5,
-     6,
-     7,
-     8
+     6
     ],
     "stacks": [
      3
@@ -418,7 +428,7 @@
    "icon": "abilities/fiery_soul",
    "color": "",
    "key": "KeyE",
-   "after": "Fiery Soul"
+   "_after": "Fiery Soul"
   },
   {
    "id": "laguna_blade",
@@ -432,9 +442,9 @@
     680
    ],
    "cooldown": [
-    7000,
-    6000,
-    5000
+    12000,
+    9000,
+    5500
    ],
    "range": [
     600
@@ -448,12 +458,20 @@
      450,
      675,
      950
+    ],
+    "scepter_damage": [
+     600,
+     925,
+     1250
+    ],
+    "scepter_range": [
+     900
     ]
    },
    "icon": "abilities/laguna_blade",
    "color": "fx_fire",
    "key": "KeyR",
-   "after": "Laguna Blade"
+   "_after": "Laguna Blade"
   },
   {
    "id": "frost_arrows",
@@ -465,7 +483,9 @@
     12
    ],
    "cooldown": [],
-   "range": [],
+   "range": [
+    625
+   ],
    "cast_point": 30,
    "values": {
     "slow": [
@@ -474,14 +494,23 @@
      30,
      40
     ],
+    "attack_slow": [
+     5,
+     10,
+     15,
+     20
+    ],
     "duration": [
      150
+    ],
+    "creep_duration": [
+     700
     ]
    },
    "icon": "abilities/frost_arrows",
    "color": "fx_frost",
    "key": "KeyQ",
-   "after": "Frost Arrows"
+   "_after": "Frost Arrows"
   },
   {
    "id": "silence",
@@ -490,18 +519,15 @@
    "on": "enemy",
    "ultimate": false,
    "mana": [
-    70
+    90
    ],
    "cooldown": [
-    2500,
-    2000,
-    1500,
-    1000
+    1500
    ],
    "range": [
     900
    ],
-   "cast_point": 50,
+   "cast_point": 40,
    "values": {
     "radius": [
      275
@@ -516,7 +542,7 @@
    "icon": "abilities/silence",
    "color": "fx_arcane",
    "key": "KeyW",
-   "after": "Silence"
+   "_after": "Silence"
   },
   {
    "id": "trueshot_aura",
@@ -542,7 +568,7 @@
    "icon": "abilities/trueshot_aura",
    "color": "",
    "key": "KeyE",
-   "after": "Trueshot Aura"
+   "_after": "Trueshot Aura"
   },
   {
    "id": "marksmanship",
@@ -564,7 +590,7 @@
    "icon": "abilities/marksmanship",
    "color": "",
    "key": "KeyR",
-   "after": "Marksmanship"
+   "_after": "Marksmanship"
   },
   {
    "id": "meat_hook",
@@ -579,13 +605,16 @@
     140
    ],
    "cooldown": [
-    1400
+    1400,
+    1300,
+    1200,
+    1100
    ],
    "range": [
-    700,
-    900,
-    1100,
-    1300
+    600,
+    800,
+    1000,
+    1200
    ],
    "cast_point": 30,
    "values": {
@@ -605,7 +634,7 @@
    "icon": "abilities/meat_hook",
    "color": "fx_steel",
    "key": "KeyQ",
-   "after": "Meat Hook"
+   "_after": "Meat Hook"
   },
   {
    "id": "rot",
@@ -634,7 +663,7 @@
    "icon": "abilities/rot",
    "color": "fx_rot",
    "key": "KeyW",
-   "after": "Rot"
+   "_after": "Rot"
   },
   {
    "id": "flesh_heap",
@@ -648,22 +677,25 @@
    "cast_point": 30,
    "values": {
     "resist": [
-     6,
+     4,
      8,
-     10,
-     12
+     12,
+     16
     ],
     "str": [
      90,
      120,
      150,
      180
+    ],
+    "radius": [
+     450
     ]
    },
    "icon": "abilities/flesh_heap",
    "color": "",
    "key": "KeyE",
-   "after": "Flesh Heap"
+   "_after": "Flesh Heap"
   },
   {
    "id": "dismember",
@@ -691,12 +723,18 @@
     ],
     "duration": [
      300
+    ],
+    "creep_duration": [
+     600
+    ],
+    "scepter_str_pct": [
+     75
     ]
    },
    "icon": "abilities/dismember",
    "color": "fx_blood",
    "key": "KeyR",
-   "after": "Dismember"
+   "_after": "Dismember"
   },
   {
    "id": "fissure",
@@ -714,21 +752,21 @@
     1500
    ],
    "range": [
-    1400
+    1200
    ],
    "cast_point": 69,
    "values": {
     "length": [
-     1400
+     1200
     ],
     "width": [
      225
     ],
     "damage": [
-     110,
-     160,
-     210,
-     260
+     125,
+     175,
+     225,
+     275
     ],
     "stun": [
      100,
@@ -743,7 +781,7 @@
    "icon": "abilities/fissure",
    "color": "fx_earth",
    "key": "KeyQ",
-   "after": "Fissure"
+   "_after": "Fissure"
   },
   {
    "id": "enchant_totem",
@@ -755,16 +793,16 @@
     50
    ],
    "cooldown": [
-    500
+    700
    ],
    "range": [],
-   "cast_point": 50,
+   "cast_point": 69,
    "values": {
     "damage_pct": [
-     100,
-     200,
-     300,
-     400
+     75,
+     150,
+     225,
+     300
     ],
     "duration": [
      1400
@@ -773,7 +811,7 @@
    "icon": "abilities/enchant_totem",
    "color": "fx_earth",
    "key": "KeyW",
-   "after": "Enchant Totem"
+   "_after": "Enchant Totem"
   },
   {
    "id": "aftershock",
@@ -787,25 +825,25 @@
    "cast_point": 30,
    "values": {
     "radius": [
-     280
+     300
     ],
     "damage": [
-     50,
+     25,
+     45,
      75,
-     100,
-     125
+     115
     ],
     "stun": [
-     60,
-     80,
-     100,
-     120
+     30,
+     70,
+     120,
+     150
     ]
    },
    "icon": "abilities/aftershock",
    "color": "",
    "key": "KeyE",
-   "after": "Aftershock"
+   "_after": "Aftershock"
   },
   {
    "id": "echo_slam",
@@ -824,10 +862,13 @@
     11000
    ],
    "range": [],
-   "cast_point": 0,
+   "cast_point": 69,
    "values": {
     "radius": [
-     575
+     500
+    ],
+    "echo_radius": [
+     550
     ],
     "damage": [
      160,
@@ -843,7 +884,7 @@
    "icon": "abilities/echo_slam",
    "color": "fx_earth",
    "key": "KeyR",
-   "after": "Echo Slam"
+   "_after": "Echo Slam"
   },
   {
    "id": "blade_fury",
@@ -855,10 +896,13 @@
     110
    ],
    "cooldown": [
-    3000
+    3000,
+    2800,
+    2600,
+    2400
    ],
    "range": [],
-   "cast_point": 0,
+   "cast_point": 30,
    "values": {
     "duration": [
      500
@@ -876,7 +920,7 @@
    "icon": "abilities/blade_fury",
    "color": "fx_steel",
    "key": "KeyQ",
-   "after": "Blade Fury"
+   "_after": "Blade Fury"
   },
   {
    "id": "healing_ward",
@@ -885,6 +929,9 @@
    "on": "self",
    "ultimate": false,
    "mana": [
+    80,
+    100,
+    120,
     140
    ],
    "cooldown": [
@@ -899,10 +946,10 @@
      500
     ],
     "heal_pct": [
-     1,
      2,
      3,
-     4
+     4,
+     5
     ],
     "duration": [
      2500
@@ -911,7 +958,7 @@
    "icon": "abilities/healing_ward",
    "color": "fx_heal",
    "key": "KeyW",
-   "after": "Healing Ward"
+   "_after": "Healing Ward"
   },
   {
    "id": "blade_dance",
@@ -925,10 +972,10 @@
    "cast_point": 30,
    "values": {
     "chance": [
-     10,
      15,
      20,
-     25
+     25,
+     35
     ],
     "multiplier": [
      200
@@ -937,7 +984,7 @@
    "icon": "abilities/blade_dance",
    "color": "",
    "key": "KeyE",
-   "after": "Blade Dance"
+   "_after": "Blade Dance"
   },
   {
    "id": "omnislash",
@@ -956,7 +1003,7 @@
     11000
    ],
    "range": [
-    350
+    450
    ],
    "cast_point": 30,
    "values": {
@@ -979,12 +1026,22 @@
     ],
     "pierces": [
      1
+    ],
+    "scepter_jumps": [
+     5,
+     7,
+     10
+    ],
+    "scepter_cooldown": [
+     11000,
+     10000,
+     9000
     ]
    },
    "icon": "abilities/omnislash",
    "color": "fx_steel",
    "key": "KeyR",
-   "after": "Omnislash"
+   "_after": "Omnislash"
   },
   {
    "id": "earth_spike",
@@ -995,40 +1052,46 @@
    "mana": [
     100,
     120,
-    140,
-    160
+    145,
+    170
    ],
    "cooldown": [
     1200
    ],
    "range": [
-    850
+    500
    ],
    "cast_point": 30,
    "values": {
     "length": [
-     825
+     700
     ],
     "width": [
      125
     ],
+    "speed": [
+     1600
+    ],
+    "airborne": [
+     52
+    ],
     "damage": [
-     80,
-     140,
+     60,
+     130,
      200,
      260
     ],
     "stun": [
-     125,
-     175,
-     225,
-     275
+     50,
+     100,
+     150,
+     200
     ]
    },
    "icon": "abilities/earth_spike",
    "color": "fx_earth",
    "key": "KeyQ",
-   "after": "Earth Spike (Impale)"
+   "_after": "Earth Spike (Impale)"
   },
   {
    "id": "hex",
@@ -1037,16 +1100,13 @@
    "on": "enemy",
    "ultimate": false,
    "mana": [
-    125,
-    150,
-    175,
+    110,
+    140,
+    170,
     200
    ],
    "cooldown": [
-    3000,
-    2400,
-    1800,
-    1200
+    1300
    ],
    "range": [
     500
@@ -1063,7 +1123,7 @@
    "icon": "abilities/hex",
    "color": "fx_arcane",
    "key": "KeyW",
-   "after": "Voodoo (Hex)"
+   "_after": "Voodoo (Hex)"
   },
   {
    "id": "mana_drain",
@@ -1081,27 +1141,33 @@
     1000
    ],
    "range": [
-    850
+    600,
+    650,
+    700,
+    750
    ],
    "cast_point": 30,
    "values": {
     "drain": [
      20,
-     35,
-     50,
-     75
+     40,
+     60,
+     120
     ],
     "duration": [
-     450
+     400
+    ],
+    "tick": [
+     25
     ],
     "break": [
-     1100
+     800
     ]
    },
    "icon": "abilities/mana_drain",
    "color": "fx_arcane",
    "key": "KeyE",
-   "after": "Mana Drain"
+   "_after": "Mana Drain"
   },
   {
    "id": "finger_of_death",
@@ -1115,12 +1181,12 @@
     650
    ],
    "cooldown": [
-    16000,
-    10000,
-    4000
+    15000,
+    9000,
+    5500
    ],
    "range": [
-    900
+    700
    ],
    "cast_point": 30,
    "values": {
@@ -1128,15 +1194,25 @@
      25
     ],
     "damage": [
-     600,
-     725,
+     500,
+     650,
      850
+    ],
+    "scepter_damage": [
+     600,
+     800,
+     1025
+    ],
+    "scepter_cooldown": [
+     15000,
+     9000,
+     5000
     ]
    },
    "icon": "abilities/finger_of_death",
    "color": "fx_arcane",
    "key": "KeyR",
-   "after": "Finger of Death"
+   "_after": "Finger of Death"
   },
   {
    "id": "shrapnel",
@@ -1151,36 +1227,42 @@
     1500
    ],
    "range": [
-    1800
+    1200
    ],
    "cast_point": 30,
    "values": {
     "radius": [
-     450
+     350
     ],
     "delay": [
-     120
+     80
     ],
     "duration": [
-     1100
+     800
     ],
     "dps": [
-     15,
-     35,
-     55,
-     75
+     12,
+     24,
+     36,
+     48
     ],
     "slow": [
      15,
      20,
      25,
      30
+    ],
+    "hits": [
+     9
+    ],
+    "building_pct": [
+     33
     ]
    },
    "icon": "abilities/shrapnel",
    "color": "fx_fire",
    "key": "KeyQ",
-   "after": "Shrapnel"
+   "_after": "Shrapnel"
   },
   {
    "id": "headshot",
@@ -1194,22 +1276,28 @@
    "cast_point": 30,
    "values": {
     "chance": [
+     25,
+     30,
+     35,
      40
     ],
     "damage": [
-     20,
+     30,
+     30,
      40,
-     60,
-     80
+     50
     ],
     "stun": [
-     10
+     1,
+     10,
+     20,
+     20
     ]
    },
    "icon": "abilities/headshot",
    "color": "",
    "key": "KeyW",
-   "after": "Headshot"
+   "_after": "Headshot"
   },
   {
    "id": "take_aim",
@@ -1220,17 +1308,17 @@
    "mana": [],
    "cooldown": [],
    "range": [
-    75,
-    150,
-    225,
-    300
+    65,
+    130,
+    195,
+    260
    ],
    "cast_point": 30,
    "values": {},
    "icon": "abilities/take_aim",
    "color": "",
    "key": "KeyE",
-   "after": "Take Aim"
+   "_after": "Take Aim"
   },
   {
    "id": "assassinate",
@@ -1240,8 +1328,8 @@
    "ultimate": true,
    "mana": [
     175,
-    225,
-    275
+    275,
+    375
    ],
    "cooldown": [
     2000,
@@ -1270,88 +1358,96 @@
    "icon": "abilities/assassinate",
    "color": "fx_fire",
    "key": "KeyR",
-   "after": "Assassinate"
+   "_after": "Assassinate"
   },
   {
-   "id": "berserkers_call",
-   "logic": "berserkers_call",
-   "target": "none",
-   "on": "self",
-   "ultimate": false,
-   "mana": [
-    80,
-    90,
-    100,
-    110
-   ],
-   "cooldown": [
-    1600,
-    1400,
-    1200,
-    1000
-   ],
-   "range": [],
-   "cast_point": 40,
-   "values": {
-    "radius": [
-     300
-    ],
-    "duration": [
-     200,
-     250,
-     300,
-     350
-    ],
-    "armor": [
-     40
-    ]
-   },
-   "icon": "abilities/berserkers_call",
-   "color": "fx_blood",
-   "key": "KeyQ",
-   "after": "Berserker's Call"
-  },
-  {
-   "id": "battle_hunger",
-   "logic": "battle_hunger",
+   "id": "arc_lightning",
+   "logic": "arc_lightning",
    "target": "unit",
    "on": "enemy",
    "ultimate": false,
    "mana": [
-    75
+    65,
+    70,
+    75,
+    80
    ],
    "cooldown": [
-    1500
+    200
    ],
    "range": [
-    750
+    700
    ],
-   "cast_point": 30,
+   "cast_point": 40,
    "values": {
-    "dps": [
-     10,
-     15,
-     20,
-     25
+    "damage": [
+     85,
+     100,
+     115,
+     145
     ],
-    "slow": [
-     12
+    "bounces": [
+     5,
+     7,
+     9,
+     15
     ],
-    "speed": [
-     12
-    ],
-    "duration": [
-     2000
+    "radius": [
+     500
     ]
    },
-   "icon": "abilities/battle_hunger",
-   "color": "fx_blood",
-   "key": "KeyW",
-   "after": "Battle Hunger"
+   "icon": "abilities/arc_lightning",
+   "color": "fx_holy",
+   "key": "KeyQ",
+   "_after": "Arc Lightning"
   },
   {
-   "id": "counter_helix",
-   "logic": "counter_helix",
+   "id": "lightning_bolt",
+   "logic": "lightning_bolt",
+   "target": "unit",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    75,
+    95,
+    115,
+    135
+   ],
+   "cooldown": [
+    600
+   ],
+   "range": [
+    700
+   ],
+   "cast_point": 40,
+   "values": {
+    "damage": [
+     100,
+     175,
+     275,
+     350
+    ],
+    "stun": [
+     10
+    ],
+    "sight": [
+     900
+    ],
+    "vision": [
+     1000
+    ],
+    "sight_duration": [
+     300
+    ]
+   },
+   "icon": "abilities/lightning_bolt",
+   "color": "fx_holy",
+   "key": "KeyW",
+   "_after": "Lightning Bolt"
+  },
+  {
+   "id": "static_field",
+   "logic": "static_field",
    "target": "passive",
    "on": "enemy",
    "ultimate": false,
@@ -1360,60 +1456,62 @@
    "range": [],
    "cast_point": 30,
    "values": {
-    "chance": [
-     17
+    "pct": [
+     5,
+     7,
+     9,
+     11
     ],
     "radius": [
-     275
-    ],
-    "damage": [
-     100,
-     125,
-     150,
-     175
+     1000
     ]
    },
-   "icon": "abilities/counter_helix",
+   "icon": "abilities/static_field",
    "color": "",
    "key": "KeyE",
-   "after": "Counter Helix"
+   "_after": "Static Field"
   },
   {
-   "id": "culling_blade",
-   "logic": "culling",
-   "target": "unit",
-   "on": "enemy",
+   "id": "thundergods_wrath",
+   "logic": "thundergods_wrath",
+   "target": "none",
+   "on": "self",
    "ultimate": true,
    "mana": [
-    60,
-    120,
-    180
+    225,
+    325,
+    450
    ],
    "cooldown": [
-    7500,
-    6500,
-    5500
+    12000
    ],
-   "range": [
-    150
-   ],
-   "cast_point": 30,
+   "range": [],
+   "cast_point": 40,
    "values": {
-    "threshold": [
-     300,
-     450,
-     625
-    ],
     "damage": [
-     150,
-     250,
+     210,
+     335,
+     460
+    ],
+    "scepter_damage": [
+     400,
+     500,
+     600
+    ],
+    "sight": [
+     900
+    ],
+    "vision": [
+     1000
+    ],
+    "sight_duration": [
      300
     ]
    },
-   "icon": "abilities/culling_blade",
-   "color": "fx_blood",
+   "icon": "abilities/thundergods_wrath",
+   "color": "fx_holy",
    "key": "KeyR",
-   "after": "Culling Blade"
+   "_after": "Thundergod's Wrath"
   },
   {
    "id": "warden_bash",
@@ -1439,7 +1537,7 @@
    "icon": "abilities/warden_bash",
    "color": "",
    "key": "",
-   "after": "Roshan's Bash"
+   "_after": "Roshan's Bash"
   }
  ]
 }

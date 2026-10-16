@@ -69,7 +69,9 @@ pub fn learn(w: &mut World, ctx: &Ctx, id: Uid, slot: usize) {
         keep_share(w, ctx, id, before);
         return;
     }
-    let Some(&k) = ctx.rules.unit_abilities[u.def as usize].get(slot) else { return };
+    let Some(&k) = ctx.rules.unit_abilities[u.def as usize].get(slot) else {
+        return;
+    };
     let a = &ctx.rules.abilities[k];
     let have = u.abil[slot].level;
     if have >= a.max_level() {
@@ -114,7 +116,9 @@ fn keep_share(w: &mut World, ctx: &Ctx, id: Uid, before: stats::Stats) {
 
 /// Whether a cast could begin now (level, cooldown, mana, not silenced, a fit target).
 pub fn can_start(w: &World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, _p: P) -> bool {
-    let Some((k, level)) = slot_info(ctx, w, id, slot) else { return false };
+    let Some((k, level)) = slot_info(ctx, w, id, slot) else {
+        return false;
+    };
     let a = &ctx.rules.abilities[k];
     let Some(u) = w.live(id) else { return false };
     if level <= 0 || a.target == Target::Passive {
@@ -193,7 +197,9 @@ fn idle(w: &mut World, id: Uid) {
 
 /// Starts the cast point; a toggle flips at once.
 pub fn begin(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
-    let Some((k, level)) = slot_info(ctx, w, id, slot) else { return };
+    let Some((k, level)) = slot_info(ctx, w, id, slot) else {
+        return;
+    };
     let a = &ctx.rules.abilities[k];
     if a.target == Target::Toggle {
         let u = w.get_mut(id).expect("checked");
@@ -220,7 +226,9 @@ pub fn begin(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
 
 /// The cast point has passed: spend, start the cooldown, and act.
 pub fn fire(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
-    let Some((k, level)) = slot_info(ctx, w, id, slot) else { return };
+    let Some((k, level)) = slot_info(ctx, w, id, slot) else {
+        return;
+    };
     if !can_start(w, ctx, id, slot, t, at) {
         return;
     }
@@ -246,12 +254,26 @@ fn on_cast(w: &mut World, ctx: &Ctx, id: Uid) {
         let until = secs_x100(w, a.v("duration", lv));
         let stacks = w
             .get(id)
-            .map(|u| u.mods.iter().filter(|m| m.tag == tag(k) && m.kind == M::AttackPct).count() as i32)
+            .map(|u| {
+                u.mods
+                    .iter()
+                    .filter(|m| m.tag == tag(k) && m.kind == M::AttackPct)
+                    .count() as i32
+            })
             .unwrap_or(0);
         let n = (stacks + 1).min(a.v("stacks", lv));
         w.remove_mods(id, tag(k));
         for _ in 0..n {
-            add(w, id, M::AttackPct, id, until, a.v("attack_speed", lv), tag(k), false);
+            add(
+                w,
+                id,
+                M::AttackPct,
+                id,
+                until,
+                a.v("attack_speed", lv),
+                tag(k),
+                false,
+            );
             add(w, id, M::MovePct, id, until, a.v("move_pct", lv), tag(k), false);
         }
     }
@@ -364,7 +386,10 @@ fn toward(from: P, to: P, len: i32) -> P {
     if d == 0 {
         return [from[0] + len, from[1]];
     }
-    [from[0] + (dx * len as i64 / d) as i32, from[1] + (dy * len as i64 / d) as i32]
+    [
+        from[0] + (dx * len as i64 / d) as i32,
+        from[1] + (dy * len as i64 / d) as i32,
+    ]
 }
 
 /// Units whose centre is within `half_width` of the segment a–b.
@@ -472,7 +497,15 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
         "crystal_nova" => {
             for v in enemies_near(w, ctx, team, at, a.v("radius", lv), false) {
                 combat::damage(w, ctx, id, v, a.v("damage", lv), Dmg::Magic);
-                slow(w, id, v, a.v("slow", lv), a.v("attack_slow", lv), a.v("duration", lv), tg);
+                slow(
+                    w,
+                    id,
+                    v,
+                    a.v("slow", lv),
+                    a.v("attack_slow", lv),
+                    a.v("duration", lv),
+                    tg,
+                );
             }
             zone(w, id, at, a.v("radius", lv), k, lv, 0, w.tick + 15, 1);
         }
@@ -607,7 +640,15 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
             zone(w, id, here, a.v("radius", lv), k, lv, 0, until, t as i32);
         }
         "earth_spike" => {
-            let end = toward(here, if t != NO_UNIT { w.live(t).map(|v| v.pos()).unwrap_or(at) } else { at }, a.v("length", lv));
+            let end = toward(
+                here,
+                if t != NO_UNIT {
+                    w.live(t).map(|v| v.pos()).unwrap_or(at)
+                } else {
+                    at
+                },
+                a.v("length", lv),
+            );
             for v in in_line(w, ctx, team, here, end, a.v("width", lv), false) {
                 combat::damage(w, ctx, id, v, a.v("damage", lv), Dmg::Magic);
                 stun(w, ctx, id, v, a.v("stun", lv), tg);
@@ -623,7 +664,17 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
         }
         "shrapnel" => {
             let until = secs_x100(w, a.v("duration", lv));
-            zone(w, id, at, a.v("radius", lv), k, lv, secs_x100(w, a.v("delay", lv)) - w.tick, until, 0);
+            zone(
+                w,
+                id,
+                at,
+                a.v("radius", lv),
+                k,
+                lv,
+                secs_x100(w, a.v("delay", lv)) - w.tick,
+                until,
+                0,
+            );
         }
         "berserkers_call" => {
             let until = secs_x100(w, a.v("duration", lv));
@@ -748,7 +799,7 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
         "laguna" | "finger" => {
             let t = z.a as u32;
             if w.live(t).is_some() {
-                let kind = if a.logic == "laguna" { Dmg::Magic } else { Dmg::Magic };
+                let kind = Dmg::Magic;
                 combat::damage(w, ctx, z.src, t, a.v("damage", lv), kind);
             }
             z.next = u32::MAX;
@@ -787,7 +838,9 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
                 return;
             };
             z.at = wd.pos();
-            let allies = w.near(z.at, z.radius, |u| u.team == z.team && !ctx.rules.units[u.def as usize].kind.is_building());
+            let allies = w.near(z.at, z.radius, |u| {
+                u.team == z.team && !ctx.rules.units[u.def as usize].kind.is_building()
+            });
             for id in allies {
                 let max = stats::of(ctx, w, id).max_hp;
                 // percent of maximum health a second
@@ -855,7 +908,9 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
 
 /// Channels: what goes on each tick while the hero stands still.
 pub fn channel_tick(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, _at: P) {
-    let Some((k, lv)) = slot_info(ctx, w, id, slot) else { return };
+    let Some((k, lv)) = slot_info(ctx, w, id, slot) else {
+        return;
+    };
     let a = &ctx.rules.abilities[k];
     let team = w.get(id).expect("checked").team;
     let here = w.get(id).expect("checked").pos();
@@ -890,13 +945,16 @@ pub fn channel_tick(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, _at:
         }
         "freezing_field" => {
             let every = (a.v("interval", lv) * TPS / 100).max(1) as u32;
-            if w.tick % every == 0 {
+            if w.tick.is_multiple_of(every) {
                 // an explosion at a seeded point in the ring around the hero
                 let ang = w.rng.below(fx::TURN as u32) as i32;
                 let lo = a.v("inner", lv);
                 let hi = a.v("outer", lv);
                 let r = w.rng.between(lo, hi);
-                let p = [here[0] + fx::cos(ang) * r / fx::ONE, here[1] + fx::sin(ang) * r / fx::ONE];
+                let p = [
+                    here[0] + fx::cos(ang) * r / fx::ONE,
+                    here[1] + fx::sin(ang) * r / fx::ONE,
+                ];
                 for v in enemies_near(w, ctx, team, p, a.v("blast", lv), false) {
                     combat::damage(w, ctx, id, v, a.v("damage", lv), Dmg::Magic);
                 }
@@ -927,7 +985,8 @@ pub fn channel_broken(w: &mut World, ctx: &Ctx, id: Uid, slot: usize) {
             // the victim's stun ends with the channel
             let tg = tag(k);
             for u in w.units.iter_mut() {
-                u.mods.retain(|m| !(m.tag == tg && m.src == id && m.kind == M::Stun));
+                u.mods
+                    .retain(|m| !(m.tag == tg && m.src == id && m.kind == M::Stun));
             }
         }
     }
@@ -936,7 +995,9 @@ pub fn channel_broken(w: &mut World, ctx: &Ctx, id: Uid, slot: usize) {
 
 /// A line missile passing through units (Dragon Slave, the hook).
 pub fn missile_passes(w: &mut World, ctx: &Ctx, m: &mut Missile) {
-    let Hit::Ability { ability, level } = m.what else { return };
+    let Hit::Ability { ability, level } = m.what else {
+        return;
+    };
     let k = ability as usize;
     let a = &ctx.rules.abilities[k];
     let at = [m.x / SUB, m.y / SUB];
@@ -994,7 +1055,9 @@ fn hooked(w: &mut World, ctx: &Ctx, src: Uid, v: Uid, k: usize, lv: i32) {
 }
 
 pub fn missile_arrives(w: &mut World, ctx: &Ctx, m: &Missile) {
-    let Hit::Ability { ability, level } = m.what else { return };
+    let Hit::Ability { ability, level } = m.what else {
+        return;
+    };
     let k = ability as usize;
     let a = &ctx.rules.abilities[k];
     match a.logic.as_str() {
@@ -1024,7 +1087,12 @@ pub fn before_attack(w: &mut World, ctx: &Ctx, src: Uid, _t: Uid, raw: i32) -> O
             out = Some(out.map(|o: i32| o.max(v)).unwrap_or(v));
         }
     }
-    let totem = w.get(src).and_then(|u| u.mods.iter().find(|m| m.kind == M::Tag && has_tag_logic(ctx, m.tag, "totem")).copied());
+    let totem = w.get(src).and_then(|u| {
+        u.mods
+            .iter()
+            .find(|m| m.kind == M::Tag && has_tag_logic(ctx, m.tag, "totem"))
+            .copied()
+    });
     if let Some(m) = totem {
         let base = out.unwrap_or(raw);
         out = Some(base * (100 + m.a) / 100);
@@ -1036,7 +1104,9 @@ pub fn before_attack(w: &mut World, ctx: &Ctx, src: Uid, _t: Uid, raw: i32) -> O
 }
 
 fn has_tag_logic(ctx: &Ctx, t: u16, logic: &str) -> bool {
-    t >= 1 && (t as usize - 1) < ctx.rules.abilities.len() && ctx.rules.abilities[t as usize - 1].logic == logic
+    t >= 1
+        && (t as usize - 1) < ctx.rules.abilities.len()
+        && ctx.rules.abilities[t as usize - 1].logic == logic
 }
 
 /// On-hit effects after an attack lands: cleave, frost arrows, headshot,
@@ -1091,7 +1161,6 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
             }
             if let Some(u) = w.get_mut(dst) {
                 u.anim = crate::world::ANIM_CAST;
-                u.anim_at = u.anim_at.max(0);
             }
         }
     }
@@ -1101,7 +1170,12 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
 /// Trueshot Aura, Marksmanship, Flesh Heap, Take Aim.
 fn auras(w: &mut World, ctx: &Ctx) {
     let until = w.tick + 2;
-    let heroes: Vec<Uid> = w.units.iter().filter(|u| u.alive && u.hero.is_some()).map(|u| u.id).collect();
+    let heroes: Vec<Uid> = w
+        .units
+        .iter()
+        .filter(|u| u.alive && u.hero.is_some())
+        .map(|u| u.id)
+        .collect();
     for id in heroes {
         let team = w.get(id).expect("listed").team;
         let here = w.get(id).expect("listed").pos();
@@ -1132,10 +1206,15 @@ fn auras(w: &mut World, ctx: &Ctx) {
                     }
                 }
                 "trueshot" if !illusion => {
-                    let agi = stats::of(ctx, w, id).attrs[1];
-                    let bonus = agi * a.v("pct", lv) / 100;
-                    let allies = w.near(here, reach, |u| u.team == team && ctx.rules.units[u.def as usize].missile > 0 && !ctx.rules.units[u.def as usize].kind.is_building());
+                    // 6.72: each ranged ally gains a share of its own base damage
+                    let allies = w.near(here, reach, |u| {
+                        u.team == team
+                            && ctx.rules.units[u.def as usize].missile > 0
+                            && !ctx.rules.units[u.def as usize].kind.is_building()
+                    });
                     for ally in allies {
+                        let base = stats::of(ctx, w, ally).damage;
+                        let bonus = (base[0] + base[1]) / 2 * a.v("pct", lv) / 100;
                         w.add_mod(
                             ally,
                             Mod {
@@ -1211,7 +1290,7 @@ fn auras(w: &mut World, ctx: &Ctx) {
 
 /// Flesh Heap: a stack for each enemy hero that dies near the hero.
 pub fn hero_died_near(w: &mut World, ctx: &Ctx, at: P, team: u8) {
-    let heroes: Vec<Uid> = w.near(at, 400, |u| u.team != team && u.hero.is_some());
+    let heroes: Vec<Uid> = w.near(at, 450, |u| u.team != team && u.hero.is_some());
     for id in heroes {
         if let Some((slot, _, _)) = has_logic(ctx, w, id, "flesh_heap") {
             if let Some(u) = w.get_mut(id) {

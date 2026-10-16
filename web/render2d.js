@@ -69,6 +69,8 @@ export function createRenderer(canvas, assets) {
 
   const ops = [];
   ops[assets.ops.clear] = () => {
+    // cleared first, so a see-through clear colour leaves the layer empty
+    ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = colors[next()];
     ctx.fillRect(0, 0, width, height);
   };

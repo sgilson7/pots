@@ -108,7 +108,11 @@ pub fn find<G: Grid>(g: &G, from: P, to: P) -> Vec<P> {
     let mut cost: Vec<i32> = vec![i32::MAX; n];
     let mut heap = BinaryHeap::new();
     cost[idx(start)] = 0;
-    heap.push(Reverse((octile(start.0, start.1, goal.0, goal.1), 0i32, idx(start) as u32)));
+    heap.push(Reverse((
+        octile(start.0, start.1, goal.0, goal.1),
+        0i32,
+        idx(start) as u32,
+    )));
     let mut best = (octile(start.0, start.1, goal.0, goal.1), idx(start));
     let mut expanded = 0usize;
     let mut reached = false;
@@ -126,7 +130,16 @@ pub fn find<G: Grid>(g: &G, from: P, to: P) -> Vec<P> {
         if expanded > MAX_EXPANDED {
             break;
         }
-        for (dx, dy) in [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)] {
+        for (dx, dy) in [
+            (1, 0),
+            (-1, 0),
+            (0, 1),
+            (0, -1),
+            (1, 1),
+            (1, -1),
+            (-1, 1),
+            (-1, -1),
+        ] {
             let (nx, ny) = (c.0 + dx, c.1 + dy);
             if nx < 0 || ny < 0 || nx >= w || ny >= w || g.blocked(nx, ny) {
                 continue;

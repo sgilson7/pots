@@ -52,13 +52,13 @@ struct ModelFile {
     #[serde(default)]
     spin: i32,
     /// Free text for the person.
-    #[serde(default)]
+    #[serde(default, rename = "_note")]
     note: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
-struct File {
+struct ModelsFile {
     palette: BTreeMap<String, [i32; 3]>,
     /// Team colour roles: "team" in a part becomes the side's colour.
     teams: [BTreeMap<String, [i32; 3]>; 3],
@@ -152,14 +152,17 @@ fn joint_named(s: &str) -> Option<Joint> {
 
 impl Models {
     pub fn load(json: &str) -> Result<Models, String> {
-        let f: File = serde_json::from_str(json).map_err(|e| format!("models.json could not be read: {e}"))?;
+        let f: ModelsFile =
+            serde_json::from_str(json).map_err(|e| format!("models.json could not be read: {e}"))?;
         let palette_names: Vec<String> = f.palette.keys().cloned().collect();
         let palette: Vec<Rgb> = f.palette.values().map(|c| rgb(*c)).collect();
         let team_roles: Vec<String> = f.teams[0].keys().cloned().collect();
         let mut teams: [Vec<Rgb>; 3] = [Vec::new(), Vec::new(), Vec::new()];
         for (k, t) in f.teams.iter().enumerate() {
             for role in &team_roles {
-                let c = t.get(role).ok_or_else(|| format!("Team {k} has no colour \"{role}\"."))?;
+                let c = t
+                    .get(role)
+                    .ok_or_else(|| format!("Team {k} has no colour \"{role}\"."))?;
                 teams[k].push(rgb(*c));
             }
         }
@@ -167,8 +170,10 @@ impl Models {
         for (name, m) in &f.models {
             let mut parts = Vec::new();
             for p in &m.parts {
-                let mesh = mesh_named(&p.mesh).ok_or_else(|| format!("Model \"{name}\": no mesh \"{}\".", p.mesh))?;
-                let joint = joint_named(&p.joint).ok_or_else(|| format!("Model \"{name}\": no joint \"{}\".", p.joint))?;
+                let mesh = mesh_named(&p.mesh)
+                    .ok_or_else(|| format!("Model \"{name}\": no mesh \"{}\".", p.mesh))?;
+                let joint = joint_named(&p.joint)
+                    .ok_or_else(|| format!("Model \"{name}\": no joint \"{}\".", p.joint))?;
                 let color = if let Some(k) = palette_names.iter().position(|n| *n == p.color) {
                     k as i32
                 } else if let Some(k) = team_roles.iter().position(|n| *n == p.color) {
@@ -192,7 +197,8 @@ impl Models {
             }
             let mut pivots = [V3::ZERO; 8];
             for (j, at) in &m.pivots {
-                let k = joint_named(j).ok_or_else(|| format!("Model \"{name}\": no joint \"{j}\" to pivot."))?;
+                let k =
+                    joint_named(j).ok_or_else(|| format!("Model \"{name}\": no joint \"{j}\" to pivot."))?;
                 pivots[k as usize] = hundredths(*at);
             }
             let _ = &m.note;
@@ -271,7 +277,9 @@ impl Pose {
 }
 
 fn about(pivot: V3, rot: &Affine) -> Affine {
-    Affine::translate(pivot).then(rot).then(&Affine::translate(pivot.neg()))
+    Affine::translate(pivot)
+        .then(rot)
+        .then(&Affine::translate(pivot.neg()))
 }
 
 /// The transform of each joint for a pose, in model space.

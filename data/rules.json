@@ -259,43 +259,43 @@
  "heroes": [
   {
    "unit": "ironvow",
-   "after": "Sven"
+   "_after": "Sven"
   },
   {
    "unit": "rime",
-   "after": "Crystal Maiden"
+   "_after": "Crystal Maiden"
   },
   {
    "unit": "cinder",
-   "after": "Lina"
+   "_after": "Lina"
   },
   {
    "unit": "thistle",
-   "after": "Drow Ranger"
+   "_after": "Drow Ranger"
   },
   {
    "unit": "gristle",
-   "after": "Pudge"
+   "_after": "Pudge"
   },
   {
    "unit": "tectus",
-   "after": "Earthshaker"
+   "_after": "Earthshaker"
   },
   {
    "unit": "kestrel",
-   "after": "Juggernaut"
+   "_after": "Juggernaut"
   },
   {
    "unit": "hexwright",
-   "after": "Lion"
+   "_after": "Lion"
   },
   {
    "unit": "longwick",
-   "after": "Sniper"
+   "_after": "Sniper"
   },
   {
    "unit": "tempest",
-   "after": "Zeus"
+   "_after": "Zeus"
   }
  ]
 }

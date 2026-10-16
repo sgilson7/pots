@@ -10,7 +10,9 @@ use crate::combat::{self, Dmg};
 use crate::fx;
 use crate::rules::{Kind, Target, P, SUB, TPS};
 use crate::stats;
-use crate::world::{within, Act, Ctx, Hit, ItemSlot, Missile, Mod, Order, Uid, World, EV_BUY, M, NEUTRAL, NO_UNIT};
+use crate::world::{
+    within, Act, Ctx, Hit, ItemSlot, Missile, Mod, Order, Uid, World, EV_BUY, M, NEUTRAL, NO_UNIT,
+};
 
 fn tag(item: usize) -> u16 {
     5000 + item as u16
@@ -26,7 +28,11 @@ pub fn near_shop(w: &World, ctx: &Ctx, player: usize, kind: &str) -> bool {
     let id = w.players[player].hero;
     let Some(u) = w.get(id) else { return false };
     let team = u.team;
-    let here = if u.alive { u.pos() } else { ctx.rules.map.sides[team as usize].spawn };
+    let here = if u.alive {
+        u.pos()
+    } else {
+        ctx.rules.map.sides[team as usize].spawn
+    };
     let r = ctx.rules.t.shop_range;
     for (k, at) in &ctx.rules.map.shops {
         let ok = match kind {
@@ -49,7 +55,8 @@ fn sold_here(w: &World, ctx: &Ctx, player: usize, k: usize) -> bool {
     if it.shop == "none" {
         return false;
     }
-    near_shop(w, ctx, player, &it.shop) || (it.shop != "secret" && near_shop(w, ctx, player, "side") && it.shop == "home" && side_sells(it))
+    near_shop(w, ctx, player, &it.shop)
+        || (it.shop != "secret" && near_shop(w, ctx, player, "side") && it.shop == "home" && side_sells(it))
 }
 
 /// Side shops sell a short list of basic items, as in DotA.
@@ -74,7 +81,11 @@ pub fn buy(w: &mut World, ctx: &Ctx, player: usize, k: usize) {
         let it = &ctx.rules.items[k];
         let cost = ctx.rules.item_total(k);
         let alive = w.live(id).is_some();
-        if it.shop == "home" && alive && crate::courier::at_base(w, ctx, team) && w.players[player].gold >= cost {
+        if it.shop == "home"
+            && alive
+            && crate::courier::at_base(w, ctx, team)
+            && w.players[player].gold >= cost
+        {
             pay(w, player, cost);
             w.players[player].pending.push((k as u16 + 1, it.charges));
             w.event(EV_BUY, k as i32, player as i32, [0, 0]);
@@ -137,8 +148,8 @@ fn price_with(w: &World, ctx: &Ctx, id: Uid, k: usize, used: &mut [bool; 6], top
     if !top {
         // a carried copy of this part covers it
         if let Some(u) = w.get(id) {
-            for i in 0..6 {
-                if !used[i] && u.items[i].item as usize == k + 1 {
+            for (i, slot) in u.items.iter().enumerate() {
+                if !used[i] && slot.item as usize == k + 1 {
                     used[i] = true;
                     return 0;
                 }
@@ -163,7 +174,11 @@ pub fn price(w: &World, ctx: &Ctx, player: usize, k: usize) -> i32 {
 
 pub fn sell(w: &mut World, ctx: &Ctx, player: usize, slot: usize) {
     let id = w.players[player].hero;
-    if slot >= 6 || !near_shop(w, ctx, player, "home") && !near_shop(w, ctx, player, "side") && !near_shop(w, ctx, player, "secret") {
+    if slot >= 6
+        || !near_shop(w, ctx, player, "home")
+            && !near_shop(w, ctx, player, "side")
+            && !near_shop(w, ctx, player, "secret")
+    {
         return;
     }
     let Some(u) = w.get_mut(id) else { return };
@@ -190,7 +205,9 @@ fn item_of(w: &World, id: Uid, slot: usize) -> Option<(usize, ItemSlot)> {
 }
 
 pub fn can_use(w: &World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, _p: P) -> bool {
-    let Some((k, s)) = item_of(w, id, slot) else { return false };
+    let Some((k, s)) = item_of(w, id, slot) else {
+        return false;
+    };
     let it = &ctx.rules.items[k];
     let Some(u) = w.live(id) else { return false };
     if it.logic.is_empty() || it.target == Some(Target::Passive) || it.target.is_none() {
@@ -213,7 +230,9 @@ pub fn can_use(w: &World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, _p: P) -> boo
 
 /// An item that acts at once, with no target to walk to.
 pub fn instant(_w: &World, ctx: &Ctx, _id: Uid, _slot: usize) -> bool {
-    let Some((k, _)) = item_of(_w, _id, _slot) else { return true };
+    let Some((k, _)) = item_of(_w, _id, _slot) else {
+        return true;
+    };
     ctx.rules.items[k].target == Some(Target::None)
 }
 
@@ -283,7 +302,9 @@ fn add(w: &mut World, id: Uid, kind: M, src: Uid, until: u32, a: i32, t: u16) {
 
 /// The item's effect, its cooldown and its charge.
 pub fn use_item(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
-    let Some((k, _)) = item_of(w, id, slot) else { return };
+    let Some((k, _)) = item_of(w, id, slot) else {
+        return;
+    };
     if !can_use(w, ctx, id, slot, t, at) {
         return;
     }
@@ -303,24 +324,55 @@ pub fn use_item(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
             }
             w.cut_tree(ctx, i);
             let until = secs_x100(w, it.val("duration"));
-            add(w, id, M::Regen, id, until, it.val("heal") * 10_000 / it.val("duration").max(1), tg);
+            add(
+                w,
+                id,
+                M::Regen,
+                id,
+                until,
+                it.val("heal") * 10_000 / it.val("duration").max(1),
+                tg,
+            );
         }
         "salve" => {
             let target = if t == NO_UNIT { id } else { t };
             let until = secs_x100(w, it.val("duration"));
-            add(w, target, M::Regen, id, until, it.val("heal") * 10_000 / it.val("duration").max(1), tg);
+            add(
+                w,
+                target,
+                M::Regen,
+                id,
+                until,
+                it.val("heal") * 10_000 / it.val("duration").max(1),
+                tg,
+            );
         }
         "clarity" => {
             let target = if t == NO_UNIT { id } else { t };
             let until = secs_x100(w, it.val("duration"));
-            add(w, target, M::ManaRegen, id, until, it.val("mana") * 10_000 / it.val("duration").max(1), tg);
+            add(
+                w,
+                target,
+                M::ManaRegen,
+                id,
+                until,
+                it.val("mana") * 10_000 / it.val("duration").max(1),
+                tg,
+            );
         }
         "tp" => {
             // to the allied building nearest the point
             let dest = w
                 .units
                 .iter()
-                .filter(|u| u.alive && u.team == team && matches!(ctx.rules.units[u.def as usize].kind, Kind::Tower | Kind::Fountain | Kind::Barracks | Kind::Sphere))
+                .filter(|u| {
+                    u.alive
+                        && u.team == team
+                        && matches!(
+                            ctx.rules.units[u.def as usize].kind,
+                            Kind::Tower | Kind::Fountain | Kind::Barracks | Kind::Sphere
+                        )
+                })
                 .min_by_key(|u| crate::world::dist2(u.pos(), at))
                 .map(|u| u.pos());
             let dest = dest.unwrap_or(ctx.rules.map.sides[team as usize].spawn);
@@ -331,7 +383,11 @@ pub fn use_item(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
             }
         }
         "ward_observer" | "ward_sentry" => {
-            let name = if it.logic == "ward_observer" { "observer_ward" } else { "sentry_ward" };
+            let name = if it.logic == "ward_observer" {
+                "observer_ward"
+            } else {
+                "sentry_ward"
+            };
             if let Some(def) = ctx.rules.unit(name) {
                 let wid = w.spawn(ctx, def, team, at);
                 let until = secs_x100(w, it.val("duration"));
@@ -371,7 +427,14 @@ pub fn use_item(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
             }
             let far = crate::world::dist(here, at);
             let range = it.range;
-            let dest = if far <= range { at } else { [here[0] + (at[0] - here[0]) * range / far.max(1), here[1] + (at[1] - here[1]) * range / far.max(1)] };
+            let dest = if far <= range {
+                at
+            } else {
+                [
+                    here[0] + (at[0] - here[0]) * range / far.max(1),
+                    here[1] + (at[1] - here[1]) * range / far.max(1),
+                ]
+            };
             let walk = w.walk(ctx.terrain);
             let pc = ctx.terrain.path_cell;
             let open = crate::path::nearest_open(&walk, dest[0] / pc, dest[1] / pc, 6);
@@ -404,8 +467,24 @@ pub fn use_item(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
                 return;
             }
             let until = secs_x100(w, it.val("duration"));
-            add(w, id, M::Regen, id, until, it.val("heal") * 10_000 / it.val("duration").max(1), tg);
-            add(w, id, M::ManaRegen, id, until, it.val("mana") * 10_000 / it.val("duration").max(1), tg);
+            add(
+                w,
+                id,
+                M::Regen,
+                id,
+                until,
+                it.val("heal") * 10_000 / it.val("duration").max(1),
+                tg,
+            );
+            add(
+                w,
+                id,
+                M::ManaRegen,
+                id,
+                until,
+                it.val("mana") * 10_000 / it.val("duration").max(1),
+                tg,
+            );
         }
         "midas" => {
             let Some(v) = w.live(t) else { return };
@@ -447,13 +526,23 @@ pub fn use_item(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
         }
         "mekansm" => {
             let until = secs_x100(w, it.val("duration"));
-            for ally in w.near(here, it.val("radius"), |u| u.team == team && !ctx.rules.units[u.def as usize].kind.is_building()) {
+            for ally in w.near(here, it.val("radius"), |u| {
+                u.team == team && !ctx.rules.units[u.def as usize].kind.is_building()
+            }) {
                 combat::heal(w, ctx, ally, it.val("heal"));
                 add(w, ally, M::Armor, id, until, it.val("armor") * 100, tg);
             }
         }
         "manta" => {
-            crate::ability::illusions(w, ctx, id, 2, it.val("duration") / 100, it.val("dealt"), it.val("taken"));
+            crate::ability::illusions(
+                w,
+                ctx,
+                id,
+                2,
+                it.val("duration") / 100,
+                it.val("dealt"),
+                it.val("taken"),
+            );
         }
         "sheep" => {
             let until = secs_x100(w, it.val("duration"));
@@ -484,7 +573,10 @@ pub fn use_item(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
         if spend_charge {
             u.items[slot].charges -= 1;
             let k1 = u.items[slot].item as usize - 1;
-            if u.items[slot].charges <= 0 && ctx.rules.items[k1].logic != "bottle" && ctx.rules.items[k1].logic != "wand" {
+            if u.items[slot].charges <= 0
+                && ctx.rules.items[k1].logic != "bottle"
+                && ctx.rules.items[k1].logic != "wand"
+            {
                 u.items[slot] = ItemSlot::default();
             }
         }
@@ -497,7 +589,12 @@ pub fn missile_arrives(_w: &mut World, _ctx: &Ctx, _m: &Missile) {}
 pub fn before_attack(w: &mut World, ctx: &Ctx, src: Uid, raw: i32) -> Option<i32> {
     let u = w.get(src)?;
     let mut best: Option<i32> = None;
-    let items: Vec<usize> = u.items.iter().filter(|s| s.item > 0).map(|s| s.item as usize - 1).collect();
+    let items: Vec<usize> = u
+        .items
+        .iter()
+        .filter(|s| s.item > 0)
+        .map(|s| s.item as usize - 1)
+        .collect();
     for k in items {
         let it = &ctx.rules.items[k];
         if it.logic == "crit" && combat::prd(w, src, 3, it.val("chance")) {
@@ -514,7 +611,12 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
     let Some(u) = w.get(src) else { return };
     let team = u.team;
     let melee = ctx.rules.units[u.def as usize].missile == 0;
-    let items: Vec<usize> = u.items.iter().filter(|s| s.item > 0).map(|s| s.item as usize - 1).collect();
+    let items: Vec<usize> = u
+        .items
+        .iter()
+        .filter(|s| s.item > 0)
+        .map(|s| s.item as usize - 1)
+        .collect();
     let dst_pos = w.get(dst).map(|v| v.pos()).unwrap_or([0, 0]);
     let mut bashed = false;
     for k in items {
@@ -522,7 +624,11 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
         let tg = tag(k);
         match it.logic.as_str() {
             "bash" if !bashed => {
-                let chance = if melee { it.val("chance") } else { it.val("ranged_chance") };
+                let chance = if melee {
+                    it.val("chance")
+                } else {
+                    it.val("ranged_chance")
+                };
                 if combat::prd(w, src, 4, chance) {
                     bashed = true;
                     combat::damage(w, ctx, src, dst, it.val("damage"), Dmg::Physical);
@@ -560,7 +666,25 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
         }
     }
     // Satanic's active: extra lifesteal while it lasts
-    let rage = w.get(src).map(|u| u.mods.iter().filter(|m| m.kind == M::Tag && m.tag >= 5000 && ctx.rules.items.get(m.tag as usize - 5000).map(|i| i.logic == "satanic").unwrap_or(false)).map(|m| m.a).sum::<i32>()).unwrap_or(0);
+    let rage = w
+        .get(src)
+        .map(|u| {
+            u.mods
+                .iter()
+                .filter(|m| {
+                    m.kind == M::Tag
+                        && m.tag >= 5000
+                        && ctx
+                            .rules
+                            .items
+                            .get(m.tag as usize - 5000)
+                            .map(|i| i.logic == "satanic")
+                            .unwrap_or(false)
+                })
+                .map(|m| m.a)
+                .sum::<i32>()
+        })
+        .unwrap_or(0);
     if rage > 0 {
         combat::heal(w, ctx, src, raw * rage / 100);
     }
@@ -594,6 +718,12 @@ pub fn auras(w: &mut World, ctx: &Ctx) {
                     add(w, ally, M::Armor, id, until, it.val("armor") * 100, tag(k));
                     add(w, ally, M::AttackPct, id, until, it.val("attack_speed"), tag(k));
                 }
+            }
+            "heart" => {
+                // two percent of maximum health a second
+                let max = stats::of(ctx, w, id).max_hp;
+                let until = w.tick + 2;
+                add(w, id, M::Regen, id, until, max * it.val("regen_pct"), tag(k));
             }
             "bottle" => {
                 // a bottle refills at the fountain
@@ -656,9 +786,13 @@ pub fn drop_aegis(w: &mut World, ctx: &Ctx, killer: Uid, _at: P) {
 /// A hero holding the shield is saved from death: it is spent and the hero
 /// rises in place at full health after a short pause.
 pub fn aegis_saves(w: &mut World, ctx: &Ctx, id: Uid) -> bool {
-    let Some(k) = ctx.rules.item("aegis") else { return false };
+    let Some(k) = ctx.rules.item("aegis") else {
+        return false;
+    };
     let Some(u) = w.get(id) else { return false };
-    let Some(slot) = u.items.iter().position(|s| s.item as usize == k + 1) else { return false };
+    let Some(slot) = u.items.iter().position(|s| s.item as usize == k + 1) else {
+        return false;
+    };
     let s = stats::of(ctx, w, id);
     let until = w.tick + (ctx.rules.items[k].val("delay") * TPS / 100) as u32;
     let u = w.get_mut(id).expect("checked");

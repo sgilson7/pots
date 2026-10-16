@@ -51,7 +51,16 @@ def humanoid(h=250, w=100, skin="skin_tan", torso="cloth_red", legs="leather", a
         for z in (-w * 40 // 100, w * 40 // 100):
             parts.append(P("sphere", (0, shoulder + 4, z), (w * 36 // 100, w * 24 // 100, w * 36 // 100), shoulders))
     hs = head_size or (h * 22 // 100)
-    parts.append(P(head, (0, shoulder + hs // 2 + 10, 0), (hs, hs, hs), skin, "head"))
+    head_y = shoulder + hs // 2 + 10
+    parts.append(P(head, (0, head_y, 0), (hs, hs, hs), skin, "head"))
+    # a face: two eyes on the front of the head, and a neck below it
+    for z in (-hs // 5, hs // 5):
+        parts.append(P("sphere", (hs // 2 - 2, head_y + hs // 10, z), (hs // 6, hs // 6, hs // 6), "eye_dark", "head", plain=True))
+    parts.append(P("cyl", (0, shoulder + 4, 0), (w * 16 // 100, 16, w * 16 // 100), skin))
+    # hips and the toes of the boots
+    parts.append(P("cube", (0, hip + 6, 0), (w * 40 // 100, 22, w * 60 // 100), legs))
+    for side, z in (("leg_l", -w * 18 // 100), ("leg_r", w * 18 // 100)):
+        parts.append(P("wedge", (leg_w // 2 + 8, 8, z), (leg_w, 16, leg_w + 2), boots, side, rot=(0, 90, 0)))
     pivots = {
         "leg_l": [0, hip, -w * 18 // 100], "leg_r": [0, hip, w * 18 // 100],
         "arm_l": [0, shoulder, -w * 42 // 100], "arm_r": [0, shoulder, w * 42 // 100],
@@ -66,7 +75,7 @@ def hand_r(w, shoulder, h):
 M = {}
 
 def model(name, height, parts, pivots=None, spin=0, note=""):
-    M[name] = {"height": height, "parts": parts, "pivots": pivots or {}, "spin": spin, "note": note}
+    M[name] = {"height": height, "parts": parts, "pivots": pivots or {}, "spin": spin, "_note": note}
 
 # ---------------------------------------------------------------- heroes
 # 1 Ironvow: a knight in heavy plate with a blade taller than he is.
@@ -350,10 +359,10 @@ model("sentry_ward", 160, [P("cyl", (0, 60, 0), (10, 120, 10), "wood"), P("octa"
 model("healing_ward", 200, [P("cyl", (0, 50, 0), (30, 100, 30), "wood"), P("sphere", (0, 120, 0), (50, 50, 50), "heal", "spin", style=4),
                             P("ring", (0, 120, 0), (80, 8, 80), "heal", "spin", rot=(30, 0, 0))], note="a healing totem")
 model("fissure_rock", 120, [P("cone", (0, 50, 0), (90, 120, 90), "stone_dark"), P("cone", (20, 40, 30), (60, 80, 60), "stone")], note="a rock thrown up by the fissure")
-model("tree_sun", 400, [P("cyl", (0, 60, 0), (24, 120, 24), "wood", "fixed"), P("cone", (0, 170, 0), (120, 160, 120), "leaf_sun"),
-                        P("cone", (0, 260, 0), (90, 140, 90), "leaf_sun_light")], note="a Sunward pine")
-model("tree_moon", 400, [P("cyl", (0, 60, 0), (24, 120, 24), "wood_dark", "fixed"), P("blob", (0, 180, 0), (130, 120, 130), "leaf_moon"),
-                         P("blob", (10, 250, 0), (90, 90, 90), "leaf_moon_light")], note="a Moonward frost tree")
+model("tree_sun", 520, [P("cyl", (0, 60, 0), (40, 120, 40), "wood", "fixed"), P("cone", (0, 200, 0), (300, 220, 300), "leaf_sun"),
+                        P("cone", (0, 330, 0), (220, 200, 220), "leaf_sun_light"), P("cone", (0, 440, 0), (130, 150, 130), "leaf_sun")], note="a Sunward pine")
+model("tree_moon", 480, [P("cyl", (0, 70, 0), (40, 140, 40), "wood_dark", "fixed"), P("blob", (0, 230, 0), (320, 200, 320), "leaf_moon"),
+                         P("blob", (20, 340, -10), (220, 160, 220), "leaf_moon_light"), P("cone", (-30, 420, 20), (60, 120, 60), "ice")], note="a Moonward frost tree")
 for k, c in (("haste", "rune_haste"), ("double", "rune_double"), ("illusion", "rune_illusion"), ("invis", "rune_invis"), ("regen", "rune_regen")):
     model(f"rune_{k}", 150, [P("octa", (0, 90, 0), (60, 90, 60), c, "spin", style=4), P("ring", (0, 20, 0), (110, 6, 110), c, "fixed", plain=True)],
           note=f"the {k} rune")
@@ -368,7 +377,7 @@ palette = {
     "frost": [140, 210, 240], "ice": [190, 235, 255], "bone": [230, 220, 190], "fur": [210, 205, 195], "fur_grey": [130, 126, 120],
     "shadow": [30, 26, 34], "blood": [140, 30, 40], "mask": [235, 225, 200], "arcane": [190, 90, 255], "poison": [120, 220, 80],
     "beard": [200, 120, 60], "wing": [220, 230, 240], "drake": [80, 60, 70], "drake_wing": [120, 50, 60], "warden": [96, 78, 64],
-    "warden_head": [120, 96, 80], "critter": [240, 200, 210], "cloud": [220, 226, 240], "lightning": [150, 220, 255], "eye": [255, 220, 90], "heal": [120, 240, 140],
+    "warden_head": [120, 96, 80], "critter": [240, 200, 210], "eye_dark": [24, 20, 30], "cloud": [220, 226, 240], "lightning": [150, 220, 255], "eye": [255, 220, 90], "heal": [120, 240, 140],
     "stone_sun_build": [214, 190, 150], "stone_moon_build": [96, 96, 120],
     "leaf_sun": [60, 120, 56], "leaf_sun_light": [96, 150, 70], "leaf_moon": [70, 90, 120], "leaf_moon_light": [120, 150, 180],
     "grass_sun": [92, 128, 64], "grass_moon": [80, 92, 104], "lane": [156, 134, 98], "water": [60, 110, 150],

@@ -111,6 +111,8 @@ footer { color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--rul
   <p class="lede">A browser game that plays like the Warcraft III map Defense of the Ancients, with heroes of its own. One tab for each round of work. New rounds are added as new tabs.</p>
   <div class="tabbar" role="tablist" aria-label="Journal entries">
     <button role="tab" id="t-brief" aria-controls="p-brief" aria-selected="false" tabindex="-1"><small>1 · 15 Oct</small><span>Brief and plan</span></button>
+    <button role="tab" id="t-lit" aria-controls="p-lit" aria-selected="false" tabindex="-1"><small>2 · 16 Oct</small><span>Literature review</span></button>
+    <button role="tab" id="t-look" aria-controls="p-look" aria-selected="false" tabindex="-1"><small>3 · 16 Oct</small><span>Models, map and interface</span></button>
     <!--TABS-->
   </div>
 </div>
@@ -167,6 +169,132 @@ footer { color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--rul
 </section>
 
 <footer>Kept by the coding agent. The project's notebook (<code>SECOND-ORDER.md</code>) records each decision in more detail, numbered, as it is made.</footer>
+</div>
+
+<!-- ======================================================= TAB 2 -->
+<div class="panel-tab" role="tabpanel" id="p-lit" aria-labelledby="t-lit" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 2 · 16 October 2026 · literature review</div>
+  <h2>How DotA Allstars actually worked</h2>
+  <p class="lede">The full review is in <code>notes/LITERATURE.md</code> (about 2,600 lines, every number with its source). This tab is what it changed in the build.</p>
+</header>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Where it comes from</div><h2>Sources</h2></div>
+  <div class="grid3">
+    <div class="card"><h3>playdota.com, archived</h3><p>IceFrog's own site, read through the Wayback Machine. Its mechanics pages were captured in December 2011, which is map version 6.72/6.73: attributes, attack speed, the damage table, gold, experience, every unit's stats, runes, vision.</p><span class="src">primary source</span></div>
+    <div class="card"><h3>IceFrog's changelogs</h3><p>6.48 to 6.79c, mirrored on playdota. Used to tag every number with the version it holds for, and to catch where later versions changed it.</p><span class="src">primary source</span></div>
+    <div class="card"><h3>Player threads</h3><p>A 97-post TeamLiquid thread from October 2011 comparing DotA with the Dota 2 beta, Hive Workshop and Steam threads. Reddit and fandom blocked every fetch, so no quotes come from them.</p><span class="src">feel and priorities</span></div>
+  </div>
+  <div class="note"><strong>The version.</strong><p>The game is pinned to 6.72/6.73, the version the mechanics pages describe. Where a number changed later, the review keeps both and the data uses 6.72/6.73.</p></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">What changed because of it</div><h2>Assumptions the review overturned</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>I had assumed</th><th>The sources say</th><th>Now in the build</th></tr></thead>
+    <tbody>
+      <tr><td>Warcraft III's stock attack-and-armor table</td><td>DotA edited it: normal attacks deal 75% to heroes, siege 75%, chaos 40% to buildings, spells 75% to heroes</td><td>DotA's table in <code>data/rules.json</code>; heroes resist a quarter of spell damage</td></tr>
+      <tr><td>Damage rolled evenly in its range</td><td>Damage is dice (XdY), so the middle comes up more often</td><td>Two dice per attack</td></tr>
+      <tr><td>Bash and crit rolled plainly</td><td>Warcraft III's pseudo-random chance; players named it as part of the feel</td><td>A counter per unit and proc</td></tr>
+      <tr><td>Aggro drawn when a hit lands</td><td>The attack <em>order</em> on a hero draws creep and tower aggro; spells never do</td><td>Drawn by the order</td></tr>
+      <tr><td>Experience shared within 1000</td><td>1000 before 6.69, 1200 after, 1300 from 6.79</td><td>1200</td></tr>
+      <tr><td>Denies give a share of experience</td><td>A flat 36 split among nearby melee heroes, 18 among ranged</td><td>As the source says</td></tr>
+      <tr><td>Day and night, four minutes each</td><td>Six minutes each from 6.68 to 6.78</td><td>Six minutes each</td></tr>
+      <tr><td>The boss returns at random</td><td>Exactly ten minutes in 6.72; random from 6.79</td><td>Ten minutes; it grows by 500 health and 10 damage every five minutes of the match</td></tr>
+      <tr><td>A tenth hero after Axe</td><td>The review sourced Zeus fully and Axe not at all</td><td>Tempest follows Zeus</td></tr>
+      <tr><td>No Smoke of Deceit in DotA</td><td>Added in 6.70</td><td>Left out of the first shop; noted for later</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Never simplify</div><h2>What players single out</h2></div>
+  <div class="grid2">
+    <div class="card"><h3>Kept exactly</h3><ul>
+      <li>Gold only from the last hit; denies below half health</li>
+      <li>Per-hero attack point and backswing, cancelled by any order</li>
+      <li>The damage table, the armor formula, the hero spell resistance</li>
+      <li>Starting gold 603, 200 + 5 per level for a kill plus streaks, assist gold by heroes near, death costs 30 per level of unreliable gold, buyback and its cooldown, respawn 4 seconds per level</li>
+      <li>Waves every 30 seconds, upgrades every 7½ minutes, mega creeps after barracks fall</li>
+      <li>Neutrals refill on the minute if the camp is empty, so stacking and pulling work</li>
+      <li>Trees block paths and sight; higher ground hides from lower</li>
+      <li>Towers fall in order; backdoor protection; the glyph</li>
+    </ul></div>
+    <div class="card"><h3>Simplified for now</h3><ul>
+      <li>One courier for each side from the start, rather than bought</li>
+      <li>No items on the ground: a full inventory refuses a purchase</li>
+      <li>Backdoor protection without the "unregenerable" part</li>
+      <li>No Aghanim's upgrades, no Bottle-stored runes, no Cheese</li>
+      <li>Collision sizes and some turn rates are unverified in every source; Dota 2's values stand in</li>
+    </ul></div>
+  </div>
+  <div class="note"><strong>Open questions the review could not settle.</strong><p>Lane creep armor (playdota prints Unarmored, the Dota 2 port says Medium; ranged-creep damage differs 2×), periodic gold (one every 0.875 or 0.8 seconds), creep aggro radius, and the map's real size. Each needs the 6.83 map file opened in the World Editor.</p></div>
+</section>
+<footer>Sources and every number: <code>notes/LITERATURE.md</code>. Player quotes: <code>notes/FEEL.md</code>. What the data uses where the review is unverified: <code>notes/DATA-TRANSCRIPTION.md</code>.</footer>
+</div>
+<!-- ======================================================= TAB 3 -->
+<div class="panel-tab" role="tabpanel" id="p-look" aria-labelledby="t-look" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 3 · 16 October 2026 · models, map and interface</div>
+  <h2>Every model, the map, and the screens</h2>
+  <p class="lede">Rendered by the game itself: these are screenshots of the built page, not drawings. Each model is a set of shapes in <code>data/models.json</code> (written by <code>tools/modelgen.py</code>), posed by the core and outlined in the shader. They are original: none copies a Warcraft III or DotA model.</p>
+</header>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Heroes</div><h2>Ten heroes, ten silhouettes</h2></div>
+  <p>Each one should read at a glance from the raised camera: a blade taller than its bearer, a hood and staff, flame hair, a bow, a hook and belly, horns and a totem, a mask, bone spikes, a rifle twice the gnome's height, a cloud crown.</p>
+  <figure><img src="img/heroes_a.jpg" alt="Five hero models in a row: an armoured knight with a greatsword, a hooded frost hermit with a crystal staff, a fire dancer with flame hair, a hooded archer, and a huge pale butcher with a cleaver"><figcaption>Ironvow (after Sven), Rime (Crystal Maiden), Cinder (Lina), Thistle (Drow Ranger), Gristle (Pudge).</figcaption></figure>
+  <figure><img src="img/heroes_b.jpg" alt="Five more heroes: a horned stone ox-man with a club, a masked swordsman, a gaunt purple warlock, a gnome with a long rifle and goggles, and an old storm caller with a cloud crown"><figcaption>Tectus (Earthshaker), Kestrel (Juggernaut), Hexwright (Lion), Longwick (Sniper), Tempest (Zeus).</figcaption></figure>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">The lanes</div><h2>Creeps, towers, barracks, Spheres</h2></div>
+  <figure><img src="img/creeps.jpg" alt="Six lane creeps: Sunward spearman, slinger and ballista; Moonward thrall, caster and catapult"><figcaption>Sunward spearman, slinger and ballista; Moonward thrall, caster and catapult. Their numbers are the same; only the look differs, as in DotA.</figcaption></figure>
+  <div class="grid2">
+    <figure><img src="img/build_sun.jpg" alt="Sunward buildings in sandstone and gold: a tower, two barracks, the Sphere in two rings, the fountain and a shop"><figcaption>Sunward: tower, melee and ranged barracks, the Sphere, the fountain, a shop.</figcaption></figure>
+    <figure><img src="img/build_moon.jpg" alt="Moonward buildings in slate and violet"><figcaption>Moonward: the same buildings in slate and violet crystal.</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">The forest</div><h2>Neutrals, the ancients and the Warden</h2></div>
+  <figure><img src="img/neutrals.jpg" alt="Neutral creeps: an imp, a hound, a moss-shelled tortoise, two stone golems, a hornet and a horned shaman"><figcaption>Imp, ridge hound, mossback, small and great golem, hornet, shaman. Camp stats follow DotA's kobolds, wolves, mud golems, centaurs and dark trolls.</figcaption></figure>
+  <figure><img src="img/ancients.jpg" alt="A young drake, an elder drake with wings, and the Warden, a huge horned beast"><figcaption>The ancient camp (young and elder drakes) and the Warden, the boss in the river pit (after Roshan).</figcaption></figure>
+  <figure><img src="img/small.jpg" alt="Wards, a healing totem, the courier mule, a fissure rock, the hex critter and two kinds of tree"><figcaption>Observer and sentry wards, the healing totem, the courier, a fissure rock, what a hex turns a unit into, and the two forests' trees.</figcaption></figure>
+  <figure><img src="img/runes.jpg" alt="Five runes: haste, double damage, illusion, invisibility and regeneration"><figcaption>The five runes. Each also differs in shape and spin, so colour is never the only cue.</figcaption></figure>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">The map</div><h2>Three lanes, one river, two bases</h2></div>
+  <figure><img src="img/overview.jpg" alt="The whole map from above: the Sunward base at bottom left, the Moonward base at top right, three lanes around and through the middle, a river crossing diagonally, jungle paths on each side"><figcaption>From above. The Sunward base sits in the south-west corner, the Moonward in the north-east, as Sentinel and Scourge do. The river runs from the north-west to the south-east and crosses mid at the centre. Each side's forest holds six camps (one easy, two moderate, two hard, one ancient), and the Warden's pit lies beside the lower rune.</figcaption></figure>
+  <div class="grid2">
+    <figure><img src="img/lane.jpg" alt="A hero in the top lane by a Sunward tower, pines on both sides, the minimap in the corner"><figcaption>The top lane from the play camera. Trees are generated from a seed, so every player sees the same forest; cut trees grow back after five minutes.</figcaption></figure>
+    <figure><img src="img/mid.jpg" alt="Moonward creeps marching through frost trees, two heroes meeting them below a Moonward tower"><figcaption>Five minutes in, between computer players. Fog dims what the side cannot see; the minimap shows the camera's frame.</figcaption></figure>
+  </div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Piece</th><th>As built</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Size</td><td>16,384 map units square, point-symmetric through the centre</td><td>DotA's size is unverified; symmetry keeps the sides even</td></tr>
+      <tr><td>Towers</td><td>Three a lane a side plus two by each Sphere: 11 a side</td><td>As DotA</td></tr>
+      <tr><td>Bases</td><td>High ground with ramps at the three lane exits</td><td>Ranged attacks uphill miss a quarter of the time</td></tr>
+      <tr><td>Shops</td><td>A base shop each, two side shops, two secret shops</td><td>As DotA 6.60+</td></tr>
+      <tr><td>Runes</td><td>Two spots in the river, one rune every second minute</td><td>As DotA</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Interface</div><h2>Menus and the HUD</h2></div>
+  <p>Menus follow Galactic Survivors (condensed capitals, hard edges, the hazard stripe) and Ape Race (rounded glass panels, a big slanted title). The in-match HUD follows Warcraft III's bottom bar: portrait, health and mana, stats, four abilities, six item slots, gold. Every ability, item and hero shows its numbers on hover. The icons are being drawn in TikZ now and are blank in these shots.</p>
+  <div class="grid2">
+    <figure><img src="img/ui_title.jpg" alt="The title screen with the game's name in slanted gold capitals and four buttons"><figcaption>Title.</figcaption></figure>
+    <figure><img src="img/ui_arcade.jpg" alt="The arcade screen: a ladder of ten missions on the left, the custom match with allies, enemies and two skill settings on the right"><figcaption>Arcade: the mission ladder, and a custom match where each side's size and skill are set apart.</figcaption></figure>
+    <figure><img src="img/ui_pick.jpg" alt="The hero choice screen: ten hero cards and a panel listing the chosen hero's abilities, with a hover tip"><figcaption>Choosing a hero; the tip lists the hero's abilities.</figcaption></figure>
+    <figure><img src="img/ui_hud.jpg" alt="The in-match HUD: score and clock at top, goal line, bottom bar with portrait, bars, stats, abilities with learn buttons, item slots, gold and buttons, and the minimap"><figcaption>The HUD at the start of a match: learn buttons wait under each ability.</figcaption></figure>
+  </div>
+</section>
+<footer>Pictures made with <code>tools/shots.py</code> from the built game (<code>?tile=lineup:…</code>, <code>overview</code>, <code>match:&lt;seconds&gt;</code>).</footer>
 </div>
 
 <!--PANELS-->
