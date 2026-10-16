@@ -35,6 +35,10 @@ The person answered "looks amazing" (R2.5 to R2.7 closed).
 - **The locked cursor (T4).** In a match the page draws its own cursor; a click on the battlefield locks the pointer to the window and the core moves the drawn cursor (`Game::nudge`); every edge pans the camera, including the bottom and left under the HUD and the minimap (R2.15).
 - **The page's DOM sync** now keeps a node whose own part did not change (R2.17).
 
+**Checked and live (16 October 2026).** `./scripts/check.sh`: BUILDER CHECK PASSED (110 core tests passed, 0 failed, 4 ignored; browser check in Chromium, Firefox and WebKit); `scripts/break_tests.py` caught 22 of 22 before the last five rows were added. Five-runner test: run three kept every checksum in step but its dropped browser could not get back through the relays (R2.18); run four passed, rejoin in 4.5 s, 199 checksum ticks and 371 live sums with no disagreement, 30 ticks a second (`notes/ONLINE-RUN.md`). `./scripts/publish.sh` published build `bbf8133`; `BUILDER_ORIGIN=https://sgilson7.github.io/pots tests/browser/check.py` passed in all three engines on the live site, and a live `smoke.py --rejoin` rejoined. The scholar site's page and tile were updated (commit `f42a76a` in `~/Documents/website`, unpushed under its rules), `make check`, `make packet`, `make gate`, `make deploy` (build bb39ce2d) and `make gate-live` passed. Journal artifact version 5.
+
+Still open from round 2: R2.18 (rejoining failed in two of four five-runner runs, in the relay and WebRTC layer), R2.19 (a rejoined browser comes back three ticks behind and causes small rollbacks).
+
 Open for the person from round 2: **R2.16** (try the locked cursor by hand: automated browsers cannot lock the pointer).
 
 ## What passed
