@@ -199,13 +199,14 @@ impl Game {
         let mut rules = Rules::load(f.rules, f.units, f.abilities, f.items, f.map)?;
         rules.ai = Some(AiDef::load(f.ai)?);
         let (terrain, trees0) = world::setup(&rules);
-        let models = Models::load(f.models)?;
+        let mut models = Models::load(f.models)?;
         for d in &rules.units {
             if models.find(&d.model).is_none() {
                 return Err(format!("Unit \"{}\" has no model \"{}\".", d.id, d.model));
             }
         }
         let look: Look = parse("presentation.json", f.presentation)?;
+        models.facet(&look.map_look.faceted)?;
         let strings = Strings::load(f.strings)?;
         let glossary = crate::glossary::parse(f.glossary)
             .map_err(|e| e.message())?

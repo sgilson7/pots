@@ -383,5 +383,54 @@
   "find": "            o.aram = aram;\n            o.fill = fill;",
   "replace": "            o.aram = aram;",
   "test": "with_computer_players_off_only_the_people_in_the_room_play"
+ },
+ {
+  "name": "a map model keeps its round shapes",
+  "file": "crates/core/src/models.rs",
+  "find": "                p.mesh = p.mesh.faceted();\n",
+  "replace": "",
+  "test": "map_models_are_faceted_without_an_outline_and_characters_keep_their_look"
+ },
+ {
+  "name": "a map model keeps its outline",
+  "file": "crates/core/src/models.rs",
+  "find": "                p.plain = true;\n",
+  "replace": "",
+  "test": "the_match_draws_no_faceted_shape_with_an_outline_and_soft_shadows_under_the_map"
+ },
+ {
+  "name": "glowing parts are faceted too",
+  "file": "crates/core/src/models.rs",
+  "find": ".filter(|p| p.style != crate::scene::STYLE_GLOW)",
+  "replace": "",
+  "test": "map_models_are_faceted_without_an_outline_and_characters_keep_their_look"
+ },
+ {
+  "name": "a hero is drawn in the map's look",
+  "file": "data/presentation.json",
+  "find": "\"faceted\": [\"tower_sun\",",
+  "replace": "\"faceted\": [\"hero_ironvow\", \"tower_sun\",",
+  "test": "map_models_are_faceted_without_an_outline_and_characters_keep_their_look"
+ },
+ {
+  "name": "the map's shadows are not drawn",
+  "file": "crates/core/src/scene.rs",
+  "find": "        b.tint(Mesh::Facet, &a, f.models.named(\"dress_shadow\"), alpha);\n",
+  "replace": "",
+  "test": "the_match_draws_no_faceted_shape_with_an_outline_and_soft_shadows_under_the_map"
+ },
+ {
+  "name": "the ground is never dressed",
+  "file": "crates/core/src/scene.rs",
+  "find": "    if next(100) >= if open { lk.dress_pct } else { lk.dress_pct / 3 } {",
+  "replace": "    if true {",
+  "test": "the_ground_is_dressed_the_same_every_frame_and_only_when_asked"
+ },
+ {
+  "name": "the faceted ball has too few faces",
+  "file": "crates/core/src/mesh.rs",
+  "find": "                face(ab, bc, ca);\n",
+  "replace": "",
+  "test": "the_map_s_faceted_shapes_have_flat_faces_and_few_of_them"
  }
 ]

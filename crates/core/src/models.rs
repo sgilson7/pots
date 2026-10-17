@@ -99,6 +99,8 @@ pub struct Model {
     pub parts: Vec<Part>,
     pub pivots: [V3; 8],
     pub spin: i32,
+    /// Drawn in the map's look (T19): faceted, no outline, a soft shadow.
+    pub faceted: bool,
 }
 
 #[derive(Debug, Clone)]
@@ -209,6 +211,7 @@ impl Models {
                 parts,
                 pivots,
                 spin: m.spin,
+                faceted: false,
             });
         }
         Ok(Models {
@@ -218,6 +221,26 @@ impl Models {
             teams,
             team_roles,
         })
+    }
+
+    /// Puts the named models in the map's look (T19, after Mage Tower
+    /// Battle's newer one): every part takes the faceted form of its shape
+    /// and loses its outline, except glowing parts, which stay smooth so
+    /// their light fades evenly (Mage Tower's R7.5). Heroes, creeps and
+    /// creatures are left out of the list and keep their look.
+    pub fn facet(&mut self, names: &[String]) -> Result<(), String> {
+        for name in names {
+            let k = self
+                .find(name)
+                .ok_or_else(|| format!("presentation.json: map_look names no model \"{name}\"."))?;
+            let m = &mut self.list[k];
+            m.faceted = true;
+            for p in m.parts.iter_mut().filter(|p| p.style != crate::scene::STYLE_GLOW) {
+                p.mesh = p.mesh.faceted();
+                p.plain = true;
+            }
+        }
+        Ok(())
     }
 
     pub fn find(&self, name: &str) -> Option<usize> {

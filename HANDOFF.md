@@ -76,6 +76,10 @@ Planned with mockups (journal tab 9); the person answered R4.1 to R4.6 (middle l
 
 Mockups only; **the game is unchanged**. Journal tab 10 (`journal/mockups/tab10.py`) traces Mage Tower Battle's look from 1.5.0 (the one this game copied) to 1.7.1, and shows all 53 models and two lanes as the game draws them now and as mockups in the new look. The mockup kit draws the new look with `?look=ape` (`journal/mockups/kit.js`: facets, no outline, sky and ground light with a low sun, haze, disc shadows, ground dressed at three sizes); `ART=art4 LOOK=ape shoot.py` makes its pictures into `journal/art4/`. The game's pictures are `tools/shots.py` into `journal/art4/game/`.
 
+## Round 6, continued (17 October 2026): the map in the newer look (T19)
+
+The person chose tab 10's look for every map asset and the current look for characters. `data/presentation.json` `map_look` lists the map's models; `Models::facet` swaps their parts to the new faceted meshes (`Mesh::Facet`, `FacetCyl`, `FacetCone`, `FacetTaper`: 80 faces, 8 sides, flat normals) and drops their outline, glowing parts excepted. `scene::shadow` puts two see-through discs under each; `scene::dress` dresses open ground. Light, haze and camera are unchanged (R6.9). Tests: `tests/map_look.rs`, `mesh.rs`'s facet test.
+
 ## What passed
 
 Recorded at the end of this round; the counts come from the commands, not from memory.
@@ -95,9 +99,8 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **R1.12**: lane creep armor type, Unarmored (playdota) or Medium (Dota 2 port). It changes ranged-creep damage 2×.
 - **R1.16**: if the host's browser leaves, the online match ends. A host hand-over is not built.
 - **R1.18**: the 143 icons; a few are plain at 48 px.
-- **R6.1**: build the newer look into the game: all of it, some parts, or not yet (journal tab 10).
 - **R6.2**: the new look's time of day: late afternoon as drawn, dusk, or a mood that turns with the day.
-- **R6.3**: faceted heads as drawn, or smooth heads so the eyes read at match distance.
+- **R6.8**: which models count as map assets (faceted) and which as characters: the list `map_look.faceted` in `data/presentation.json`. Wards, runes, the relic and Fissure's rock went with the map.
 - **R5.5**: the WebKit error: its exact words, the browser (Safari on a Mac or an iPhone) and the screen it came on.
 - **R4.18**: play a custom match in All Random All Mid: reroll once, press F at the fountain and click the lane, take a relic when hurt. Does it feel right?
 - **R3.4**: abilities that go off at once (Warcry, Echo Slam, Blade Fury) show no outline. Show their radius while the key is held, or on hovering the button?

@@ -56,7 +56,7 @@ for m in IDS + ["heroes_1", "heroes_2"]:
     for d in ("game", "models"):
         if not (ART / d / f"{m}.jpg").exists():
             missing.append(f"{d}/{m}.jpg")
-for p in ["game/lane", "scenes/lane", "scenes/lane_game"] + [f"mtb/{n}" for n in ("r8b-floor", "r8g-floor", "r8b-library", "r8g-library", "g-battle-one", "r8g-battle", "r8b-lab", "r8-lab")]:
+for p in ["game/lane", "scenes/lane", "scenes/lane_game", "built/lane", "built/lineup", "built/tower_sun", "built/tree_sun", "built/sphere_sun"] + [f"mtb/{n}" for n in ("r8b-floor", "r8g-floor", "r8b-library", "r8g-library", "g-battle-one", "r8g-battle", "r8b-lab", "r8-lab")]:
     if not (ART / f"{p}.jpg").exists():
         missing.append(f"{p}.jpg")
 
@@ -140,9 +140,15 @@ STEPS = [
 ]
 
 QUESTIONS = [
-    ["R6.1", "Build this look into the game: all of it, some parts (which?), or not yet?"],
-    ["R6.2", "Time of day: late afternoon as drawn, or Mage Tower's dusk, or a mood that turns with the game's day and night?"],
-    ["R6.3", "Faces: heads faceted as drawn, or kept smooth so the eyes read better at match distance?"],
+    ["R6.1", "Build this look into the game: all of it, some parts (which?), or not yet? <b>Answered:</b> \"i like the art style for all the map assets, i prefer the current style for characters\". Built for the map; see Part 5."],
+    ["R6.2", "Time of day: late afternoon as drawn, or Mage Tower's dusk, or a mood that turns with the game's day and night? <i>Still open: the game's light is unchanged, so the characters look as they did.</i>"],
+    ["R6.3", "Faces: heads faceted as drawn, or kept smooth so the eyes read better at match distance? <b>Answered by R6.1:</b> characters keep their smooth heads."],
+]
+BUILT = [
+    ("game/lane", "built/lane", "A lane, 75 seconds in", "The same moment of the same match. Trees and the tower are faceted with no outline; the hero and the creeps keep their smooth, outlined shapes. Pebbles and stones lie on the lane; stones, tufts and flowers on open grass."),
+    ("game/tower_sun", "built/tower_sun", "The Sunward tower", "Eight-sided courses and an 80-faced dome; the sun on top glows and stays smooth."),
+    ("game/tree_sun", "built/tree_sun", "A Sunward pine", "Eight-sided tiers. In a match each tree also stands on a soft shadow."),
+    ("game/sphere_sun", "built/sphere_sun", "The Sunward Sphere", "The frame and base faceted; the Sphere's glowing core and rings stay smooth."),
 ]
 
 CSS = """/*NEWLOOK*/
@@ -170,9 +176,9 @@ def gallery():
 PANEL = f'''<!-- ======================================================= TAB 10 -->
 <div class="panel-tab" role="tabpanel" id="p-newlook" aria-labelledby="t-newlook" hidden>
 <header style="display:grid;gap:12px">
-  <div class="eyebrow">Entry 10 · 17 October 2026 · a style study (triage T18); the game itself has not changed</div>
+  <div class="eyebrow">Entry 10 · 17 October 2026 · a style study (triage T18), then the map built in it (T19)</div>
   <h2>Mage Tower's newer look, applied to every model here</h2>
-  <p class="lede">Part 1 traces how Mage Tower Battle's look changed from the version this game copied to its latest version. Part 2 measures where this game stands against those changes. Part 3 shows every current model twice: as the game draws it now, and as a mockup in the new look. Part 4 is what building it would take, with three questions for you. Click any picture to see it larger.</p>
+  <p class="lede">Part 1 traces how Mage Tower Battle's look changed from the version this game copied to its latest version. Part 2 measures where this game stands against those changes. Part 3 shows every current model twice: as the game draws it now, and as a mockup in the new look. Part 4 is what building it would take, with three questions for you. Part 5 is what was built once you answered: the map in the new look, the characters as they were. Click any picture to see it larger.</p>
 </header>
 
 <section>
@@ -239,6 +245,12 @@ PANEL = f'''<!-- ======================================================= TAB 10 
     <thead><tr><th>#</th><th>Question</th></tr></thead>
     <tbody>{table(QUESTIONS)}</tbody>
   </table></div>
+</section>
+<section>
+  <div class="section-head"><div class="eyebrow">Part 5 · built (T19)</div><h2>The map in the new look, the characters as they were</h2></div>
+  <p>You chose the new look for every map asset and the current look for characters. In the game now: the buildings, the Spheres, the shop, the cannons, the trees, runes, wards, the relic and Fissure's rock are faceted, drawn without an outline, and stand on a soft shadow of two see-through discs. Heroes, creeps, the forest's creatures, the courier and the critter are unchanged. Open ground carries seeded dressing at three sizes, and the lanes and bases pebbles and stones. The light, the haze and the camera are unchanged. Each pair below is the game before and after, from the same spot.</p>
+  <div class="grid2">{"".join(pair(a, b, "before", "built", c, t) for a, b, t, c in BUILT)}</div>
+  <figure class="ba">{pic("built/lineup", "Map assets and characters side by side, built")}<figcaption><b>Side by side in the game:</b> a tower, a pine and the shop in the map's look, with Ironvow and a Sunward creep in the characters' look.</figcaption></figure>
 </section>
 <footer>Mockups: <code>journal/mockups/kit.js</code> with <code>?look=ape</code> (three.js r160, MIT), pictures from <code>ART=art4 LOOK=ape journal/mockups/shoot.py</code>. The game's pictures from <code>tools/shots.py</code> on the build of 17 October 2026. Mage Tower Battle's pictures are from its own design journal. This tab written by <code>journal/mockups/tab10.py</code>. The mockups are labelled as such: the game draws its models with its own renderer.</footer>
 </div>

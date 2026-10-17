@@ -30,10 +30,19 @@ pub enum Mesh {
     /// an upright cylinder whose top is narrower than its base (TAPER):
     /// round towers' stone courses
     Taper = 11,
+    /// The map's look (T19, after Mage Tower's newer one): a ball of 80
+    /// flat faces, so each face takes the light on its own
+    Facet = 12,
+    /// an upright column of eight flat sides
+    FacetCyl = 13,
+    /// an upright cone of eight flat sides
+    FacetCone = 14,
+    /// a tapered column of eight flat sides
+    FacetTaper = 15,
 }
 
 impl Mesh {
-    pub const ALL: [Mesh; 12] = [
+    pub const ALL: [Mesh; 16] = [
         Mesh::Cube,
         Mesh::Wedge,
         Mesh::Octa,
@@ -46,7 +55,23 @@ impl Mesh {
         Mesh::Card,
         Mesh::Tri,
         Mesh::Taper,
+        Mesh::Facet,
+        Mesh::FacetCyl,
+        Mesh::FacetCone,
+        Mesh::FacetTaper,
     ];
+
+    /// The same shape in the map's faceted look; a shape that is already
+    /// flat-faced (a box, a wedge, a card) stays as it is.
+    pub fn faceted(self) -> Mesh {
+        match self {
+            Mesh::Sphere | Mesh::Blob => Mesh::Facet,
+            Mesh::Cyl => Mesh::FacetCyl,
+            Mesh::Cone => Mesh::FacetCone,
+            Mesh::Taper => Mesh::FacetTaper,
+            m => m,
+        }
+    }
 
     pub fn from_name(s: &str) -> Option<Mesh> {
         match s {
@@ -153,6 +178,91 @@ pub fn vertices(mesh: Mesh) -> Vec<i32> {
                 }
             }
         }
+        Mesh::Facet => {
+            // an icosahedron with each face cut in four, pushed out to the
+            // sphere; every triangle keeps its own flat normal
+            const PHI: i32 = 106_039; // the golden ratio in Q16
+            let ico = [
+                v3(-ONE, PHI, 0),
+                v3(ONE, PHI, 0),
+                v3(-ONE, -PHI, 0),
+                v3(ONE, -PHI, 0),
+                v3(0, -ONE, PHI),
+                v3(0, ONE, PHI),
+                v3(0, -ONE, -PHI),
+                v3(0, ONE, -PHI),
+                v3(PHI, 0, -ONE),
+                v3(PHI, 0, ONE),
+                v3(-PHI, 0, -ONE),
+                v3(-PHI, 0, ONE),
+            ];
+            const FACES: [[usize; 3]; 20] = [
+                [0, 11, 5],
+                [0, 5, 1],
+                [0, 1, 7],
+                [0, 7, 10],
+                [0, 10, 11],
+                [1, 5, 9],
+                [5, 11, 4],
+                [11, 10, 2],
+                [10, 7, 6],
+                [7, 1, 8],
+                [3, 9, 4],
+                [3, 4, 2],
+                [3, 2, 6],
+                [3, 6, 8],
+                [3, 8, 9],
+                [4, 9, 5],
+                [2, 4, 11],
+                [6, 2, 10],
+                [8, 6, 7],
+                [9, 8, 1],
+            ];
+            let out = |p: V3| p.norm().scale(H);
+            let mid = |a: V3, b: V3| out(v3((a.x + b.x) / 2, (a.y + b.y) / 2, (a.z + b.z) / 2));
+            let mut face = |a: V3, b: V3, c: V3| {
+                // wound so the face looks away from the centre
+                let n = b.sub(a).cross(c.sub(a));
+                if n.dot(a.add(b).add(c)) >= 0 {
+                    push_tri(&mut o, a, b, c);
+                } else {
+                    push_tri(&mut o, a, c, b);
+                }
+            };
+            for f in FACES {
+                let (a, b, c) = (out(ico[f[0]]), out(ico[f[1]]), out(ico[f[2]]));
+                let (ab, bc, ca) = (mid(a, b), mid(b, c), mid(c, a));
+                face(a, ab, ca);
+                face(ab, b, bc);
+                face(ca, bc, c);
+                face(ab, bc, ca);
+            }
+        }
+        Mesh::FacetCyl | Mesh::FacetCone | Mesh::FacetTaper => {
+            const SIDES: i32 = 8;
+            let top = match mesh {
+                Mesh::FacetCone => 0,
+                Mesh::FacetTaper => fx::mul(H, TAPER),
+                _ => H,
+            };
+            let rim = |j: i32, r: i32, y: i32| {
+                let a = fx::TURN * j / SIDES;
+                v3(fx::mul(fx::cos(a), r), y, fx::mul(-fx::sin(a), r))
+            };
+            for j in 0..SIDES {
+                let (a, b) = (rim(j, H, -H), rim(j + 1, H, -H));
+                let (c, d) = (rim(j + 1, top, H), rim(j, top, H));
+                if top > 0 {
+                    push_quad(&mut o, a, b, c, d);
+                } else {
+                    push_tri(&mut o, a, b, c);
+                }
+                push_tri(&mut o, b, a, v3(0, -H, 0));
+                if top > 0 {
+                    push_tri(&mut o, d, c, v3(0, H, 0));
+                }
+            }
+        }
         Mesh::Ring => {
             const SIDES: i32 = 40;
             let rim = |j: i32, y: i32| {
@@ -242,6 +352,10 @@ mod tests {
             (Mesh::Cyl, V3::ZERO),
             (Mesh::Cone, v3(0, -H / 2, 0)),
             (Mesh::Taper, V3::ZERO),
+            (Mesh::Facet, V3::ZERO),
+            (Mesh::FacetCyl, V3::ZERO),
+            (Mesh::FacetCone, v3(0, -H / 2, 0)),
+            (Mesh::FacetTaper, V3::ZERO),
         ] {
             for [a, b, c, n] in tris(m) {
                 let centroid = v3(
@@ -255,6 +369,35 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[test]
+    fn the_map_s_faceted_shapes_have_flat_faces_and_few_of_them() {
+        // T19: each face catches the light on its own, so its three corners
+        // share one normal. An icosahedron cut once has 20 x 4 = 80 faces;
+        // an eight-sided column has 8 sides of 2 triangles and 8 + 8 cap
+        // triangles, 32; a cone has 8 sides and 8 base triangles, 16.
+        for (m, count) in [
+            (Mesh::Facet, 80),
+            (Mesh::FacetCyl, 32),
+            (Mesh::FacetCone, 16),
+            (Mesh::FacetTaper, 32),
+        ] {
+            let v = vertices(m);
+            let t: Vec<&[i32]> = v.chunks(3 * VERTEX_VALUES).collect();
+            assert_eq!(t.len(), count, "{m:?}");
+            for tri in t {
+                let n = |i: usize| &tri[i * VERTEX_VALUES + 3..i * VERTEX_VALUES + 6];
+                assert!(n(0) == n(1) && n(1) == n(2), "{m:?}: a face with a bent normal");
+            }
+        }
+        // the smooth sphere's corners do not share one normal
+        let v = vertices(Mesh::Sphere);
+        let tri = &v[3 * VERTEX_VALUES..6 * VERTEX_VALUES];
+        assert_ne!(&tri[3..6], &tri[VERTEX_VALUES + 3..VERTEX_VALUES + 6]);
+        assert_eq!(Mesh::Sphere.faceted(), Mesh::Facet);
+        assert_eq!(Mesh::Blob.faceted(), Mesh::Facet);
+        assert_eq!(Mesh::Cube.faceted(), Mesh::Cube);
     }
 
     #[test]

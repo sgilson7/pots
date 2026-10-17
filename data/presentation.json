@@ -76,6 +76,16 @@
   30
  ],
  "max_ticks_per_frame": 6,
+ "map_look": {
+  "_note": "T19: the map in the look of Mage Tower Battle's 1.6.0 (journal tab 10). The person chose it for every map asset and kept the current look for characters, so heroes, creeps, the forest's creatures, the courier and the critter are not listed.",
+  "faceted": ["tower_sun", "tower_moon", "barracks_melee_sun", "barracks_melee_moon", "barracks_ranged_sun", "barracks_ranged_moon", "fountain_sun", "fountain_moon", "sphere_sun", "sphere_moon", "shop", "cannon_sun", "cannon_moon", "tree_sun", "tree_moon", "fissure_rock", "relic", "rune_double", "rune_haste", "rune_illusion", "rune_invis", "rune_regen", "observer_ward", "sentry_ward", "healing_ward"],
+  "shadow_pct": 110,
+  "shadow_alpha": 30,
+  "tree_shadow": 260,
+  "dress_pct": 38,
+  "dress_most": 3,
+  "vary_pct": 12
+ },
  "ping": 70,
  "shots": {
   "tower": {

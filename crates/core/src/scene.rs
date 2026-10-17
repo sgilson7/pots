@@ -190,6 +190,31 @@ pub struct Look {
     #[serde(default)]
     pub fx: crate::marks::Book,
     pub max_ticks_per_frame: i32,
+    /// The map's look (T19).
+    pub map_look: MapLook,
+}
+
+/// The map's look (T19, after Mage Tower Battle's newer one; journal tab
+/// 10): which models are faceted, their soft shadows, and the ground's
+/// dressing. Characters keep round 2's look.
+#[derive(Debug, Clone, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct MapLook {
+    #[serde(default, rename = "_note")]
+    pub note: String,
+    /// Models drawn faceted, with no outline and a soft shadow.
+    pub faceted: Vec<String>,
+    /// The shadow disc: percent of a building's footprint across, and how
+    /// dark (percent); a tree's disc across, hundredths of a scene unit.
+    pub shadow_pct: i32,
+    pub shadow_alpha: i32,
+    pub tree_shadow: i32,
+    /// Percent of open grass cells that carry dressing, and the most pieces
+    /// on one cell.
+    pub dress_pct: i32,
+    pub dress_most: i32,
+    /// Percent of brightness one grass cell may differ from the next.
+    pub vary_pct: i32,
 }
 
 pub struct Frame<'a> {
@@ -261,7 +286,7 @@ pub fn ground(f: &Frame, b: &mut Batch) {
                 level_height(lv)
             };
             // a little seeded variation per cell keeps the grass from looking tiled
-            let vary = ONE - ((i as i32 * 7919) & 7) * ONE / 120;
+            let vary = ONE - ((i as i32 * 7919) & 15) * lk.map_look.vary_pct * ONE / 1500;
             let mut col = match t.mark[i] {
                 map::T_LANE => lane,
                 map::T_RIVER => water,
@@ -286,6 +311,12 @@ pub fn ground(f: &Frame, b: &mut Batch) {
                 col,
                 if t.mark[i] == map::T_RIVER { 9 } else { 6 },
             );
+            if matches!(f.w.trees[i], Tree::None) && t.mark[i] != map::T_RIVER {
+                // open grass takes every kind; the lanes, paths and bases
+                // only stones and pebbles, and fewer of them
+                let open = t.mark[i] == map::T_GRASS;
+                dress(f, b, i, c, top, if seen { ONE } else { fog }, open);
+            }
             if let Tree::Standing = f.w.trees[i] {
                 if let Some(mi) = tree_models[side] {
                     let model = &m.list[mi];
@@ -296,6 +327,10 @@ pub fn ground(f: &Frame, b: &mut Batch) {
                     let place = Affine::translate(to_scene(c, top))
                         .then(&Affine::rot_y(turn))
                         .then(&Affine::scale(v3(scale, scale, scale)));
+                    if model.faceted {
+                        let d = fx::mul(lk.map_look.tree_shadow * ONE / 100, scale);
+                        shadow(f, b, to_scene(c, top), d);
+                    }
                     pose_parts(model, &Pose::STILL, &place, |p, a| {
                         let mut col = m.color(NEUTRAL, p.color);
                         if !seen {
@@ -311,6 +346,121 @@ pub fn ground(f: &Frame, b: &mut Batch) {
                     });
                 }
             }
+        }
+    }
+}
+
+/// The map's soft shadow (T19): a dark see-through disc `d` across, on the
+/// ground at `at`. The renderer casts no shadows, as Mage Tower's does not.
+pub fn shadow(f: &Frame, b: &mut Batch, at: V3, d: i32) {
+    // two discs, the inner one two thirds across: darkest in the middle,
+    // so the edge reads soft (Mage Tower's shadows are soft too)
+    let alpha = f.look.map_look.shadow_alpha * ONE / 200;
+    for (k, lift) in [(ONE, ONE / 50), (ONE * 2 / 3, ONE / 40)] {
+        let w = fx::mul(d, k);
+        let a = Affine::translate(at.add(v3(0, lift, 0))).then(&Affine::scale(v3(w, ONE / 100, w)));
+        b.tint(Mesh::Facet, &a, f.models.named("dress_shadow"), alpha);
+    }
+}
+
+/// Seeded dressing on one open grass cell (T19): stones, tufts and
+/// flowers at three sizes, each with its own place, size and turn, so the
+/// ground does not look tiled. Fixed by the cell's index, so every browser
+/// draws the same and nothing moves between frames.
+fn dress(f: &Frame, b: &mut Batch, i: usize, c: P, top: i32, dim: i32, open: bool) {
+    let lk = &f.look.map_look;
+    let m = f.models;
+    let mut h = (i as u32).wrapping_mul(2_654_435_761) ^ 0x9e37_79b9;
+    let mut next = |n: u32| {
+        h ^= h << 13;
+        h ^= h >> 17;
+        h ^= h << 5;
+        (h % n.max(1)) as i32
+    };
+    if next(100) >= if open { lk.dress_pct } else { lk.dress_pct / 3 } {
+        return;
+    }
+    let tc = f.ctx.terrain.tree_cell;
+    let pieces = 1 + next(lk.dress_most.max(1) as u32);
+    for _ in 0..pieces {
+        let at = [c[0] - tc / 2 + next(tc as u32), c[1] - tc / 2 + next(tc as u32)];
+        let turn = next(fx::TURN as u32);
+        let base = to_scene(at, top);
+        let shade = ONE - next(16) * ONE / 100;
+        // off the grass, only a stone (the first 12) or a pebble (78 and up)
+        let kind = match next(100) {
+            k if open => k,
+            k if k < 30 => k * 12 / 30,
+            k => 78 + k % 22,
+        };
+        let put = |b: &mut Batch, mesh: Mesh, off: V3, size: V3, col: Rgb, tilt: i32| {
+            let a = Affine::translate(base.add(off))
+                .then(&Affine::rot_y(turn))
+                .then(&Affine::rot_z(tilt))
+                .then(&Affine::scale(size));
+            b.push(
+                crate::render::LAYER_PLAIN,
+                mesh,
+                &a,
+                mulc(mulc(col, shade), dim),
+                0,
+            );
+        };
+        if kind < 12 {
+            // a boulder, the large size
+            let s = ONE * 2 / 5 + next(40) * ONE / 100;
+            put(
+                b,
+                Mesh::Facet,
+                v3(0, s / 5, 0),
+                v3(s * 4 / 3, s * 3 / 4, s),
+                m.named("dress_stone"),
+                next(20) * fx::TURN / 360,
+            );
+        } else if kind < 60 {
+            // a tuft: three blades leaning out
+            for k in 0..3 {
+                let lean = (k - 1) * fx::TURN / 24;
+                let tall = ONE / 4 + next(20) * ONE / 100;
+                put(
+                    b,
+                    Mesh::FacetCone,
+                    v3((k - 1) * ONE / 14, tall / 2, 0),
+                    v3(ONE / 12, tall, ONE / 12),
+                    m.named("dress_tuft"),
+                    lean,
+                );
+            }
+        } else if kind < 78 {
+            // a flower: a stalk and a head
+            let col = ["dress_flower_a", "dress_flower_b", "dress_flower_c"][next(3) as usize];
+            put(
+                b,
+                Mesh::FacetCyl,
+                v3(0, ONE / 6, 0),
+                v3(ONE / 40, ONE / 3, ONE / 40),
+                m.named("dress_tuft"),
+                0,
+            );
+            put(
+                b,
+                Mesh::Facet,
+                v3(0, ONE / 3, 0),
+                v3(ONE / 8, ONE / 10, ONE / 8),
+                m.named(col),
+                0,
+            );
+        } else {
+            // a pebble, the small size
+            let s = ONE / 5 + next(16) * ONE / 100;
+            put(
+                b,
+                Mesh::Facet,
+                v3(0, s / 6, 0),
+                v3(s, s / 2, s * 4 / 5),
+                m.named("dress_stone"),
+                0,
+            );
         }
     }
 }
@@ -454,6 +604,10 @@ pub fn units(f: &Frame, b: &mut Batch) {
                 });
                 continue;
             }
+        }
+        if model.faceted && !flying && !invisible && !illusion {
+            let d = (d.radius + d.footprint) * 2 * lk.map_look.shadow_pct / 100 * ONE / GAME_UNITS_PER_SCENE;
+            shadow(f, b, sub_to_scene(x, y, h), d.max(ONE));
         }
         pose_parts(model, &pose, &place, |pt, a| {
             let mut col = m.color(u.team, pt.color);
