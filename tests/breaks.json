@@ -366,7 +366,7 @@
  {
   "name": "computer players wait at the outer tower in All Random All Mid",
   "file": "crates/core/src/ai.rs",
-  "find": "        None if w.aram => crate::aram::band(ctx, l.team).map(|(_, end, _)| end).unwrap_or(side.spawn),\n",
+  "find": "        None if w.aram => crate::aram::band(ctx, l.team)\n            .map(|(_, end, _)| end)\n            .unwrap_or(side.spawn),\n",
   "replace": "",
   "test": "before_the_first_wave_computer_players_wait_out_in_the_lane"
  },

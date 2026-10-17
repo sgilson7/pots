@@ -373,6 +373,7 @@ pub fn act(g: &mut Game, name: &str, value: &str) -> Result<(), String> {
             o.seats = empty_seats();
             o.my_seat = None;
             o.started = false;
+            o.fill = true;
             o.status = "online.connecting".into();
             o.want = Some(("join".into(), room_name(&o.room)));
             g.screen = "online.lobby".into();

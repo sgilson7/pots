@@ -519,6 +519,10 @@ fn with_computer_players_off_only_the_people_in_the_room_play() {
         if aram {
             room.games[0].act("online.mode", "").unwrap();
         }
+        assert!(
+            room.games.iter().all(|g| g.online.fill),
+            "on until the host switches it off"
+        );
         room.games[0].act("online.fill", "").unwrap();
         for _ in 0..30 {
             room.step(false);
