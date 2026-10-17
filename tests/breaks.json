@@ -362,5 +362,26 @@
   "find": "    if w.aram {\n        let mut cannon",
   "replace": "    if false {\n        let mut cannon",
   "test": "the_custom_match_deals_a_hero_allows_one_reroll_and_starts_in_the_mode"
+ },
+ {
+  "name": "computer players wait at the outer tower in All Random All Mid",
+  "file": "crates/core/src/ai.rs",
+  "find": "        None if w.aram => crate::aram::band(ctx, l.team).map(|(_, end, _)| end).unwrap_or(side.spawn),\n",
+  "replace": "",
+  "test": "before_the_first_wave_computer_players_wait_out_in_the_lane"
+ },
+ {
+  "name": "computer players fill the open seats though the host switched them off",
+  "file": "crates/core/src/online.rs",
+  "find": "        if !seat.human && !fill {\n            continue;\n        }",
+  "replace": "",
+  "test": "with_computer_players_off_only_the_people_in_the_room_play"
+ },
+ {
+  "name": "the joiner never hears that computer players are off",
+  "file": "crates/core/src/online.rs",
+  "find": "            o.aram = aram;\n            o.fill = fill;",
+  "replace": "            o.aram = aram;",
+  "test": "with_computer_players_off_only_the_people_in_the_room_play"
  }
 ]

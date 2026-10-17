@@ -58,6 +58,17 @@ if grep -rnE --include='*.js' --exclude-dir=vendor '(from|import\()\s*"\.{1,2}/[
   exit 1
 fi
 grep -q "_bg.wasm?v=$BUILD" dist/pkg/tool_shim.js || { echo "the WebAssembly URL was not stamped" >&2; exit 1; }
+# The data files load through one helper, text(path) in app.js, whose fetch
+# takes a variable, so the literal rule above never reached them and a
+# deploy could pair the new module with last build's data (T15). Stamp the
+# helper's fetch, and refuse any other fetch of a variable (the module's
+# own glue in pkg/ fetches the WebAssembly URL stamped above).
+BUILD="$BUILD" perl -0777 -pi -e 's{fetch\(path\)}{"fetch(`\${path}?v=$ENV{BUILD}`)"}ge' dist/app.js
+grep -qF "fetch(\`\${path}?v=$BUILD\`)" dist/app.js || { echo "the data files' fetch in app.js was not stamped" >&2; exit 1; }
+if grep -rnE --include='*.js' --exclude-dir=vendor --exclude-dir=pkg 'fetch\([A-Za-z_]+\)' dist; then
+  echo "the fetch above takes a path the build cannot stamp" >&2
+  exit 1
+fi
 
 echo "$BUILD $(git rev-parse --short HEAD 2>/dev/null || echo none)" > dist/build.txt
 touch dist/.nojekyll

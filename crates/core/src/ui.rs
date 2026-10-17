@@ -176,6 +176,26 @@ fn difficulty_name(g: &Game, d: u8) -> String {
         .unwrap_or_else(|| id.clone())
 }
 
+/// Computer players in the open seats, or none: a click switches.
+fn fill_switch(g: &Game, fill: bool) -> Node {
+    let s = &g.strings;
+    let mut b = button(
+        if fill { "mode on" } else { "mode" },
+        s.ui(if fill { "online.fill.on" } else { "online.fill.off" }),
+        "online.fill",
+        "",
+    );
+    b.tip = Some(Tip {
+        title: s.ui("online.fill"),
+        text: s.ui("online.fill.text"),
+        ..Tip::default()
+    });
+    with(
+        node("div", "stepper mode-row"),
+        vec![text("span", "label", s.ui("online.fill")), b],
+    )
+}
+
 /// The mode: Normal or All Random All Mid, a click switches (round 4).
 fn mode_switch(g: &Game, aram: bool, act: &str) -> Node {
     let s = &g.strings;
@@ -1325,8 +1345,10 @@ pub fn online_view(g: &Game) -> Node {
                     n = s.ui("online.away").replace("{v}", &n);
                 }
                 n
-            } else {
+            } else if o.fill {
                 s.ui("online.open_seat").replace("{v}", &bots)
+            } else {
+                s.ui("online.open_empty")
             };
             kids.push(text("strong", "", who));
             if seat.pick >= 0 {
@@ -1431,6 +1453,11 @@ pub fn online_view(g: &Game) -> Node {
         setup.push(text("p", "fine", s.ui("mode.aram")));
     }
     if host {
+        setup.push(fill_switch(g, o.fill));
+    } else if !o.fill {
+        setup.push(text("p", "fine", s.ui("online.no_fill")));
+    }
+    if host && o.fill {
         setup.push(with(
             node("div", "stepper"),
             vec![

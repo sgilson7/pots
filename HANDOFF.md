@@ -65,6 +65,13 @@ Planned with mockups (journal tab 9); the person answered R4.1 to R4.6 (middle l
 - **Relics:** `aram::clock`; drawn with a ring that fills while one is away.
 - **Bots:** `ai::aram`: mid only, the cannon when healed at the base, a relic below half health.
 
+## Round 5 (17 October 2026): stale data after a deploy, the bots in All Random All Mid, computer players off (T15–T17)
+
+- **Stale data (T15, R5.1):** the page's data files were fetched without the build stamp, so a browser could mix the new module with old data after a deploy. `scripts/build.sh` now stamps them and fails if it cannot. The person's WebKit error was not reproduced; R5.5 asks for its text.
+- **Bots in the lane (T16, R5.2):** in All Random All Mid, computer players with no creeps of their own in the lane wait where the cannon lands, not on their outer tower.
+- **Computer players off (T17, R5.3):** a switch in the host's lobby, both modes; open seats stay empty. `PROTOCOL` 4, so every browser must reload.
+- The page probe now reports where the computer players stand (`bots`).
+
 ## What passed
 
 Recorded at the end of this round; the counts come from the commands, not from memory.
@@ -84,6 +91,7 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **R1.12**: lane creep armor type, Unarmored (playdota) or Medium (Dota 2 port). It changes ranged-creep damage 2×.
 - **R1.16**: if the host's browser leaves, the online match ends. A host hand-over is not built.
 - **R1.18**: the 143 icons; a few are plain at 48 px.
+- **R5.5**: the WebKit error: its exact words, the browser (Safari on a Mac or an iPhone) and the screen it came on.
 - **R4.18**: play a custom match in All Random All Mid: reroll once, press F at the fountain and click the lane, take a relic when hurt. Does it feel right?
 - **R3.4**: abilities that go off at once (Warcry, Echo Slam, Blade Fury) show no outline. Show their radius while the key is held, or on hovering the button?
 - **R3.10**: creep blocking: walk just ahead of your first wave and zigzag in its path. Does it feel like DotA's?

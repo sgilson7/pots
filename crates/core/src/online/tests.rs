@@ -230,6 +230,7 @@ fn every_message_round_trips() {
             bots: 2,
             started: false,
             aram: true,
+            fill: false,
         },
         Msg::In {
             seats: vec![(4, 120, vec![[118, 2, 100, 200, 0, 0]])],
@@ -504,4 +505,55 @@ fn three_browsers_in_all_random_all_mid_are_dealt_alike_and_play_one_match() {
         agree && !room.games.iter().any(|g| g.online.desync),
         "one match in every browser"
     );
+}
+
+#[test]
+fn with_computer_players_off_only_the_people_in_the_room_play() {
+    // T15: the host switches the computer players off; the open seats stay
+    // empty in every browser, and the match still agrees between them
+    for aram in [false, true] {
+        let mut room = Room::new(2, 3, 5, 61);
+        for _ in 0..30 {
+            room.step(false);
+        }
+        if aram {
+            room.games[0].act("online.mode", "").unwrap();
+        }
+        room.games[0].act("online.fill", "").unwrap();
+        for _ in 0..30 {
+            room.step(false);
+        }
+        assert!(
+            room.games.iter().all(|g| !g.online.fill),
+            "every lobby sees it off"
+        );
+        if !aram {
+            room.games[0].act("pick", "0").unwrap();
+            room.games[1].act("pick", "1").unwrap();
+            for _ in 0..30 {
+                room.step(false);
+            }
+        }
+        room.games[0].act("online.start", "").unwrap();
+        for _ in 0..(60 * 20) {
+            room.step(true);
+        }
+        for g in &room.games {
+            let w = &g.m.as_ref().expect("in the match").world;
+            let present = w.players.iter().filter(|p| p.present).count();
+            let heroes = w
+                .players
+                .iter()
+                .filter(|p| p.hero != crate::world::NO_UNIT)
+                .count();
+            let bots = w.players.iter().filter(|p| p.bot.is_some()).count();
+            assert_eq!(
+                (present, heroes, bots),
+                (2, 2, 0),
+                "two players and no computer (aram {aram})"
+            );
+        }
+        let (compared, agree) = room.checksums_agree();
+        assert!(compared >= 4 && agree, "one match in both browsers ({compared})");
+    }
 }

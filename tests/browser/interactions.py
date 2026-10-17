@@ -128,4 +128,16 @@ def aram(page, check):
     page.wait_for_function("() => { const p = JSON.parse(document.body.dataset.probe || '{}'); return !p.flying && p.x > 4000; }", timeout=20000)
     p = probe(page)
     check(p["x"] > 4000 and p["y"] > 3500, f"the hero lands in the middle lane, far from the fountain: {p['x']}, {p['y']}")
+    # T15: the computer players come out past their outer towers before the
+    # first wave, to where the cannon lands, not pressed against the tower.
+    # The Sunward outer tower stands at (6450, 6050), x + y = 12500; the
+    # Moonward one at its mirror, x + y = 20268. A Sunward hero is one with
+    # x + y below the centre's 16384.
+    out = "() => { const b = JSON.parse(document.body.dataset.probe || '{}').bots || []; return b.length == 9 && b.every(([x, y]) => x + y < 16384 ? x + y > 12500 : x + y < 20268); }"
+    try:
+        page.wait_for_function(out, timeout=40000)
+        came = True
+    except Exception:
+        came = False
+    check(came, f"the computer players wait out in the lane, past their outer towers: {probe(page).get('bots')}")
     check(page.inner_text("#notice") == "", "no error message is shown in All Random All Mid")

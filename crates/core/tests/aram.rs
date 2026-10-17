@@ -276,3 +276,34 @@ fn computer_players_ride_the_cannon_out_and_keep_to_the_middle_lane() {
         assert_eq!(w.players[p].brain.lane, 1, "seat {p} keeps to the middle lane");
     }
 }
+
+#[test]
+fn before_the_first_wave_computer_players_wait_out_in_the_lane() {
+    // T15: they stood pressed against their outer tower until the creeps
+    // came. Now they wait where the cannon lands: the Sunward band's end is
+    // (6662, 6262), 300 past the outer tower at (6450, 6050); the Moonward
+    // one is its mirror, (9722, 10122).
+    let f = common::fixture();
+    let ctx = f.ctx();
+    let mut w = aram_world(&f, 12);
+    let deal = aram::deal(12, f.rules.heroes.len(), &[false; PLAYERS]);
+    for (p, &hero) in deal.iter().enumerate() {
+        w.players[p].present = true;
+        w.players[p].bot = Some(2);
+        orders::apply(&mut w, &ctx, p, Cmd::Pick(hero));
+    }
+    // 25 s: thrown, landed and settled, and the horn not yet blown
+    while w.tick < 25 * TPS as u32 {
+        w.step(&ctx, &[]);
+    }
+    assert!(w.tick < w.horn_at, "before the first wave");
+    for p in 0..PLAYERS {
+        let at = w.get(w.players[p].hero).unwrap().pos();
+        let end = if p < 5 { [6662, 6262] } else { [9722, 10122] };
+        let d2 = pots_core::world::dist2(at, end);
+        assert!(
+            d2 <= 400 * 400,
+            "seat {p} waits by the landing spot {end:?}: at {at:?}"
+        );
+    }
+}

@@ -1854,6 +1854,17 @@ impl Game {
                         .count()
                 })
                 .unwrap_or(0),
+            // where the computer players' heroes stand, for the checks
+            "bots": m
+                .map(|m| {
+                    m.world
+                        .players
+                        .iter()
+                        .filter(|p| p.bot.is_some())
+                        .filter_map(|p| m.world.get(p.hero).map(|u| u.pos()))
+                        .collect::<Vec<_>>()
+                })
+                .unwrap_or_default(),
             "net": crate::online::probe(self),
         })
         .to_string()

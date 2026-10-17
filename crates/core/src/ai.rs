@@ -496,6 +496,11 @@ fn lane_spot(w: &World, ctx: &Ctx, l: &Look, lane: u8, range: i32) -> P {
                 foe[1] + (home[1] - foe[1]) * back / d,
             ]
         }
+        // no creeps, in All Random All Mid: out in the lane where the cannon
+        // lands, past the outer tower, not pressed against it
+        None if w.aram => crate::aram::band(ctx, l.team)
+            .map(|(_, end, _)| end)
+            .unwrap_or(side.spawn),
         // no creeps: the first allied tower of the lane
         None => w
             .units
