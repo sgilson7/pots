@@ -320,7 +320,6 @@ PANEL = f'''<!-- ======================================================= TAB 8 -
   </table></div>
 </section>
 <footer>Mockups in <code>journal/mockups/</code> (three.js r160, MIT), pictures made with <code>journal/mockups/shoot.py</code>, this tab written by <code>journal/mockups/tab8.py</code>. Labelled mockups: the game draws its own models with its own renderer.</footer>
-<dialog class="lightbox" id="lightbox" aria-label="Larger picture"><img alt=""><p></p><button type="button" data-close>Close</button></dialog>
 </div>
 '''
 
@@ -334,7 +333,9 @@ s = re.sub(r'\n    <button role="tab" id="t-art".*?</button>', "", s)
 s = s.replace("    <!--TABS-->", '    <button role="tab" id="t-art" aria-controls="p-art" aria-selected="false" tabindex="-1"><small>8 · 16 Oct</small><span>The new look</span></button>\n    <!--TABS-->', 1)
 s = re.sub(r"<!-- =+ TAB 8 -->.*?<!--/TAB 8-->\n", "", s, flags=re.S)
 s = s.replace("<!--PANELS-->", PANEL + "<!--/TAB 8-->\n<!--PANELS-->", 1)
-LIGHTBOX = """<script>
+# the viewer sits outside every panel, so it opens from any tab
+LIGHTBOX = """<dialog class="lightbox" id="lightbox" aria-label="Larger picture"><img alt=""><p></p><button type="button" data-close>Close</button></dialog>
+<script>
 /*ART2-JS*/
 (function () {
   var box = document.getElementById('lightbox');
@@ -348,6 +349,7 @@ LIGHTBOX = """<script>
 /*ART2-JS-END*/
 </script>
 """
+s = s.replace('<dialog class="lightbox" id="lightbox" aria-label="Larger picture"><img alt=""><p></p><button type="button" data-close>Close</button></dialog>\n', '').replace('<dialog class="lightbox" id="lightbox" aria-label="Larger picture"><img alt=""><p></p><button type="button" data-close>Close</button></dialog>', '')
 s = re.sub(r"<script>\n/\*ART2-JS\*/.*?/\*ART2-JS-END\*/\n</script>\n", "", s, flags=re.S)
 i = s.rindex("<script>")
 s = s[:i] + LIGHTBOX + s[i:]

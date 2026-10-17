@@ -9,10 +9,10 @@ const canvas = document.getElementById("gl");
 let MODELS = { ...HEROES };
 let ABILITIES = {};
 async function load() {
-  for (const f of ["./world.js"]) {
+  for (const f of ["./world.js", "./aram.js"]) {
     try { const m = await import(f); MODELS = { ...MODELS, ...m.MODELS }; } catch (e) { if (!String(e).includes("Failed to fetch")) throw e; }
   }
-  for (const f of ["./fx_a.js", "./fx_b.js"]) {
+  for (const f of ["./fx_a.js", "./fx_b.js", "./aram.js"]) {
     try { const m = await import(f); ABILITIES = { ...ABILITIES, ...m.ABILITIES }; } catch (e) { if (!String(e).includes("Failed to fetch")) throw e; }
   }
 }

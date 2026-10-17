@@ -17,7 +17,9 @@ from playwright.sync_api import sync_playwright
 from PIL import Image
 
 HERE = pathlib.Path(__file__).resolve().parent
-OUT = HERE.parent / "art2"
+import os
+# ART=art3 writes a later round's pictures beside round 2's
+OUT = HERE.parent / os.environ.get("ART", "art2")
 
 
 class Quiet(http.server.SimpleHTTPRequestHandler):

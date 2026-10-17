@@ -74,6 +74,12 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **R1.12**: lane creep armor type, Unarmored (playdota) or Medium (Dota 2 port). It changes ranged-creep damage 2×.
 - **R1.16**: if the host's browser leaves, the online match ends. A host hand-over is not built.
 - **R1.18**: the 143 icons; a few are plain at 48 px.
+- **R4.1**: All Mid on the usual map's middle lane (planned), or a small map of its own?
+- **R4.2**: All Random: no reroll, one reroll each (planned), or teammates swap?
+- **R4.3**: the cannon's numbers (0.5 s climb, 2 s flight, lands up to 300 past the outer tower, once each visit to base). The cannon you meant?
+- **R4.4**: health relics in the lane (two a side, 15 %, back after 60 s): keep, change or drop?
+- **R4.5**: starting gold in All Random: 603 or 853?
+- **R4.6**: teleport scrolls in this mode: sell them or not?
 - **R3.4**: abilities that go off at once (Warcry, Echo Slam, Blade Fury) show no outline. Show their radius while the key is held, or on hovering the button?
 - **R3.10**: creep blocking: walk just ahead of your first wave and zigzag in its path. Does it feel like DotA's?
 - **R1.21**: online depends on public relays and STUN, with no TURN server; two strict NATs cannot connect. Try two real networks by hand.

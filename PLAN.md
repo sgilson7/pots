@@ -70,3 +70,62 @@ Each decision is listed in build order with its reason and the test that will sh
 
 - **Decision.** `sgilson7/pots` on GitHub Pages; a tile on sgilson7.github.io.
 - **Test.** `./scripts/check.sh` passes; the browser check passes on the live address.
+
+## Round 4: All Random All Mid, and the base cannon (T13, T14)
+
+A plan only, for the person to read (stage 3) before any code. The person asked for a plan and a journal tab of mockups; building waits for their answers to the open rows (R4.1 to R4.6 in `SECOND-ORDER.md`). Numbers marked *proposed* are starting values to tune, held in data.
+
+Measured from `data/map.json` and `data/units.json`: walking from the Sunward spawn to the outer middle tower is 7,221 map units, 24.6 s at the heroes' average speed of 293.5 (23.7 s to 25.8 s across the ten heroes); to the centre of the map, 9,959 units and 33.9 s. The two outer middle towers stand 5,522 units apart, 18.8 s of walking.
+
+### 1. The mode is data and one flag
+
+- **Decision.** A `modes` table in `data/rules.json` with an `aram` entry: the lanes that spawn creeps (`["mid"]`), which shops sell (`["home"]`), whether neutral camps, the boss and runes appear (no), the starting gold, the relics and the cannon. The match setup gains a `mode` (`normal` or `aram`); the custom-match screen and the online lobby show it as a choice, and the core's `act("mode", …)` sets it.
+- **Reason.** Every rule stays in the core and every number in data; a mode is a change of numbers and a few switches, not a second rulebook.
+- **Test.** A match in `aram` mode spawns creeps in the middle lane only, has no camps, boss or runes, and its world differs from a `normal` match only where the table says.
+
+### 2. All Random
+
+- **Decision.** When an `aram` match starts, the core draws each player's hero from the match seed with no hero drawn twice, bots included. The pick screen shows the draw (the `random_reveal` mockup) and then starts. Proposed: one reroll each, spent before the match starts, which draws again from the heroes nobody has.
+- **Reason.** The draw comes from the seed every browser already shares, so online players agree on it without a new message.
+- **Test.** Ten draws from one seed are ten different heroes and the same in every browser; a reroll never gives a hero someone else has.
+
+### 3. All Mid
+
+- **Decision.** Only the middle lane's creeps spawn. The top and bottom lanes' towers and barracks are not built, so the middle lane's chain is the whole defence: outer, inner and base tower, two barracks, the two base towers and the Sphere. The base towers' rule (they fall only after every lane's base-level tower) counts only the lanes the mode builds. Side and secret shops do not sell; the home shop and the courier do.
+- **Reason.** This is DotA's own "mid only" mode on the map the game already has. A smaller map of its own (a bridge, as League's ARAM has) is the alternative (R4.1).
+- **Test.** With the middle lane's three towers and two barracks down, the base towers can be hurt; the base-tower rule in a `normal` match is unchanged.
+
+### 4. The base cannon (T14)
+
+- **Decision.** Each side has a cannon beside its spawn (`cannon_sun`, `cannon_moon` mockups). A hero standing within the fountain's range (825) clicks the cannon, then clicks a point; the point is held inside a band down the middle lane from the side's base tower out to 300 units past its outer tower. The hero climbs in (proposed 0.5 s), flies in a fixed time whatever the distance (proposed 2.0 s), and lands. In flight the hero cannot be targeted or act. The landing ring shows to both sides from the moment of firing, as the teleport's landing glow does (T11). The cannon is loaded each time the hero is in the fountain's range and is spent by a throw, so it carries a hero out once each visit to the base.
+- **Reason.** From spawn to the outer tower takes 24.6 s on foot and about 3.5 s by cannon (1 s to reach it, 0.5 s to climb in, 2 s in the air). The band stops at the outer tower so the cannon rejoins a fight but cannot throw a hero into the enemy's tower. It is a new order (`Cmd::Cannon(point)`) and a new act (`Act::Flight`), so rollback and online play carry it like any other order.
+- **Test.** A throw lands at the clamped point after exactly 0.5 s + 2.0 s of ticks; a point past the band lands at the band's end; a hero outside the fountain's range is refused; a second throw before returning is refused; a hero in flight takes no damage and cannot be targeted.
+
+### 5. Health relics
+
+- **Decision.** Proposed: two relics on each side of the middle lane, between the outer tower and the river. A hero who walks over one takes it and regains 15 % of its health and mana; the relic returns 60 s later. Drawn as the `relic` mockup, with a ring that fills while it is away.
+- **Reason.** With no fountain within half a minute, a lane of ten heroes needs a way to keep fighting without walking home.
+- **Test.** A relic heals once, is gone for 60 s and comes back; an enemy hero can take it too.
+
+### 6. Starting numbers
+
+- **Decision.** Proposed: 853 starting gold in place of 603 (the 250 the brief subtracts for choosing a hero, since nobody chooses), and creep waves every 30 s as now. Everything else as in a normal match.
+- **Reason.** The fights start at once, so the first purchase matters more; the numbers are data and easy to tune after a played match.
+
+### 7. Computer players
+
+- **Decision.** Bots play the middle lane only, use the cannon after each respawn, take a relic below half health, and buy as now.
+- **Test.** The bot test's match in `aram` mode ends with a Sphere destroyed inside the usual time limit and every bot has thrown itself from the cannon at least once.
+
+### 8. Online
+
+- **Decision.** The host chooses the mode in the lobby; it travels in the start message with the seed. `PROTOCOL` goes from 2 to 3.
+- **Test.** The online fence and smoke tests in `aram` mode; the five-runner test before publishing.
+
+### 9. What gets drawn
+
+- **Decision.** The cannon, its aim band and landing ring, the flight (a curled hero on an arc with a trail), the relic and its timer, the random draw. Each from the mockups in journal tab 9 into `data/models.json` and `marks.rs`/`overlay.rs`, as round 2's models were.
+
+### Order of work
+
+1. Mode table, setup flag, lanes and buildings, shops, camps (1, 3). 2. All Random (2). 3. Cannon rule, then its drawing (4). 4. Relics (5). 5. Bots (7). 6. Online (8). 7. Models and effects (9). 8. Full check, break tests, five-runner test, publish.

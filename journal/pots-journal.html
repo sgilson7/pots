@@ -132,6 +132,31 @@ dialog.lightbox p { color: #f1f1ee; font-size: 14.5px; margin: 10px 2px 0; max-w
 dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit; font-size: 14px; background: rgba(20,20,24,.75); color: #fff; border: 0; border-radius: 999px; padding: 6px 12px; cursor: pointer; }
 @media (max-width: 760px) { .ba { grid-template-columns: minmax(0, 1fr); } }
 /*ART2-END*/
+/*ARAM*/
+.aram-map { width: 100%; max-width: 560px; height: auto; display: block; }
+.m-ground { fill: #7fb86a; }
+.m-base.sun { fill: #f2b33d; fill-opacity: .28; } .m-base.moon { fill: #7a5cd6; fill-opacity: .28; }
+.m-river { fill: none; stroke: #7fd3f0; stroke-linecap: round; stroke-linejoin: round; }
+.m-lane { fill: none; stroke: #e9cf9e; stroke-linecap: round; stroke-linejoin: round; }
+.m-lane.off { stroke: #5d7a55; stroke-opacity: .8; }
+.m-off line { stroke: #3d5a37; stroke-width: 2; }
+.m-b.sun { fill: #f2b33d; stroke: #2b2140; stroke-width: 1.2; } .m-b.moon { fill: #9a83ea; stroke: #2b2140; stroke-width: 1.2; }
+.m-b.off { fill: none; stroke: #3d5a37; stroke-dasharray: 2 2; }
+.m-reach.sun { fill: #ffd36a; fill-opacity: .55; } .m-reach.moon { fill: #c3b2ff; fill-opacity: .6; }
+.m-arc { fill: none; stroke-width: 2; stroke-dasharray: 3 4; } .m-arc.sun { stroke: #b06b10; } .m-arc.moon { stroke: #4f3a9e; }
+.m-cannon.sun { fill: #d9812b; stroke: #2b2140; stroke-width: 1.5; } .m-cannon.moon { fill: #4f3a9e; stroke: #2b2140; stroke-width: 1.5; }
+.m-relic { fill: #3ee06a; stroke: #1f5a30; stroke-width: 1.5; }
+.m-shop { fill: #fff1d6; stroke: #2b2140; } .m-shop.off { fill: none; stroke: #3d5a37; stroke-dasharray: 2 2; }
+.maprow { display: grid; grid-template-columns: minmax(0, 560px) minmax(0, 1fr); gap: 22px; align-items: start; }
+.legend { display: grid; gap: 10px; font-size: 14.5px; margin: 0; padding: 0; list-style: none; }
+.legend li { display: flex; gap: 10px; align-items: center; }
+.legend li.src { display: block; color: var(--muted); font-size: 13.5px; }
+.legend i { flex: none; width: 22px; height: 12px; border-radius: 3px; border: 1px solid #2b2140; }
+.m-lane-k { background: #e9cf9e; } .m-off-k { background: transparent; border-style: dashed !important; } .m-cannon-k { background: #d9812b; }
+.m-reach-k { background: #ffd36a; } .m-relic-k { background: #3ee06a; border-radius: 50% !important; width: 12px !important; }
+.nums td:nth-child(2) { font-family: var(--font-mono); white-space: nowrap; }
+@media (max-width: 860px) { .maprow { grid-template-columns: minmax(0, 1fr); } }
+/*ARAM-END*/
 </style>
 
 <div class="wrap">
@@ -149,6 +174,7 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
     <button role="tab" id="t-runners" aria-controls="p-runners" aria-selected="false" tabindex="-1"><small>6 · 16 Oct</small><span>The five-runner test</span></button>
     <button role="tab" id="t-live" aria-controls="p-live" aria-selected="false" tabindex="-1"><small>7 · 16 Oct</small><span>Published</span></button>
     <button role="tab" id="t-art" aria-controls="p-art" aria-selected="false" tabindex="-1"><small>8 · 16 Oct</small><span>The new look</span></button>
+    <button role="tab" id="t-aram" aria-controls="p-aram" aria-selected="false" tabindex="-1"><small>9 · 16 Oct</small><span>All Random All Mid</span></button>
     <!--TABS-->
   </div>
 </div>
@@ -874,13 +900,103 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
   </table></div>
 </section>
 <footer>Mockups in <code>journal/mockups/</code> (three.js r160, MIT), pictures made with <code>journal/mockups/shoot.py</code>, this tab written by <code>journal/mockups/tab8.py</code>. Labelled mockups: the game draws its own models with its own renderer.</footer>
-<dialog class="lightbox" id="lightbox" aria-label="Larger picture"><img alt=""><p></p><button type="button" data-close>Close</button></dialog>
 </div>
 <!--/TAB 8-->
+<!-- ======================================================= TAB 9 -->
+<div class="panel-tab" role="tabpanel" id="p-aram" aria-labelledby="t-aram" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 9 · 16 October 2026 · All Random All Mid (triage T13, T14)</div>
+  <h2>One lane, a random hero, and a cannon home to the fight</h2>
+  <p class="lede">A plan for a new mode and mockups of what it adds: every player gets a random hero, all ten fight in the middle lane, and a cannon at each base throws a hero back out to the lane. Nothing here is built yet; the plan waits for your answers to the six questions at the end. Click any picture to see it larger.</p>
+</header>
+
+<section>
+  <div class="section-head"><div class="eyebrow">The request</div><h2>In your words</h2></div>
+  <blockquote>now, plan for an all random all mid mode, make a design journal tab with mock ups; i want a cannon like in league to come back to the middle of lane faster.</blockquote>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Why a cannon</div><h2>The walk back, measured</h2></div>
+  <p>From the map and the ten heroes' speeds (average 293.5 map units a second):</p>
+  <div class="table-scroll"><table class="nums">
+    <thead><tr><th>From the spawn</th><th>Distance and time</th></tr></thead>
+    <tbody><tr><td>to the outer middle tower, on foot</td><td>7,221 units, 24.6 s (23.7 s to 25.8 s)</td></tr><tr><td>to the centre of the map, on foot</td><td>9,959 units, 33.9 s</td></tr><tr><td>to the outer middle tower, by cannon</td><td>about 3.5 s (1 s to the cannon, 0.5 s to climb in, 2 s in the air)</td></tr><tr><td>between the two outer middle towers</td><td>5,522 units, 18.8 s</td></tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Mockup</div><h2>The map, middle lane only</h2></div>
+  <div class="maprow">
+    <div><svg viewBox="0 0 560 560" role="img" aria-labelledby="aram-map-t" class="aram-map"><title id="aram-map-t">The map in All Random All Mid: only the middle lane, with a cannon and a landing band at each base and two relics a side</title><rect width="560" height="560" rx="10" class="m-ground"/><polygon points="0.0,560.0 147.0,560.0 147.0,467.7 123.0,437.0 92.3,413.0 0.0,413.0" class="m-base sun"/><polygon points="560.0,0.0 413.0,0.0 413.0,92.3 437.0,123.0 467.7,147.0 560.0,147.0" class="m-base moon"/><polyline points="6.8,105.4 88.9,170.4 191.4,218.2 280.0,280.0 368.6,341.8 471.1,389.6 553.2,454.6" class="m-river" stroke-width="12.3"/><polyline points="58.1,450.6 49.6,409.6 47.9,279.7 49.6,105.4 92.3,52.4 280.3,47.3 420.4,49.0 454.6,61.0 481.4,78.6" class="m-lane off" stroke-width="14.4"/><polyline points="109.4,501.9 150.4,510.4 280.3,512.1 454.6,510.4 507.6,467.7 512.7,279.7 511.0,139.6 499.0,105.4 481.4,78.6" class="m-lane off" stroke-width="14.4"/><polyline points="106.0,454.0 119.6,440.4 280.0,280.0 440.4,119.6 481.4,78.6" class="m-lane" stroke-width="14.4"/><g class="m-off"><line x1="124.9" y1="288.4" x2="134.9" y2="298.4"/><line x1="124.9" y1="298.4" x2="134.9" y2="288.4"/></g><g class="m-off"><line x1="425.1" y1="261.6" x2="435.1" y2="271.6"/><line x1="425.1" y1="271.6" x2="435.1" y2="261.6"/></g><g class="m-off"><line x1="224.0" y1="425.1" x2="234.0" y2="435.1"/><line x1="224.0" y1="435.1" x2="234.0" y2="425.1"/></g><g class="m-off"><line x1="326.0" y1="124.9" x2="336.0" y2="134.9"/><line x1="326.0" y1="134.9" x2="336.0" y2="124.9"/></g><g class="m-off"><line x1="295.8" y1="432.0" x2="305.8" y2="442.0"/><line x1="295.8" y1="442.0" x2="305.8" y2="432.0"/></g><g class="m-off"><line x1="254.2" y1="118.0" x2="264.2" y2="128.0"/><line x1="254.2" y1="128.0" x2="264.2" y2="118.0"/></g><g class="m-off"><line x1="367.6" y1="442.2" x2="377.6" y2="452.2"/><line x1="367.6" y1="452.2" x2="377.6" y2="442.2"/></g><g class="m-off"><line x1="182.4" y1="107.8" x2="192.4" y2="117.8"/><line x1="182.4" y1="117.8" x2="192.4" y2="107.8"/></g><g class="m-off"><line x1="268.4" y1="363.6" x2="278.4" y2="373.6"/><line x1="268.4" y1="373.6" x2="278.4" y2="363.6"/></g><g class="m-off"><line x1="281.6" y1="186.4" x2="291.6" y2="196.4"/><line x1="281.6" y1="196.4" x2="291.6" y2="186.4"/></g><g class="m-off"><line x1="172.7" y1="264.5" x2="182.7" y2="274.5"/><line x1="172.7" y1="274.5" x2="182.7" y2="264.5"/></g><g class="m-off"><line x1="377.3" y1="285.5" x2="387.3" y2="295.5"/><line x1="377.3" y1="295.5" x2="387.3" y2="285.5"/></g><g class="m-off"><line x1="425.1" y1="261.6" x2="435.1" y2="271.6"/><line x1="425.1" y1="271.6" x2="435.1" y2="261.6"/></g><g class="m-off"><line x1="124.9" y1="288.4" x2="134.9" y2="298.4"/><line x1="124.9" y1="298.4" x2="134.9" y2="288.4"/></g><g class="m-off"><line x1="326.0" y1="124.9" x2="336.0" y2="134.9"/><line x1="326.0" y1="134.9" x2="336.0" y2="124.9"/></g><g class="m-off"><line x1="224.0" y1="425.1" x2="234.0" y2="435.1"/><line x1="224.0" y1="435.1" x2="234.0" y2="425.1"/></g><g class="m-off"><line x1="254.2" y1="118.0" x2="264.2" y2="128.0"/><line x1="254.2" y1="128.0" x2="264.2" y2="118.0"/></g><g class="m-off"><line x1="295.8" y1="432.0" x2="305.8" y2="442.0"/><line x1="295.8" y1="442.0" x2="305.8" y2="432.0"/></g><g class="m-off"><line x1="182.4" y1="107.8" x2="192.4" y2="117.8"/><line x1="182.4" y1="117.8" x2="192.4" y2="107.8"/></g><g class="m-off"><line x1="367.6" y1="442.2" x2="377.6" y2="452.2"/><line x1="367.6" y1="452.2" x2="377.6" y2="442.2"/></g><g class="m-off"><line x1="281.6" y1="186.4" x2="291.6" y2="196.4"/><line x1="281.6" y1="196.4" x2="291.6" y2="186.4"/></g><g class="m-off"><line x1="268.4" y1="363.6" x2="278.4" y2="373.6"/><line x1="268.4" y1="373.6" x2="278.4" y2="363.6"/></g><g class="m-off"><line x1="377.3" y1="285.5" x2="387.3" y2="295.5"/><line x1="377.3" y1="295.5" x2="387.3" y2="285.5"/></g><g class="m-off"><line x1="172.7" y1="264.5" x2="182.7" y2="274.5"/><line x1="172.7" y1="274.5" x2="182.7" y2="264.5"/></g><circle cx="37.6" cy="207.9" r="4.5" class="m-b sun off"/><circle cx="37.6" cy="317.3" r="4.5" class="m-b sun off"/><circle cx="39.3" cy="392.5" r="4.5" class="m-b sun off"/><circle cx="220.5" cy="353.2" r="4.5" class="m-b sun"/><circle cx="179.4" cy="394.2" r="4.5" class="m-b sun"/><circle cx="145.3" cy="428.4" r="4.5" class="m-b sun"/><circle cx="427.2" cy="522.4" r="4.5" class="m-b sun off"/><circle cx="270.0" cy="522.4" r="4.5" class="m-b sun off"/><circle cx="167.5" cy="520.7" r="4.5" class="m-b sun off"/><circle cx="100.8" cy="489.9" r="4.5" class="m-b sun"/><circle cx="70.1" cy="459.2" r="4.5" class="m-b sun"/><circle cx="37.6" cy="426.7" r="4" class="m-b sun off"/><circle cx="70.1" cy="426.7" r="4" class="m-b sun off"/><circle cx="131.6" cy="455.8" r="4" class="m-b sun"/><circle cx="104.2" cy="428.4" r="4" class="m-b sun"/><circle cx="133.3" cy="522.4" r="4" class="m-b sun off"/><circle cx="133.3" cy="489.9" r="4" class="m-b sun off"/><circle cx="78.6" cy="481.4" r="9" class="m-b sun"/><circle cx="22.2" cy="537.8" r="6" class="m-b sun"/><polygon points="140.2,423.3 222.6,340.9 232.8,351.0 150.3,433.5" class="m-reach sun"/><path d="M51.3,525.8 Q135.9,379.5 220.5,353.2" class="m-arc sun"/><rect x="45.3" y="519.8" width="12" height="12" rx="3" class="m-cannon sun"/><circle cx="241.3" cy="327.6" r="5" class="m-relic"/><circle cx="265.1" cy="298.3" r="5" class="m-relic"/><circle cx="522.4" cy="352.1" r="4.5" class="m-b moon off"/><circle cx="522.4" cy="242.7" r="4.5" class="m-b moon off"/><circle cx="520.7" cy="167.5" r="4.5" class="m-b moon off"/><circle cx="339.5" cy="206.8" r="4.5" class="m-b moon"/><circle cx="380.6" cy="165.8" r="4.5" class="m-b moon"/><circle cx="414.7" cy="131.6" r="4.5" class="m-b moon"/><circle cx="132.8" cy="37.6" r="4.5" class="m-b moon off"/><circle cx="290.0" cy="37.6" r="4.5" class="m-b moon off"/><circle cx="392.5" cy="39.3" r="4.5" class="m-b moon off"/><circle cx="459.2" cy="70.1" r="4.5" class="m-b moon"/><circle cx="489.9" cy="100.8" r="4.5" class="m-b moon"/><circle cx="522.4" cy="133.3" r="4" class="m-b moon off"/><circle cx="489.9" cy="133.3" r="4" class="m-b moon off"/><circle cx="428.4" cy="104.2" r="4" class="m-b moon"/><circle cx="455.8" cy="131.6" r="4" class="m-b moon"/><circle cx="426.7" cy="37.6" r="4" class="m-b moon off"/><circle cx="426.7" cy="70.1" r="4" class="m-b moon off"/><circle cx="481.4" cy="78.6" r="9" class="m-b moon"/><circle cx="537.8" cy="22.2" r="6" class="m-b moon"/><polygon points="409.7,126.5 327.2,209.0 337.4,219.1 419.8,136.7" class="m-reach moon"/><path d="M508.7,34.2 Q424.1,60.5 339.5,206.8" class="m-arc moon"/><rect x="502.7" y="28.200000000000003" width="12" height="12" rx="3" class="m-cannon moon"/><circle cx="318.7" cy="232.4" r="5" class="m-relic"/><circle cx="294.9" cy="261.7" r="5" class="m-relic"/><rect x="46.1" y="527.4" width="7" height="7" class="m-shop"/><rect x="506.9" y="25.6" width="7" height="7" class="m-shop"/><rect x="66.6" y="190.8" width="7" height="7" class="m-shop off"/><rect x="486.4" y="362.2" width="7" height="7" class="m-shop off"/><rect x="143.5" y="245.5" width="7" height="7" class="m-shop off"/><rect x="409.5" y="307.5" width="7" height="7" class="m-shop off"/></svg></div>
+    <ul class="legend"><li><i class="m-lane-k"></i>The middle lane: the only lane with creeps</li><li><i class="m-off-k"></i>Side lanes, their buildings, the camps and the side and secret shops: not built</li><li><i class="m-cannon-k"></i>Each side&#x27;s cannon, beside its spawn</li><li><i class="m-reach-k"></i>Where its throw can land: the lane from the base tower to 300 past the outer tower</li><li><i class="m-relic-k"></i>Health relics, proposed: two a side between the outer tower and the river</li>
+      <li class="src">Drawn from <code>data/map.json</code>: the bases, river, lanes, buildings, camps and shops are where the game has them. The cannons, bands and relics are the plan's.</li></ul>
+  </div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Mockups</div><h2>New models</h2></div>
+  <div class="mgrid"><figure class="mcard"><button class="zoom" data-full="art3/models/cannon_sun.jpg" data-cap="Sunward cannon: Sunward cannon: a fat gold mortar tilted up on a turning sandstone drum, banded in sun orange, a sun disc on its side, two sleepy eyes and a sparking fuse."><img loading="lazy" src="art3/models/cannon_sun.jpg" alt="Sunward cannon: Sunward cannon: a fat gold mortar tilted up on a turning sandstone drum, banded in sun orange, a sun disc on its side, two sleepy eyes and a sparking fuse."></button><figcaption><b>Sunward cannon</b> <code>cannon_sun</code><span>Sunward cannon: a fat gold mortar tilted up on a turning sandstone drum, banded in sun orange, a sun disc on its side, two sleepy eyes and a sparking fuse.</span></figcaption></figure><figure class="mcard"><button class="zoom" data-full="art3/models/cannon_moon.jpg" data-cap="Moonward cannon: Moonward cannon: the same mortar in silver, banded in violet on a slate drum, with a crescent on its side."><img loading="lazy" src="art3/models/cannon_moon.jpg" alt="Moonward cannon: Moonward cannon: the same mortar in silver, banded in violet on a slate drum, with a crescent on its side."></button><figcaption><b>Moonward cannon</b> <code>cannon_moon</code><span>Moonward cannon: the same mortar in silver, banded in violet on a slate drum, with a crescent on its side.</span></figcaption></figure><figure class="mcard"><button class="zoom" data-full="art3/models/relic.jpg" data-cap="Health relic: Health relic: a round glass flask with a green heart of light and a white plus, floating and turning over a ring of stones."><img loading="lazy" src="art3/models/relic.jpg" alt="Health relic: Health relic: a round glass flask with a green heart of light and a white plus, floating and turning over a ring of stones."></button><figcaption><b>Health relic</b> <code>relic</code><span>Health relic: a round glass flask with a green heart of light and a white plus, floating and turning over a ring of stones.</span></figcaption></figure></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Mockups</div><h2>How it moves</h2></div>
+  <p>Distances are drawn shorter than they are: the real throw crosses several thousand map units.</p>
+  <div class="agrid"><article class="acard">
+  <header><div><h3>The cannon fired</h3><div class="ameta"><span class="chip acc">T14</span> mockup · <code>cannon_launch</code></div></div></header>
+  <button class="zoom gif" data-full="art3/abilities/cannon_launch.jpg" data-cap="The cannon fired"><img loading="lazy" src="art3/abilities/cannon_launch.gif" alt="The cannon fired, animated: A hero walks up to the cannon by the fountain and hops into the barrel. The cannon turns toward a gold ring on the lane, leans back and fires with a flash and a puff of smoke; the hero flies curled up along a high arc with a trail of sparks, and lands in the ring with a squash and a ring of dust." width="480" height="270"></button>
+  <p><b>What you see.</b> A hero walks up to the cannon by the fountain and hops into the barrel. The cannon turns toward a gold ring on the lane, leans back and fires with a flash and a puff of smoke; the hero flies curled up along a high arc with a trail of sparks, and lands in the ring with a squash and a ring of dust.</p>
+  <p><b>How you can tell.</b> The gold ring shows where the hero will land from the moment the cannon is aimed until the landing, to both sides, as the teleport&#x27;s landing glow does.</p>
+</article><article class="acard">
+  <header><div><h3>Aiming the cannon</h3><div class="ameta"><span class="chip acc">T14</span> mockup · <code>cannon_aim</code></div></div></header>
+  <button class="zoom gif" data-full="art3/abilities/cannon_aim.jpg" data-cap="Aiming the cannon"><img loading="lazy" src="art3/abilities/cannon_aim.gif" alt="Aiming the cannon, animated: With the cannon chosen, a pale gold band shows the ground it can reach: the lane from the base out to the side&#x27;s outer tower. A gold ring follows the pointer inside the band, with a dotted arc from the barrel to it." width="480" height="270"></button>
+  <p><b>What you see.</b> With the cannon chosen, a pale gold band shows the ground it can reach: the lane from the base out to the side&#x27;s outer tower. A gold ring follows the pointer inside the band, with a dotted arc from the barrel to it.</p>
+  <p><b>How you can tell.</b> The band ends at the outer tower, so a thrown hero can rejoin the fight but cannot be thrown past it into the enemy.</p>
+</article><article class="acard">
+  <header><div><h3>A health relic taken</h3><div class="ameta"><span class="chip acc">T13</span> mockup · <code>relic_pickup</code></div></div></header>
+  <button class="zoom gif" data-full="art3/abilities/relic_pickup.jpg" data-cap="A health relic taken"><img loading="lazy" src="art3/abilities/relic_pickup.gif" alt="A health relic taken, animated: A hero walks through a floating green flask. It bursts into green motes, a green ring opens under the hero and small plus signs float up as health returns. The empty stones then show a green ring filling until the flask comes back." width="480" height="270"></button>
+  <p><b>What you see.</b> A hero walks through a floating green flask. It bursts into green motes, a green ring opens under the hero and small plus signs float up as health returns. The empty stones then show a green ring filling until the flask comes back.</p>
+  <p><b>How you can tell.</b> Only the stones remain while the relic is away, and the filling ring says how long until it is back.</p>
+</article><article class="acard">
+  <header><div><h3>The random draw</h3><div class="ameta"><span class="chip acc">T13</span> mockup · <code>random_reveal</code></div></div></header>
+  <button class="zoom gif" data-full="art3/abilities/random_reveal.jpg" data-cap="The random draw"><img loading="lazy" src="art3/abilities/random_reveal.gif" alt="The random draw, animated: On the pick screen the ten heroes turn on a ring, quickly at first, then slow and stop with one in front. The others dim; the chosen hero hops forward into a column of gold light and raises a hand." width="480" height="270"></button>
+  <p><b>What you see.</b> On the pick screen the ten heroes turn on a ring, quickly at first, then slow and stop with one in front. The others dim; the chosen hero hops forward into a column of gold light and raises a hand.</p>
+  <p><b>How you can tell.</b> Everyone sees the draw at the same moment; the hero in the light is yours.</p>
+</article><article class="acard">
+  <header><div><h3>All mid, five a side</h3><div class="ameta"><span class="chip acc">T13</span> mockup · <code>aram_mid</code></div></div></header>
+  <button class="zoom gif" data-full="art3/abilities/aram_mid.jpg" data-cap="All mid, five a side"><img loading="lazy" src="art3/abilities/aram_mid.gif" alt="All mid, five a side, animated: The one lane at full strength: five heroes a side behind their creep waves, the towers at either end, and a health relic on each side of the middle." width="480" height="270"></button>
+  <p><b>What you see.</b> The one lane at full strength: five heroes a side behind their creep waves, the towers at either end, and a health relic on each side of the middle.</p>
+  
+</article></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">The plan</div><h2>The mode's rules</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>What</th><th>In All Random All Mid</th><th>Note</th></tr></thead>
+    <tbody><tr><td>Heroes</td><td>Drawn for every player from the match seed, none twice, bots too</td><td>One reroll each before the start (R4.2)</td></tr><tr><td>Lanes</td><td>The middle lane only; the side lanes' towers and barracks are not built</td><td>The usual map's middle lane (R4.1)</td></tr><tr><td>Base towers</td><td>Fall once every built lane's base-level tower has fallen</td><td>Counts the middle lane only (R4.8)</td></tr><tr><td>Forest</td><td>No neutral camps, no boss, no runes</td><td></td></tr><tr><td>Shops</td><td>The home shop and the courier; side and secret shops closed</td><td>Teleport scrolls still sold? (R4.6)</td></tr><tr><td>Starting gold</td><td>853</td><td>603 in a normal match (R4.5)</td></tr><tr><td>Cannon</td><td>From within the fountain's range (825); 0.5 s to climb in, 2 s in the air; lands in the band</td><td>Once each visit to the base (R4.3)</td></tr><tr><td>Health relics</td><td>Two a side; 15 % of health and mana; back after 60 s</td><td>Proposed (R4.4)</td></tr><tr><td>Online</td><td>The host picks the mode in the lobby; the seed carries the draw</td><td>PROTOCOL 2 → 3</td></tr></tbody>
+  </table></div>
+  <div class="grid2">
+    <div class="card"><h3>Order of work</h3><ol><li><b>The mode as data.</b> A <code>modes</code> table in <code>data/rules.json</code>; a mode choice on the custom-match screen and in the lobby; middle-lane waves only; side buildings, camps, boss, runes and far shops left out; the base-tower rule counting built lanes.</li><li><b>All Random.</b> The draw from the seed, the reveal on the pick screen, the reroll.</li><li><b>The cannon.</b> A new order and a flight act in the core, so rollback and online carry them; the band, the landing ring, the arc and the landing in the scene.</li><li><b>Relics.</b> Pick-up, heal, return; the empty stones and their timer.</li><li><b>Computer players.</b> Mid only, the cannon after each respawn, a relic below half health.</li><li><b>Online.</b> The mode in the start message; PROTOCOL 3; the five-runner test.</li><li><b>Models.</b> The cannon and relic from these mockups into <code>data/models.json</code>, as round 2's were.</li></ol></div>
+    <div class="card"><h3>How each part is tested</h3><ul><li>An <code>aram</code> match spawns creeps in the middle lane only and builds no side-lane tower, camp, boss or rune.</li><li>With the middle lane's three towers and two barracks down, the base towers can be hurt; a normal match's rule is unchanged.</li><li>Ten heroes drawn from one seed are ten different heroes and the same in every browser; a reroll never gives a hero someone has.</li><li>A throw lands at the chosen point after exactly 0.5 s + 2 s of ticks; a point past the band lands at its end; from outside the fountain's range it is refused; a second throw before returning is refused; a hero in flight takes no damage.</li><li>A relic heals once, is gone for 60 s and returns; either side can take it.</li><li>Bots in an <code>aram</code> match each use the cannon at least once and a Sphere falls within the usual limit.</li><li>Each test gets a row in <code>tests/breaks.json</code> and must fail with its rule broken.</li></ul></div>
+  </div>
+  <p>The full plan, with a reason and a test for each decision, is round 4 of <code>PLAN.md</code>.</p>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Yours to decide</div><h2>Open questions, by number</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>#</th><th>Question</th></tr></thead>
+    <tbody><tr><td>R4.1</td><td>All Mid on the usual map's middle lane (planned), or a small map of its own, as League's ARAM has?</td></tr><tr><td>R4.2</td><td>All Random: no reroll, one reroll each (planned), or teammates may swap?</td></tr><tr><td>R4.3</td><td>The cannon: 0.5 s to climb in, 2 s in the air, lands up to 300 past the outer tower, once each visit to the base. The cannon you meant?</td></tr><tr><td>R4.4</td><td>Health relics in the lane (two a side, 15 %, back after 60 s): keep, change or drop?</td></tr><tr><td>R4.5</td><td>Starting gold in All Random: 603 or 853?</td></tr><tr><td>R4.6</td><td>Teleport scrolls in this mode: sell them or not?</td></tr></tbody>
+  </table></div>
+</section>
+<footer>Mockups in <code>journal/mockups/aram.js</code> (three.js r160, MIT), pictures made with <code>ART=art3 journal/mockups/shoot.py</code>, this tab written by <code>journal/mockups/tab9.py</code>. Labelled mockups: the game draws its own models with its own renderer.</footer>
+</div>
+<!--/TAB 9-->
 <!--PANELS-->
 
 </div>
 
+<dialog class="lightbox" id="lightbox" aria-label="Larger picture"><img alt=""><p></p><button type="button" data-close>Close</button></dialog>
 <script>
 /*ART2-JS*/
 (function () {
