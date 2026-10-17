@@ -19,6 +19,11 @@ The state measured rather than recalled, so later changes can be compared with i
 | Model parts, round 2 | `python3 tools/modelport.py` | 2448 parts over 50 models (546 in round 1); worst rebuild error of a part's transform 1.5 % | 16 Oct 2026 |
 | Frame rate, round 2 | `.venv/bin/python tests/browser/fps.py 100` | a custom 5v5 on this Mac (Metal): 60 frames a second at 5 s and at 100 s, camera on the middle of the map (the browser's cap) | 16 Oct 2026 |
 | WebAssembly size, round 2 | printed by `./scripts/build.sh` | 1336 KB (1289 KB before the ability marks) | 16 Oct 2026 |
+| Creeps inside each other, round 3 | a probe like `crates/core/tests/collision.rs`, seed 5, the first 70 s after the horn, three looks a second | before solid units: up to 17 pairs of creeps at once with centres closer than their two radii (1,779 pair-looks in all; 35 closer than three quarters, 2 closer than half); after: none | 16 Oct 2026 |
+| Attack shot size, round 3 | `data/presentation.json` before and after | radius before: every attack shot 0.15 scene units in one colour, a spell's 1.0; after: 0.6 to 1.4 by kind (towers largest), spells 1.0 to 2.2 | 16 Oct 2026 |
+| Frame rate, round 3 | `.venv/bin/python tests/browser/fps.py` | a custom 5v5 on this Mac (Metal): 60 frames a second at 5 s and at 90 s with solid units | 16 Oct 2026 |
+| WebAssembly size, round 3 | printed by `scripts/wasm_imports.py` | 1421 KB | 16 Oct 2026 |
+| Online, round 3 | `.venv/bin/python tests/online/smoke.py --rejoin` | two browsers through the public relays: the dropped one rejoined at its seat, and the checksums at ticks 1350 to 1800 agreed | 16 Oct 2026 |
 
 ## Not measured
 

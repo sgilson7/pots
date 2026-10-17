@@ -52,6 +52,7 @@ The lobby's Copy code and Copy link had never worked: the page's copy function w
 - **Shop (T8):** a node's `alt` is its right-click action; shop items and tree parts carry `buy`.
 - **Aim, order marker, teleport (T9–T11):** `crates/core/src/overlay.rs`. `Game::overlay()` builds the aim outline and the order marker each frame; neither reaches the world. `overlay::teleports` draws channels from the world, using `item::tp_destination`, the rule's own landing spot.
 - **Solid units (T12):** `orders::clear_step` and `crowded`: a step into another unit turns aside or waits; creeps do not push heroes. `PROTOCOL` is now 2, so an older browser is told to reload rather than play on different rules.
+- Checks: BUILDER CHECK PASSED (Chromium, Firefox, WebKit, with a right-click buy in each); break tests 34 of 34; the online smoke test rejoined with checksums agreeing; 60 frames a second in a 5v5.
 - Person rows: **R3.4** (should abilities that go off at once show their radius while the key is held?) and **R3.10** (try creep blocking by hand).
 
 ## What passed
