@@ -55,6 +55,16 @@ The lobby's Copy code and Copy link had never worked: the page's copy function w
 - Checks: BUILDER CHECK PASSED (Chromium, Firefox, WebKit, with a right-click buy in each); break tests 34 of 34; the online smoke test rejoined with checksums agreeing; 60 frames a second in a 5v5.
 - Person rows: **R3.4** (should abilities that go off at once show their radius while the key is held?) and **R3.10** (try creep blocking by hand).
 
+## Round 4 (17 October 2026): All Random All Mid and the base cannon (T13, T14)
+
+Planned with mockups (journal tab 9); the person answered R4.1 to R4.6 (middle lane of the usual map, one reroll, the cannon and relic numbers as planned, 853 gold, no teleports); then built.
+
+- **Rules:** `crates/core/src/aram.rs` with the numbers in `data/rules.json` `aram`. `World::new_mode` leaves the side lanes unbuilt; `lanes.rs` skips their waves, the camps, the boss and runes; the base towers count built lanes only. `aram::shop_of` sells the far shops' goods at the base and no teleports.
+- **The deal:** `aram::deal(seed, heroes, rerolled)`, one shuffle a side (R4.9). Arcade: `setup.mode`, `custom`, `reroll`; the seed changes each match (`Game::arcade_seed`). Online: the host deals in `deal_seats` from the match seed; `online.mode`, `online.reroll`, `Msg::Reroll`; the mode rides in `Lobby` and `Start`; `PROTOCOL` 3.
+- **The cannon:** `Cmd::Cannon(point)`, `Act::Flight`, `aram::throw` and `fly`; F or the HUD button aims it (`Aim::Cannon`); the minimap shows the band; the camera follows the throw. Drawn in `overlay::aram` and `scene::units`; models `cannon_sun`, `cannon_moon`, `relic` ported from the mockups.
+- **Relics:** `aram::clock`; drawn with a ring that fills while one is away.
+- **Bots:** `ai::aram`: mid only, the cannon when healed at the base, a relic below half health.
+
 ## What passed
 
 Recorded at the end of this round; the counts come from the commands, not from memory.
@@ -74,12 +84,7 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **R1.12**: lane creep armor type, Unarmored (playdota) or Medium (Dota 2 port). It changes ranged-creep damage 2×.
 - **R1.16**: if the host's browser leaves, the online match ends. A host hand-over is not built.
 - **R1.18**: the 143 icons; a few are plain at 48 px.
-- **R4.1**: All Mid on the usual map's middle lane (planned), or a small map of its own?
-- **R4.2**: All Random: no reroll, one reroll each (planned), or teammates swap?
-- **R4.3**: the cannon's numbers (0.5 s climb, 2 s flight, lands up to 300 past the outer tower, once each visit to base). The cannon you meant?
-- **R4.4**: health relics in the lane (two a side, 15 %, back after 60 s): keep, change or drop?
-- **R4.5**: starting gold in All Random: 603 or 853?
-- **R4.6**: teleport scrolls in this mode: sell them or not?
+- **R4.18**: play a custom match in All Random All Mid: reroll once, press F at the fountain and click the lane, take a relic when hurt. Does it feel right?
 - **R3.4**: abilities that go off at once (Warcry, Echo Slam, Blade Fury) show no outline. Show their radius while the key is held, or on hovering the button?
 - **R3.10**: creep blocking: walk just ahead of your first wave and zigzag in its path. Does it feel like DotA's?
 - **R1.21**: online depends on public relays and STUN, with no TURN server; two strict NATs cannot connect. Try two real networks by hand.

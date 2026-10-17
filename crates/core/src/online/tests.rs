@@ -221,6 +221,16 @@ fn every_message_round_trips() {
         },
         Msg::Sit { seat: 3 },
         Msg::Pick { hero: 2 },
+        Msg::Reroll,
+        Msg::Lobby {
+            seats: vec![Seat {
+                rerolled: true,
+                ..Seat::default()
+            }],
+            bots: 2,
+            started: false,
+            aram: true,
+        },
         Msg::In {
             seats: vec![(4, 120, vec![[118, 2, 100, 200, 0, 0]])],
         },
@@ -426,4 +436,72 @@ fn a_player_back_before_the_host_noticed_the_drop_gets_the_seat() {
     assert!(!back.online.catching && back.m.is_some(), "in the match");
     let (compared, agree) = room.checksums_agree();
     assert!(compared > 0 && agree, "and agreeing ({compared})");
+}
+
+#[test]
+fn three_browsers_in_all_random_all_mid_are_dealt_alike_and_play_one_match() {
+    // round 4: the host switches the mode on; a joiner rerolls; everyone
+    // sees the same dealt heroes and the match agrees in every browser
+    let mut room = Room::new(3, 4, 5, 57);
+    for _ in 0..30 {
+        room.step(false);
+    }
+    room.games[0].act("online.mode", "").unwrap();
+    for _ in 0..30 {
+        room.step(false);
+    }
+    assert!(
+        room.games.iter().all(|g| g.online.aram),
+        "every browser sees the mode"
+    );
+    let before: Vec<i32> = room.games[0].online.seats.iter().map(|s| s.pick).collect();
+    let mine = room.games[1].online.my_seat.expect("seated");
+    room.games[1].act("online.reroll", "").unwrap();
+    for _ in 0..30 {
+        room.step(false);
+    }
+    let after: Vec<i32> = room.games[0].online.seats.iter().map(|s| s.pick).collect();
+    assert_ne!(
+        after[mine], before[mine],
+        "the reroll dealt that seat another hero"
+    );
+    for (k, (a, b)) in before.iter().zip(&after).enumerate() {
+        if k != mine {
+            assert_eq!(a, b, "nobody else's hero changed");
+        }
+    }
+    for g in &room.games[1..] {
+        let seen: Vec<i32> = g.online.seats.iter().map(|s| s.pick).collect();
+        assert_eq!(seen, after, "every lobby shows the same deal");
+    }
+    assert!(room.games[1].act("online.reroll", "").is_err(), "one reroll only");
+    assert!(
+        room.games[2].act("pick", "0").is_err(),
+        "no choosing in this mode"
+    );
+    room.games[0].act("online.start", "").unwrap();
+    for _ in 0..(60 * 20) {
+        room.step(true);
+    }
+    for g in &room.games {
+        let w = &g.m.as_ref().expect("in the match").world;
+        assert!(w.aram, "the match is in the mode");
+        for (k, p) in w.players.iter().enumerate() {
+            let def = w.get(p.hero).map(|u| u.def as usize);
+            assert!(def.is_some(), "seat {k} has a hero");
+            if after[k] >= 0 {
+                assert_eq!(
+                    def,
+                    Some(g.rules.heroes[after[k] as usize]),
+                    "seat {k} plays the dealt hero"
+                );
+            }
+        }
+    }
+    let (compared, agree) = room.checksums_agree();
+    assert!(compared >= 4, "checksums were compared: {compared}");
+    assert!(
+        agree && !room.games.iter().any(|g| g.online.desync),
+        "one match in every browser"
+    );
 }

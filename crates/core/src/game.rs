@@ -64,6 +64,8 @@ pub enum Aim {
     Ability(u8),
     Item(u8),
     AttackMove,
+    /// All Random All Mid: where the base cannon throws the hero.
+    Cannon,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -101,6 +103,10 @@ pub struct Setup {
     pub enemy: u8,
     pub hero: i32,
     pub mission: Option<usize>,
+    /// All Random All Mid (round 4): heroes dealt at random, one lane.
+    pub aram: bool,
+    /// Whether this player has spent their reroll.
+    pub rerolled: bool,
 }
 
 pub struct Game {
@@ -136,6 +142,8 @@ pub struct Game {
     pub shop_pick: i32,
     pub score: bool,
     pub menu: bool,
+    /// Arcade matches started, so each All Random All Mid match deals afresh.
+    played: u64,
     /// Microseconds of display time since the game began, for what the
     /// player's own hand shows (the order marker).
     clock_us: i64,
@@ -243,6 +251,7 @@ impl Game {
             shop_pick: -1,
             score: false,
             menu: false,
+            played: 0,
             clock_us: 0,
             ping: None,
             last_us: -1,
@@ -255,6 +264,8 @@ impl Game {
                 enemy: 2,
                 hero: -1,
                 mission: None,
+                aram: false,
+                rerolled: false,
             },
             alpha: 0,
             stage: None,
@@ -283,6 +294,11 @@ impl Game {
         [self.width * self.dpr / 100, self.height * self.dpr / 100]
     }
 
+    /// The forest every match starts with.
+    pub fn trees_for_match(&self) -> Vec<crate::map::Tree> {
+        self.trees0.clone()
+    }
+
     /// A fresh world for a match with these seats.
     pub fn new_world(&self, seed: u64) -> World {
         World::new(&self.ctx(), self.trees0.clone(), seed)
@@ -290,9 +306,24 @@ impl Game {
 
     /// Starts an arcade match from the setup: me in seat 0, allies after
     /// me, enemies in the Moonward seats.
+    /// The seed the next arcade match deals its heroes from.
+    pub fn arcade_seed(&self) -> u64 {
+        self.seed ^ self.played.wrapping_mul(0x9e37_79b9_7f4a_7c15)
+    }
+
+    /// This mode's deal for the next arcade match: every seat's hero.
+    pub fn arcade_deal(&self) -> [u8; PLAYERS] {
+        let mut rerolled = [false; PLAYERS];
+        rerolled[0] = self.setup.rerolled;
+        crate::aram::deal(self.arcade_seed(), self.rules.heroes.len(), &rerolled)
+    }
+
     pub fn start_arcade(&mut self) {
         let s = self.setup;
-        let mut w = self.new_world(self.seed);
+        let aram = s.aram && s.mission.is_none();
+        let deal = self.arcade_deal();
+        let mut w = World::new_mode(&self.ctx(), self.trees0.clone(), self.arcade_seed(), aram);
+        self.played += 1;
         let t = &self.rules.t;
         // a shorter wait before the first wave in the arcade
         w.horn_at = (t.horn * TPS / 2) as u32;
@@ -306,8 +337,17 @@ impl Game {
             w.players[p].present = true;
         }
         let ctx = self.ctx();
-        let hero = if s.hero >= 0 { s.hero as usize } else { 0 };
-        crate::orders::apply(&mut w, &ctx, 0, Cmd::Pick(hero as u8));
+        if aram {
+            // every seat takes its dealt hero, so the computer players pick nothing
+            for (p, &hero) in deal.iter().enumerate() {
+                if w.players[p].present {
+                    crate::orders::apply(&mut w, &ctx, p, Cmd::Pick(hero));
+                }
+            }
+        } else {
+            let hero = if s.hero >= 0 { s.hero as usize } else { 0 };
+            crate::orders::apply(&mut w, &ctx, 0, Cmd::Pick(hero as u8));
+        }
         self.begin(w, 0, s.mission, false);
     }
 
@@ -358,6 +398,7 @@ impl Game {
         self.last_us = now_us;
         self.clock_us += dt;
         self.pan(dt);
+        self.follow_throw();
         if self.screen != "match" {
             return;
         }
@@ -634,6 +675,7 @@ impl Game {
             }
             Some(Aim::Ability(s)) => self.command(Cmd::Cast(s, under, at)),
             Some(Aim::Item(s)) => self.command(Cmd::Item(s, under, at)),
+            Some(Aim::Cannon) => self.command(Cmd::Cannon(at)),
             None => self.selected = under,
         }
     }
@@ -663,6 +705,19 @@ impl Game {
             _ => {
                 self.command(Cmd::Move(at));
                 self.mark_order(at, NO_UNIT, false);
+            }
+        }
+    }
+
+    /// While my hero is in the air from the cannon, the camera keeps it in view.
+    fn follow_throw(&mut self) {
+        let hero = self.my_hero();
+        let Some(u) = self.m.as_ref().and_then(|m| m.world.get(hero)) else {
+            return;
+        };
+        if let world::Act::Flight { up, .. } = u.act {
+            if self.m.as_ref().map(|m| m.world.tick >= up).unwrap_or(false) {
+                self.view.target = u.pos();
             }
         }
     }
@@ -756,6 +811,12 @@ impl Game {
                 self.models.named("bar_enemy"),
                 "enemy".to_string(),
             ),
+            Aim::Cannon => (
+                0,
+                Area::Cannon,
+                self.models.team_named(team, "team_glow"),
+                "none".to_string(),
+            ),
         };
         o.aim = Some(Aiming {
             hero,
@@ -778,10 +839,15 @@ impl Game {
         if button == 2 {
             self.command(Cmd::Move(p));
             self.mark_order(p, NO_UNIT, false);
-        } else if let Some(Aim::AttackMove) = self.aim.take() {
-            self.command(Cmd::AttackMove(p));
         } else {
-            self.view.target = p;
+            match self.aim.take() {
+                Some(Aim::AttackMove) => self.command(Cmd::AttackMove(p)),
+                Some(Aim::Cannon) => self.command(Cmd::Cannon(p)),
+                other => {
+                    self.aim = other;
+                    self.view.target = p;
+                }
+            }
         }
     }
 
@@ -829,6 +895,9 @@ impl Game {
             "ability" => self.use_slot(Aim::Ability(arg as u8)),
             "item" => self.use_slot(Aim::Item(arg as u8)),
             "attack" => self.aim = Some(Aim::AttackMove),
+            "cannon" => {
+                let _ = self.aim_cannon();
+            }
             "stop" => self.command(Cmd::Stop),
             "hold" => self.command(Cmd::Hold),
             "learn" => self.learn = !self.learn,
@@ -852,6 +921,21 @@ impl Game {
         }
     }
 
+    /// The cannon key or button: aims the base cannon when it may fire.
+    pub fn aim_cannon(&mut self) -> Result<(), String> {
+        let hero = self.my_hero();
+        let ok = self
+            .m
+            .as_ref()
+            .map(|m| crate::aram::may_throw(&m.world, &self.ctx(), hero))
+            .unwrap_or(false);
+        if !ok {
+            return Err(self.strings.ui("cannon.not_ready"));
+        }
+        self.aim = Some(Aim::Cannon);
+        Ok(())
+    }
+
     /// An ability or item key: a target-less one goes off at once, a
     /// targeted one waits for a click.
     pub fn use_slot(&mut self, aim: Aim) {
@@ -867,7 +951,7 @@ impl Game {
                 .get(s as usize)
                 .filter(|it| it.item > 0)
                 .and_then(|it| self.rules.items[it.item as usize - 1].target),
-            Aim::AttackMove => None,
+            Aim::AttackMove | Aim::Cannon => None,
         };
         match (aim, target) {
             (_, None) | (_, Some(Target::Passive)) => {}
@@ -891,6 +975,7 @@ impl Game {
             scene::units(f, &mut b);
             scene::effects(f, &mut b);
             crate::overlay::teleports(f, &mut b);
+            crate::overlay::aram(f, &mut b);
             crate::overlay::draw(f, &mut b, &overlay);
         });
         b.finish()
@@ -1387,13 +1472,31 @@ impl Game {
                     enemy: ms.enemy,
                     hero: ms.hero,
                     mission: Some(k),
+                    aram: false,
+                    rerolled: false,
                 };
                 self.screen = "pick".into();
             }
             "custom" => {
                 self.setup.mission = None;
                 self.setup.hero = -1;
+                self.setup.rerolled = false;
+                if self.setup.aram {
+                    self.setup.hero = self.arcade_deal()[0] as i32;
+                }
                 self.screen = "pick".into();
+            }
+            "setup.mode" => self.setup.aram = !self.setup.aram,
+            "reroll" => {
+                let spare = self.rules.aram.as_ref().map(|a| a.rerolls > 0).unwrap_or(false);
+                if !(self.setup.aram && self.setup.mission.is_none() && spare) {
+                    return Err(self.strings.ui("pick.no_reroll"));
+                }
+                if self.setup.rerolled {
+                    return Err(self.strings.ui("pick.rerolled"));
+                }
+                self.setup.rerolled = true;
+                self.setup.hero = self.arcade_deal()[0] as i32;
             }
             "setup.allies" | "setup.enemies" | "setup.ally" | "setup.enemy" => {
                 let up = value == "+";
@@ -1421,6 +1524,10 @@ impl Game {
                 let k = num()?;
                 if k < 0 || k as usize >= self.rules.heroes.len() {
                     return Err("There is no such hero.".into());
+                }
+                let online_aram = self.screen.starts_with("online") && self.online.aram;
+                if (self.setup.aram && self.setup.mission.is_none() && self.screen == "pick") || online_aram {
+                    return Err(self.strings.ui("pick.random"));
                 }
                 self.setup.hero = k;
                 if self.screen.starts_with("online") {
@@ -1488,6 +1595,7 @@ impl Game {
                 self.shop_pick = k;
             }
             "score.toggle" => self.score = !self.score,
+            "cannon" => self.aim_cannon()?,
             // the page puts the code or link on the clipboard; the core says so
             "copy" | "copy.link" => self.notice = self.strings.ui("online.copied"),
             n if n.starts_with("online.") => crate::online::act(self, n, value)?,
@@ -1608,6 +1716,22 @@ impl Game {
             let (x, y) = to(self.rules.map.runes[spot]);
             d.shape(Shape::Diamond, x, y, Scale::Small, Color::Rune, Color::Frame, 1);
         }
+        // All Random All Mid: the relics waiting, and while the cannon is
+        // aimed, the band it can reach (a click on the minimap lands there)
+        if w.aram {
+            for (i, spot) in crate::aram::relic_spots(&ctx).iter().enumerate() {
+                if w.relics.get(i) == Some(&0) {
+                    let (x, y) = to(*spot);
+                    d.shape(Shape::Square, x, y, Scale::Small, Color::Rune, Color::Frame, 1);
+                }
+            }
+            if self.aim == Some(Aim::Cannon) {
+                if let Some((a, b, half)) = crate::aram::band(&ctx, team) {
+                    let width = (half * 2 * WIDTH / size).max(2);
+                    d.line(&[to(a), to(b)], Color::Me, width);
+                }
+            }
+        }
         for u in &w.units {
             if !u.alive {
                 continue;
@@ -1715,6 +1839,21 @@ impl Game {
             "gold": m.map(|m| m.world.players[m.me].gold).unwrap_or(0),
             "winner": m.and_then(|m| m.world.winner),
             "over": m.map(|m| m.over.is_some()).unwrap_or(false),
+            // All Random All Mid, for the browser check (round 4)
+            "aram": m.map(|m| m.world.aram).unwrap_or(false),
+            "flying": u.map(|u| matches!(u.act, world::Act::Flight { .. })).unwrap_or(false),
+            "heroes": m.map(|m| m.world.players.iter().filter(|p| p.hero != NO_UNIT).count()).unwrap_or(0),
+            "side_towers": m
+                .map(|m| {
+                    m.world
+                        .units
+                        .iter()
+                        .filter(|v| {
+                            v.alive && self.rules.units[v.def as usize].kind == Kind::Tower && matches!(v.lane_name, 0 | 2)
+                        })
+                        .count()
+                })
+                .unwrap_or(0),
             "net": crate::online::probe(self),
         })
         .to_string()

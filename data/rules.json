@@ -256,6 +256,20 @@
    ]
   ]
  },
+ "aram": {
+  "_note": "All Random All Mid (round 4, T13 and T14). Sunward points; the Moonward's are their mirrors through the centre.",
+  "lanes": ["mid"],
+  "starting_gold": 853,
+  "rerolls": 1,
+  "cannon": [1650, 1500],
+  "climb": 50,
+  "flight": 200,
+  "reach_past": 300,
+  "relics": [[7060, 6800], [7757, 7656]],
+  "relic_pct": 15,
+  "relic_back": 60,
+  "relic_radius": 130
+ },
  "heroes": [
   {
    "unit": "ironvow",

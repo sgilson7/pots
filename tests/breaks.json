@@ -236,5 +236,131 @@
   "find": "            crate::overlay::teleports(f, &mut b);\n",
   "replace": "",
   "test": "a_teleport_glows_at_both_ends_while_it_channels_then_lands_where_it_glowed"
+ },
+ {
+  "name": "every lane is built in All Random All Mid",
+  "file": "crates/core/src/aram.rs",
+  "find": "a.lanes.iter().any(|l| l == lane)",
+  "replace": "true",
+  "test": "only_the_middle_lane_is_built_and_fought_over"
+ },
+ {
+  "name": "the base towers count the unbuilt lanes",
+  "file": "crates/core/src/lanes.rs",
+  "find": "built.iter().all(|&l| standing(w, team, 3, Some(l)))",
+  "replace": "(0..3u8).all(|l| standing(w, team, 3, Some(l)))",
+  "test": "the_base_towers_open_once_the_middle_lane_falls"
+ },
+ {
+  "name": "a reroll deals nothing new",
+  "file": "crates/core/src/aram.rs",
+  "find": "if rerolled.get(p).copied().unwrap_or(false) && next < n {",
+  "replace": "if false {",
+  "test": "each_side_is_dealt_five_different_heroes_and_a_reroll_draws_a_sixth"
+ },
+ {
+  "name": "All Random All Mid starts with the usual gold",
+  "file": "crates/core/src/world.rs",
+  "find": "(Some(a), true) => a.starting_gold,",
+  "replace": "(Some(_), true) => ctx.rules.t.starting_gold,",
+  "test": "players_start_with_853_gold"
+ },
+ {
+  "name": "the climb takes as long as the flight",
+  "file": "crates/core/src/aram.rs",
+  "find": "(a.climb * TPS / 100).max(1) as u32,",
+  "replace": "(a.flight * TPS / 100).max(1) as u32,",
+  "test": "the_cannon_throws_a_hero_to_the_band_s_end_in_two_and_a_half_seconds"
+ },
+ {
+  "name": "a thrown hero can be hurt",
+  "file": "crates/core/src/aram.rs",
+  "find": "            until: land,",
+  "replace": "            until: tick,",
+  "test": "the_cannon_throws_a_hero_to_the_band_s_end_in_two_and_a_half_seconds"
+ },
+ {
+  "name": "a throw may land beside the lane",
+  "file": "crates/core/src/aram.rs",
+  "find": "let k = off.min(half as i64);",
+  "replace": "let k = off;",
+  "test": "a_throw_lands_inside_the_lane_and_on_its_own_side"
+ },
+ {
+  "name": "the base is the fountain's range of the fountain only",
+  "file": "crates/core/src/aram.rs",
+  "find": "within(p, side.fountain, r) || within(p, side.spawn, r)",
+  "replace": "within(p, side.fountain, r)",
+  "test": "computer_players_ride_the_cannon_out_and_keep_to_the_middle_lane"
+ },
+ {
+  "name": "a relic heals nothing",
+  "file": "crates/core/src/aram.rs",
+  "find": "u.hp = (u.hp + hp * a.relic_pct / 100).min(hp);",
+  "replace": "u.hp = u.hp.min(hp);",
+  "test": "a_relic_heals_a_hero_once_and_returns_after_a_minute"
+ },
+ {
+  "name": "a taken relic never returns",
+  "file": "crates/core/src/aram.rs",
+  "find": "            if now >= w.relics[i] {\n                w.relics[i] = 0;\n            }",
+  "replace": "            if false {\n                w.relics[i] = 0;\n            }",
+  "test": "a_relic_heals_a_hero_once_and_returns_after_a_minute"
+ },
+ {
+  "name": "teleports are sold in All Random All Mid",
+  "file": "crates/core/src/aram.rs",
+  "find": "        if it.logic == \"tp\" {\n            return \"none\";",
+  "replace": "        if false {\n            return \"none\";",
+  "test": "teleports_are_not_sold_and_the_far_shops_goods_are_sold_at_the_base"
+ },
+ {
+  "name": "the far shops' goods stay far",
+  "file": "crates/core/src/aram.rs",
+  "find": "        if it.shop == \"side\" || it.shop == \"secret\" {",
+  "replace": "        if false {",
+  "test": "teleports_are_not_sold_and_the_far_shops_goods_are_sold_at_the_base"
+ },
+ {
+  "name": "computer players never ride the cannon",
+  "file": "crates/core/src/ai.rs",
+  "find": "            orders::apply(w, ctx, p, Cmd::Cannon(end));",
+  "replace": "            let _ = end;",
+  "test": "computer_players_ride_the_cannon_out_and_keep_to_the_middle_lane"
+ },
+ {
+  "name": "the arcade reroll deals the same hero",
+  "file": "crates/core/src/game.rs",
+  "find": "                self.setup.rerolled = true;\n                self.setup.hero = self.arcade_deal()[0] as i32;",
+  "replace": "                self.setup.hero = self.arcade_deal()[0] as i32;",
+  "test": "the_custom_match_deals_a_hero_allows_one_reroll_and_starts_in_the_mode"
+ },
+ {
+  "name": "the arcade lets you choose in All Random All Mid",
+  "file": "crates/core/src/game.rs",
+  "find": "if (self.setup.aram && self.setup.mission.is_none() && self.screen == \"pick\") || online_aram {",
+  "replace": "if online_aram {",
+  "test": "the_custom_match_deals_a_hero_allows_one_reroll_and_starts_in_the_mode"
+ },
+ {
+  "name": "the host deals nobody a hero",
+  "file": "crates/core/src/online.rs",
+  "find": "s.pick = if s.human { deal[k] as i32 } else { -1 };",
+  "replace": "s.pick = -1;",
+  "test": "three_browsers_in_all_random_all_mid_are_dealt_alike_and_play_one_match"
+ },
+ {
+  "name": "the host ignores a joiner's reroll",
+  "file": "crates/core/src/online.rs",
+  "find": "            o.seats[seat].rerolled = true;\n            broadcast_lobby(o);",
+  "replace": "            broadcast_lobby(o);",
+  "test": "three_browsers_in_all_random_all_mid_are_dealt_alike_and_play_one_match"
+ },
+ {
+  "name": "the HUD has no cannon button",
+  "file": "crates/core/src/ui.rs",
+  "find": "    if w.aram {\n        let mut cannon",
+  "replace": "    if false {\n        let mut cannon",
+  "test": "the_custom_match_deals_a_hero_allows_one_reroll_and_starts_in_the_mode"
  }
 ]

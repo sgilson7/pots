@@ -32,7 +32,14 @@ with sync_playwright() as p:
     while time.time() - t0 < 60 and probe(host)["net"]["peers"] < 1:
         time.sleep(1)
     print("peers after", round(time.time() - t0), "s:", probe(host)["net"]["peers"], probe(pgs[1])["net"])
-    host.click(".hero-mini[data-v='0']"); pgs[1].click(".hero-mini[data-v='1']")
+    if "--aram" in sys.argv:
+        # round 4: the host switches on All Random All Mid; the joiner rerolls
+        host.click("[data-a='online.mode']"); time.sleep(2)
+        before = probe(pgs[1])["net"]["seats"]
+        pgs[1].click("[data-a='online.reroll']"); time.sleep(2)
+        print("aram lobby: joiner rerolled; host sees", host.inner_text(".lobby .seats").replace("\n", " ")[:200])
+    else:
+        host.click(".hero-mini[data-v='0']"); pgs[1].click(".hero-mini[data-v='1']")
     time.sleep(2)
     host.click("[data-a='online.start']")
     time.sleep(20)

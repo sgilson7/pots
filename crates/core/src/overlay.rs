@@ -31,6 +31,9 @@ pub enum Area {
     Unit,
     /// A teleport: the building it would land beside.
     Teleport,
+    /// The base cannon (All Random All Mid): the band it can reach and
+    /// where in it the throw would land.
+    Cannon,
 }
 
 /// An ability or item being aimed.
@@ -228,6 +231,35 @@ fn aim(f: &Frame, b: &mut Batch, a: &Aiming) {
                 ring(b, p, fx::mul(r, ONE * 13 / 10 + beat), a.color, ONE / 2);
             }
         }
+        Area::Cannon => {
+            let Some((s, e, half)) = crate::aram::band(f.ctx, u.team) else {
+                return;
+            };
+            let (a0, a1) = (floor_at(f, s), floor_at(f, e));
+            let d = a1.sub(a0);
+            let len = d.len_xz();
+            let dir = v3(fx::div(d.x, len.max(1)), 0, fx::div(d.z, len.max(1)));
+            strip(b, a0, dir, len, scene_len(half * 2), a.color, ONE / 5);
+            for side in [-1, 1] {
+                let across = v3(dir.z, 0, -dir.x).scale(scene_len(half) * side);
+                strip(
+                    b,
+                    a0.add(across),
+                    dir,
+                    len,
+                    big(f, ONE / 20),
+                    a.color,
+                    ONE * 3 / 4,
+                );
+            }
+            let land = crate::aram::clamp_landing(f.ctx, u.team, a.at);
+            let spot = floor_at(f, land);
+            ring(b, spot, scene_len(110), a.color, ONE * 3 / 4 + beat);
+            disc(b, spot, scene_len(110), a.color, ONE / 4);
+            if let Some(c) = crate::aram::cannon_at(f.ctx, u.team) {
+                arc_dots(f, b, floor_at(f, c), spot, a.color, cycle(f, 20));
+            }
+        }
         Area::Teleport => {
             let dest = crate::item::tp_destination(f.w, f.ctx, u.team, a.at);
             let p = floor_at(f, dest);
@@ -361,5 +393,182 @@ pub fn teleports(f: &Frame, b: &mut Batch) {
             col,
             ONE,
         );
+    }
+}
+
+/// A dotted arc from `a` to `b`, highest in the middle, the dots running
+/// along it with `phase`.
+fn arc_dots(f: &Frame, b: &mut Batch, a: V3, c: V3, col: Rgb, phase: i32) {
+    let n = 16;
+    let high = fx::mul(c.sub(a).len_xz(), ONE / 5).max(ONE * 2);
+    for i in 0..n {
+        let u = fx::div(i, n) + phase / n;
+        if u > ONE {
+            continue;
+        }
+        let p = a
+            .lerp(c, u)
+            .add(v3(0, fx::mul(fx::mul(u, ONE - u) * 4, high) + ONE / 3, 0));
+        glow(b, p, big(f, ONE / 14), col, ONE * 3 / 4);
+    }
+}
+
+/// How far through its time in the air a thrown hero is (Q16), and how
+/// high above the ground it is drawn (scene units): highest halfway.
+pub fn flight_arc(f: &Frame, up: u32, land: u32) -> (i32, i32) {
+    let span = (land.saturating_sub(up) as i32).max(1) * ONE;
+    let k = fx::div(crate::marks::age(f, up).min(span), span);
+    (k, fx::mul(fx::mul(k, ONE - k) * 4, ONE * 9))
+}
+
+/// The mode's own things on the field: each side's cannon, the relics
+/// (or the ring filling while one is away), and every throw in the air
+/// with its trail and the landing ring both sides can see.
+pub fn aram(f: &Frame, b: &mut Batch) {
+    if !f.w.aram {
+        return;
+    }
+    let m = f.models;
+    let scale = f.look.unit_scale * ONE / 100;
+    let put = |b: &mut Batch, name: &str, at: P, face: i32, team: u8, lift: i32, squash: i32| {
+        let Some(mi) = m.find(name) else { return };
+        let h = ground(f, at) + lift;
+        let s = fx::mul(scale, ONE - squash);
+        let place = Affine::translate(to_scene(at, h))
+            .then(&Affine::rot_y(face))
+            .then(&Affine::scale(v3(
+                fx::mul(scale, ONE + squash / 2),
+                s,
+                fx::mul(scale, ONE + squash / 2),
+            )));
+        crate::models::pose_parts(&m.list[mi], &crate::models::Pose::STILL, &place, |pt, a| {
+            let layer = if pt.plain {
+                crate::render::LAYER_PLAIN
+            } else {
+                crate::render::LAYER_INKED
+            };
+            b.push(layer, pt.mesh, &a, m.color(team, pt.color), pt.style);
+        });
+    };
+    // the cannons, turned down the lane, squashing as they fire
+    for team in [crate::world::SUN, crate::world::MOON] {
+        let (Some(c), Some((_, end, _))) = (
+            crate::aram::cannon_at(f.ctx, team),
+            crate::aram::band(f.ctx, team),
+        ) else {
+            continue;
+        };
+        let face = fx::atan2(end[1] - c[1], end[0] - c[0]);
+        let fired = f.w.units.iter().find_map(|u| match u.act {
+            Act::Flight { up, .. } if u.team == team && f.w.tick >= up && f.w.tick < up + 9 => Some(up),
+            _ => None,
+        });
+        let squash = fired
+            .map(|up| {
+                fx::sin(fx::mul(
+                    fx::div(crate::marks::age(f, up).min(ONE * 9), ONE * 9),
+                    fx::HALF,
+                )) / 6
+            })
+            .unwrap_or(0);
+        let name = if team == crate::world::SUN {
+            "cannon_sun"
+        } else {
+            "cannon_moon"
+        };
+        put(b, name, c, face, team, 0, squash);
+        if let Some(up) = fired {
+            // a puff of smoke from the barrel
+            let k = fx::div(crate::marks::age(f, up).min(ONE * 9), ONE * 9);
+            let mouth = to_scene(c, ground(f, c) + big(f, ONE * 2));
+            glow(
+                b,
+                mouth.add(v3(0, fx::mul(k, ONE), 0)),
+                big(f, ONE / 3 + k / 2),
+                m.named("cloud"),
+                ONE - k,
+            );
+        }
+    }
+    // the relics, bobbing; while one is away, a ring that fills toward its return
+    let back = f
+        .ctx
+        .rules
+        .aram
+        .as_ref()
+        .map(|a| a.relic_back * crate::rules::TPS)
+        .unwrap_or(1)
+        .max(1);
+    let heal = m.named("fx_heal");
+    for (i, spot) in crate::aram::relic_spots(f.ctx).iter().enumerate() {
+        let floor = floor_at(f, *spot);
+        let away = f.w.relics.get(i).copied().unwrap_or(0);
+        if away == 0 {
+            let bob = fx::mul(fx::sin(fx::mul(cycle(f, 66), fx::TURN)), ONE / 6);
+            put(
+                b,
+                "relic",
+                *spot,
+                fx::mul(cycle(f, 120), fx::TURN),
+                crate::world::NEUTRAL,
+                bob,
+                0,
+            );
+            ring(b, floor, scene_len(90), heal, ONE / 2);
+        } else {
+            let taken = away.saturating_sub(back as u32);
+            let k = fx::div(crate::marks::age(f, taken).min(back * ONE), back * ONE);
+            ring(b, floor, scene_len(90), heal, ONE / 3);
+            disc(b, floor, fx::mul(scene_len(90), k), heal, ONE / 3);
+            // the burst as it is taken
+            let burst = crate::marks::age(f, taken);
+            if burst < ONE * 18 {
+                let u = fx::div(burst, ONE * 18);
+                for j in 0..8 {
+                    let ang = fx::TURN * j / 8;
+                    let out = fx::mul(scene_len(80), u);
+                    let p = floor.add(v3(
+                        fx::mul(fx::cos(ang), out),
+                        big(f, ONE) + fx::mul(u, big(f, ONE)),
+                        fx::mul(fx::sin(ang), out),
+                    ));
+                    glow(b, p, big(f, ONE / 10), heal, ONE - u);
+                }
+            }
+        }
+    }
+    // throws in the air: a trail behind the hero and the ring where it lands
+    for u in &f.w.units {
+        let Act::Flight {
+            from, to, up, land, ..
+        } = u.act
+        else {
+            continue;
+        };
+        let col = m.team_named(u.team, "team_glow");
+        let spot = floor_at(f, to);
+        let pulse = fx::sin(fx::mul(cycle(f, 12), fx::TURN)) / 8;
+        ring(b, spot, scene_len(110), col, ONE * 3 / 4 + pulse);
+        let (k, _) = flight_arc(f, up, land);
+        disc(b, spot, fx::mul(scene_len(110), k), col, ONE / 4);
+        if f.w.tick < up {
+            continue;
+        }
+        let (a, c) = (floor_at(f, from), spot);
+        for i in 1..7 {
+            let kk = k - ONE * i / 28;
+            if kk <= 0 {
+                break;
+            }
+            let lift = fx::mul(fx::mul(kk, ONE - kk) * 4, ONE * 9);
+            let p = a.lerp(c, kk).add(v3(0, lift + big(f, ONE / 2), 0));
+            glow(
+                b,
+                p,
+                big(f, ONE / 5) - big(f, ONE / 40) * i,
+                col,
+                ONE - ONE * i / 7,
+            );
+        }
     }
 }

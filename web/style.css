@@ -252,3 +252,17 @@ body[data-stage="still"] #ui, body[data-stage="still"] #notice:empty { display: 
 
 /* the copy fallback's text box: selectable, never seen */
 .offscreen { position: fixed; left: -100vw; opacity: 0; }
+
+/* All Random All Mid (round 4): the mode switch, and the dealt hero's reveal */
+.stepper.mode-row { grid-template-columns: minmax(0, 1fr) auto; }
+.stepper button.mode { min-width: 22ch; }
+.stepper button.mode.on { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+.hero-card.dim { opacity: .38; filter: saturate(.5); }
+.hero-card.dim:hover { border-color: var(--line); }
+.hero-card.dealt { border-color: var(--accent); box-shadow: 0 0 22px var(--accent); animation: dealt .9s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes dealt {
+  0% { transform: scale(.6) rotate(-8deg); opacity: 0; }
+  60% { transform: scale(1.12) rotate(3deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); }
+}
+@media (prefers-reduced-motion: reduce) { .hero-card.dealt { animation: none; } }

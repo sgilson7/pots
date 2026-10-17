@@ -39,6 +39,9 @@ pub enum Cmd {
     /// Stand still and attack nothing until the next order (the computer
     /// players' version of a player's stop-spam between last hits).
     Stand,
+    /// All Random All Mid: climb into the base cannon and be thrown toward
+    /// a point on the middle lane.
+    Cannon(P),
 }
 
 pub const CMD_VALUES: usize = 5;
@@ -63,6 +66,7 @@ impl Cmd {
             Cmd::Glyph => [14, 0, 0, 0, 0],
             Cmd::Autopilot(d) => [15, d as i32, 0, 0, 0],
             Cmd::Stand => [16, 0, 0, 0, 0],
+            Cmd::Cannon(p) => [17, p[0], p[1], 0, 0],
         }
     }
 
@@ -85,6 +89,7 @@ impl Cmd {
             14 => Cmd::Glyph,
             15 => Cmd::Autopilot(small(v[1])?),
             16 => Cmd::Stand,
+            17 => Cmd::Cannon([v[1], v[2]]),
             _ => return None,
         })
     }
@@ -102,7 +107,21 @@ pub fn apply(w: &mut World, ctx: &Ctx, player: usize, cmd: Cmd) {
         return;
     }
     let hero = w.players[player].hero;
+    // a hero in the air takes no orders until it lands
+    let flying = w
+        .get(hero)
+        .map(|u| matches!(u.act, Act::Flight { .. }))
+        .unwrap_or(false);
+    if flying
+        && !matches!(
+            cmd,
+            Cmd::Buy(_) | Cmd::Sell(_) | Cmd::Swap(..) | Cmd::Learn(_) | Cmd::Autopilot(_)
+        )
+    {
+        return;
+    }
     match cmd {
+        Cmd::Cannon(at) => crate::aram::throw(w, ctx, hero, at),
         Cmd::Pick(k) => {
             if hero == NO_UNIT && (k as usize) < ctx.rules.heroes.len() {
                 w.add_hero(ctx, player, k as usize);
@@ -301,7 +320,7 @@ pub fn walk(w: &mut World, ctx: &Ctx, id: Uid, goal: P, stop: i32) -> bool {
 /// one it already overlaps is always allowed, so a crowd can come apart.
 fn crowded(w: &World, ctx: &Ctx, id: Uid, radius: i32, from: (i32, i32), to: (i32, i32)) -> bool {
     w.units.iter().any(|o| {
-        if o.id == id || !o.alive {
+        if o.id == id || !o.alive || matches!(o.act, Act::Flight { .. }) {
             return false;
         }
         let d = &ctx.rules.units[o.def as usize];
@@ -446,6 +465,9 @@ pub fn act_all(w: &mut World, ctx: &Ctx) {
 }
 
 fn act_one(w: &mut World, ctx: &Ctx, id: Uid) {
+    if crate::aram::fly(w, id) {
+        return;
+    }
     let Some(u) = w.live(id) else { return };
     let kind = ctx.rules.units[u.def as usize].kind;
     if u.expires != 0 && u.expires <= w.tick {
@@ -468,6 +490,8 @@ fn act_one(w: &mut World, ctx: &Ctx, id: Uid) {
         return;
     }
     match u.act {
+        // handled by `aram::fly` above; never reached
+        Act::Flight { .. } => return,
         Act::Swing { t, hit_at } => {
             if w.tick >= hit_at {
                 w.get_mut(id).expect("checked").act = Act::None;
@@ -608,7 +632,8 @@ fn separate(w: &mut World, ctx: &Ctx) {
             continue;
         }
         let da = &ctx.rules.units[a.def as usize];
-        if da.kind.is_building() || da.speed == 0 || matches!(a.act, Act::Channel { .. }) {
+        if da.kind.is_building() || da.speed == 0 || matches!(a.act, Act::Channel { .. } | Act::Flight { .. })
+        {
             continue;
         }
         for j in 0..n {
@@ -616,7 +641,7 @@ fn separate(w: &mut World, ctx: &Ctx) {
                 continue;
             }
             let b = &w.units[j];
-            if !b.alive {
+            if !b.alive || matches!(b.act, Act::Flight { .. }) {
                 continue;
             }
             let db = &ctx.rules.units[b.def as usize];
@@ -702,6 +727,7 @@ mod tests {
             Cmd::Glyph,
             Cmd::Autopilot(2),
             Cmd::Stand,
+            Cmd::Cannon([6000, 5900]),
         ] {
             assert_eq!(Cmd::decode(c.encode()), Some(c));
         }

@@ -176,6 +176,28 @@ fn difficulty_name(g: &Game, d: u8) -> String {
         .unwrap_or_else(|| id.clone())
 }
 
+/// The mode: Normal or All Random All Mid, a click switches (round 4).
+fn mode_switch(g: &Game, aram: bool, act: &str) -> Node {
+    let s = &g.strings;
+    let mut b = button(
+        if aram { "mode on" } else { "mode" },
+        s.ui(if aram { "mode.aram" } else { "mode.normal" }),
+        act,
+        "",
+    );
+    b.off = g.rules.aram.is_none();
+    b.tip = Some(Tip {
+        title: s.ui("mode.aram"),
+        text: s.ui("mode.aram.text"),
+        ..Tip::default()
+    });
+    b.term = "All Random All Mid".into();
+    with(
+        node("div", "stepper mode-row"),
+        vec![text("span", "label", s.ui("arcade.mode")), b],
+    )
+}
+
 fn arcade(g: &Game) -> Node {
     let s = &g.strings;
     let mut missions = Vec::new();
@@ -228,6 +250,7 @@ fn arcade(g: &Game) -> Node {
         vec![
             text("h2", "", s.ui("arcade.custom")),
             text("p", "fine", s.ui("arcade.custom.text")),
+            mode_switch(g, st.aram, "setup.mode"),
             stepper(s.ui("arcade.allies"), st.allies.to_string(), "setup.allies"),
             stepper(s.ui("arcade.enemies"), st.enemies.to_string(), "setup.enemies"),
             stepper(
@@ -240,7 +263,16 @@ fn arcade(g: &Game) -> Node {
                 difficulty_name(g, st.enemy),
                 "setup.enemy",
             ),
-            button("primary", s.ui("arcade.custom.start"), "custom", ""),
+            button(
+                "primary",
+                s.ui(if st.aram {
+                    "arcade.custom.start_aram"
+                } else {
+                    "arcade.custom.start"
+                }),
+                "custom",
+                "",
+            ),
         ],
     );
     with(
@@ -390,13 +422,20 @@ fn item_tip(g: &Game, k: usize, price: Option<i32>) -> Tip {
 
 fn pick(g: &Game, choosing: bool) -> Node {
     let s = &g.strings;
+    let dealt = choosing && g.setup.aram && g.setup.mission.is_none();
     let mut cards = Vec::new();
     for (k, &u) in g.rules.heroes.iter().enumerate() {
         let def = &g.rules.units[u];
         let named = s.hero(&def.id);
         let chosen = choosing && g.setup.hero == k as i32;
+        let class = match (chosen, dealt) {
+            (true, true) => "hero-card chosen dealt",
+            (true, false) => "hero-card chosen",
+            (false, true) => "hero-card dim",
+            (false, false) => "hero-card",
+        };
         let mut card = with(
-            node("button", if chosen { "hero-card chosen" } else { "hero-card" }),
+            node("button", class),
             vec![
                 Node {
                     t: "img",
@@ -409,11 +448,17 @@ fn pick(g: &Game, choosing: bool) -> Node {
             ],
         );
         card.tip = Some(hero_tip(g, k));
-        if choosing {
+        if choosing && !dealt {
             card.a = "pick".into();
             card.v = k.to_string();
         }
-        cards.push(keyed(card, format!("h{k}")));
+        // keyed by the hero dealt, so a reroll plays the reveal again
+        let key = if dealt && chosen {
+            format!("h{k}d{}", g.setup.rerolled as u8)
+        } else {
+            format!("h{k}")
+        };
+        cards.push(keyed(card, key));
     }
     let detail = if g.setup.hero >= 0 || !choosing {
         let k = g.setup.hero.max(0) as usize;
@@ -449,7 +494,13 @@ fn pick(g: &Game, choosing: bool) -> Node {
         text(
             "h1",
             "",
-            s.ui(if choosing { "pick.title" } else { "heroes.title" }),
+            s.ui(if dealt {
+                "pick.title_aram"
+            } else if choosing {
+                "pick.title"
+            } else {
+                "heroes.title"
+            }),
         ),
         button(
             "back",
@@ -458,6 +509,12 @@ fn pick(g: &Game, choosing: bool) -> Node {
             if choosing { "arcade" } else { "title" },
         ),
     ];
+    if dealt {
+        let mut again = button("", s.ui("pick.reroll"), "reroll", "");
+        again.off = g.setup.rerolled;
+        again.term = "Reroll".into();
+        head.push(again);
+    }
     if choosing {
         let mut go = button("primary", s.ui("pick.start"), "start", "");
         go.off = g.setup.hero < 0;
@@ -595,6 +652,7 @@ fn hud(g: &Game) -> Node {
     if let Some(aim) = g.aim {
         let key = match aim {
             Aim::AttackMove => "hud.aim_attack",
+            Aim::Cannon => "hud.aim_cannon",
             _ => "hud.aim",
         };
         kids.push(keyed(text("div", "aim-hint", s.ui(key)), "aim"));
@@ -895,6 +953,12 @@ fn bottom(g: &Game, w: &World, me: usize, hero: Uid) -> Node {
         button("", s.ui("hud.shop"), "shop.toggle", ""),
         button("", s.ui("hud.score"), "score.toggle", ""),
     ];
+    if w.aram {
+        let mut cannon = button("", s.ui("hud.cannon"), "cannon", "");
+        cannon.off = !crate::aram::may_throw(w, &ctx, hero);
+        cannon.term = "Cannon".into();
+        side.push(cannon);
+    }
     let k = (p.team as usize).min(1);
     let mut glyph = button("", s.ui("hud.glyph"), "glyph", "");
     glyph.off = w.glyph_ready[k] > w.tick;
@@ -941,11 +1005,12 @@ fn shop(g: &Game, w: &World, me: usize) -> Node {
     let near_home = crate::item::near_shop(w, &ctx, me, "home");
     let courier = crate::courier::at_base(w, &ctx, w.players[me].team);
     for (k, it) in g.rules.items.iter().enumerate() {
-        if it.tab != g.shop_tab || it.shop == "none" {
+        let sold = crate::aram::shop_of(w, &ctx, k);
+        if it.tab != g.shop_tab || sold == "none" {
             continue;
         }
         let price = crate::item::price(w, &ctx, me, k);
-        let here = crate::item::near_shop(w, &ctx, me, &it.shop) || (it.shop == "home" && courier);
+        let here = crate::item::near_shop(w, &ctx, me, sold) || (sold == "home" && courier);
         let mut b = with(
             node("button", "shop-item"),
             vec![
@@ -972,10 +1037,10 @@ fn shop(g: &Game, w: &World, me: usize) -> Node {
         }
         b.c = c;
         let mut tip = item_tip(g, k, Some(price));
-        if it.shop == "secret" {
+        if sold == "secret" {
             tip.lines.push(s.ui("tip.secret"));
         }
-        if !near_home && it.shop == "home" && courier {
+        if !near_home && sold == "home" && courier {
             tip.lines.push(s.ui("tip.courier"));
         }
         b.tip = Some(tip);
@@ -1015,14 +1080,15 @@ fn build_panel(g: &Game, w: &World, me: usize) -> Node {
     let it = &g.rules.items[k];
     let price = crate::item::price(w, &ctx, me, k);
     let courier = crate::courier::at_base(w, &ctx, w.players[me].team);
-    let here = crate::item::near_shop(w, &ctx, me, &it.shop) || (it.shop == "home" && courier);
+    let sold = crate::aram::shop_of(w, &ctx, k);
+    let here = crate::item::near_shop(w, &ctx, me, sold) || (sold == "home" && courier);
     let mut buy = button(
         "buy-button",
         s.ui("shop.buy").replace("{v}", &price.to_string()),
         "buy",
         k.to_string(),
     );
-    buy.off = w.players[me].gold < price || !here || it.shop == "none";
+    buy.off = w.players[me].gold < price || !here || sold == "none";
     let head = with(
         node("div", "build-head"),
         vec![
@@ -1339,10 +1405,31 @@ pub fn online_view(g: &Game) -> Node {
         start.off = o.started;
         head.insert(2, start);
     }
-    let mut setup = vec![
-        text("h2", "", s.ui("online.your_hero")),
-        with(node("div", "hero-mini-grid"), cards),
-    ];
+    let mut setup = vec![text("h2", "", s.ui("online.your_hero"))];
+    if o.aram {
+        // the hero is dealt; the grid shows it, and a reroll waits
+        for c in cards.iter_mut() {
+            c.a.clear();
+            c.off = c.c != "hero-mini chosen";
+        }
+        let spent = o
+            .my_seat
+            .and_then(|k| o.seats.get(k))
+            .map(|s| s.rerolled)
+            .unwrap_or(true);
+        let mut again = button("", s.ui("pick.reroll"), "online.reroll", "");
+        again.off = spent || o.started;
+        again.term = "Reroll".into();
+        setup.push(with(node("div", "hero-mini-grid"), cards));
+        setup.push(again);
+    } else {
+        setup.push(with(node("div", "hero-mini-grid"), cards));
+    }
+    if host {
+        setup.push(mode_switch(g, o.aram, "online.mode"));
+    } else if o.aram {
+        setup.push(text("p", "fine", s.ui("mode.aram")));
+    }
     if host {
         setup.push(with(
             node("div", "stepper"),

@@ -19,6 +19,7 @@
   "KeyA": "attack",
   "KeyS": "stop",
   "KeyH": "hold",
+    "KeyF": "cannon",
   "KeyO": "learn",
   "KeyB": "shop",
   "Tab": "score",

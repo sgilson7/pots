@@ -417,8 +417,21 @@ pub fn units(f: &Frame, b: &mut Batch) {
         let p = [x / SUB, y / SUB];
         let h = ground_at(f.ctx.terrain, p);
         let scale = d.scale * lk.unit_scale * ONE / 10_000;
-        let place = Affine::translate(sub_to_scene(x, y, h))
+        // a hero thrown by the cannon: hidden in the barrel, then high on
+        // its arc and tumbling (All Random All Mid)
+        let (lift, tumble, flying) = match u.act {
+            Act::Flight { up, .. } if f.w.tick < up => continue,
+            Act::Flight { up, land, .. } => {
+                let (k, lift) = crate::overlay::flight_arc(f, up, land);
+                (lift, fx::mul(k, fx::TURN * 2), true)
+            }
+            _ => (0, 0, false),
+        };
+        let half = fx::mul(model.height, scale) / 2;
+        let place = Affine::translate(sub_to_scene(x, y, h + lift + if flying { half } else { 0 }))
             .then(&Affine::rot_y(face))
+            .then(&Affine::rot_z(-tumble))
+            .then(&Affine::translate(v3(0, if flying { -half } else { 0 }, 0)))
             .then(&Affine::scale(v3(scale, scale, scale)));
         let pose = pose_of(f, u.id);
         let invisible = u.has(M::Invisible);
@@ -462,7 +475,7 @@ pub fn units(f: &Frame, b: &mut Batch) {
             }
         });
         // team ring under every unit that is not a building
-        if !d.kind.is_building() && d.kind != Kind::Ward {
+        if !d.kind.is_building() && d.kind != Kind::Ward && !flying {
             let r = (d.radius + 16) * 2 * ONE / GAME_UNITS_PER_SCENE;
             let ring_col = m.team_named(u.team, "ring");
             let a =

@@ -52,11 +52,11 @@ pub fn near_shop(w: &World, ctx: &Ctx, player: usize, kind: &str) -> bool {
 /// item wherever its recipe scroll is sold (the base shop).
 fn sold_here(w: &World, ctx: &Ctx, player: usize, k: usize) -> bool {
     let it = &ctx.rules.items[k];
-    if it.shop == "none" {
+    let shop = crate::aram::shop_of(w, ctx, k);
+    if shop == "none" {
         return false;
     }
-    near_shop(w, ctx, player, &it.shop)
-        || (it.shop != "secret" && near_shop(w, ctx, player, "side") && it.shop == "home" && side_sells(it))
+    near_shop(w, ctx, player, shop) || (shop == "home" && near_shop(w, ctx, player, "side") && side_sells(it))
 }
 
 /// Side shops sell a short list of basic items, as in DotA.
@@ -81,7 +81,7 @@ pub fn buy(w: &mut World, ctx: &Ctx, player: usize, k: usize) {
         let it = &ctx.rules.items[k];
         let cost = ctx.rules.item_total(k);
         let alive = w.live(id).is_some();
-        if it.shop == "home"
+        if crate::aram::shop_of(w, ctx, k) == "home"
             && alive
             && crate::courier::at_base(w, ctx, team)
             && w.players[player].gold >= cost

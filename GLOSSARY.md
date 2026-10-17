@@ -8,6 +8,10 @@ Each entry is a `### Term` heading, one or two plain sentences, and an optional 
 
 An attribute. Each point adds armor and attack speed, and an agility hero's damage.
 
+### All Random All Mid
+
+A mode of the custom match and online play. Each player is dealt a random hero, and all ten fight in the middle lane.
+
 ### Armor
 
 Cuts the physical damage a unit takes. Each point of armor counts for less than the one before, so no amount makes a unit immune. Negative armor makes it take more.
@@ -25,6 +29,10 @@ A building behind each lane's last tower. While it stands, the enemy's creeps in
 ### Buyback
 
 Paying gold to return from death at once, instead of waiting to respawn. It then waits a while before it can be used again.
+
+### Cannon
+
+Stands beside each side's fountain in All Random All Mid. From the fountain it throws your hero onto the middle lane, no farther than just past your outer tower, and it loads again each time you return.
 
 ### Cooldown
 
@@ -56,6 +64,10 @@ Makes every tower of your side shrug off attacks for a few seconds. Your side sh
 
 What you buy items with. Most of it comes from last hits; killing heroes and taking towers pays too. Dying loses some of it.
 
+### Health relic
+
+A flask that waits in the middle lane in All Random All Mid. Walk over it to get back some health and mana; it returns a while after it is taken.
+
 ### Intelligence
 
 An attribute. Each point adds mana and mana regeneration, and an intelligence hero's damage.
@@ -83,6 +95,10 @@ How fast a unit walks, in map units a second.
 ### Neutral camp
 
 A group of creeps that belongs to no side, waiting in the forest. A camp refills on the minute if no one stands in it.
+
+### Reroll
+
+In All Random All Mid, trading the hero you were dealt for another from your side's deck before the match starts.
 
 ### Respawn
 

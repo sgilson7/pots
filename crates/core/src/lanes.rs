@@ -33,9 +33,10 @@ pub const LEASH: i32 = 900;
 pub fn clock(w: &mut World, ctx: &Ctx) {
     let t = &ctx.rules.t;
     let tick = w.tick;
-    if tick == 0 {
+    if tick == 0 && !w.aram {
         spawn_boss(w, ctx);
     }
+    crate::aram::clock(w, ctx);
     if tick == w.horn_at {
         w.event(EV_HORN, 0, 0, [0, 0]);
     }
@@ -56,7 +57,7 @@ pub fn clock(w: &mut World, ctx: &Ctx) {
     // neutral camps: first half a minute after the horn, then on every minute mark
     let first = w.horn_at + (t.neutral_first * TPS) as u32;
     let minute = (t.neutral_every * TPS) as u32;
-    if tick == first || (tick > first && (tick - w.horn_at).is_multiple_of(minute)) {
+    if !w.aram && (tick == first || (tick > first && (tick - w.horn_at).is_multiple_of(minute))) {
         spawn_camps(w, ctx);
     }
     // runes: every even minute from the horn, unless one still waits
@@ -65,6 +66,7 @@ pub fn clock(w: &mut World, ctx: &Ctx) {
         && (tick - w.horn_at).is_multiple_of(rune_every)
         && !ctx.rules.map.runes.is_empty()
         && w.rune.is_none()
+        && !w.aram
     {
         let spot = w.rng.below(ctx.rules.map.runes.len() as u32) as usize;
         let kind = w.rng.below(RUNE_KINDS) as u8;
@@ -128,6 +130,9 @@ fn spawn_waves(w: &mut World, ctx: &Ctx) {
     for team in [SUN, MOON] {
         let side = &ctx.rules.map.sides[team as usize];
         for (li, lane) in LANES.iter().enumerate() {
+            if !crate::aram::builds_lane(w, ctx, lane) {
+                continue;
+            }
             let Some(spawn) = side.creep_spawn.get(*lane) else {
                 continue;
             };
@@ -578,11 +583,13 @@ fn protect(w: &mut World, ctx: &Ctx) {
         .map(|u| u.id)
         .collect();
     let calm = (t.backdoor_calm * TPS) as u32;
+    // the base towers count only the lanes the match builds (R4.8)
+    let built = crate::aram::built_lanes(w, ctx);
     for id in ids {
         let u = w.get(id).expect("listed");
         let (team, tier, lane, kind) = (u.team, u.tier, u.lane_name, ctx.rules.units[u.def as usize].kind);
         let shielded = match kind {
-            Kind::Tower if tier == 4 => (0..3u8).all(|l| standing(w, team, 3, Some(l))),
+            Kind::Tower if tier == 4 => built.iter().all(|&l| standing(w, team, 3, Some(l))),
             Kind::Tower if tier > 1 => standing(w, team, tier - 1, Some(lane)),
             Kind::Barracks => standing(w, team, 3, Some(lane)),
             Kind::Sphere => standing(w, team, 4, None),

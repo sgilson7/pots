@@ -605,7 +605,38 @@ struct ItemsFile {
 pub struct RulesFile {
     pub tables: Tables,
     pub damage: DamageTable,
+    #[serde(default)]
+    pub aram: Option<AramDef>,
     pub heroes: Vec<HeroPick>,
+}
+
+/// All Random All Mid (round 4, T13 and T14): what the mode changes. Points
+/// are the Sunward side's; the Moonward's are their mirrors through the
+/// map's centre, as the map itself is.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct AramDef {
+    #[serde(default, rename = "_note")]
+    pub note: String,
+    /// The lanes whose towers, barracks and creeps are built.
+    pub lanes: Vec<String>,
+    pub starting_gold: i32,
+    /// Rerolls each player may spend before the match starts.
+    pub rerolls: i32,
+    /// Where the cannon stands.
+    pub cannon: P,
+    /// Hundredths of a second to climb into the cannon, and in the air.
+    pub climb: i32,
+    pub flight: i32,
+    /// How far past the outer tower a throw may land, map units.
+    pub reach_past: i32,
+    pub relics: Vec<P>,
+    /// Percent of health and mana a relic gives back.
+    pub relic_pct: i32,
+    /// Seconds until a taken relic returns.
+    pub relic_back: i32,
+    /// How near a hero must walk to take one, map units.
+    pub relic_radius: i32,
 }
 
 /// Everything fixed for a match, with names resolved to indices.
@@ -628,6 +659,8 @@ pub struct Rules {
     pub item_parts: Vec<Vec<usize>>,
     /// Computer players' trees and difficulty, when loaded.
     pub ai: Option<crate::ai::AiDef>,
+    /// The All Random All Mid mode's numbers.
+    pub aram: Option<AramDef>,
 }
 
 pub type Fail = String;
@@ -734,6 +767,7 @@ impl Rules {
             unit_armor,
             item_parts,
             ai: None,
+            aram: r.aram,
         })
     }
 

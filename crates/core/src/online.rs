@@ -40,7 +40,7 @@ use crate::ui::Node;
 use crate::world::{Ctx, World, PLAYERS};
 
 /// Changes when a message changes shape; `web/net/config.js` carries it too.
-pub const PROTOCOL: u32 = 2;
+pub const PROTOCOL: u32 = 3;
 /// Ticks between an order and the tick it acts on.
 pub const DELAY: u32 = 2;
 /// Ticks a browser may run past its confirmed tick before it waits.
@@ -70,6 +70,9 @@ pub struct Seat {
     /// The browser dropped; the computer plays the seat until it returns.
     #[serde(default)]
     pub away: bool,
+    /// All Random All Mid: this seat has spent its reroll.
+    #[serde(default)]
+    pub rerolled: bool,
 }
 
 /// What goes over the wire, as JSON text.
@@ -90,7 +93,11 @@ pub enum Msg {
         seats: Vec<Seat>,
         bots: u8,
         started: bool,
+        #[serde(default)]
+        aram: bool,
     },
+    /// Joiner to host: deal my seat another hero (All Random All Mid).
+    Reroll,
     Sit {
         seat: usize,
     },
@@ -101,6 +108,8 @@ pub enum Msg {
         seed: u64,
         horn: u32,
         bots: u8,
+        #[serde(default)]
+        aram: bool,
         seats: Vec<Seat>,
         seat: usize,
         log: Vec<[i32; 7]>,
@@ -192,6 +201,8 @@ pub struct Session {
     pub deepest: u32,
     pub stalls: u32,
     pub replayed: u64,
+    /// The match is All Random All Mid.
+    pub aram: bool,
     /// Seats coming back, and the tick each takes its seat again (host).
     pub returning: Vec<(usize, u32)>,
     /// After a rejoin, the host repeats every order since the log it sent,
@@ -228,6 +239,10 @@ pub struct Online {
     pub tokens: Vec<String>,
     /// A returning joiner: log entries received before the Start.
     pub early_log: Vec<[i32; 7]>,
+    /// The room plays All Random All Mid (the host's choice).
+    pub aram: bool,
+    /// The host: the roster's size, for dealing heroes in the lobby.
+    pub heroes: usize,
 }
 
 fn empty_seats() -> Vec<Seat> {
@@ -237,6 +252,7 @@ fn empty_seats() -> Vec<Seat> {
             human: false,
             pick: -1,
             away: false,
+            rerolled: false,
         })
         .collect()
 }
@@ -260,11 +276,31 @@ fn send(o: &mut Online, to: &str, m: &Msg, fast: bool) {
     o.out.push((to.to_string(), m.text(), fast));
 }
 
+/// The seed a room's match is played and dealt from.
+fn match_seed(game_seed: u64) -> u64 {
+    game_seed ^ 0x9e37_79b9
+}
+
+/// The host deals each seated player's hero in All Random All Mid, from the
+/// seed the match will start from, so the lobby shows the hero each will play.
+fn deal_seats(o: &mut Online) {
+    if !o.aram || o.started {
+        return;
+    }
+    let rerolled: Vec<bool> = o.seats.iter().map(|s| s.rerolled).collect();
+    let deal = crate::aram::deal(o.seed, o.heroes, &rerolled);
+    for (k, s) in o.seats.iter_mut().enumerate() {
+        s.pick = if s.human { deal[k] as i32 } else { -1 };
+    }
+}
+
 fn broadcast_lobby(o: &mut Online) {
+    deal_seats(o);
     let m = Msg::Lobby {
         seats: o.seats.clone(),
         bots: o.bots,
         started: o.started,
+        aram: o.aram,
     };
     send(o, "*", &m, false);
 }
@@ -283,6 +319,8 @@ pub fn act(g: &mut Game, name: &str, value: &str) -> Result<(), String> {
         }
         "online.host" => {
             o.role = Role::Host;
+            o.seed = match_seed(g.seed);
+            o.heroes = g.rules.heroes.len();
             o.room = code_from(g.seed ^ 0x5eed);
             o.token = code_from(g.seed ^ 0x70c3);
             o.seats = empty_seats();
@@ -291,6 +329,7 @@ pub fn act(g: &mut Game, name: &str, value: &str) -> Result<(), String> {
                 human: true,
                 pick: -1,
                 away: false,
+                rerolled: false,
             };
             o.my_seat = Some(0);
             o.peers.clear();
@@ -354,6 +393,42 @@ pub fn act(g: &mut Game, name: &str, value: &str) -> Result<(), String> {
                 let v = o.bots as i32 + if value == "+" { 1 } else { -1 };
                 o.bots = v.clamp(0, levels - 1) as u8;
                 broadcast_lobby(o);
+            }
+        }
+        "online.mode" => {
+            if o.role == Role::Host && !o.started && g.rules.aram.is_some() {
+                o.aram = !o.aram;
+                for s in o.seats.iter_mut() {
+                    s.pick = -1;
+                    s.rerolled = false;
+                }
+                broadcast_lobby(o);
+            }
+        }
+        "online.reroll" => {
+            if !o.aram || o.started {
+                return Err(g.strings.ui("pick.no_reroll"));
+            }
+            let spent = o
+                .my_seat
+                .and_then(|k| o.seats.get(k))
+                .map(|s| s.rerolled)
+                .unwrap_or(true);
+            if spent {
+                return Err(g.strings.ui("pick.rerolled"));
+            }
+            match o.role {
+                Role::Host => {
+                    if let Some(k) = o.my_seat {
+                        o.seats[k].rerolled = true;
+                    }
+                    broadcast_lobby(o);
+                }
+                Role::Joiner => {
+                    let host = o.host_peer.clone();
+                    send(o, &host, &Msg::Reroll, false);
+                }
+                Role::None => {}
             }
         }
         "online.start" => {
@@ -551,6 +626,7 @@ fn host_receives(g: &mut Game, peer: &str, msg: Msg) {
                     human: true,
                     pick: -1,
                     away: false,
+                    rerolled: false,
                 };
             }
             send(
@@ -595,8 +671,22 @@ fn host_receives(g: &mut Game, peer: &str, msg: Msg) {
             p.seat = Some(seat);
             broadcast_lobby(o);
         }
+        Msg::Reroll => {
+            let o = &mut g.online;
+            let Some(seat) = o.peers.iter().find(|p| p.id == peer).and_then(|p| p.seat) else {
+                return;
+            };
+            if o.started || !o.aram || o.seats[seat].rerolled {
+                return;
+            }
+            o.seats[seat].rerolled = true;
+            broadcast_lobby(o);
+        }
         Msg::Pick { hero } => {
             let o = &mut g.online;
+            if o.aram {
+                return;
+            }
             let Some(seat) = o.peers.iter().find(|p| p.id == peer).and_then(|p| p.seat) else {
                 return;
             };
@@ -646,16 +736,23 @@ fn joiner_receives(g: &mut Game, peer: &str, msg: Msg) {
             o.my_seat = usize::try_from(seat).ok();
             o.token = token;
         }
-        Msg::Lobby { seats, bots, started } => {
+        Msg::Lobby {
+            seats,
+            bots,
+            started,
+            aram,
+        } => {
             let o = &mut g.online;
             o.seats = seats;
             o.bots = bots;
             o.started = started;
+            o.aram = aram;
         }
         Msg::Start {
             seed,
             horn,
             bots,
+            aram,
             seats,
             seat,
             log,
@@ -665,7 +762,8 @@ fn joiner_receives(g: &mut Game, peer: &str, msg: Msg) {
             g.online.seats = seats.clone();
             g.online.my_seat = Some(seat);
             g.online.started = true;
-            begin(g, seed, horn, bots, seats, seat, take_over);
+            g.online.aram = aram;
+            begin(g, seed, horn, bots, aram, seats, seat, take_over);
             let early = std::mem::take(&mut g.online.early_log);
             let s = g.online.s.as_mut().expect("just begun");
             for e in early.into_iter().chain(log) {
@@ -725,19 +823,35 @@ fn take_in(g: &mut Game, seats: Vec<(usize, u32, Vec<[i32; 6]>)>) {
 }
 
 /// Builds the world every browser starts from: the seed, the seats, the picks.
-fn begin(g: &mut Game, seed: u64, horn: u32, bots: u8, seats: Vec<Seat>, me: usize, take_over: u32) {
-    let mut w = g.new_world(seed);
-    w.horn_at = horn;
+#[allow(clippy::too_many_arguments)]
+fn begin(
+    g: &mut Game,
+    seed: u64,
+    horn: u32,
+    bots: u8,
+    aram: bool,
+    seats: Vec<Seat>,
+    me: usize,
+    take_over: u32,
+) {
     let ctx = Ctx {
         rules: &g.rules,
         terrain: &g.terrain,
     };
+    let mut w = World::new_mode(&ctx, g.trees_for_match(), seed, aram);
+    w.horn_at = horn;
+    // in All Random All Mid every seat, computer or not, takes its dealt hero
+    let rerolled: Vec<bool> = seats.iter().map(|s| s.rerolled).collect();
+    let deal = crate::aram::deal(seed, g.rules.heroes.len(), &rerolled);
     let mut humans = [false; PLAYERS];
     for (k, seat) in seats.iter().enumerate() {
         w.players[k].present = true;
+        if w.aram {
+            crate::orders::apply(&mut w, &ctx, k, Cmd::Pick(deal[k]));
+        }
         if seat.human {
             humans[k] = true;
-            if seat.pick >= 0 {
+            if seat.pick >= 0 && !w.aram {
                 crate::orders::apply(&mut w, &ctx, k, Cmd::Pick(seat.pick as u8));
             }
         } else {
@@ -769,15 +883,17 @@ fn begin(g: &mut Game, seed: u64, horn: u32, bots: u8, seats: Vec<Seat>, me: usi
         deepest: 0,
         stalls: 0,
         replayed: 0,
+        aram,
         returning: Vec::new(),
         resend_from: None,
     });
 }
 
 fn start_as_host(g: &mut Game) {
-    let seed = g.seed ^ 0x9e37_79b9;
+    let seed = match_seed(g.seed);
     let horn = (g.rules.t.horn * TPS) as u32;
     let o = &mut g.online;
+    let aram = o.aram;
     o.started = true;
     let seats = o.seats.clone();
     let bots = o.bots;
@@ -788,6 +904,7 @@ fn start_as_host(g: &mut Game) {
                 seed,
                 horn,
                 bots,
+                aram,
                 seats: seats.clone(),
                 seat,
                 log: Vec::new(),
@@ -799,7 +916,7 @@ fn start_as_host(g: &mut Game) {
     }
     broadcast_lobby(o);
     let me = o.my_seat.unwrap_or(0);
-    begin(g, seed, horn, bots, seats, me, 0);
+    begin(g, seed, horn, bots, aram, seats, me, 0);
     g.online.status = "online.playing".into();
 }
 
@@ -840,6 +957,7 @@ fn welcome_back(g: &mut Game, peer: &str, seat: usize) {
         seed: s.seed,
         horn: s.horn,
         bots: s.bots,
+        aram: s.aram,
         seats: s.seats.clone(),
         seat,
         log: Vec::new(),
@@ -1180,6 +1298,7 @@ pub fn probe(g: &Game) -> serde_json::Value {
         "replayed": s.map(|s| s.replayed).unwrap_or(0),
         "sums": s.map(|s| s.sums.len()).unwrap_or(0),
         "desync": o.desync,
+        "aram": o.aram,
         "catching": o.catching,
         "away": s.map(|s| s.away.iter().filter(|a| **a).count()).unwrap_or(0),
         "seats": o.seats.iter().map(|x| format!("{}{}", if x.human { "h" } else { "-" }, if x.away { "a" } else { "" })).collect::<Vec<_>>(),

@@ -189,8 +189,45 @@ pub fn think(w: &mut World, ctx: &Ctx) {
             w.players[p].brain.lane = lane_index(ai.lanes.get(seat).map(|s| s.as_str()).unwrap_or("mid"));
             continue;
         }
+        if w.aram && aram(w, ctx, p) {
+            continue;
+        }
         decide(w, ctx, ai, d, p);
     }
+}
+
+/// All Random All Mid: a computer player keeps to the middle lane, rides
+/// the cannon out when healed at the base, and fetches a relic near it when
+/// below half health. Returns true when it gave an order (or is in the air).
+fn aram(w: &mut World, ctx: &Ctx, p: usize) -> bool {
+    w.players[p].brain.lane = lane_index("mid");
+    let hero = w.players[p].hero;
+    let Some(u) = w.live(hero) else { return false };
+    if matches!(u.act, crate::world::Act::Flight { .. }) {
+        return true;
+    }
+    let (team, here, hp) = (u.team, u.pos(), u.hp);
+    let max = crate::stats::of(ctx, w, hero).max_hp * 1000;
+    if crate::aram::may_throw(w, ctx, hero) && hp * 10 >= max * 9 {
+        if let Some((_, end, _)) = crate::aram::band(ctx, team) {
+            orders::apply(w, ctx, p, Cmd::Cannon(end));
+            return true;
+        }
+    }
+    if hp * 2 < max {
+        let spots = crate::aram::relic_spots(ctx);
+        let near = spots
+            .iter()
+            .enumerate()
+            .filter(|&(i, s)| w.relics.get(i) == Some(&0) && crate::world::within(here, *s, 1800))
+            .min_by_key(|&(_, s)| crate::world::dist2(here, *s))
+            .map(|(_, s)| *s);
+        if let Some(s) = near {
+            orders::apply(w, ctx, p, Cmd::Move(s));
+            return true;
+        }
+    }
+    false
 }
 
 fn lane_index(name: &str) -> u8 {
@@ -379,7 +416,7 @@ fn next_purchase(w: &World, ctx: &Ctx, ai: &AiDef, p: usize) -> Option<usize> {
     let name = b.items.get(i)?;
     let k = ctx.rules.item(name)?;
     let cost = crate::item::price(w, ctx, p, k);
-    if w.players[p].gold >= cost && crate::item::near_shop(w, ctx, p, &ctx.rules.items[k].shop) {
+    if w.players[p].gold >= cost && crate::item::near_shop(w, ctx, p, crate::aram::shop_of(w, ctx, k)) {
         Some(k)
     } else {
         None

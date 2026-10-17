@@ -133,6 +133,15 @@ pub enum Act {
     Backswing {
         until: u32,
     },
+    /// Thrown by the base cannon (All Random All Mid): in the barrel until
+    /// `up`, in the air from `from` to `to` until `land`. Map units.
+    Flight {
+        from: P,
+        to: P,
+        start: u32,
+        up: u32,
+        land: u32,
+    },
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -164,6 +173,9 @@ pub struct HeroState {
     /// Enemy heroes who damaged this hero recently: (unit, tick).
     pub damaged_by: Vec<(Uid, u32)>,
     pub respawn_at: u32,
+    /// All Random All Mid: the base cannon is loaded for this hero (it
+    /// loads in the fountain's range and a throw spends it).
+    pub cannon: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -408,6 +420,10 @@ pub struct World {
     pub carrying: [i32; 2],
     /// Recent moments of abilities, for the scene only (`Mark`).
     pub marks: Vec<Mark>,
+    /// All Random All Mid (round 4).
+    pub aram: bool,
+    /// The tick each relic returns, Sunward ones first; 0 while it waits.
+    pub relics: Vec<u32>,
 }
 
 /// The world with the rules and terrain it plays on.
@@ -458,6 +474,20 @@ pub fn dist(a: P, b: P) -> i32 {
 impl World {
     /// An empty world for a match on these rules; `seed` decides every roll.
     pub fn new(ctx: &Ctx, trees: Vec<Tree>, seed: u64) -> World {
+        World::new_mode(ctx, trees, seed, false)
+    }
+
+    /// A world for a normal match, or for All Random All Mid when `aram`.
+    pub fn new_mode(ctx: &Ctx, trees: Vec<Tree>, seed: u64, aram: bool) -> World {
+        let aram = aram && ctx.rules.aram.is_some();
+        let gold = match (&ctx.rules.aram, aram) {
+            (Some(a), true) => a.starting_gold,
+            _ => ctx.rules.t.starting_gold,
+        };
+        let relics = match (&ctx.rules.aram, aram) {
+            (Some(a), true) => vec![0; a.relics.len() * 2],
+            _ => Vec::new(),
+        };
         let cells = (ctx.terrain.tw * ctx.terrain.tw) as usize;
         let mut w = World {
             tick: 0,
@@ -471,7 +501,7 @@ impl World {
                     team: if p < 5 { SUN } else { MOON },
                     hero: NO_UNIT,
                     pick: -1,
-                    gold: ctx.rules.t.starting_gold,
+                    gold,
                     reliable: 0,
                     kills: 0,
                     deaths: 0,
@@ -499,6 +529,8 @@ impl World {
             couriers: [NO_UNIT; 2],
             carrying: [-1; 2],
             marks: Vec::new(),
+            aram,
+            relics,
         };
         w.place_buildings(ctx);
         w
@@ -558,6 +590,7 @@ impl World {
                 streak: 0,
                 damaged_by: Vec::new(),
                 respawn_at: 0,
+                cannon: true,
             })
         } else {
             None
@@ -612,6 +645,9 @@ impl World {
     fn place_buildings(&mut self, ctx: &Ctx) {
         for (team, side) in ctx.rules.map.sides.iter().enumerate() {
             for b in &side.buildings {
+                if !crate::aram::builds_lane(self, ctx, &b.lane) {
+                    continue;
+                }
                 let def = ctx.rules.unit(&b.unit).expect("checked when the rules loaded");
                 let id = self.spawn(ctx, def, team as u8, b.at);
                 let lane = lane_code(&b.lane);
@@ -753,6 +789,10 @@ impl World {
             mix(m.y as i64);
         }
         mix(self.tree_version as i64);
+        mix(self.aram as i64);
+        for &r in &self.relics {
+            mix(r as i64);
+        }
         h
     }
 

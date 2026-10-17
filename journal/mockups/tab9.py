@@ -39,7 +39,8 @@ walk_c = d(spawn, entry) + d(entry, centre)
 t1_t1 = d(t1, mirror(t1))
 fountain_range = RULES["tables"]["fountain_range"]
 # the plan's proposed cannon: 1 s to reach, 0.5 s to climb in, 2 s in the air
-CLIMB, FLIGHT, REACH_PAST = 0.5, 2.0, 300
+ARAM = RULES["aram"]
+CLIMB, FLIGHT, REACH_PAST = ARAM["climb"] / 100, ARAM["flight"] / 100, ARAM["reach_past"]
 by_cannon = 1.0 + CLIMB + FLIGHT
 N = {
     "walk_t1": f"{walk_t1:,.0f}", "walk_t1_s": f"{walk_t1 / avg:.1f} s", "fast": f"{walk_t1 / speeds[-1]:.1f} s", "slow": f"{walk_t1 / speeds[0]:.1f} s",
@@ -71,8 +72,9 @@ def band(a, b):
 
 
 reach_end = [t1[0] + ux * REACH_PAST, t1[1] + uy * REACH_PAST]
-cannon_at = [spawn[0] + 350, spawn[1] - 150]
-relics = [[t1[0] + (centre[0] - t1[0]) * f, t1[1] + (centre[1] - t1[1]) * f] for f in (0.35, 0.75)]
+# where the game puts them (data/rules.json "aram")
+cannon_at = ARAM["cannon"]
+relics = ARAM["relics"]
 
 
 def svg_map():
