@@ -66,6 +66,16 @@ def run(page, check, engine):
             break
     check(found, "the build tree of a built item shows the parts it is made from")
     check(page.locator(".inventory .slot:not(.empty)").count() >= 1, "the bought item is in the inventory")
+    # a right-click on an item in the shop buys it at once (T8)
+    page.click(".shop .tabs button >> nth=0")
+    gold = int(page.inner_text(".gold").strip().split()[0])
+    held = page.locator(".inventory .slot:not(.empty)").count()
+    page.locator(".shop-item:not(.dim)").first.click(button="right")
+    page.wait_for_function(
+        "(g) => { const p = JSON.parse(document.body.dataset.probe || '{}'); return p.gold < g; }", arg=gold, timeout=20000
+    )
+    check(probe(page)["gold"] < gold, "a right-click on an item in the shop buys it")
+    check(page.locator(".inventory .slot:not(.empty)").count() >= held, "the right-clicked item is carried")
     # learn the first ability with its button
     page.click("button.learn[data-v='0']")
     page.wait_for_selector(".abilities .pip.on")

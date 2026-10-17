@@ -254,8 +254,12 @@ impl Models {
 pub struct Pose {
     /// Walk cycle phase in angle units (0 when standing).
     pub walk: i32,
-    /// Attack swing progress, Q16 0..ONE (0 when not attacking).
+    /// Attack swing progress, Q16 0..ONE (0 when not attacking): the
+    /// wind-up and the strike, ONE at the hit.
     pub swing: i32,
+    /// The follow-through after the hit, Q16 0..ONE: the weapon arm and
+    /// the body ease back to rest (T7).
+    pub recover: i32,
     /// Cast: arms raised share, Q16.
     pub cast: i32,
     /// Death: share of the fall, Q16.
@@ -270,6 +274,7 @@ impl Pose {
     pub const STILL: Pose = Pose {
         walk: 0,
         swing: 0,
+        recover: 0,
         cast: 0,
         death: 0,
         spin: 0,
@@ -295,23 +300,59 @@ pub fn joints(m: &Model, pose: &Pose) -> [Affine; 8] {
     let raise = fx::mul(pose.cast, fx::deg(115));
     j[Joint::ArmL as usize] = about(piv(Joint::ArmL), &Affine::rot_z(-swing_arm + raise));
     // the weapon arm: drawn back then struck through on an attack
-    let strike = if pose.swing > 0 {
-        // back to +70° by 40 %, then down to −50° by the hit
-        let t = pose.swing;
-        if t < ONE * 2 / 5 {
-            fx::mul(fx::div(t, ONE * 2 / 5), fx::deg(70))
-        } else {
-            fx::deg(70) - fx::mul(fx::div(t - ONE * 2 / 5, ONE * 3 / 5), fx::deg(120))
-        }
-    } else {
-        0
-    };
+    let strike = strike_angle(pose);
     j[Joint::ArmR as usize] = about(piv(Joint::ArmR), &Affine::rot_z(swing_arm + raise + strike));
     // head nods slightly with the step
     let nod = fx::mul(fx::sin(pose.walk * 2), fx::deg(3));
     j[Joint::Head as usize] = about(piv(Joint::Head), &Affine::rot_z(nod));
     j[Joint::Spin as usize] = Affine::rot_y(pose.spin);
     j
+}
+
+/// Eases in and out: slow at both ends, quick in the middle.
+fn smooth(t: i32) -> i32 {
+    let t = t.clamp(0, ONE);
+    fx::mul(fx::mul(t, t), ONE * 3 - 2 * t)
+}
+
+/// The weapon arm through an attack (T7): drawn back to +70° with an easy
+/// start, held a moment, struck down to −50° quickly at the hit, then
+/// eased back to rest through the follow-through.
+fn strike_angle(pose: &Pose) -> i32 {
+    let back = fx::deg(70);
+    let down = fx::deg(-50);
+    if pose.recover > 0 {
+        return down - fx::mul(smooth(pose.recover), down);
+    }
+    let t = pose.swing;
+    if t <= 0 {
+        0
+    } else if t < ONE / 2 {
+        fx::mul(smooth(fx::div(t, ONE / 2)), back)
+    } else if t < ONE * 13 / 20 {
+        back
+    } else {
+        // the strike speeds up into the hit
+        let u = fx::div(t - ONE * 13 / 20, ONE * 7 / 20);
+        back + fx::mul(fx::mul(u, u), down - back)
+    }
+}
+
+/// The body's lean through an attack: back a little on the wind-up,
+/// forward into the strike, upright again by the end of the follow-through.
+fn lean(pose: &Pose) -> i32 {
+    if pose.recover > 0 {
+        return fx::mul(ONE - smooth(pose.recover), fx::deg(-9));
+    }
+    let t = pose.swing;
+    if t <= 0 {
+        0
+    } else if t < ONE * 13 / 20 {
+        fx::mul(smooth(fx::div(t, ONE * 13 / 20)), fx::deg(5))
+    } else {
+        let u = fx::div(t - ONE * 13 / 20, ONE * 7 / 20);
+        fx::deg(5) + fx::mul(smooth(u), fx::deg(-14))
+    }
 }
 
 /// Every part of a model placed in the world: `place` puts the model's
@@ -323,7 +364,8 @@ pub fn pose_parts(m: &Model, pose: &Pose, place: &Affine, mut emit: impl FnMut(&
     let fall = Affine::rot_x(fx::mul(pose.death, fx::deg(88)));
     let sink = Affine::translate(v3(0, bob - fx::mul(pose.death, ONE / 3), 0));
     let whirl = Affine::rot_y(pose.whirl);
-    let body = sink.then(&fall).then(&whirl);
+    let tilt = Affine::rot_z(lean(pose));
+    let body = sink.then(&fall).then(&whirl).then(&tilt);
     for p in &m.parts {
         let local = Affine::translate(p.at).then(&p.rot).then(&Affine::scale(p.size));
         let joint = match p.joint {
@@ -336,5 +378,61 @@ pub fn pose_parts(m: &Model, pose: &Pose, place: &Affine, mut emit: impl FnMut(&
         };
         let a = place.then(&body).then(&joint).then(&local);
         emit(p, a);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The weapon arm and the lean through one whole attack, a 128th of
+    /// the swing and of the follow-through at a time.
+    fn through_an_attack() -> Vec<(i32, i32)> {
+        let mut out = vec![(0, 0)];
+        for k in 1..=128 {
+            let p = Pose {
+                swing: ONE * k / 128,
+                ..Pose::STILL
+            };
+            out.push((strike_angle(&p), lean(&p)));
+        }
+        for k in 1..=128 {
+            let p = Pose {
+                recover: ONE * k / 128,
+                ..Pose::STILL
+            };
+            out.push((strike_angle(&p), lean(&p)));
+        }
+        out.push((0, 0));
+        out
+    }
+
+    #[test]
+    fn an_attack_flows_from_rest_through_the_hit_and_back_to_rest_without_a_jump() {
+        // round 2 struck to −50° and then snapped straight back to rest (T7)
+        let path = through_an_attack();
+        let worst_arm = path.windows(2).map(|w| (w[1].0 - w[0].0).abs()).max().unwrap();
+        let worst_lean = path.windows(2).map(|w| (w[1].1 - w[0].1).abs()).max().unwrap();
+        // the quickest moment is the strike: 120° over 35 % of the swing,
+        // speeding up, so at most 2 × 120° × (1/128) / 0.35 ≈ 5.4° a step
+        assert!(
+            worst_arm <= fx::deg(6),
+            "the arm jumped {worst_arm} angle units in a step"
+        );
+        assert!(
+            worst_lean <= fx::deg(1),
+            "the body jumped {worst_lean} angle units in a step"
+        );
+        let hit = path[128].0;
+        // to within a few angle units: Q16 rounding
+        assert!(
+            (hit - fx::deg(-50)).abs() < 16,
+            "the arm is struck through to −50° at the hit: {hit}"
+        );
+        let drawn_back = path.iter().map(|p| p.0).max().unwrap();
+        assert!(
+            (drawn_back - fx::deg(70)).abs() < 16,
+            "the arm is drawn back to +70°: {drawn_back}"
+        );
     }
 }

@@ -338,6 +338,24 @@ pub fn approach(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
     u.anim_at = tick;
 }
 
+/// Where a teleport toward `at` lands: the side's building nearest the
+/// point, or its spawn when none stands. The scene draws the same place.
+pub fn tp_destination(w: &World, ctx: &Ctx, team: u8, at: P) -> P {
+    w.units
+        .iter()
+        .filter(|u| {
+            u.alive
+                && u.team == team
+                && matches!(
+                    ctx.rules.units[u.def as usize].kind,
+                    Kind::Tower | Kind::Fountain | Kind::Barracks | Kind::Sphere
+                )
+        })
+        .min_by_key(|u| crate::world::dist2(u.pos(), at))
+        .map(|u| u.pos())
+        .unwrap_or(ctx.rules.map.sides[team as usize].spawn)
+}
+
 fn idle(w: &mut World, id: Uid) {
     if let Some(u) = w.get_mut(id) {
         u.order = Order::Idle;
@@ -420,21 +438,7 @@ pub fn use_item(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
             );
         }
         "tp" => {
-            // to the allied building nearest the point
-            let dest = w
-                .units
-                .iter()
-                .filter(|u| {
-                    u.alive
-                        && u.team == team
-                        && matches!(
-                            ctx.rules.units[u.def as usize].kind,
-                            Kind::Tower | Kind::Fountain | Kind::Barracks | Kind::Sphere
-                        )
-                })
-                .min_by_key(|u| crate::world::dist2(u.pos(), at))
-                .map(|u| u.pos());
-            let dest = dest.unwrap_or(ctx.rules.map.sides[team as usize].spawn);
+            let dest = tp_destination(w, ctx, team, at);
             if let Some(u) = w.get_mut(id) {
                 u.x = (dest[0] - 150) * SUB;
                 u.y = (dest[1] - 150) * SUB;

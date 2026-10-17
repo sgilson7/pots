@@ -136,6 +136,11 @@ pub struct Game {
     pub shop_pick: i32,
     pub score: bool,
     pub menu: bool,
+    /// Microseconds of display time since the game began, for what the
+    /// player's own hand shows (the order marker).
+    clock_us: i64,
+    /// The last order click: where, on whom, whether an attack, and when.
+    ping: Option<(P, Uid, bool, i64)>,
     last_us: i64,
     acc_us: i64,
     prev: Vec<(Uid, i32, i32, i32)>,
@@ -238,6 +243,8 @@ impl Game {
             shop_pick: -1,
             score: false,
             menu: false,
+            clock_us: 0,
+            ping: None,
             last_us: -1,
             acc_us: 0,
             prev: Vec::new(),
@@ -349,6 +356,7 @@ impl Game {
             (now_us - self.last_us).clamp(0, 250_000)
         };
         self.last_us = now_us;
+        self.clock_us += dt;
         self.pan(dt);
         if self.screen != "match" {
             return;
@@ -618,8 +626,10 @@ impl Game {
             Some(Aim::AttackMove) => {
                 if under != NO_UNIT && self.is_enemy(under) {
                     self.command(Cmd::Attack(under));
+                    self.mark_order(at, under, true);
                 } else {
                     self.command(Cmd::AttackMove(at));
+                    self.mark_order(at, NO_UNIT, true);
                 }
             }
             Some(Aim::Ability(s)) => self.command(Cmd::Cast(s, under, at)),
@@ -642,14 +652,120 @@ impl Game {
         let Some(m) = self.m.as_ref() else { return };
         match m.world.get(under) {
             Some(u) if u.team != team && !matches!(self.rules.units[u.def as usize].kind, Kind::Shop) => {
-                self.command(Cmd::Attack(under))
+                self.command(Cmd::Attack(under));
+                self.mark_order(at, under, true);
             }
             Some(u) if u.team == team && self.rules.units[u.def as usize].kind == Kind::Creep => {
                 // a right-click on an allied creep tries a deny; the rule decides if it may
-                self.command(Cmd::Attack(under))
+                self.command(Cmd::Attack(under));
+                self.mark_order(at, under, true);
             }
-            _ => self.command(Cmd::Move(at)),
+            _ => {
+                self.command(Cmd::Move(at));
+                self.mark_order(at, NO_UNIT, false);
+            }
         }
+    }
+
+    /// Remembers an order click, so the scene marks it for a moment (T10).
+    fn mark_order(&mut self, at: P, unit: Uid, attack: bool) {
+        self.ping = Some((at, unit, attack, self.clock_us));
+    }
+
+    /// What the local player's own hand shows this frame (T9, T10).
+    pub fn overlay(&self) -> crate::overlay::Overlay {
+        use crate::overlay::{ability_area, Aiming, Area, Overlay, Ping};
+        let mut o = Overlay::default();
+        let life = self.look.ping as i64 * 10_000;
+        if let Some((at, unit, attack, when)) = self.ping {
+            let gone = self.clock_us - when;
+            if gone < life {
+                o.ping = Some(Ping {
+                    at,
+                    unit,
+                    attack,
+                    age: (gone * ONE as i64 / life.max(1)) as i32,
+                });
+            }
+        }
+        let Some(aim) = self.aim else { return o };
+        let hero = self.my_hero();
+        let Some(m) = self.m.as_ref() else { return o };
+        let Some(u) = m.world.get(hero) else { return o };
+        let at = self.ground_point(self.pointer.0, self.pointer.1);
+        let team = u.team;
+        let fits = |on: &str, t: Uid| -> Uid {
+            let Some(v) = m.world.live(t) else { return NO_UNIT };
+            let ok = match on {
+                "ally" => v.team == team,
+                "self" => v.id == hero,
+                "any" => true,
+                _ => v.team != team,
+            };
+            if ok && !self.rules.units[v.def as usize].kind.is_building() {
+                t
+            } else {
+                NO_UNIT
+            }
+        };
+        let (range, area, color, on) = match aim {
+            Aim::Ability(s) => {
+                let Some(&k) = self.rules.unit_abilities[u.def as usize].get(s as usize) else {
+                    return o;
+                };
+                let a = &self.rules.abilities[k];
+                let level = u.abil.get(s as usize).map(|x| x.level).unwrap_or(1).max(1);
+                let col = self
+                    .look
+                    .fx
+                    .get(&a.id)
+                    .map(|l| l.color.as_str())
+                    .unwrap_or("select");
+                (
+                    a.range_at(level),
+                    ability_area(a, level),
+                    self.models.named(col),
+                    a.on.clone(),
+                )
+            }
+            Aim::Item(s) => {
+                let Some(it) = u.items.get(s as usize).filter(|x| x.item > 0) else {
+                    return o;
+                };
+                let def = &self.rules.items[it.item as usize - 1];
+                let area = match (def.logic.as_str(), def.target) {
+                    ("tp", _) => Area::Teleport,
+                    (_, Some(Target::Unit)) => Area::Unit,
+                    _ => Area::Point,
+                };
+                let col = if def.logic == "tp" {
+                    self.models.team_named(team, "team_glow")
+                } else {
+                    self.models.named("fx_arcane")
+                };
+                let on = if matches!(def.logic.as_str(), "salve" | "clarity") {
+                    "ally"
+                } else {
+                    "enemy"
+                };
+                (def.range, area, col, on.to_string())
+            }
+            Aim::AttackMove => (
+                0,
+                Area::Point,
+                self.models.named("bar_enemy"),
+                "enemy".to_string(),
+            ),
+        };
+        o.aim = Some(Aiming {
+            hero,
+            range,
+            at,
+            under: fits(&on, self.hover),
+            area,
+            color,
+        });
+        o
     }
 
     /// A click on the minimap, in its own pixels.
@@ -661,6 +777,7 @@ impl Game {
         ];
         if button == 2 {
             self.command(Cmd::Move(p));
+            self.mark_order(p, NO_UNIT, false);
         } else if let Some(Aim::AttackMove) = self.aim.take() {
             self.command(Cmd::AttackMove(p));
         } else {
@@ -768,10 +885,13 @@ impl Game {
         if let Some(stage) = &self.stage {
             return self.stage_scene(stage);
         }
+        let overlay = self.overlay();
         self.with_frame(|f| {
             scene::ground(f, &mut b);
             scene::units(f, &mut b);
             scene::effects(f, &mut b);
+            crate::overlay::teleports(f, &mut b);
+            crate::overlay::draw(f, &mut b, &overlay);
         });
         b.finish()
     }
@@ -922,9 +1042,103 @@ impl Game {
                 }
                 self.stage = None;
             }
+            "volley" => {
+                // volley:<ticks>: every kind of shooter fires across open
+                // ground, so the shots can be seen side by side (T6)
+                let ticks: u32 = arg.parse().map_err(|_| format!("\"{arg}\" is not a number."))?;
+                let w = self.volley_world(ticks)?;
+                let hero = w.players[0].hero;
+                self.begin(w, 0, None, false);
+                if let Some(u) = self.m.as_ref().and_then(|m| m.world.get(hero)) {
+                    self.view.target = [u.pos()[0] + 350, u.pos()[1] + 200];
+                }
+                if let Some(m) = self.m.as_mut() {
+                    m.paused = true;
+                }
+                self.stage = None;
+            }
             _ => return Err(format!("There is no stage \"{kind}\".")),
         }
         Ok(())
+    }
+
+    /// The `volley:` stage's world: the ranged heroes, a ranged and a siege
+    /// creep of each side and a tower each attack a row of enemy creeps,
+    /// `ticks` after the order.
+    pub fn volley_world(&self, ticks: u32) -> Result<World, String> {
+        let ctx = self.ctx();
+        let mut w = self.new_world(self.seed);
+        let spot = [self.rules.map.size / 2 - 1400, self.rules.map.size / 2 - 1200];
+        let place = |w: &mut World, id: Uid, at: P| {
+            let u = w.get_mut(id).expect("just added");
+            u.x = at[0] * SUB;
+            u.y = at[1] * SUB;
+            u.path.clear();
+        };
+        let unit = |name: &str| self.rules.unit(name).ok_or(format!("no unit \"{name}\""));
+        // a column of targets for each side
+        let mut targets = [Vec::new(), Vec::new()];
+        for i in 0..6 {
+            for side in 0..2u8 {
+                let def = unit(if side == 0 {
+                    "creep_melee_moon"
+                } else {
+                    "creep_melee_sun"
+                })?;
+                let x = spot[0] + 600 + side as i32 * 200;
+                let id = w.spawn(&ctx, def, 1 - side, [x, spot[1] + i * 150]);
+                w.get_mut(id).expect("spawned").order = world::Order::Stand;
+                targets[side as usize].push(id);
+            }
+        }
+        let ranged: Vec<usize> = (0..self.rules.heroes.len())
+            .filter(|&r| self.rules.units[self.rules.heroes[r]].missile > 0)
+            .collect();
+        let mut shooters = Vec::new();
+        for (i, &r) in ranged.iter().enumerate().take(5) {
+            w.players[i].present = true;
+            let h = w.add_hero(&ctx, i, r);
+            place(&mut w, h, [spot[0], spot[1] + i as i32 * 170]);
+            shooters.push((h, 0usize));
+        }
+        if let Some(&r) = ranged.get(5) {
+            w.players[5].present = true;
+            let h = w.add_hero(&ctx, 5, r);
+            place(&mut w, h, [spot[0] + 1400, spot[1] + 400]);
+            shooters.push((h, 1));
+        }
+        let near = [
+            [spot[0] + 250, spot[1] - 60],
+            [spot[0] + 250, spot[1] - 240],
+            [spot[0] + 200, spot[1] + 880],
+        ];
+        for (k, name) in ["creep_ranged_sun", "creep_siege_sun", "tower1_sun"]
+            .iter()
+            .enumerate()
+        {
+            let id = w.spawn(&ctx, unit(name)?, 0, near[k]);
+            shooters.push((id, 0));
+        }
+        for (k, name) in ["creep_ranged_moon", "creep_siege_moon"].iter().enumerate() {
+            let id = w.spawn(
+                &ctx,
+                unit(name)?,
+                1,
+                [spot[0] + 1450, spot[1] + 100 + k as i32 * 500],
+            );
+            shooters.push((id, 1));
+        }
+        for (n, &(id, side)) in shooters.iter().enumerate() {
+            let list = &targets[side];
+            let t = list[n % list.len()];
+            let u = w.get_mut(id).expect("added");
+            u.order = world::Order::Attack(t);
+            u.attack_ready = 0;
+        }
+        for _ in 0..ticks {
+            w.step(&ctx, &[]);
+        }
+        Ok(w)
     }
 
     /// The `cast:` stage's world: ability `id`'s hero casts it `ticks`

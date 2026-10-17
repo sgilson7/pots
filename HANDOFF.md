@@ -45,6 +45,15 @@ Open for the person from round 2: **R2.16** (try the locked cursor by hand: auto
 
 The lobby's Copy code and Copy link had never worked: the page's copy function was not called (R2.20). The page now copies inside the click, the core shows "Copied.", and `tests/actions.rs` presses every button on every screen and fails on an action the core does not know. Check: BUILDER CHECK PASSED; break tests 24 of 24.
 
+## Round 3 (16 October 2026): shots, attacks, the hand's marks, solid units (T6–T12)
+
+- **Shots (T6):** `data/presentation.json` `shots` gives each kind of shooter a shape, colour and size (tower bolt, creep orb, siege boulder, an arrow, bullet streak, frost shard, fireball, hex orb and spark for the ranged heroes); spells can name a `missile` (Storm Bolt's hammer, Meat Hook's hook, Dragon Slave's fireball, Assassinate's streak). Drawn in `marks::draw_missile`, moving between ticks. The `volley:<ticks>` stage shows them all (`tools/shots.py`).
+- **Attacks (T7):** `models::strike_angle` and `lean`, timed by the rules' attack point and backswing at the unit's attack speed (`scene::pose_of`).
+- **Shop (T8):** a node's `alt` is its right-click action; shop items and tree parts carry `buy`.
+- **Aim, order marker, teleport (T9–T11):** `crates/core/src/overlay.rs`. `Game::overlay()` builds the aim outline and the order marker each frame; neither reaches the world. `overlay::teleports` draws channels from the world, using `item::tp_destination`, the rule's own landing spot.
+- **Solid units (T12):** `orders::clear_step` and `crowded`: a step into another unit turns aside or waits; creeps do not push heroes. `PROTOCOL` is now 2, so an older browser is told to reload rather than play on different rules.
+- Person rows: **R3.4** (should abilities that go off at once show their radius while the key is held?) and **R3.10** (try creep blocking by hand).
+
 ## What passed
 
 Recorded at the end of this round; the counts come from the commands, not from memory.
@@ -64,6 +73,8 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **R1.12**: lane creep armor type, Unarmored (playdota) or Medium (Dota 2 port). It changes ranged-creep damage 2×.
 - **R1.16**: if the host's browser leaves, the online match ends. A host hand-over is not built.
 - **R1.18**: the 143 icons; a few are plain at 48 px.
+- **R3.4**: abilities that go off at once (Warcry, Echo Slam, Blade Fury) show no outline. Show their radius while the key is held, or on hovering the button?
+- **R3.10**: creep blocking: walk just ahead of your first wave and zigzag in its path. Does it feel like DotA's?
 - **R1.21**: online depends on public relays and STUN, with no TURN server; two strict NATs cannot connect. Try two real networks by hand.
 
 ## Try by hand first

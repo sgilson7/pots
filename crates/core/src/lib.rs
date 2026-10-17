@@ -24,6 +24,7 @@ pub mod mesh;
 pub mod models;
 pub mod online;
 pub mod orders;
+pub mod overlay;
 pub mod path;
 pub mod render;
 pub mod rng;

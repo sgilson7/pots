@@ -76,6 +76,74 @@
   30
  ],
  "max_ticks_per_frame": 6,
+ "ping": 70,
+ "shots": {
+  "tower": {
+   "shape": "bolt",
+   "color": "team_glow",
+   "size": 70
+  },
+  "fountain": {
+   "shape": "bolt",
+   "color": "fx_holy",
+   "size": 60
+  },
+  "creep_ranged": {
+   "shape": "orb",
+   "color": "team_glow",
+   "size": 38
+  },
+  "creep_siege": {
+   "shape": "boulder",
+   "color": "stone",
+   "size": 45
+  },
+  "thistle": {
+   "shape": "arrow",
+   "color": "fx_heal",
+   "size": 40
+  },
+  "longwick": {
+   "shape": "streak",
+   "color": "fx_gold",
+   "size": 40
+  },
+  "rime": {
+   "shape": "shard",
+   "color": "fx_frost",
+   "size": 40
+  },
+  "cinder": {
+   "shape": "flame",
+   "color": "fx_fire",
+   "size": 45
+  },
+  "hexwright": {
+   "shape": "orb",
+   "color": "fx_hex",
+   "size": 42
+  },
+  "tempest": {
+   "shape": "spark",
+   "color": "fx_storm",
+   "size": 40
+  },
+  "hornet": {
+   "shape": "arrow",
+   "color": "poison",
+   "size": 30
+  },
+  "shaman": {
+   "shape": "orb",
+   "color": "fx_arcane",
+   "size": 36
+  },
+  "drake": {
+   "shape": "flame",
+   "color": "fx_fire",
+   "size": 45
+  }
+ },
  "fx": {
   "storm_bolt": {
    "color": "fx_gold",
@@ -91,7 +159,11 @@
      "r": 120,
      "dur": 35
     }
-   ]
+   ],
+   "missile": {
+    "shape": "hammer",
+    "size": 55
+   }
   },
   "great_cleave": {
    "color": "fx_gold",
@@ -204,7 +276,11 @@
      "r": 180,
      "dur": 90
     }
-   ]
+   ],
+   "missile": {
+    "shape": "flame",
+    "size": 110
+   }
   },
   "light_strike_array": {
    "color": "fx_fire",
@@ -310,7 +386,11 @@
      "r": 110,
      "dur": 40
     }
-   ]
+   ],
+   "missile": {
+    "shape": "hook",
+    "size": 55
+   }
   },
   "rot": {
    "color": "fx_rot",
@@ -540,7 +620,11 @@
      "r": 150,
      "dur": 50
     }
-   ]
+   ],
+   "missile": {
+    "shape": "streak",
+    "size": 60
+   }
   },
   "arc_lightning": {
    "color": "fx_storm",

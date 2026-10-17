@@ -62,6 +62,9 @@ pub struct Look {
     pub land: Vec<Shape>,
     #[serde(default, rename = "proc")]
     pub procs: Vec<Shape>,
+    /// How its missile looks (T6); a glowing ball in its colour when unset.
+    #[serde(default)]
+    pub missile: Option<Shot>,
     /// How its zones are drawn: `warn` (a pulsing ring until it lands),
     /// `cloud` (puffs round the caster), `rain` (falling shot), `spin`,
     /// `heal` (a soft ring), `flash` (a fading disc), or `none`.
@@ -73,20 +76,20 @@ pub type Book = BTreeMap<String, Look>;
 
 /// The decorative sizes below are for a model of scale one; models are
 /// drawn at `unit_scale`, so the glows and rings grow with them.
-fn big(f: &Frame, x: i32) -> i32 {
+pub(crate) fn big(f: &Frame, x: i32) -> i32 {
     fx::mul(x, f.look.unit_scale * ONE / 100)
 }
 
-fn scene_len(map_units: i32) -> i32 {
+pub(crate) fn scene_len(map_units: i32) -> i32 {
     map_units * ONE / GAME_UNITS_PER_SCENE
 }
 
 /// Q16 ticks since tick `t`, with the frame's share of the next one.
-fn age(f: &Frame, t: u32) -> i32 {
+pub(crate) fn age(f: &Frame, t: u32) -> i32 {
     (f.w.tick.saturating_sub(t) as i32) * ONE + f.alpha
 }
 
-fn ticks(hundredths: i32) -> i32 {
+pub(crate) fn ticks(hundredths: i32) -> i32 {
     (hundredths * TPS / 100).max(1) * ONE
 }
 
@@ -111,7 +114,7 @@ fn value(f: &Frame, k: usize, s: &Shape) -> i32 {
 }
 
 /// The height of a unit's chest and top, in scene units, as drawn.
-fn heights(f: &Frame, u: &Unit) -> (i32, i32) {
+pub(crate) fn heights(f: &Frame, u: &Unit) -> (i32, i32) {
     let d = &f.ctx.rules.units[u.def as usize];
     let top = f
         .models
@@ -123,12 +126,12 @@ fn heights(f: &Frame, u: &Unit) -> (i32, i32) {
     (top / 2, top)
 }
 
-fn ground(f: &Frame, p: P) -> i32 {
+pub(crate) fn ground(f: &Frame, p: P) -> i32 {
     ground_at(f.ctx.terrain, p)
 }
 
 /// A glowing ball: a lit-less core and a see-through halo round it.
-fn glow(b: &mut Batch, at: V3, r: i32, col: Rgb, alpha: i32) {
+pub(crate) fn glow(b: &mut Batch, at: V3, r: i32, col: Rgb, alpha: i32) {
     if r <= 0 || alpha <= 0 {
         return;
     }
@@ -139,7 +142,7 @@ fn glow(b: &mut Batch, at: V3, r: i32, col: Rgb, alpha: i32) {
 }
 
 /// A flat ring on the ground of radius `r`.
-fn ring(b: &mut Batch, at: V3, r: i32, col: Rgb, alpha: i32) {
+pub(crate) fn ring(b: &mut Batch, at: V3, r: i32, col: Rgb, alpha: i32) {
     if r <= 0 || alpha <= 0 {
         return;
     }
@@ -148,7 +151,7 @@ fn ring(b: &mut Batch, at: V3, r: i32, col: Rgb, alpha: i32) {
 }
 
 /// A flat disc on the ground of radius `r`.
-fn disc(b: &mut Batch, at: V3, r: i32, col: Rgb, alpha: i32) {
+pub(crate) fn disc(b: &mut Batch, at: V3, r: i32, col: Rgb, alpha: i32) {
     if r <= 0 || alpha <= 0 {
         return;
     }
@@ -157,7 +160,7 @@ fn disc(b: &mut Batch, at: V3, r: i32, col: Rgb, alpha: i32) {
 }
 
 /// A rod from `a` to `c`, `w` across: beams, bolts, tethers, chains.
-fn rod(b: &mut Batch, a: V3, c: V3, w: i32, col: Rgb, alpha: i32) {
+pub(crate) fn rod(b: &mut Batch, a: V3, c: V3, w: i32, col: Rgb, alpha: i32) {
     let d = c.sub(a);
     let len = d.len();
     if len <= 0 || alpha <= 0 {
@@ -325,36 +328,270 @@ fn seen(f: &Frame, p: P) -> bool {
             .unwrap_or(true)
 }
 
-/// Missiles: an ability's as a glowing ball in its colour (the hook with
-/// its chain back to the thrower), an attack's as a small bright shot.
+/// How a missile looks (T6): its shape, its palette colour and its size.
+/// Attacks are looked up by the shooter's unit id (the longest key it
+/// starts with), abilities by the `missile` of their look.
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Shot {
+    /// `orb` (a glowing ball), `bolt` (a big ball with a streak, for
+    /// towers), `arrow`, `streak` (a long thin bullet), `shard` (an ice
+    /// crystal), `flame` (a fireball with a smoky tail), `boulder` (a stone
+    /// lobbed in an arc), `spark` (crackling lightning), `hammer` (a
+    /// spinning hammer), `hook` (a hook on its chain).
+    pub shape: String,
+    /// A palette role; `team_glow` and the other team roles take the
+    /// shooter's side. Empty for an ability: its look's colour.
+    #[serde(default)]
+    pub color: String,
+    /// The ball's radius, hundredths of a scene unit, for a model of scale one.
+    pub size: i32,
+}
+
+pub type Shots = BTreeMap<String, Shot>;
+
+/// The attack look for a shooter: the longest key its unit id starts with.
+pub fn shot_for<'a>(shots: &'a Shots, unit_id: &str) -> Option<&'a Shot> {
+    shots
+        .iter()
+        .filter(|(k, _)| unit_id.starts_with(k.as_str()))
+        .max_by_key(|(k, _)| k.len())
+        .map(|(_, s)| s)
+}
+
+/// A frame for a part lying along `axis` (a unit vector): `len` along it
+/// and `w` across, centred on `at`.
+pub(crate) fn along(at: V3, axis: V3, len: i32, w: i32) -> Affine {
+    let helper = if axis.y.abs() > ONE - ONE / 16 {
+        v3(ONE, 0, 0)
+    } else {
+        V3::UP
+    };
+    let x = helper.cross(axis).norm();
+    let z = axis.cross(x);
+    Affine {
+        c0: x.scale(w),
+        c1: axis.scale(len),
+        c2: z.scale(w),
+        t: at,
+    }
+}
+
+/// Where a missile is going, in sixteenths, and how far it still has to go.
+fn heading(f: &Frame, ms: &crate::world::Missile) -> (i64, i64, i64) {
+    let goal = if ms.t != NO_UNIT {
+        f.w.get(ms.t).map(|u| [u.x, u.y]).unwrap_or(ms.to)
+    } else {
+        ms.to
+    };
+    let (dx, dy) = ((goal[0] - ms.x) as i64, (goal[1] - ms.y) as i64);
+    (dx, dy, fx::isqrt((dx * dx + dy * dy) as u64) as i64)
+}
+
+/// Missiles (T6). Each kind of shot has its own shape, colour and size, so
+/// a tower's bolt, a ranged creep's spit, a hero's arrow and a spell read
+/// apart at a glance. A missile moves on between ticks with the frame, and
+/// leaves a short fading trail behind it.
 pub fn draw_missile(f: &Frame, b: &mut Batch, at: V3, ms: &crate::world::Missile) {
-    if let Hit::Ability { ability, .. } = ms.what {
-        let k = ability as usize;
-        if let Some(l) = look(f, k) {
-            let col = color(f, l);
-            glow(b, at, big(f, ONE / 2), col, ONE);
-            if f.ctx.rules.abilities[k].logic == "hook" {
-                if let Some(u) = f.w.get(ms.src) {
-                    let (chest, _) = heights(f, u);
-                    let from = to_scene(u.pos(), ground(f, u.pos()) + chest);
-                    for i in 1..10 {
-                        let p = from.lerp(at, fx::div(i, 10));
-                        let c = big(f, ONE / 5);
-                        let a = Affine::translate(p).then(&Affine::scale(v3(c, c, c)));
-                        b.push(
-                            crate::render::LAYER_INKED,
-                            Mesh::Sphere,
-                            &a,
-                            f.models.named("iron"),
-                            0,
-                        );
-                    }
+    let (shot, col) = match ms.what {
+        Hit::Ability { ability, .. } => {
+            let k = ability as usize;
+            let Some(l) = look(f, k) else { return };
+            let fallback = Shot {
+                shape: "orb".into(),
+                color: String::new(),
+                size: 50,
+            };
+            let s = l.missile.clone().unwrap_or(fallback);
+            let col = if s.color.is_empty() {
+                color(f, l)
+            } else {
+                f.models.named(&s.color)
+            };
+            (s, col)
+        }
+        _ => {
+            let id =
+                f.w.get(ms.src)
+                    .map(|u| f.ctx.rules.units[u.def as usize].id.as_str());
+            let s = id
+                .and_then(|id| shot_for(&f.look.shots, id))
+                .cloned()
+                .unwrap_or(Shot {
+                    shape: "orb".into(),
+                    color: "shot".into(),
+                    size: f.look.missile,
+                });
+            let col = if s.color.starts_with("team") {
+                f.models.team_named(ms.team, &s.color)
+            } else {
+                f.models.named(&s.color)
+            };
+            (s, col)
+        }
+    };
+    let (dx, dy, left) = heading(f, ms);
+    // the way it flies, in the scene (map y is the scene's −z)
+    let dir = if left > 0 {
+        v3(
+            (dx * ONE as i64 / left) as i32,
+            0,
+            -((dy * ONE as i64 / left) as i32),
+        )
+    } else {
+        v3(ONE, 0, 0)
+    };
+    // on between ticks, never past where it lands
+    let ahead = (fx::mul(ms.speed, f.alpha) as i64).min(left) as i32;
+    let at = at.add(dir.scale(scene_len(ahead) / crate::rules::SUB));
+    let gone = (ms.age as i32 * ms.speed + ahead) / crate::rules::SUB;
+    let r = big(f, shot.size * ONE / 100);
+    // how far back the trail may reach: no further than it has flown
+    let tail = scene_len(gone).min(r * 8);
+    let trail = |b: &mut Batch, from: V3, n: i32, gap: i32, col: Rgb| {
+        for i in 1..=n {
+            let back = gap * i;
+            if back > tail {
+                break;
+            }
+            let s = r - r * i / (n + 1);
+            let p = from.sub(dir.scale(back));
+            b.tint(
+                Mesh::Sphere,
+                &Affine::translate(p).then(&Affine::scale(v3(s * 2, s * 2, s * 2))),
+                col,
+                ONE / 2 - ONE * i / (2 * (n + 1)),
+            );
+        }
+    };
+    let spin = (f.w.tick as i32 * ONE + f.alpha) / ONE * (fx::TURN / 9);
+    match shot.shape.as_str() {
+        "bolt" => {
+            glow(b, at, r, col, ONE);
+            rod(b, at, at.sub(dir.scale((r * 5).min(tail))), r / 3, col, ONE);
+            trail(b, at, 5, r, col);
+        }
+        "arrow" => {
+            let shaft = along(at.sub(dir.scale(r * 2)), dir, r * 4, r / 4);
+            b.push(
+                crate::render::LAYER_INKED,
+                Mesh::Cyl,
+                &shaft,
+                f.models.named("wood"),
+                0,
+            );
+            let tip = along(at.add(dir.scale(r / 2)), dir, r, r * 2 / 3);
+            b.push(
+                crate::render::LAYER_INKED,
+                Mesh::Cone,
+                &tip,
+                f.models.named("steel_bright"),
+                0,
+            );
+            let fletch = along(at.sub(dir.scale(r * 4)), dir, r, r * 3 / 4);
+            b.push(crate::render::LAYER_PLAIN, Mesh::Cone, &fletch, col, STYLE_GLOW);
+            trail(b, at.sub(dir.scale(r * 4)), 4, r, col);
+        }
+        "streak" => {
+            rod(b, at, at.sub(dir.scale((r * 10).min(tail))), r / 4, col, ONE);
+            glow(b, at, r / 2, col, ONE);
+        }
+        "shard" => {
+            let a = along(at, dir, r * 3, r).then(&Affine::rot_y(spin));
+            b.push(LAYER_PLAIN, Mesh::Octa, &a, col, STYLE_GLOW);
+            let halo = Affine::translate(at).then(&Affine::scale(v3(r * 3, r * 3, r * 3)));
+            b.tint(Mesh::Sphere, &halo, col, ONE / 4);
+            trail(b, at, 4, r, f.models.named("ice"));
+        }
+        "flame" => {
+            glow(b, at, r, f.models.named("ember"), ONE);
+            let flick = fx::sin(spin * 3) / 6;
+            glow(b, at.sub(dir.scale(r)), r * 3 / 4 + fx::mul(r, flick), col, ONE);
+            trail(b, at, 6, r * 2 / 3, col);
+        }
+        "boulder" => {
+            // lobbed: highest halfway along its flight
+            let total = (gone as i64 + left / crate::rules::SUB as i64).max(1);
+            let u = ((gone as i64 * ONE as i64) / total) as i32;
+            let lift = fx::mul(fx::mul(u, ONE - u), ONE * 10);
+            let p = at.add(v3(0, lift, 0));
+            let rock = Affine::translate(p)
+                .then(&Affine::rot_x(spin))
+                .then(&Affine::scale(v3(r * 2, r * 2, r * 2)));
+            b.push(crate::render::LAYER_INKED, Mesh::Sphere, &rock, col, 0);
+            trail(b, p, 3, r, f.models.named("cloud"));
+        }
+        "spark" => {
+            glow(b, at, r, col, ONE);
+            for i in 0..3 {
+                let a = spin * 2 + fx::TURN * i / 3;
+                let out = v3(
+                    fx::mul(fx::cos(a), r * 2),
+                    fx::mul(fx::sin(a * 2), r),
+                    fx::mul(fx::sin(a), r * 2),
+                );
+                rod(b, at, at.add(out), r / 6, col, ONE);
+            }
+            trail(b, at, 4, r, col);
+        }
+        "hammer" => {
+            let turn = Affine::translate(at)
+                .then(&Affine::rot_y(fx::atan2(dir.x, dir.z)))
+                .then(&Affine::rot_x(spin * 2));
+            let head = turn.then(&Affine::scale(v3(r * 2, r * 2, r * 3)));
+            b.push(
+                crate::render::LAYER_INKED,
+                Mesh::Cube,
+                &head,
+                f.models.named("steel_bright"),
+                0,
+            );
+            let handle = turn
+                .then(&Affine::translate(v3(0, -r * 2, 0)))
+                .then(&Affine::scale(v3(r / 2, r * 3, r / 2)));
+            b.push(
+                crate::render::LAYER_INKED,
+                Mesh::Cyl,
+                &handle,
+                f.models.named("wood"),
+                0,
+            );
+            let halo = Affine::translate(at).then(&Affine::scale(v3(r * 4, r * 4, r * 4)));
+            b.tint(Mesh::Sphere, &halo, col, ONE / 3);
+            trail(b, at, 5, r, col);
+        }
+        "hook" => {
+            let tip = along(at, dir, r * 2, r);
+            b.push(
+                crate::render::LAYER_INKED,
+                Mesh::Cone,
+                &tip,
+                f.models.named("steel_bright"),
+                0,
+            );
+            if let Some(u) = f.w.get(ms.src) {
+                let (chest, _) = heights(f, u);
+                let from = to_scene(u.pos(), ground(f, u.pos()) + chest);
+                for i in 1..12 {
+                    let p = from.lerp(at, fx::div(i, 12));
+                    let c = r * 2 / 5;
+                    let a = Affine::translate(p).then(&Affine::scale(v3(c, c, c)));
+                    b.push(
+                        crate::render::LAYER_INKED,
+                        Mesh::Sphere,
+                        &a,
+                        f.models.named("iron"),
+                        0,
+                    );
                 }
             }
-            return;
+            glow(b, at, r / 2, col, ONE);
+        }
+        _ => {
+            glow(b, at, r, col, ONE);
+            trail(b, at, 4, r, col);
         }
     }
-    glow(b, at, f.look.missile * ONE / 200, f.models.named("shot"), ONE);
 }
 
 /// A zone in its ability's way; returns false to leave it to the plain disc.

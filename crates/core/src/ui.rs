@@ -43,6 +43,10 @@ pub struct Node {
     pub a: String,
     #[serde(skip_serializing_if = "String::is_empty")]
     pub v: String,
+    /// The action a right-click sends, with the same value (T8: a
+    /// right-click on an item in the shop buys it).
+    #[serde(skip_serializing_if = "String::is_empty")]
+    pub alt: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub tip: Option<Tip>,
     /// CSS custom properties: name and value.
@@ -955,8 +959,9 @@ fn shop(g: &Game, w: &World, me: usize) -> Node {
             ],
         );
         // a click picks the item and shows its build tree; buying is the
-        // tree's button, as in DotA 2 and League
+        // tree's button, or a right-click, as in DotA 2 and League
         b.a = "shop.pick".into();
+        b.alt = "buy".into();
         b.v = k.to_string();
         let mut c = String::from("shop-item");
         if w.players[me].gold < price || !here {
@@ -1051,6 +1056,7 @@ fn build_panel(g: &Game, w: &World, me: usize) -> Node {
                     }],
                 );
                 b.a = "shop.pick".into();
+                b.alt = "buy".into();
                 b.v = j.to_string();
                 b.tip = Some(item_tip(g, j, None));
                 keyed(b, format!("bi{j}"))
@@ -1086,6 +1092,7 @@ fn piece(g: &Game, p: &crate::item::Piece, top: bool) -> Node {
     );
     b.c = c;
     b.a = "shop.pick".into();
+    b.alt = "buy".into();
     b.v = p.item.to_string();
     let mut tip = item_tip(g, p.item, None);
     if p.owned {

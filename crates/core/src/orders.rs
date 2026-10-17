@@ -264,24 +264,88 @@ pub fn walk(w: &mut World, ctx: &Ctx, id: Uid, goal: P, stop: i32) -> bool {
     }
     let step = s.step();
     let tick = w.tick;
-    let u = w.get_mut(id).expect("checked");
-    let (dx, dy) = ((next[0] * SUB - u.x) as i64, (next[1] * SUB - u.y) as i64);
+    let (x0, y0) = {
+        let u = w.get(id).expect("checked");
+        (u.x, u.y)
+    };
+    let (dx, dy) = ((next[0] * SUB - x0) as i64, (next[1] * SUB - y0) as i64);
     let d = fx::isqrt((dx * dx + dy * dy) as u64) as i64;
-    if d <= step as i64 {
-        u.x = next[0] * SUB;
-        u.y = next[1] * SUB;
-        if u.path.len() > 1 {
-            u.path.pop();
-        }
+    let straight = if d <= step as i64 {
+        (next[0] * SUB, next[1] * SUB)
     } else {
-        u.x += (dx * step as i64 / d) as i32;
-        u.y += (dy * step as i64 / d) as i32;
+        (
+            x0 + (dx * step as i64 / d) as i32,
+            y0 + (dy * step as i64 / d) as i32,
+        )
+    };
+    // units are solid (T12): a step into another unit turns aside, and a
+    // unit with no way past waits, which is what lets a hero block creeps
+    let Some((nx, ny)) = clear_step(w, ctx, id, (x0, y0), straight) else {
+        return false;
+    };
+    let u = w.get_mut(id).expect("checked");
+    u.x = nx;
+    u.y = ny;
+    if (nx, ny) == (next[0] * SUB, next[1] * SUB) && u.path.len() > 1 {
+        u.path.pop();
     }
     if u.anim != crate::world::ANIM_WALK {
         u.anim = crate::world::ANIM_WALK;
         u.anim_at = tick;
     }
     false
+}
+
+/// Whether a unit of collision radius `radius` stepping from `from` to
+/// `to` would press into another unit on the ground. Stepping away from
+/// one it already overlaps is always allowed, so a crowd can come apart.
+fn crowded(w: &World, ctx: &Ctx, id: Uid, radius: i32, from: (i32, i32), to: (i32, i32)) -> bool {
+    w.units.iter().any(|o| {
+        if o.id == id || !o.alive {
+            return false;
+        }
+        let d = &ctx.rules.units[o.def as usize];
+        if d.kind.is_building() || d.kind == Kind::Ward {
+            return false;
+        }
+        let r = ((radius + d.radius) * SUB) as i64;
+        let (dx, dy) = ((to.0 - o.x) as i64, (to.1 - o.y) as i64);
+        if dx.abs() >= r || dy.abs() >= r {
+            return false;
+        }
+        let d2 = dx * dx + dy * dy;
+        if d2 >= r * r {
+            return false;
+        }
+        let (fx0, fy0) = ((from.0 - o.x) as i64, (from.1 - o.y) as i64);
+        d2 <= fx0 * fx0 + fy0 * fy0
+    })
+}
+
+/// Turns tried, in order, when the straight step is blocked by a unit.
+const SIDESTEPS: [i32; 6] = [30, -30, 60, -60, 90, -90];
+
+/// The step a unit may take toward `to`: straight when clear, else the
+/// first turn aside that is clear of units and trees, else none.
+fn clear_step(w: &World, ctx: &Ctx, id: Uid, from: (i32, i32), to: (i32, i32)) -> Option<(i32, i32)> {
+    let u = w.get(id)?;
+    let radius = ctx.rules.units[u.def as usize].radius;
+    if !crowded(w, ctx, id, radius, from, to) {
+        return Some(to);
+    }
+    let (dx, dy) = (to.0 - from.0, to.1 - from.1);
+    let walk = w.walk(ctx.terrain);
+    let cell = ctx.terrain.path_cell;
+    SIDESTEPS.iter().find_map(|&deg| {
+        let a = fx::deg(deg);
+        let (c, s) = (fx::cos(a), fx::sin(a));
+        let p = (
+            from.0 + fx::mul(dx, c) - fx::mul(dy, s),
+            from.1 + fx::mul(dx, s) + fx::mul(dy, c),
+        );
+        let free = !path::Grid::blocked(&walk, p.0 / SUB / cell, p.1 / SUB / cell);
+        (free && !crowded(w, ctx, id, radius, from, p)).then_some(p)
+    })
 }
 
 /// The nearest enemy this unit can see within `r`, preferring heroes when
@@ -559,6 +623,10 @@ fn separate(w: &mut World, ctx: &Ctx) {
             if db.kind == Kind::Ward {
                 continue;
             }
+            // a hero stands its ground against creeps: they give way to it (T12)
+            if a.hero.is_some() && b.hero.is_none() && !db.kind.is_building() {
+                continue;
+            }
             let r = da.radius + db.radius + db.footprint;
             let (dx, dy) = (a.x - b.x, a.y - b.y);
             if dx.abs() >= r * SUB || dy.abs() >= r * SUB {
@@ -572,7 +640,7 @@ fn separate(w: &mut World, ctx: &Ctx) {
             let d = fx::isqrt(d2 as u64) as i64;
             let overlap = rr - d;
             // a building pushes fully; two walkers share the push
-            let share = if db.kind.is_building() || db.speed == 0 {
+            let share = if db.kind.is_building() || db.speed == 0 || (b.hero.is_some() && a.hero.is_none()) {
                 1
             } else {
                 2

@@ -166,5 +166,75 @@
   "find": "            \"copy\" | \"copy.link\" => self.notice = self.strings.ui(\"online.copied\"),\n",
   "replace": "",
   "test": "every_button_on_every_screen_names_an_action_the_core_accepts"
+ },
+ {
+  "name": "units walk through each other",
+  "file": "crates/core/src/orders.rs",
+  "find": "    let Some((nx, ny)) = clear_step(w, ctx, id, (x0, y0), straight) else {\n        return false;\n    };",
+  "replace": "    let (nx, ny) = straight;",
+  "test": "the_creeps_of_a_wave_never_stand_inside_each_other"
+ },
+ {
+  "name": "creeps walk through heroes",
+  "file": "crates/core/src/orders.rs",
+  "find": "        if d.kind.is_building() || d.kind == Kind::Ward {\n            return false;\n        }\n        let r = ((radius + d.radius) * SUB) as i64;",
+  "replace": "        if d.kind.is_building() || d.kind == Kind::Ward || o.hero.is_some() {\n            return false;\n        }\n        let r = ((radius + d.radius) * SUB) as i64;",
+  "test": "a_hero_standing_in_the_creeps_way_is_walked_round_not_through"
+ },
+ {
+  "name": "the arm snaps back after the hit",
+  "file": "crates/core/src/models.rs",
+  "find": "        return down - fx::mul(smooth(pose.recover), down);",
+  "replace": "        return 0;",
+  "test": "an_attack_flows_from_rest_through_the_hit_and_back_to_rest_without_a_jump"
+ },
+ {
+  "name": "a shot is found only by its exact unit id",
+  "file": "crates/core/src/marks.rs",
+  "find": ".filter(|(k, _)| unit_id.starts_with(k.as_str()))",
+  "replace": ".filter(|(k, _)| unit_id == k.as_str())",
+  "test": "every_shooter_has_a_shot_of_its_own"
+ },
+ {
+  "name": "a right-click on a shop item does nothing",
+  "file": "crates/core/src/ui.rs",
+  "find": "        b.a = \"shop.pick\".into();\n        b.alt = \"buy\".into();\n        b.v = k.to_string();",
+  "replace": "        b.a = \"shop.pick\".into();\n        b.v = k.to_string();",
+  "test": "a_right_click_on_an_item_in_the_shop_buys_it"
+ },
+ {
+  "name": "lines are outlined as points",
+  "file": "crates/core/src/overlay.rs",
+  "find": "            if width > 0 {\n                let len",
+  "replace": "            if false {\n                let len",
+  "test": "each_aimed_ability_outlines_the_ground_its_own_numbers_cover"
+ },
+ {
+  "name": "the aim outline is not drawn",
+  "file": "crates/core/src/overlay.rs",
+  "find": "    if let Some(a) = &o.aim {\n        aim(f, b, a);\n    }",
+  "replace": "    if let Some(a) = &o.aim {\n        let _ = a;\n    }",
+  "test": "pressing_an_aimed_ability_shows_its_outline_until_the_order_is_given"
+ },
+ {
+  "name": "aiming gives an order",
+  "file": "crates/core/src/game.rs",
+  "find": "            _ => self.aim = Some(aim),\n        }",
+  "replace": "            _ => {\n                self.aim = Some(aim);\n                self.command(Cmd::Move([0, 0]))\n            }\n        }",
+  "test": "aiming_and_order_marks_change_nothing_in_the_world"
+ },
+ {
+  "name": "the order marker never fades",
+  "file": "crates/core/src/game.rs",
+  "find": "        self.clock_us += dt;\n",
+  "replace": "",
+  "test": "a_right_click_on_the_ground_is_marked_where_it_landed_for_seven_tenths_of_a_second"
+ },
+ {
+  "name": "a teleport is not drawn",
+  "file": "crates/core/src/game.rs",
+  "find": "            crate::overlay::teleports(f, &mut b);\n",
+  "replace": "",
+  "test": "a_teleport_glows_at_both_ends_while_it_channels_then_lands_where_it_glowed"
  }
 ]

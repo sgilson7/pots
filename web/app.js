@@ -118,6 +118,7 @@ function build(n) {
     node.dataset.a = n.a;
     node.dataset.v = n.v || "";
   }
+  if (n.alt) node.dataset.alt = n.alt;
   if (n.off) {
     node.disabled = true;
     node.classList.add("off");
@@ -186,6 +187,16 @@ function wireInput(canvas) {
     const target = e.target.closest("[data-a]");
     if (!target || target.disabled) return;
     act(target.dataset.a, target.dataset.v);
+  });
+  // a right-click sends a node's second action, when the core gave it one (T8)
+  const secondary = (target) => {
+    const t = target && target.closest && target.closest("[data-alt]");
+    if (!t || t.disabled) return false;
+    act(t.dataset.alt, t.dataset.v);
+    return true;
+  };
+  el("ui").addEventListener("contextmenu", (e) => {
+    if (secondary(e.target)) e.preventDefault();
   });
   el("ui").addEventListener("mouseover", (e) => {
     const t = e.target.closest("*");
@@ -275,6 +286,8 @@ function wireInput(canvas) {
   });
   document.addEventListener("contextmenu", (e) => {
     if (inMatch()) e.preventDefault();
+    // under the lock the right-click is the body's: the element under the drawn cursor takes it
+    if (locked()) secondary(document.elementFromPoint(pos.x, pos.y));
   });
   document.addEventListener("wheel", (e) => {
     const target = locked() ? document.elementFromPoint(pos.x, pos.y) : e.target;

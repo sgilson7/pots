@@ -181,6 +181,11 @@ pub struct Look {
     pub ambient: [i32; 3],
     /// The bounce from the ground below, hundredths of each colour.
     pub ground: [i32; 3],
+    /// How long the order marker shows, hundredths of a second (T10).
+    pub ping: i32,
+    /// How each attack's missile looks (T6), by the shooter's unit id.
+    #[serde(default)]
+    pub shots: crate::marks::Shots,
     /// How each ability looks while it happens (`marks`), by ability id.
     #[serde(default)]
     pub fx: crate::marks::Book,
@@ -324,16 +329,23 @@ fn pose_of(f: &Frame, id: Uid) -> Pose {
                 ((since as i64 * per_sec as i64 * fx::TURN as i64) / (200 * TPS as i64 * ONE as i64)) as i32;
         }
         ANIM_ATTACK => {
-            let point = (d.attack_point * TPS / 100).max(1) * ONE;
-            p.swing = fx::div(since.min(point), point).clamp(0, ONE);
-            if since > point * 2 {
-                p.swing = 0;
+            // the wind-up to the hit, then the follow-through, both timed
+            // as the rules time them at this unit's attack speed (T7)
+            let s = crate::stats::of(f.ctx, f.w, id);
+            let speed = 100 + s.attack_speed;
+            let point = (d.attack_point * TPS * 100 / (100 * speed)).max(1) * ONE;
+            let back = (d.backswing * TPS * 100 / (100 * speed)).max(TPS / 4) * ONE;
+            if since < point {
+                p.swing = fx::div(since, point);
+            } else if since < point + back {
+                p.recover = fx::div(since - point, back).max(1);
             }
         }
         ANIM_CAST | ANIM_CHANNEL => {
             let rise = ONE * 6;
             p.cast = fx::div(since.min(rise), rise);
-            if u.anim == ANIM_CAST && since > ONE * 20 {
+            // the arms stay up while a long cast (a teleport) runs
+            if u.anim == ANIM_CAST && since > ONE * 20 && !matches!(u.act, Act::Cast { .. }) {
                 p.cast = 0;
             }
         }
@@ -355,7 +367,7 @@ fn pose_of(f: &Frame, id: Uid) -> Pose {
 }
 
 /// Where a unit is drawn this frame: between its last and current tick.
-fn drawn_at(f: &Frame, u: &crate::world::Unit) -> (i32, i32, i32) {
+pub(crate) fn drawn_at(f: &Frame, u: &crate::world::Unit) -> (i32, i32, i32) {
     let slot = World::slot(u.id);
     match f.prev.get(slot) {
         Some(&(id, px, py, pf))
@@ -529,16 +541,9 @@ fn bar(f: &Frame, b: &mut Batch, u: &crate::world::Unit, x: i32, y: i32, top: i3
 /// Missiles, spell areas, the rune.
 pub fn effects(f: &Frame, b: &mut Batch) {
     let m = f.models;
-    let size = f.look.missile * ONE / 100;
     for ms in &f.w.missiles {
         let p = [ms.x / SUB, ms.y / SUB];
         let h = ground_at(f.ctx.terrain, p) + ONE * 3 / 2;
-        let col = if ms.model >= 1000 {
-            let k = (ms.model - 1000) as usize;
-            ability_color(f, k)
-        } else {
-            m.named("shot")
-        };
         if f.team != NEUTRAL && ms.team != f.team {
             let seen = f
                 .ctx
@@ -550,7 +555,6 @@ pub fn effects(f: &Frame, b: &mut Batch) {
                 continue;
             }
         }
-        let _ = (col, size);
         crate::marks::draw_missile(f, b, sub_to_scene(ms.x, ms.y, h), ms);
     }
     for z in &f.w.zones {
