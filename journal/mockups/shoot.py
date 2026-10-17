@@ -20,6 +20,8 @@ HERE = pathlib.Path(__file__).resolve().parent
 import os
 # ART=art3 writes a later round's pictures beside round 2's
 OUT = HERE.parent / os.environ.get("ART", "art2")
+# LOOK=ape draws in the new look (kit.js, journal tab 10)
+LOOK = os.environ.get("LOOK", "")
 
 
 class Quiet(http.server.SimpleHTTPRequestHandler):
@@ -46,7 +48,7 @@ def main(kind, names):
         page.on("pageerror", lambda e: errors.append(str(e)))
 
         def open_(qs):
-            page.goto(f"{base}?{qs}")
+            page.goto(f"{base}?{qs}" + (f"&look={LOOK}" if LOOK else ""))
             page.wait_for_selector("body[data-drawn='1'], body[data-error]", state="attached", timeout=60000)
             err = page.evaluate("document.body.dataset.error || ''")
             if err:

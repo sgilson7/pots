@@ -1,7 +1,7 @@
 // Routes one mockup per address and exposes frame(t) so the shooter can
 // step time itself: ?model=<id>, ?lineup=<id,id,...>, ?ability=<id>,
 // ?scene=lane. Every picture is a pure function of t, so frames repeat.
-import { THREE, makeRenderer, makeScene, plinth, aim, SHEET_VIEW, GAME_VIEW, resetRig, idle, lanePatch } from "./kit.js";
+import { THREE, makeRenderer, makeScene, plinth, aim, SHEET_VIEW, GAME_VIEW, resetRig, idle, lanePatch, APE, blob } from "./kit.js";
 import { HEROES } from "./heroes.js";
 
 const q = new URLSearchParams(location.search);
@@ -47,9 +47,11 @@ async function main() {
     const size = b0.getSize(new THREE.Vector3());
     const pr = Math.max(0.6, Math.max(size.x, size.z) * 0.75 + 0.25);
     const big = Math.max(size.x, size.y * 0.9, size.z, pr * 1.45);
-    const { scene } = makeScene({ shadowBox: Math.max(3, big * 1.4) });
+    // a model sheet keeps the haze behind the model, on the sky
+    const { scene } = makeScene({ shadowBox: Math.max(3, big * 1.4), fog: [big * 8, big * 20] });
     const base = plinth(pr);
     scene.add(base, m.g);
+    if (APE) scene.add(blob(Math.max(size.x, size.z) * 0.45 + 0.15, 0.34));
     const ctr = b0.getCenter(new THREE.Vector3());
     const at = [ctr.x * 0.5, size.y * 0.45, ctr.z * 0.5];
     const dist = (big / (2 * Math.tan((camera.fov * Math.PI) / 360))) * 1.55 + 0.45;

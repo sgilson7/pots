@@ -157,12 +157,25 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
 .nums td:nth-child(2) { font-family: var(--font-mono); white-space: nowrap; }
 @media (max-width: 860px) { .maprow { grid-template-columns: minmax(0, 1fr); } }
 /*ARAM-END*/
+/*NEWLOOK*/
+.ba { margin: 0; display: grid; gap: 8px; }
+.ba-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ba-row > div { display: grid; gap: 6px; align-content: start; }
+.ba-row .chip { justify-self: start; }
+.ba img, .bam img { width: 100%; height: auto; display: block; border-radius: 8px; }
+.ba figcaption, .bam figcaption { font-size: 14.5px; }
+.bagrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 18px; }
+.bam { margin: 0; display: grid; gap: 6px; }
+.bam figcaption code { color: var(--muted); font-size: 12.5px; }
+.ba-key { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; color: var(--muted); }
+.timeline td:first-child { white-space: nowrap; font-weight: 600; }
+/*NEWLOOK-END*/
 </style>
 
 <div class="wrap">
 
 <div class="journal-head">
-  <div class="eyebrow">Protection of the Spheres · design journal · last entry 16 October 2026</div>
+  <div class="eyebrow">Protection of the Spheres · design journal · last entry 17 October 2026</div>
   <h1>Protection of the Spheres</h1>
   <p class="lede">A browser game that plays like the Warcraft III map Defense of the Ancients, with heroes of its own. One tab for each round of work. New rounds are added as new tabs.</p>
   <div class="tabbar" role="tablist" aria-label="Journal entries">
@@ -175,6 +188,7 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
     <button role="tab" id="t-live" aria-controls="p-live" aria-selected="false" tabindex="-1"><small>7 · 16 Oct</small><span>Published</span></button>
     <button role="tab" id="t-art" aria-controls="p-art" aria-selected="false" tabindex="-1"><small>8 · 16 Oct</small><span>The new look</span></button>
     <button role="tab" id="t-aram" aria-controls="p-aram" aria-selected="false" tabindex="-1"><small>9 · 16 Oct</small><span>All Random All Mid</span></button>
+    <button role="tab" id="t-newlook" aria-controls="p-newlook" aria-selected="false" tabindex="-1"><small>10 · 17 Oct</small><span>The newer look</span></button>
     <!--TABS-->
   </div>
 </div>
@@ -992,6 +1006,266 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
 <footer>Mockups in <code>journal/mockups/aram.js</code> (three.js r160, MIT), pictures made with <code>ART=art3 journal/mockups/shoot.py</code>, this tab written by <code>journal/mockups/tab9.py</code>. Labelled mockups: the game draws its own models with its own renderer.</footer>
 </div>
 <!--/TAB 9-->
+<!-- ======================================================= TAB 10 -->
+<div class="panel-tab" role="tabpanel" id="p-newlook" aria-labelledby="t-newlook" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 10 · 17 October 2026 · a style study (triage T18); the game itself has not changed</div>
+  <h2>Mage Tower's newer look, applied to every model here</h2>
+  <p class="lede">Part 1 traces how Mage Tower Battle's look changed from the version this game copied to its latest version. Part 2 measures where this game stands against those changes. Part 3 shows every current model twice: as the game draws it now, and as a mockup in the new look. Part 4 is what building it would take, with three questions for you. Click any picture to see it larger.</p>
+</header>
+
+<section>
+  <div class="section-head"><div class="eyebrow">The request</div><h2>In your words</h2></div>
+  <blockquote>now do a pass over how mage tower&#x27;s overall art style and design was improved into the latest version, then do before and after mockups of current assets in the new style</blockquote>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 1</div><h2>How Mage Tower's look changed</h2></div>
+  <p>Read from Mage Tower Battle's triage, notebook, handoff, shader and design journal (entries 8 and 9). The big change came in one round, 1.6.0, when its person asked for Ape Race's level of fidelity inside the tower. Its agent took Ape Race's look apart first, mocked the tower up in it, and built it once the questions were answered.</p>
+  <div class="table-scroll"><table class="timeline">
+    <thead><tr><th>Version</th><th>The look</th><th>Why</th></tr></thead>
+    <tbody><tr><td>1.0 to 1.5 (rounds 1 to 6)</td><td>Smooth balls and cylinders with a black outline, under three flat bands of light. People were stacked balls with no arms that slid when they walked. Every station was one shape on a bare floor.</td><td>This is the look Protection of the Spheres took for its round 2 (with Chumbles), and the look the game has now.</td></tr><tr><td>1.6.0 (round 7, T34 to T37)</td><td>The Ape Race look: faceted shapes, sky and ground light with a wrapping sun, haze in the place&#x27;s colour, glow as added light, soft disc shadows, no outline. Jointed people with shoulders, hands and feet. A dressed room. The camera comes down behind the archmage at a station. A dark see-through HUD.</td><td>Asked for as &quot;that level of fidelity&quot;: an analysis and mockups first (entry 8), then built once answered.</td></tr><tr><td>1.7.0 (round 8)</td><td>Readable spell tiles and new screens drawn to their mockups; the battle field keeps 1.6.0&#x27;s light and facets.</td><td>A playtester&#x27;s points; the look itself unchanged.</td></tr><tr><td>1.7.1 (round 9, T46, T47)</td><td>The close camera keeps the overview&#x27;s heading and eases down over three quarters of a second, so walking stays easy to steer. The title screen turns slowly inside the tower while the archmage walks the stations.</td><td>Tuning the camera the new look brought in.</td></tr></tbody>
+  </table></div>
+  <h3 class="sub">Before and after, in Mage Tower's own pictures</h3>
+  <div class="grid2">
+    <figure class="ba">
+  <div class="ba-row"><div><span class="chip">1.5.0</span><button class="zoom" data-full="art4/mtb/r8b-floor.jpg" data-cap="The tower&#x27;s floor: 1.5.0"><img loading="lazy" src="art4/mtb/r8b-floor.jpg" alt="The tower&#x27;s floor: 1.5.0"></button></div><div><span class="chip acc">1.6.0</span><button class="zoom" data-full="art4/mtb/r8g-floor.jpg" data-cap="The tower&#x27;s floor: 1.6.0"><img loading="lazy" src="art4/mtb/r8g-floor.jpg" alt="The tower&#x27;s floor: 1.6.0"></button></div></div>
+  <figcaption><b>The tower&#x27;s floor.</b> Stone, timber posts, windows with shafts of light, full shelves, a chandelier and a rug, from the same spot. The outline is gone and the faces of every shape take the light differently.</figcaption>
+</figure>
+    <figure class="ba">
+  <div class="ba-row"><div><span class="chip">1.5.0</span><button class="zoom" data-full="art4/mtb/r8b-library.jpg" data-cap="The library: 1.5.0"><img loading="lazy" src="art4/mtb/r8b-library.jpg" alt="The library: 1.5.0"></button></div><div><span class="chip acc">1.6.0</span><button class="zoom" data-full="art4/mtb/r8g-library.jpg" data-cap="The library: 1.6.0"><img loading="lazy" src="art4/mtb/r8g-library.jpg" alt="The library: 1.6.0"></button></div></div>
+  <figcaption><b>The library.</b> Empty shelves and books lying flat became full shelves of books of mixed heights, piles on the floor and a candle, seen from just behind the archmage.</figcaption>
+</figure>
+    <figure class="ba">
+  <div class="ba-row"><div><span class="chip">1.5.0</span><button class="zoom" data-full="art4/mtb/g-battle-one.jpg" data-cap="The battle field: 1.5.0"><img loading="lazy" src="art4/mtb/g-battle-one.jpg" alt="The battle field: 1.5.0"></button></div><div><span class="chip acc">1.6.0</span><button class="zoom" data-full="art4/mtb/r8g-battle.jpg" data-cap="The battle field: 1.6.0"><img loading="lazy" src="art4/mtb/r8g-battle.jpg" alt="The battle field: 1.6.0"></button></div></div>
+  <figcaption><b>The battle field.</b> Flat green squares became faceted tiles in many shades over an earth slab, with tufts, flowers and stones; the same light and no outlines.</figcaption>
+</figure>
+    <figure class="ba">
+  <div class="ba-row"><div><span class="chip">1.5.0</span><button class="zoom" data-full="art4/mtb/r8b-lab.jpg" data-cap="The laboratory: 1.5.0"><img loading="lazy" src="art4/mtb/r8b-lab.jpg" alt="The laboratory: 1.5.0"></button></div><div><span class="chip acc">mockup</span><button class="zoom" data-full="art4/mtb/r8-lab.jpg" data-cap="The laboratory: mockup"><img loading="lazy" src="art4/mtb/r8-lab.jpg" alt="The laboratory: mockup"></button></div></div>
+  <figcaption><b>The laboratory.</b> The mockup that set the target: crystals with thin beams, a cauldron on a fire, a wall of jars, haze and a low camera.</figcaption>
+</figure>
+  </div>
+  <h3 class="sub">What changed, part by part</h3>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Part</th><th>1.5.0</th><th>1.6.0 and later</th><th>Where</th></tr></thead>
+    <tbody><tr><td>Shape</td><td>Smooth spheres and cylinders, 24 to 28 sides</td><td>Few sides and flat faces; each face catches the light on its own, so a rock reads as six shades</td><td><code>mesh.rs</code>: flat normals, corners nudged by a seeded chance</td></tr><tr><td>Outline</td><td>A black ink pass: every shape drawn twice</td><td>None. Light on the facets tells shapes apart, and dropping the second pass let a room of sixty students fit under the 16,000-instance cap (R7.2)</td><td>ink pass removed from core, page and shader</td></tr><tr><td>Light</td><td>Three flat bands</td><td>A colour from the sky above, the ground's colour from below, and a sun whose light wraps part way round each shape</td><td><code>scene.frag</code>; colours sent as uniforms with each view</td></tr><tr><td>Haze</td><td>None: near and far equally sharp</td><td>Fog in the place's own colour closes in with distance and turns the far half into a backdrop</td><td><code>render::Mood</code> per viewport</td></tr><tr><td>Shadows</td><td>None</td><td>A soft dark disc under each thing; the renderer still casts none (R7.1)</td><td><code>room.rs</code> <code>shadow</code></td></tr><tr><td>Glow</td><td>None</td><td>Added light, softest at a shape's outline; a smooth halo mesh is the one exception to flat faces (R7.5)</td><td>the glow pass</td></tr><tr><td>People</td><td>Stacked balls, no arms</td><td>Shoulders, hands, feet, head, a bent hat tip; arms turn about the shoulder; a held staff stays upright (R7.7)</td><td><code>models.json</code> pivots, <code>grip_r</code></td></tr><tr><td>Dressing</td><td>Each station one shape</td><td>Things at three sizes, each repeated with its own shade, size and tilt: stone blocks, timber, windows and light shafts, full shelves, book piles, candles</td><td><code>room.rs</code></td></tr><tr><td>Palette</td><td>One purple for everything</td><td>A few related colours for the place, plus one bright colour for what matters to play (the invasion book's red beam)</td><td><code>palette.json</code></td></tr><tr><td>Camera</td><td>High over the room</td><td>Comes down behind the archmage at a station (1.6.0), then eased so the keys keep their directions (1.7.1)</td><td><code>room::closeness</code>, <code>Prep::dip</code></td></tr><tr><td>HUD</td><td>Pale cards</td><td>Dark see-through panels, one gold button for the main action</td><td><code>web/style.css</code>; the contrast check still passes</td></tr></tbody>
+  </table></div>
+  <h3 class="sub">What Mage Tower learned building it</h3>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Its row</th><th>The lesson, and what it means here</th></tr></thead>
+    <tbody><tr><td>R7.1</td><td>Real shadows were not possible in the game&#x27;s renderer, so the mockup&#x27;s were replaced with soft discs. Here the team ring already sits under every unit and can become that disc.</td></tr><tr><td>R7.2</td><td>Dropping the outline halved the draw work. The busiest match screen here would gain the same.</td></tr><tr><td>R7.5</td><td>A faceted glow fades in flat patches, so glows stay smooth. Here: the Sphere&#x27;s light, runes, the relic and every ability&#x27;s glow.</td></tr><tr><td>R7.6</td><td>Nudging corners on one shared mesh made every copy the same wedge. The nudge was halved and half the copies turned. Here: trees and rocks share meshes too.</td></tr><tr><td>R9.1, R9.2</td><td>A camera that turns breaks steering. This game&#x27;s camera never turns, so only Mage Tower&#x27;s lighter haze and dressing carry over, not its close camera.</td></tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 2</div><h2>Where this game stands</h2></div>
+  <p>This game took Mage Tower's 1.5.0 look in its round 2, so it has most of what 1.6.0 left behind. Round 3 already moved its light part of the way.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Mage Tower 1.6.0 has</th><th>This game now</th><th>In the mockups below</th></tr></thead>
+    <tbody><tr><td>Faceted shapes</td><td>No: smooth spheres and capsules</td><td>every model, by mesh setting</td></tr><tr><td>No outline</td><td>No: the plum ink pass on every model</td><td>the shader's ink pass</td></tr><tr><td>Sky and ground light, wrapping sun</td><td>Mostly: round 3's shader already wraps the light and mixes a sky fill with a ground bounce</td><td>kept, retuned to a lower sun</td></tr><tr><td>Haze in the place's colour</td><td>Partly: there is fog, but pale blue and far off</td><td>colour and distances</td></tr><tr><td>Soft disc shadows</td><td>Partly: a team ring under each unit, no dark disc under buildings or trees</td><td>a disc under everything</td></tr><tr><td>Glow as light</td><td>Partly: glow-style parts are drawn unlit, not added</td><td>the Sphere, runes, abilities</td></tr><tr><td>Ground at three sizes</td><td>No: flat grass and a path, trees only</td><td>boulders, tufts, flowers and pebbles</td></tr><tr><td>One palette for the place</td><td>Mostly: the sides' gold and violet are the bright colours</td><td>kept</td></tr><tr><td>Jointed people</td><td>Yes: heroes and creeps already have shoulders and hips (round 2)</td><td>kept</td></tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 3</div><h2>Every model, before and after</h2></div>
+  <p class="ba-key"><span><span class="chip">left</span> the game now: its own renderer and model viewer (<code>?tile=lineup:…</code>)</span><span><span class="chip acc">right</span> mockup in the new look: the same parts, drawn with three.js</span></p>
+  <div class="grid2">
+    <figure class="ba">
+  <div class="ba-row"><div><span class="chip">the game now</span><button class="zoom" data-full="art4/game/lane.jpg" data-cap="A lane: the game now"><img loading="lazy" src="art4/game/lane.jpg" alt="A lane: the game now"></button></div><div><span class="chip acc">mockup</span><button class="zoom" data-full="art4/scenes/lane_game.jpg" data-cap="A lane: mockup"><img loading="lazy" src="art4/scenes/lane_game.jpg" alt="A lane: mockup"></button></div></div>
+  <figcaption><b>A lane.</b> Left, a match 75 seconds in, at the game's own camera. Right, a lane at the clash of two waves from the same pitch: faceted ground rising toward the trees, stones, tufts and flowers off the path, trees each in their own shade, and the far trees going into the haze.</figcaption>
+</figure>
+    <figure class="ba">
+  <div class="ba-row"><div><span class="chip">the game now</span><button class="zoom" data-full="art4/game/heroes_1.jpg" data-cap="Heroes, first five: the game now"><img loading="lazy" src="art4/game/heroes_1.jpg" alt="Heroes, first five: the game now"></button></div><div><span class="chip acc">mockup</span><button class="zoom" data-full="art4/models/heroes_1.jpg" data-cap="Heroes, first five: mockup"><img loading="lazy" src="art4/models/heroes_1.jpg" alt="Heroes, first five: mockup"></button></div></div>
+  <figcaption><b>Heroes, first five.</b> Ironvow, Rime, Cinder, Thistle and Gristle. Every round ball is now 80 faces, every column 8 sides, with no outline.</figcaption>
+</figure>
+    <figure class="ba">
+  <div class="ba-row"><div><span class="chip">the game now</span><button class="zoom" data-full="art4/game/heroes_2.jpg" data-cap="Heroes, second five: the game now"><img loading="lazy" src="art4/game/heroes_2.jpg" alt="Heroes, second five: the game now"></button></div><div><span class="chip acc">mockup</span><button class="zoom" data-full="art4/models/heroes_2.jpg" data-cap="Heroes, second five: mockup"><img loading="lazy" src="art4/models/heroes_2.jpg" alt="Heroes, second five: mockup"></button></div></div>
+  <figcaption><b>Heroes, second five.</b> Tectus, Kestrel, Hexwright, Longwick and Tempest.</figcaption>
+</figure>
+    <figure class="ba"><button class="zoom" data-full="art4/scenes/lane.jpg" data-cap="A lane in the new look, from the mockups&#x27; own angle"><img loading="lazy" src="art4/scenes/lane.jpg" alt="A lane in the new look, from the mockups&#x27; own angle"></button><figcaption><b>The same lane from closer and lower</b>, where the facets and the dressing show most.</figcaption></figure>
+  </div>
+  <h3 class="sub">Heroes (10)</h3><div class="bagrid"><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_cinder.jpg" data-cap="Cinder: the game now"><img loading="lazy" src="art4/game/hero_cinder.jpg" alt="Cinder: the game now"></button><button class="zoom" data-full="art4/models/hero_cinder.jpg" data-cap="Cinder: mockup, the new look"><img loading="lazy" src="art4/models/hero_cinder.jpg" alt="Cinder: mockup, the new look"></button></div>
+  <figcaption><b>Cinder</b> <code>hero_cinder</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_gristle.jpg" data-cap="Gristle: the game now"><img loading="lazy" src="art4/game/hero_gristle.jpg" alt="Gristle: the game now"></button><button class="zoom" data-full="art4/models/hero_gristle.jpg" data-cap="Gristle: mockup, the new look"><img loading="lazy" src="art4/models/hero_gristle.jpg" alt="Gristle: mockup, the new look"></button></div>
+  <figcaption><b>Gristle</b> <code>hero_gristle</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_hexwright.jpg" data-cap="Hexwright: the game now"><img loading="lazy" src="art4/game/hero_hexwright.jpg" alt="Hexwright: the game now"></button><button class="zoom" data-full="art4/models/hero_hexwright.jpg" data-cap="Hexwright: mockup, the new look"><img loading="lazy" src="art4/models/hero_hexwright.jpg" alt="Hexwright: mockup, the new look"></button></div>
+  <figcaption><b>Hexwright</b> <code>hero_hexwright</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_ironvow.jpg" data-cap="Ironvow: the game now"><img loading="lazy" src="art4/game/hero_ironvow.jpg" alt="Ironvow: the game now"></button><button class="zoom" data-full="art4/models/hero_ironvow.jpg" data-cap="Ironvow: mockup, the new look"><img loading="lazy" src="art4/models/hero_ironvow.jpg" alt="Ironvow: mockup, the new look"></button></div>
+  <figcaption><b>Ironvow</b> <code>hero_ironvow</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_kestrel.jpg" data-cap="Kestrel: the game now"><img loading="lazy" src="art4/game/hero_kestrel.jpg" alt="Kestrel: the game now"></button><button class="zoom" data-full="art4/models/hero_kestrel.jpg" data-cap="Kestrel: mockup, the new look"><img loading="lazy" src="art4/models/hero_kestrel.jpg" alt="Kestrel: mockup, the new look"></button></div>
+  <figcaption><b>Kestrel</b> <code>hero_kestrel</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_longwick.jpg" data-cap="Longwick: the game now"><img loading="lazy" src="art4/game/hero_longwick.jpg" alt="Longwick: the game now"></button><button class="zoom" data-full="art4/models/hero_longwick.jpg" data-cap="Longwick: mockup, the new look"><img loading="lazy" src="art4/models/hero_longwick.jpg" alt="Longwick: mockup, the new look"></button></div>
+  <figcaption><b>Longwick</b> <code>hero_longwick</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_rime.jpg" data-cap="Rime: the game now"><img loading="lazy" src="art4/game/hero_rime.jpg" alt="Rime: the game now"></button><button class="zoom" data-full="art4/models/hero_rime.jpg" data-cap="Rime: mockup, the new look"><img loading="lazy" src="art4/models/hero_rime.jpg" alt="Rime: mockup, the new look"></button></div>
+  <figcaption><b>Rime</b> <code>hero_rime</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_tectus.jpg" data-cap="Tectus: the game now"><img loading="lazy" src="art4/game/hero_tectus.jpg" alt="Tectus: the game now"></button><button class="zoom" data-full="art4/models/hero_tectus.jpg" data-cap="Tectus: mockup, the new look"><img loading="lazy" src="art4/models/hero_tectus.jpg" alt="Tectus: mockup, the new look"></button></div>
+  <figcaption><b>Tectus</b> <code>hero_tectus</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_tempest.jpg" data-cap="Tempest: the game now"><img loading="lazy" src="art4/game/hero_tempest.jpg" alt="Tempest: the game now"></button><button class="zoom" data-full="art4/models/hero_tempest.jpg" data-cap="Tempest: mockup, the new look"><img loading="lazy" src="art4/models/hero_tempest.jpg" alt="Tempest: mockup, the new look"></button></div>
+  <figcaption><b>Tempest</b> <code>hero_tempest</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hero_thistle.jpg" data-cap="Thistle: the game now"><img loading="lazy" src="art4/game/hero_thistle.jpg" alt="Thistle: the game now"></button><button class="zoom" data-full="art4/models/hero_thistle.jpg" data-cap="Thistle: mockup, the new look"><img loading="lazy" src="art4/models/hero_thistle.jpg" alt="Thistle: mockup, the new look"></button></div>
+  <figcaption><b>Thistle</b> <code>hero_thistle</code></figcaption>
+</figure></div>
+<h3 class="sub">Creeps (6)</h3><div class="bagrid"><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/creep_melee_moon.jpg" data-cap="Moonward Thrall: the game now"><img loading="lazy" src="art4/game/creep_melee_moon.jpg" alt="Moonward Thrall: the game now"></button><button class="zoom" data-full="art4/models/creep_melee_moon.jpg" data-cap="Moonward Thrall: mockup, the new look"><img loading="lazy" src="art4/models/creep_melee_moon.jpg" alt="Moonward Thrall: mockup, the new look"></button></div>
+  <figcaption><b>Moonward Thrall</b> <code>creep_melee_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/creep_melee_sun.jpg" data-cap="Sunward Spearman: the game now"><img loading="lazy" src="art4/game/creep_melee_sun.jpg" alt="Sunward Spearman: the game now"></button><button class="zoom" data-full="art4/models/creep_melee_sun.jpg" data-cap="Sunward Spearman: mockup, the new look"><img loading="lazy" src="art4/models/creep_melee_sun.jpg" alt="Sunward Spearman: mockup, the new look"></button></div>
+  <figcaption><b>Sunward Spearman</b> <code>creep_melee_sun</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/creep_ranged_moon.jpg" data-cap="Moonward Caster: the game now"><img loading="lazy" src="art4/game/creep_ranged_moon.jpg" alt="Moonward Caster: the game now"></button><button class="zoom" data-full="art4/models/creep_ranged_moon.jpg" data-cap="Moonward Caster: mockup, the new look"><img loading="lazy" src="art4/models/creep_ranged_moon.jpg" alt="Moonward Caster: mockup, the new look"></button></div>
+  <figcaption><b>Moonward Caster</b> <code>creep_ranged_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/creep_ranged_sun.jpg" data-cap="Sunward Slinger: the game now"><img loading="lazy" src="art4/game/creep_ranged_sun.jpg" alt="Sunward Slinger: the game now"></button><button class="zoom" data-full="art4/models/creep_ranged_sun.jpg" data-cap="Sunward Slinger: mockup, the new look"><img loading="lazy" src="art4/models/creep_ranged_sun.jpg" alt="Sunward Slinger: mockup, the new look"></button></div>
+  <figcaption><b>Sunward Slinger</b> <code>creep_ranged_sun</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/creep_siege_moon.jpg" data-cap="Moonward Catapult: the game now"><img loading="lazy" src="art4/game/creep_siege_moon.jpg" alt="Moonward Catapult: the game now"></button><button class="zoom" data-full="art4/models/creep_siege_moon.jpg" data-cap="Moonward Catapult: mockup, the new look"><img loading="lazy" src="art4/models/creep_siege_moon.jpg" alt="Moonward Catapult: mockup, the new look"></button></div>
+  <figcaption><b>Moonward Catapult</b> <code>creep_siege_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/creep_siege_sun.jpg" data-cap="Sunward Ballista: the game now"><img loading="lazy" src="art4/game/creep_siege_sun.jpg" alt="Sunward Ballista: the game now"></button><button class="zoom" data-full="art4/models/creep_siege_sun.jpg" data-cap="Sunward Ballista: mockup, the new look"><img loading="lazy" src="art4/models/creep_siege_sun.jpg" alt="Sunward Ballista: mockup, the new look"></button></div>
+  <figcaption><b>Sunward Ballista</b> <code>creep_siege_sun</code></figcaption>
+</figure></div>
+<h3 class="sub">Buildings (13)</h3><div class="bagrid"><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/barracks_melee_moon.jpg" data-cap="Moonward Thrall Barracks: the game now"><img loading="lazy" src="art4/game/barracks_melee_moon.jpg" alt="Moonward Thrall Barracks: the game now"></button><button class="zoom" data-full="art4/models/barracks_melee_moon.jpg" data-cap="Moonward Thrall Barracks: mockup, the new look"><img loading="lazy" src="art4/models/barracks_melee_moon.jpg" alt="Moonward Thrall Barracks: mockup, the new look"></button></div>
+  <figcaption><b>Moonward Thrall Barracks</b> <code>barracks_melee_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/barracks_melee_sun.jpg" data-cap="Sunward Spearman Barracks: the game now"><img loading="lazy" src="art4/game/barracks_melee_sun.jpg" alt="Sunward Spearman Barracks: the game now"></button><button class="zoom" data-full="art4/models/barracks_melee_sun.jpg" data-cap="Sunward Spearman Barracks: mockup, the new look"><img loading="lazy" src="art4/models/barracks_melee_sun.jpg" alt="Sunward Spearman Barracks: mockup, the new look"></button></div>
+  <figcaption><b>Sunward Spearman Barracks</b> <code>barracks_melee_sun</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/barracks_ranged_moon.jpg" data-cap="Moonward Caster Barracks: the game now"><img loading="lazy" src="art4/game/barracks_ranged_moon.jpg" alt="Moonward Caster Barracks: the game now"></button><button class="zoom" data-full="art4/models/barracks_ranged_moon.jpg" data-cap="Moonward Caster Barracks: mockup, the new look"><img loading="lazy" src="art4/models/barracks_ranged_moon.jpg" alt="Moonward Caster Barracks: mockup, the new look"></button></div>
+  <figcaption><b>Moonward Caster Barracks</b> <code>barracks_ranged_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/barracks_ranged_sun.jpg" data-cap="Sunward Slinger Barracks: the game now"><img loading="lazy" src="art4/game/barracks_ranged_sun.jpg" alt="Sunward Slinger Barracks: the game now"></button><button class="zoom" data-full="art4/models/barracks_ranged_sun.jpg" data-cap="Sunward Slinger Barracks: mockup, the new look"><img loading="lazy" src="art4/models/barracks_ranged_sun.jpg" alt="Sunward Slinger Barracks: mockup, the new look"></button></div>
+  <figcaption><b>Sunward Slinger Barracks</b> <code>barracks_ranged_sun</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/cannon_moon.jpg" data-cap="Moonward cannon: the game now"><img loading="lazy" src="art4/game/cannon_moon.jpg" alt="Moonward cannon: the game now"></button><button class="zoom" data-full="art4/models/cannon_moon.jpg" data-cap="Moonward cannon: mockup, the new look"><img loading="lazy" src="art4/models/cannon_moon.jpg" alt="Moonward cannon: mockup, the new look"></button></div>
+  <figcaption><b>Moonward cannon</b> <code>cannon_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/cannon_sun.jpg" data-cap="Sunward cannon: the game now"><img loading="lazy" src="art4/game/cannon_sun.jpg" alt="Sunward cannon: the game now"></button><button class="zoom" data-full="art4/models/cannon_sun.jpg" data-cap="Sunward cannon: mockup, the new look"><img loading="lazy" src="art4/models/cannon_sun.jpg" alt="Sunward cannon: mockup, the new look"></button></div>
+  <figcaption><b>Sunward cannon</b> <code>cannon_sun</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/fountain_moon.jpg" data-cap="Moonward Fountain: the game now"><img loading="lazy" src="art4/game/fountain_moon.jpg" alt="Moonward Fountain: the game now"></button><button class="zoom" data-full="art4/models/fountain_moon.jpg" data-cap="Moonward Fountain: mockup, the new look"><img loading="lazy" src="art4/models/fountain_moon.jpg" alt="Moonward Fountain: mockup, the new look"></button></div>
+  <figcaption><b>Moonward Fountain</b> <code>fountain_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/fountain_sun.jpg" data-cap="Sunward Fountain: the game now"><img loading="lazy" src="art4/game/fountain_sun.jpg" alt="Sunward Fountain: the game now"></button><button class="zoom" data-full="art4/models/fountain_sun.jpg" data-cap="Sunward Fountain: mockup, the new look"><img loading="lazy" src="art4/models/fountain_sun.jpg" alt="Sunward Fountain: mockup, the new look"></button></div>
+  <figcaption><b>Sunward Fountain</b> <code>fountain_sun</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/shop.jpg" data-cap="Market Stall: the game now"><img loading="lazy" src="art4/game/shop.jpg" alt="Market Stall: the game now"></button><button class="zoom" data-full="art4/models/shop.jpg" data-cap="Market Stall: mockup, the new look"><img loading="lazy" src="art4/models/shop.jpg" alt="Market Stall: mockup, the new look"></button></div>
+  <figcaption><b>Market Stall</b> <code>shop</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/sphere_moon.jpg" data-cap="Moonward Sphere: the game now"><img loading="lazy" src="art4/game/sphere_moon.jpg" alt="Moonward Sphere: the game now"></button><button class="zoom" data-full="art4/models/sphere_moon.jpg" data-cap="Moonward Sphere: mockup, the new look"><img loading="lazy" src="art4/models/sphere_moon.jpg" alt="Moonward Sphere: mockup, the new look"></button></div>
+  <figcaption><b>Moonward Sphere</b> <code>sphere_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/sphere_sun.jpg" data-cap="Sunward Sphere: the game now"><img loading="lazy" src="art4/game/sphere_sun.jpg" alt="Sunward Sphere: the game now"></button><button class="zoom" data-full="art4/models/sphere_sun.jpg" data-cap="Sunward Sphere: mockup, the new look"><img loading="lazy" src="art4/models/sphere_sun.jpg" alt="Sunward Sphere: mockup, the new look"></button></div>
+  <figcaption><b>Sunward Sphere</b> <code>sphere_sun</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/tower_moon.jpg" data-cap="Moonward tower: the game now"><img loading="lazy" src="art4/game/tower_moon.jpg" alt="Moonward tower: the game now"></button><button class="zoom" data-full="art4/models/tower_moon.jpg" data-cap="Moonward tower: mockup, the new look"><img loading="lazy" src="art4/models/tower_moon.jpg" alt="Moonward tower: mockup, the new look"></button></div>
+  <figcaption><b>Moonward tower</b> <code>tower_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/tower_sun.jpg" data-cap="Sunward tower: the game now"><img loading="lazy" src="art4/game/tower_sun.jpg" alt="Sunward tower: the game now"></button><button class="zoom" data-full="art4/models/tower_sun.jpg" data-cap="Sunward tower: mockup, the new look"><img loading="lazy" src="art4/models/tower_sun.jpg" alt="Sunward tower: mockup, the new look"></button></div>
+  <figcaption><b>Sunward tower</b> <code>tower_sun</code></figcaption>
+</figure></div>
+<h3 class="sub">The forest (13)</h3><div class="bagrid"><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/critter.jpg" data-cap="Critter: the game now"><img loading="lazy" src="art4/game/critter.jpg" alt="Critter: the game now"></button><button class="zoom" data-full="art4/models/critter.jpg" data-cap="Critter: mockup, the new look"><img loading="lazy" src="art4/models/critter.jpg" alt="Critter: mockup, the new look"></button></div>
+  <figcaption><b>Critter</b> <code>critter</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/drake.jpg" data-cap="Elder Drake: the game now"><img loading="lazy" src="art4/game/drake.jpg" alt="Elder Drake: the game now"></button><button class="zoom" data-full="art4/models/drake.jpg" data-cap="Elder Drake: mockup, the new look"><img loading="lazy" src="art4/models/drake.jpg" alt="Elder Drake: mockup, the new look"></button></div>
+  <figcaption><b>Elder Drake</b> <code>drake</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/drake_young.jpg" data-cap="Young Drake: the game now"><img loading="lazy" src="art4/game/drake_young.jpg" alt="Young Drake: the game now"></button><button class="zoom" data-full="art4/models/drake_young.jpg" data-cap="Young Drake: mockup, the new look"><img loading="lazy" src="art4/models/drake_young.jpg" alt="Young Drake: mockup, the new look"></button></div>
+  <figcaption><b>Young Drake</b> <code>drake_young</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/golem.jpg" data-cap="Stone Golem: the game now"><img loading="lazy" src="art4/game/golem.jpg" alt="Stone Golem: the game now"></button><button class="zoom" data-full="art4/models/golem.jpg" data-cap="Stone Golem: mockup, the new look"><img loading="lazy" src="art4/models/golem.jpg" alt="Stone Golem: mockup, the new look"></button></div>
+  <figcaption><b>Stone Golem</b> <code>golem</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/golem_small.jpg" data-cap="Small Stone Golem: the game now"><img loading="lazy" src="art4/game/golem_small.jpg" alt="Small Stone Golem: the game now"></button><button class="zoom" data-full="art4/models/golem_small.jpg" data-cap="Small Stone Golem: mockup, the new look"><img loading="lazy" src="art4/models/golem_small.jpg" alt="Small Stone Golem: mockup, the new look"></button></div>
+  <figcaption><b>Small Stone Golem</b> <code>golem_small</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hornet.jpg" data-cap="Giant Hornet: the game now"><img loading="lazy" src="art4/game/hornet.jpg" alt="Giant Hornet: the game now"></button><button class="zoom" data-full="art4/models/hornet.jpg" data-cap="Giant Hornet: mockup, the new look"><img loading="lazy" src="art4/models/hornet.jpg" alt="Giant Hornet: mockup, the new look"></button></div>
+  <figcaption><b>Giant Hornet</b> <code>hornet</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/hound.jpg" data-cap="Ridge Hound: the game now"><img loading="lazy" src="art4/game/hound.jpg" alt="Ridge Hound: the game now"></button><button class="zoom" data-full="art4/models/hound.jpg" data-cap="Ridge Hound: mockup, the new look"><img loading="lazy" src="art4/models/hound.jpg" alt="Ridge Hound: mockup, the new look"></button></div>
+  <figcaption><b>Ridge Hound</b> <code>hound</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/imp.jpg" data-cap="Bramble Imp: the game now"><img loading="lazy" src="art4/game/imp.jpg" alt="Bramble Imp: the game now"></button><button class="zoom" data-full="art4/models/imp.jpg" data-cap="Bramble Imp: mockup, the new look"><img loading="lazy" src="art4/models/imp.jpg" alt="Bramble Imp: mockup, the new look"></button></div>
+  <figcaption><b>Bramble Imp</b> <code>imp</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/mossback.jpg" data-cap="Mossback Tortoise: the game now"><img loading="lazy" src="art4/game/mossback.jpg" alt="Mossback Tortoise: the game now"></button><button class="zoom" data-full="art4/models/mossback.jpg" data-cap="Mossback Tortoise: mockup, the new look"><img loading="lazy" src="art4/models/mossback.jpg" alt="Mossback Tortoise: mockup, the new look"></button></div>
+  <figcaption><b>Mossback Tortoise</b> <code>mossback</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/shaman.jpg" data-cap="Hornet Shaman: the game now"><img loading="lazy" src="art4/game/shaman.jpg" alt="Hornet Shaman: the game now"></button><button class="zoom" data-full="art4/models/shaman.jpg" data-cap="Hornet Shaman: mockup, the new look"><img loading="lazy" src="art4/models/shaman.jpg" alt="Hornet Shaman: mockup, the new look"></button></div>
+  <figcaption><b>Hornet Shaman</b> <code>shaman</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/tree_moon.jpg" data-cap="Moonward tree: the game now"><img loading="lazy" src="art4/game/tree_moon.jpg" alt="Moonward tree: the game now"></button><button class="zoom" data-full="art4/models/tree_moon.jpg" data-cap="Moonward tree: mockup, the new look"><img loading="lazy" src="art4/models/tree_moon.jpg" alt="Moonward tree: mockup, the new look"></button></div>
+  <figcaption><b>Moonward tree</b> <code>tree_moon</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/tree_sun.jpg" data-cap="Sunward tree: the game now"><img loading="lazy" src="art4/game/tree_sun.jpg" alt="Sunward tree: the game now"></button><button class="zoom" data-full="art4/models/tree_sun.jpg" data-cap="Sunward tree: mockup, the new look"><img loading="lazy" src="art4/models/tree_sun.jpg" alt="Sunward tree: mockup, the new look"></button></div>
+  <figcaption><b>Sunward tree</b> <code>tree_sun</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/warden.jpg" data-cap="The Warden: the game now"><img loading="lazy" src="art4/game/warden.jpg" alt="The Warden: the game now"></button><button class="zoom" data-full="art4/models/warden.jpg" data-cap="The Warden: mockup, the new look"><img loading="lazy" src="art4/models/warden.jpg" alt="The Warden: mockup, the new look"></button></div>
+  <figcaption><b>The Warden</b> <code>warden</code></figcaption>
+</figure></div>
+<h3 class="sub">Small things (11)</h3><div class="bagrid"><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/courier.jpg" data-cap="Pack Mule: the game now"><img loading="lazy" src="art4/game/courier.jpg" alt="Pack Mule: the game now"></button><button class="zoom" data-full="art4/models/courier.jpg" data-cap="Pack Mule: mockup, the new look"><img loading="lazy" src="art4/models/courier.jpg" alt="Pack Mule: mockup, the new look"></button></div>
+  <figcaption><b>Pack Mule</b> <code>courier</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/fissure_rock.jpg" data-cap="Rift Stone: the game now"><img loading="lazy" src="art4/game/fissure_rock.jpg" alt="Rift Stone: the game now"></button><button class="zoom" data-full="art4/models/fissure_rock.jpg" data-cap="Rift Stone: mockup, the new look"><img loading="lazy" src="art4/models/fissure_rock.jpg" alt="Rift Stone: mockup, the new look"></button></div>
+  <figcaption><b>Rift Stone</b> <code>fissure_rock</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/healing_ward.jpg" data-cap="Mending Totem: the game now"><img loading="lazy" src="art4/game/healing_ward.jpg" alt="Mending Totem: the game now"></button><button class="zoom" data-full="art4/models/healing_ward.jpg" data-cap="Mending Totem: mockup, the new look"><img loading="lazy" src="art4/models/healing_ward.jpg" alt="Mending Totem: mockup, the new look"></button></div>
+  <figcaption><b>Mending Totem</b> <code>healing_ward</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/observer_ward.jpg" data-cap="Watching Eye: the game now"><img loading="lazy" src="art4/game/observer_ward.jpg" alt="Watching Eye: the game now"></button><button class="zoom" data-full="art4/models/observer_ward.jpg" data-cap="Watching Eye: mockup, the new look"><img loading="lazy" src="art4/models/observer_ward.jpg" alt="Watching Eye: mockup, the new look"></button></div>
+  <figcaption><b>Watching Eye</b> <code>observer_ward</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/relic.jpg" data-cap="Relic: the game now"><img loading="lazy" src="art4/game/relic.jpg" alt="Relic: the game now"></button><button class="zoom" data-full="art4/models/relic.jpg" data-cap="Relic: mockup, the new look"><img loading="lazy" src="art4/models/relic.jpg" alt="Relic: mockup, the new look"></button></div>
+  <figcaption><b>Relic</b> <code>relic</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/rune_double.jpg" data-cap="Rune: double: the game now"><img loading="lazy" src="art4/game/rune_double.jpg" alt="Rune: double: the game now"></button><button class="zoom" data-full="art4/models/rune_double.jpg" data-cap="Rune: double: mockup, the new look"><img loading="lazy" src="art4/models/rune_double.jpg" alt="Rune: double: mockup, the new look"></button></div>
+  <figcaption><b>Rune: double</b> <code>rune_double</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/rune_haste.jpg" data-cap="Rune: haste: the game now"><img loading="lazy" src="art4/game/rune_haste.jpg" alt="Rune: haste: the game now"></button><button class="zoom" data-full="art4/models/rune_haste.jpg" data-cap="Rune: haste: mockup, the new look"><img loading="lazy" src="art4/models/rune_haste.jpg" alt="Rune: haste: mockup, the new look"></button></div>
+  <figcaption><b>Rune: haste</b> <code>rune_haste</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/rune_illusion.jpg" data-cap="Rune: illusion: the game now"><img loading="lazy" src="art4/game/rune_illusion.jpg" alt="Rune: illusion: the game now"></button><button class="zoom" data-full="art4/models/rune_illusion.jpg" data-cap="Rune: illusion: mockup, the new look"><img loading="lazy" src="art4/models/rune_illusion.jpg" alt="Rune: illusion: mockup, the new look"></button></div>
+  <figcaption><b>Rune: illusion</b> <code>rune_illusion</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/rune_invis.jpg" data-cap="Rune: invis: the game now"><img loading="lazy" src="art4/game/rune_invis.jpg" alt="Rune: invis: the game now"></button><button class="zoom" data-full="art4/models/rune_invis.jpg" data-cap="Rune: invis: mockup, the new look"><img loading="lazy" src="art4/models/rune_invis.jpg" alt="Rune: invis: mockup, the new look"></button></div>
+  <figcaption><b>Rune: invis</b> <code>rune_invis</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/rune_regen.jpg" data-cap="Rune: regen: the game now"><img loading="lazy" src="art4/game/rune_regen.jpg" alt="Rune: regen: the game now"></button><button class="zoom" data-full="art4/models/rune_regen.jpg" data-cap="Rune: regen: mockup, the new look"><img loading="lazy" src="art4/models/rune_regen.jpg" alt="Rune: regen: mockup, the new look"></button></div>
+  <figcaption><b>Rune: regen</b> <code>rune_regen</code></figcaption>
+</figure><figure class="bam">
+  <div class="ba-row"><button class="zoom" data-full="art4/game/sentry_ward.jpg" data-cap="Seeker&#x27;s Ward: the game now"><img loading="lazy" src="art4/game/sentry_ward.jpg" alt="Seeker&#x27;s Ward: the game now"></button><button class="zoom" data-full="art4/models/sentry_ward.jpg" data-cap="Seeker&#x27;s Ward: mockup, the new look"><img loading="lazy" src="art4/models/sentry_ward.jpg" alt="Seeker&#x27;s Ward: mockup, the new look"></button></div>
+  <figcaption><b>Seeker&#x27;s Ward</b> <code>sentry_ward</code></figcaption>
+</figure></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 4</div><h2>What building it would take</h2></div>
+  <p>Like Mage Tower's, none of it needs a new library, a shadow map or a post-processing pass, and none of it touches the rules, so online play is unaffected.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Step</th><th>What</th><th>Size</th></tr></thead>
+    <tbody><tr><td>The light</td><td>Remove the ink pass from the shader, the core's draw list and the page; send the sky, ground and sun colours and the haze as uniforms, as now.</td><td>Small</td></tr><tr><td>Facets</td><td>Build the sphere, capsule, cylinder and cone meshes with few sides and flat normals; keep a smooth halo mesh for glows.</td><td>Small</td></tr><tr><td>Shadows</td><td>A soft dark disc under every unit, building and tree, from the unit's size.</td><td>Small</td></tr><tr><td>The ground</td><td>Seeded dressing at three sizes along the lanes and in the forest, from the map's seed, so every browser draws the same.</td><td>Medium</td></tr><tr><td>Tuning</td><td>Colours, haze distances and the sun's angle into <code>data/presentation.json</code>; the browser check's pictures retaken.</td><td>Small</td></tr></tbody>
+  </table></div>
+  <h3 class="sub">Yours to decide, by number</h3>
+  <div class="table-scroll"><table>
+    <thead><tr><th>#</th><th>Question</th></tr></thead>
+    <tbody><tr><td>R6.1</td><td>Build this look into the game: all of it, some parts (which?), or not yet?</td></tr><tr><td>R6.2</td><td>Time of day: late afternoon as drawn, or Mage Tower's dusk, or a mood that turns with the game's day and night?</td></tr><tr><td>R6.3</td><td>Faces: heads faceted as drawn, or kept smooth so the eyes read better at match distance?</td></tr></tbody>
+  </table></div>
+</section>
+<footer>Mockups: <code>journal/mockups/kit.js</code> with <code>?look=ape</code> (three.js r160, MIT), pictures from <code>ART=art4 LOOK=ape journal/mockups/shoot.py</code>. The game's pictures from <code>tools/shots.py</code> on the build of 17 October 2026. Mage Tower Battle's pictures are from its own design journal. This tab written by <code>journal/mockups/tab10.py</code>. The mockups are labelled as such: the game draws its models with its own renderer.</footer>
+</div>
+<!--/TAB 10-->
 <!--PANELS-->
 
 </div>

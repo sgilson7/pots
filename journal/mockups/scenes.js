@@ -1,10 +1,11 @@
 // Whole scenes for the journal: a lane at the clash of two creep waves,
 // seen from the mockups' angle (?scene=lane) and from the game's own pitch
 // of 56° (?scene=lane_game), so the style can be judged where it is played.
-import { THREE, makeScene, lanePatch, aim, unit, resetRig, idle, walk, swing, rng } from "./kit.js";
+import { THREE, makeScene, lanePatch, aim, unit, resetRig, idle, walk, swing, rng, APE, tint } from "./kit.js";
 
 export function scene(name, { renderer, camera, build }) {
-  const { scene } = makeScene({ shadowBox: 16, sunAt: [6, 14, 8] });
+  // in the new look the far trees go into the haze, framing the fight
+  const { scene } = makeScene({ shadowBox: 16, sunAt: [6, 14, 8], fog: [20, 52] });
   scene.add(lanePatch(48, 34, 5));
   const st = { scene, camera, build };
   const R = rng(9);
@@ -15,6 +16,8 @@ export function scene(name, { renderer, camera, build }) {
     for (const z of [-4.6 - R() * 2.5, 6.4 + R() * 2.5]) {
       const t = put(x < 0 ? "tree_sun" : "tree_moon", "neutral", x, z, R() * 360, { ring: false });
       if (t) t.holder.scale.setScalar(0.85 + R() * 0.3);
+      // the new look: no two trees the same shade (Ape Race repeats every piece with a different shade, size and tilt)
+      if (t && APE) { tint(t.g, R() < 0.5 ? 0x2f5f2a : 0xc9d98a, 0.08 + R() * 0.14); t.holder.rotation.z = (R() - 0.5) * 0.08; }
     }
   }
   put("tower_sun", "sun", -11, -2.3, 90, { ringR: 1.6 });

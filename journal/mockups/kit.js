@@ -9,6 +9,16 @@
 import * as THREE from "./vendor/three.module.js";
 export { THREE };
 
+// ---------------------------------------------------------------- the look
+// `?look=ape` draws every model in the look Mage Tower Battle took from Ape
+// Race in its round 7 (journal tab 10 here): faceted shapes with flat
+// faces, no ink outline, light from the sky above and the ground below with
+// a low sun, haze in the place's own colour, soft disc shadows instead of
+// cast ones, and ground dressed at three sizes. Without it, round 2's look:
+// smooth shapes, the plum outline, cast shadows.
+export const LOOK = new URLSearchParams(globalThis.location?.search || "").get("look") || "round2";
+export const APE = LOOK === "ape";
+
 // ---------------------------------------------------------------- palette
 // Pastel but saturated; the ink is a warm plum, never black.
 export const C = {
@@ -36,7 +46,7 @@ export const C = {
 const mats = new Map();
 export function mat(color, o = {}) {
   const key = color + JSON.stringify(o);
-  if (!mats.has(key)) mats.set(key, new THREE.MeshStandardMaterial({ color, roughness: 0.78, metalness: 0, ...o }));
+  if (!mats.has(key)) mats.set(key, new THREE.MeshStandardMaterial({ color, roughness: APE ? 0.92 : 0.78, metalness: 0, flatShading: APE, ...o }));
   return mats.get(key);
 }
 export const shiny = (color) => mat(color, { roughness: 0.32, metalness: 0.15 });
@@ -52,22 +62,25 @@ export function veil(color, opacity = 0.5, o = {}) {
 const INK = new THREE.MeshBasicMaterial({ color: C.ink, side: THREE.BackSide });
 
 // ---------------------------------------------------------------- geometry
-const SPH = new THREE.SphereGeometry(1, 28, 20);
-const SPH_LO = new THREE.SphereGeometry(1, 12, 9);
-const CYL = new THREE.CylinderGeometry(1, 1, 1, 24);
-const CONE = new THREE.ConeGeometry(1, 1, 24);
+// In the new look a ball is an icosphere of 80 faces and a column has eight
+// sides, so every face catches the light on its own (Ape Race's facets).
+const SPH = APE ? new THREE.IcosahedronGeometry(1, 1) : new THREE.SphereGeometry(1, 28, 20);
+const SPH_LO = APE ? new THREE.IcosahedronGeometry(1, 0) : new THREE.SphereGeometry(1, 12, 9);
+const SIDES = APE ? 8 : 24;
+const CYL = new THREE.CylinderGeometry(1, 1, 1, SIDES);
+const CONE = new THREE.ConeGeometry(1, 1, SIDES);
 const OCTA = new THREE.OctahedronGeometry(1, 0);
 const ICO = new THREE.IcosahedronGeometry(1, 0);
 const caps = new Map();
 function capsule(r, len) {
   const k = r.toFixed(3) + ":" + len.toFixed(3);
-  if (!caps.has(k)) caps.set(k, new THREE.CapsuleGeometry(r, Math.max(0.0001, len), 6, 16));
+  if (!caps.has(k)) caps.set(k, new THREE.CapsuleGeometry(r, Math.max(0.0001, len), APE ? 2 : 6, APE ? 7 : 16));
   return caps.get(k);
 }
 const tori = new Map();
 function torusGeo(R, r, arc) {
   const k = [R, r, arc].map((v) => v.toFixed(3)).join(":");
-  if (!tori.has(k)) tori.set(k, new THREE.TorusGeometry(R, r, 10, 36, arc));
+  if (!tori.has(k)) tori.set(k, new THREE.TorusGeometry(R, r, APE ? 5 : 10, APE ? 16 : 36, arc));
   return tori.get(k);
 }
 
@@ -77,6 +90,8 @@ function torusGeo(R, r, arc) {
 // Comin'). `s` is the shape's size on each axis.
 export const INK_D = 0.022;
 function outline(m, s, d = INK_D) {
+  // the new look has no outline: light on the facets tells shapes apart
+  if (APE) return m;
   const o = new THREE.Mesh(m.geometry, INK);
   o.scale.set(1 + d / s[0], 1 + d / s[1], 1 + d / s[2]);
   o.castShadow = false;
@@ -122,7 +137,7 @@ export function limb(a, b, r, color, o = {}) {
   m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), B.clone().sub(A).normalize());
   m.castShadow = true;
   m.receiveShadow = true;
-  if (o.ink !== false) {
+  if (o.ink !== false && !APE) {
     const g = new THREE.Mesh(capsule(r + (o.d ?? INK_D), len), INK);
     g.userData.ink = true;
     m.add(g);
@@ -133,7 +148,7 @@ export function limb(a, b, r, color, o = {}) {
 /** An upright cylinder, radius r (or [rTop, rBottom]), height h, centred at y. */
 export function cyl(r, h, x, y, z, color, o = {}) {
   const [rt, rb] = Array.isArray(r) ? r : [r, r];
-  const geo = rt === rb ? CYL : new THREE.CylinderGeometry(rt, rb, 1, 24);
+  const geo = rt === rb ? CYL : new THREE.CylinderGeometry(rt, rb, 1, SIDES);
   const m = new THREE.Mesh(geo, asMat(color));
   const s = rt === rb ? [rt, h, rt] : [1, h, 1];
   m.scale.set(...s);
@@ -165,7 +180,7 @@ export function hoop(R, r, x, y, z, color, o = {}) {
   const arc = ((o.arc ?? 360) * Math.PI) / 180;
   const m = new THREE.Mesh(torusGeo(R, r, arc), asMat(color));
   place(m, x, y, z);
-  if (o.ink !== false) {
+  if (o.ink !== false && !APE) {
     const g = new THREE.Mesh(torusGeo(R, r + (o.d ?? INK_D), arc), INK);
     g.userData.ink = true;
     m.add(g);
@@ -489,7 +504,8 @@ export function makeRenderer(canvas, w = W, h = H) {
   const r = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
   r.setPixelRatio(1);
   r.setSize(w, h, false);
-  r.shadowMap.enabled = true;
+  // the new look casts no shadows: each thing stands on a soft dark disc
+  r.shadowMap.enabled = !APE;
   r.shadowMap.type = THREE.PCFSoftShadowMap;
   r.toneMapping = THREE.ACESFilmicToneMapping;
   r.toneMappingExposure = 1.08;
@@ -508,8 +524,40 @@ function skyTexture(top, bottom) {
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
+// The new look's place: late afternoon over the forest. A clear sky above
+// and the grass's green bounced up from below; a low warm sun from the
+// Sunward corner; haze the colour of the far sky. One palette for the
+// place; the sides' gold and violet stay the bright colours that matter to
+// play (Ape Race's rule).
+export const PLACE = {
+  sky: ["#7fb6e8", "#f3d9b0"], skyLight: 0xcfe4ff, groundLight: 0x6f8f4a, sun: 0xffd9a8, haze: 0xe9d6b8,
+  hemi: 0.95, key: 3.3, fill: 0.55, sunAt: [8, 5, 2.5],
+};
+/** A scene in the new look: no cast shadows, sky and ground light, a low sun, haze. */
+export function makeApeScene({ fog = [18, 60], sunAt = PLACE.sunAt } = {}) {
+  const scene = new THREE.Scene();
+  scene.background = skyTexture(...PLACE.sky);
+  scene.add(new THREE.HemisphereLight(PLACE.skyLight, PLACE.groundLight, PLACE.hemi));
+  const sun = new THREE.DirectionalLight(PLACE.sun, PLACE.key);
+  sun.position.set(...sunAt);
+  scene.add(sun, sun.target);
+  // the sun's light wrapping round: a weak warm light from the far side
+  const wrap = new THREE.DirectionalLight(0xffc89a, PLACE.fill);
+  wrap.position.set(-sunAt[0], sunAt[1] * 0.4, -sunAt[2]);
+  scene.add(wrap);
+  scene.fog = new THREE.Fog(PLACE.haze, fog[0], fog[1]);
+  return { scene, sun };
+}
+/** A soft dark disc under a thing, the new look's shadow. */
+export function blob(r, opacity = 0.3) {
+  const m = disc(r, 0, 0.013, 0, new THREE.MeshBasicMaterial({ color: 0x1d2a14, transparent: true, opacity, depthWrite: false }));
+  m.castShadow = false;
+  m.renderOrder = 1;
+  return m;
+}
 /** A scene with the round-2 light: a warm key with soft shadows, a sky fill. */
-export function makeScene({ sky = ["#9fd4ff", "#e8f6ff"], shadowBox = 6, sunAt = [5, 9, 6], key = 2.3 } = {}) {
+export function makeScene({ sky = ["#9fd4ff", "#e8f6ff"], shadowBox = 6, sunAt = [5, 9, 6], key = 2.3, fog } = {}) {
+  if (APE) return makeApeScene({ fog: fog ?? [shadowBox * 3, shadowBox * 9] });
   const scene = new THREE.Scene();
   scene.background = skyTexture(...sky);
   scene.add(new THREE.HemisphereLight(0xe8f4ff, 0xb39a78, 1.1));
@@ -529,9 +577,48 @@ export function makeScene({ sky = ["#9fd4ff", "#e8f6ff"], shadowBox = 6, sunAt =
   scene.add(rim);
   return { scene, sun };
 }
+/** Ground dressing at three sizes, seeded: boulders, tufts, flowers and
+ * pebbles, each with its own shade, size and tilt, where `inside(x, z)`
+ * holds over [x0, x1] × [z0, z1]. */
+export function dress(g, n, x0, x1, z0, z1, seed, inside = () => true, big = 1) {
+  const R = rng(seed);
+  const shade = (c, k) => new THREE.Color(c).offsetHSL((R() - 0.5) * 0.03, (R() - 0.5) * 0.1, (R() - 0.5) * k).getHex();
+  for (let i = 0; i < n; i++) {
+    const x = x0 + R() * (x1 - x0), z = z0 + R() * (z1 - z0);
+    if (!inside(x, z)) continue;
+    const roll = R();
+    if (roll < 0.12 * big) {
+      const s = 0.22 + R() * 0.3;
+      g.add(ball(s * 1.3, s * 0.8, s, x, s * 0.3, z, shade(C.stone, 0.12), { lo: true, rot: [R() * 30, R() * 360, R() * 30] }));
+    } else if (roll < 0.55) {
+      const c = shade(C.grass2, 0.1);
+      for (let b = 0; b < 3; b++) {
+        const a = R() * Math.PI * 2, l = 0.12 + R() * 0.12;
+        g.add(cone(0.035, l, x + Math.cos(a) * 0.05, 0, z + Math.sin(a) * 0.05, c, { rot: [(R() - 0.5) * 40, 0, (R() - 0.5) * 40], shadow: false }));
+      }
+    } else if (roll < 0.72) {
+      g.add(cyl(0.012, 0.16, x, 0.08, z, C.leafDeep, { shadow: false }));
+      g.add(orb(0.04, x, 0.17, z, [0xfff1a8, 0xffb4c8, 0xffffff, 0xf2b33d][Math.floor(R() * 4)], { lo: true }));
+    } else {
+      g.add(ball(0.05 + R() * 0.05, 0.03, 0.045, x, 0.012, z, shade(C.stoneDark, 0.14), { lo: true, rot: [0, R() * 360, 0] }));
+    }
+  }
+  return g;
+}
 /** A round grass diorama for one model, radius r. */
 export function plinth(r = 1.6, top = C.grass, side = C.dirt) {
   const g = new THREE.Group();
+  if (APE) {
+    // faceted turf over an earth slab, dressed round the edge
+    g.add(cyl([r * 0.96, r * 0.9], 0.34, 0, -0.2, 0, C.dirt2));
+    const turf = new THREE.Mesh(new THREE.CircleGeometry(r, 18), mat(top));
+    turf.rotation.x = -Math.PI / 2;
+    turf.position.y = -0.02;
+    g.add(turf);
+    // no boulders on a model's own base: tufts, flowers and pebbles only
+    dress(g, 30, -r, r, -r, r, 11, (x, z) => { const d = Math.hypot(x, z); return d > r * 0.62 && d < r * 0.93; }, 0);
+    return g;
+  }
   const t = cyl(r, 0.22, 0, -0.11, 0, side, { d: 0.03 });
   g.add(t);
   const lid = cyl(r * 0.985, 0.06, 0, -0.02, 0, top, { ink: false });
@@ -548,6 +635,29 @@ export function plinth(r = 1.6, top = C.grass, side = C.dirt) {
 /** A patch of lane for an ability: grass with a dirt path along x. */
 export function lanePatch(w = 14, d = 10, seed = 21) {
   const g = new THREE.Group();
+  if (APE) {
+    // facets you can see: a coarse grid of grass whose corners rise and fall,
+    // a worn path along x, dressed at three sizes off the path
+    const R = rng(seed);
+    const gr = new THREE.Mesh(new THREE.PlaneGeometry(w, d, Math.round(w * 1.4), Math.round(d * 1.4)), mat(C.grass));
+    const pos = gr.geometry.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const y = pos.getY(i);
+      pos.setZ(i, Math.abs(y) < 1.6 ? (R() - 0.5) * 0.04 : (R() - 0.5) * 0.22 + Math.min(0.4, (Math.abs(y) - 1.6) * 0.05));
+    }
+    gr.geometry.computeVertexNormals();
+    gr.rotation.x = -Math.PI / 2;
+    g.add(gr);
+    const path = new THREE.Mesh(new THREE.PlaneGeometry(w, 2.8, Math.round(w), 3), mat(C.dirt));
+    const pp = path.geometry.attributes.position;
+    for (let i = 0; i < pp.count; i++) pp.setZ(i, (R() - 0.5) * 0.03);
+    path.geometry.computeVertexNormals();
+    path.rotation.x = -Math.PI / 2;
+    path.position.y = 0.012;
+    g.add(path);
+    dress(g, Math.round(w * d * 0.55), -w / 2, w / 2, -d / 2, d / 2, seed + 1, (x, z) => Math.abs(z) > 1.6);
+    return g;
+  }
   const gr = new THREE.Mesh(new THREE.PlaneGeometry(w, d, 28, 20), mat(C.grass, { flatShading: true }));
   const pos = gr.geometry.attributes.position;
   const R = rng(seed);
@@ -584,7 +694,9 @@ export const SHEET_VIEW = [0.62, 0.42, 1];
 /** A soft team ring under a unit's feet: gold for Sunward, violet for Moonward. */
 export function teamRing(team, r = 0.42) {
   const col = team === "moon" ? C.moon : team === "neutral" ? 0xe0d6c0 : C.sun;
-  const g = group(groundRing(r * 0.82, r, light(col, 0.85), 0.02), disc(r * 0.82, 0, 0.012, 0, veil(0x2b2140, 0.12)));
+  const g = APE
+    ? group(groundRing(r * 0.86, r, light(col, 0.7), 0.02), blob(r * 0.9, 0.32))
+    : group(groundRing(r * 0.82, r, light(col, 0.85), 0.02), disc(r * 0.82, 0, 0.012, 0, veil(0x2b2140, 0.12)));
   g.traverse((c) => { c.castShadow = false; });
   return g;
 }
