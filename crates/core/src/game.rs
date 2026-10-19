@@ -206,7 +206,7 @@ impl Game {
             }
         }
         let look: Look = parse("presentation.json", f.presentation)?;
-        models.facet(&look.map_look.faceted)?;
+        models.facet_all_but(&look.map_look.keep_smooth)?;
         let strings = Strings::load(f.strings)?;
         let glossary = crate::glossary::parse(f.glossary)
             .map_err(|e| e.message())?

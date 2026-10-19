@@ -100,7 +100,15 @@ Recorded at the end of this round; the counts come from the commands, not from m
 - `python3 scripts/break_tests.py`: 14 of 14 breaks caught.
 - Online: in-process tests (five browsers over a lagged, lossy wire; a fast wire with a drop keeps to the clock; a drop and rejoin; a silent browser; a return before the drop is noticed) pass. On the live site, two browsers met through the relays and a dropped one rejoined, three times in three. The five-runner test's second run: five browsers, ten minutes, 30 ticks a second, a drop and a rejoin, no checksum disagreement over 200 ticks (`notes/ONLINE-RUN.md`).
 
-## Open for the person
+## Round 7, continued (18 October 2026): the faceted ground and every model in tab 10's look (T24, T25)
+
+- **The ground (R7.18):** one faceted surface. `scene::surface` computes corner heights every half cell once, in `map::generate` (`Terrain::surface`); `scene::ground_at` interpolates them, so units, trees, runes and marks stand on the drawn ground. `scene::ground` stretches the `Tri` mesh onto each facet, blends colours from the cells round each corner, turns steep faces to rock, and lays one water sheet over the sunken riverbed. Drawing only: no rule reads the surface.
+- **Cliffs (R7.13):** a corner where high ground meets low ground (neither a ramp) stays high, so a plateau drops within half a cell; `scene::cliff_rocks` lines each cliff's foot with faceted boulders. Numbers in `data/presentation.json` `map_look.ground`, colours `cliff_rock`, `cliff_rock_dark`.
+- **Every model in tab 10's look (R7.12, R7.15):** `Models::facet_all_but` facets every model but those in `map_look.keep_smooth` (empty); glows stay smooth; missiles and effect solids are faceted and plain (`marks::SOLID`). Nothing is outlined; the outline pass is still in the renderer, empty. Every unit stands on a soft shadow. The light is tab 10's late afternoon (`light_dir`, `light`, `ambient`, `ground`, `fog`, `fog_range`, `sky`).
+- **Smaller creeps (T25, R7.16):** lane creeps drawn at 85% (`creep_scale_pct`, `scene::drawn_scale`); collision unchanged.
+- **Journal:** tab 11 Part 5 shows the built look before and after (`journal/art5/b_*`); the "before" pictures came from build `e98191f` in a throwaway worktree. The branch `mockup/smooth-ground` is superseded and can be deleted.
+- **Checked:** every core test passes, including `tests/marks.rs` (all 41 abilities cast), `tests/ground.rs` and `tests/map_look.rs`; `scripts/break_tests.py "round 7b"` caught 9 of 9 after two test fixes (R7.14). Frame rate 60 a second at 5 s and 90 s in a 5v5 (`MEASUREMENTS.md`). Five-runner test (`runs/fifth`, 6 minutes, read live by a separate agent, `runs/fifth/ANALYSIS.md`): all five in the match at the end, 30 ticks a second, 119 checksum ticks compared over the whole log with no disagreement, no rollbacks, the dropped browser back in 2.2 s. One runner logged a 404, also seen in round 2's fourth run; the page sets no favicon, which is the likely request.
+
 
 Each row of `SECOND-ORDER.md` with status *person*, by number:
 
@@ -113,8 +121,6 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **R1.12**: lane creep armor type, Unarmored (playdota) or Medium (Dota 2 port). It changes ranged-creep damage 2×.
 - **R1.16**: if the host's browser leaves, the online match ends. A host hand-over is not built.
 - **R1.18**: the 143 icons; a few are plain at 48 px.
-- **R6.2**: the new look's time of day: late afternoon as drawn, dusk, or a mood that turns with the day.
-- **R6.8**: which models count as map assets (faceted) and which as characters: the list `map_look.faceted` in `data/presentation.json`. Wards, runes, the relic and Fissure's rock went with the map.
 - **R5.5**: the WebKit error: its exact words, the browser (Safari on a Mac or an iPhone) and the screen it came on.
 - **R4.18**: play a custom match in All Random All Mid: reroll once, press F at the fountain and click the lane, take a relic when hurt. Does it feel right?
 - **R3.4**: abilities that go off at once (Warcry, Echo Slam, Blade Fury) show no outline. Show their radius while the key is held, or on hovering the button?

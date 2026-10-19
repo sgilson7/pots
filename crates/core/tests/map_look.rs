@@ -50,77 +50,107 @@ fn count(g: &Game, layer: usize, meshes: &[Mesh]) -> u32 {
 }
 
 #[test]
-fn map_models_are_faceted_without_an_outline_and_characters_keep_their_look() {
+fn every_model_is_faceted_without_an_outline_and_glows_stay_smooth() {
+    // round 7: tab 10's look for every model, characters included
     let g = Game::new(&files(), 1).unwrap();
     let raw = Models::load(files().models).unwrap();
-    for name in [
-        "tower_sun",
-        "barracks_melee_moon",
-        "sphere_sun",
-        "shop",
-        "tree_sun",
-        "tree_moon",
-        "relic",
-    ] {
-        let m = &g.models.list[g.models.find(name).unwrap()];
-        assert!(m.faceted, "{name} is in the map's look");
-        for p in m.parts.iter().filter(|p| p.style != GLOW) {
-            assert!(p.plain, "{name}: a part keeps its outline");
-            assert!(
-                !ROUND.contains(&p.mesh),
-                "{name}: a part is still round ({:?})",
-                p.mesh
-            );
-        }
-        // glowing parts stay smooth, so their light fades evenly
-        for p in m.parts.iter().filter(|p| p.style == GLOW) {
-            assert!(!FACETED.contains(&p.mesh), "{name}: a glow was faceted");
+    assert!(g.look.map_look.keep_smooth.is_empty(), "no model is kept smooth");
+    for (m, r) in g.models.list.iter().zip(&raw.list) {
+        let name = &m.name;
+        assert!(m.faceted, "{name} is in the new look");
+        for (p, q) in m.parts.iter().zip(&r.parts) {
+            if p.style == GLOW {
+                // glowing parts stay smooth, so their light fades evenly
+                assert_eq!(p.mesh, q.mesh, "{name}: a glow was faceted");
+            } else {
+                assert!(p.plain, "{name}: a part keeps its outline");
+                assert!(
+                    !ROUND.contains(&p.mesh),
+                    "{name}: a part is still round ({:?})",
+                    p.mesh
+                );
+            }
         }
     }
-    for name in [
-        "hero_ironvow",
-        "hero_rime",
-        "creep_melee_sun",
-        "creep_ranged_moon",
-        "golem",
-        "drake",
-        "courier",
-    ] {
-        let m = &g.models.list[g.models.find(name).unwrap()];
+    // the heroes were round and outlined in models.json; now they are not
+    for name in ["hero_ironvow", "hero_rime", "creep_melee_sun", "golem", "courier"] {
         let r = &raw.list[raw.find(name).unwrap()];
-        assert!(!m.faceted, "{name} keeps the characters' look");
-        let same = m
-            .parts
-            .iter()
-            .zip(&r.parts)
-            .all(|(a, b)| a.mesh == b.mesh && a.plain == b.plain);
-        assert!(same, "{name}'s parts are as models.json has them");
-        assert!(m.parts.iter().any(|p| !p.plain), "{name} still has its outline");
+        assert!(
+            r.parts.iter().any(|p| ROUND.contains(&p.mesh) && !p.plain),
+            "{name} was round"
+        );
     }
 }
 
 #[test]
-fn the_match_draws_no_faceted_shape_with_an_outline_and_soft_shadows_under_the_map() {
+fn a_model_named_to_keep_smooth_keeps_its_round_outlined_look() {
+    let mut f = files();
+    let pres = include_str!("../../../data/presentation.json")
+        .replace("\"keep_smooth\": []", "\"keep_smooth\": [\"hero_ironvow\"]");
+    assert!(pres.contains("hero_ironvow\"]"), "the edit matched");
+    f.presentation = Box::leak(pres.into_boxed_str());
+    let g = Game::new(&f, 1).unwrap();
+    let m = &g.models.list[g.models.find("hero_ironvow").unwrap()];
+    assert!(!m.faceted);
+    assert!(m.parts.iter().any(|p| !p.plain && ROUND.contains(&p.mesh)));
+}
+
+#[test]
+fn the_match_draws_nothing_outlined_and_soft_shadows_under_units_and_the_map() {
     let g = match_game();
+    let (_, runs) = g.scene();
+    let inked: u32 = runs.iter().filter(|r| r.0 == LAYER_INKED).map(|r| r.3).sum();
+    assert_eq!(inked, 0, "no shape is outlined");
+    assert!(count(&g, LAYER_PLAIN, &FACETED) > 0, "faceted shapes are drawn");
     assert_eq!(
-        count(&g, LAYER_INKED, &FACETED),
+        count(&g, LAYER_INKED, &ROUND),
         0,
-        "no faceted shape is outlined"
+        "no round outlined hero or creep"
     );
-    assert!(
-        count(&g, LAYER_PLAIN, &FACETED) > 0,
-        "faceted trees and buildings are drawn"
-    );
-    assert!(
-        count(&g, LAYER_INKED, &ROUND) > 0,
-        "the heroes and creeps are still round and outlined"
-    );
-    // every shadow is two see-through faceted discs
+    // every shadow is two see-through faceted discs, under the heroes too:
+    // ten heroes stand at the fountains, so at least twenty discs
     let shadows = count(&g, LAYER_TINT, &[Mesh::Facet]);
     assert!(
-        shadows > 0 && shadows.is_multiple_of(2),
+        shadows >= 20 && shadows.is_multiple_of(2),
         "soft shadows, two discs each: {shadows}"
     );
+    // the heroes stand on shadows of their own: with the heroes taken off
+    // the field (not alive, and not falling) the frame draws two discs
+    // fewer for each one in view
+    let mut g = g;
+    let near = count(&g, LAYER_TINT, &[Mesh::Facet]);
+    let heroes: Vec<_> =
+        g.m.as_ref()
+            .unwrap()
+            .world
+            .players
+            .iter()
+            .map(|p| p.hero)
+            .collect();
+    for &h in &heroes {
+        if let Some(u) = g.m.as_mut().unwrap().world.get_mut(h) {
+            u.alive = false;
+        }
+    }
+    let far = count(&g, LAYER_TINT, &[Mesh::Facet]);
+    assert!(
+        near >= far + 2,
+        "a hero's shadow: {near} with the heroes, {far} without"
+    );
+    // shots and spells in flight: a volley of every shooter, a hammer, a hook, a rock wall
+    for stage in [
+        "volley:20",
+        "cast:storm_bolt,12",
+        "cast:meat_hook,10",
+        "cast:fissure,30",
+    ] {
+        let mut g = Game::new(&files(), 4).unwrap();
+        g.set_stage(stage).unwrap();
+        g.frame(0);
+        let (_, runs) = g.scene();
+        let inked: u32 = runs.iter().filter(|r| r.0 == LAYER_INKED).map(|r| r.3).sum();
+        assert_eq!(inked, 0, "{stage}: no shape is outlined");
+    }
 }
 
 #[test]
@@ -172,4 +202,39 @@ fn the_lanes_are_paved_and_their_dirt_varies() {
     // and the edge blend changes them too
     g.look.map_look.lane.edge_pct = 45;
     assert_ne!(g.scene(), flat, "the lane's edge blends into the grass");
+}
+
+#[test]
+fn the_ground_is_one_faceted_surface_with_rocks_along_its_cliffs() {
+    // round 7: the Sunward base's east face, where high ground meets the forest
+    let mut g = match_game();
+    g.view.target = [4500, 2200];
+    let tris = count(&g, LAYER_PLAIN, &[Mesh::Tri]);
+    assert!(tris > 2000, "the ground is drawn as triangles: {tris}");
+    assert!(count(&g, LAYER_PLAIN, &[Mesh::Cube]) < 100, "no block per cell");
+    let rocks = count(&g, LAYER_PLAIN, &[Mesh::Facet]);
+    g.look.map_look.ground.cliff_rocks = 0;
+    let bare = count(&g, LAYER_PLAIN, &[Mesh::Facet]);
+    // four boulders on each cliff side of a cell, and dozens of sides in view
+    assert!(
+        rocks > bare + 40,
+        "boulders line the cliff: {rocks} against {bare}"
+    );
+}
+
+#[test]
+fn lane_creeps_are_drawn_smaller_than_heroes_and_neutrals() {
+    // round 7: creeps at 85% of their own size, so they read apart from heroes
+    let g = Game::new(&files(), 1).unwrap();
+    let full = |id: &str| {
+        let d = g.rules.units.iter().find(|u| u.id == id).unwrap();
+        let undiminished = d.scale as i64 * g.look.unit_scale as i64 * pots_core::fx::ONE as i64 / 10_000;
+        (pots_core::scene::drawn_scale(&g.look, d) as i64 * 100 + undiminished / 2) / undiminished
+    };
+    for id in ["creep_melee_sun", "creep_ranged_moon", "creep_siege_sun"] {
+        assert_eq!(full(id), 85, "{id} is drawn at 85%");
+    }
+    for id in ["ironvow", "golem", "warden"] {
+        assert_eq!(full(id), 100, "{id} keeps its size");
+    }
 }

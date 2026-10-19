@@ -406,13 +406,6 @@
   "test": "map_models_are_faceted_without_an_outline_and_characters_keep_their_look"
  },
  {
-  "name": "a hero is drawn in the map's look",
-  "file": "data/presentation.json",
-  "find": "\"faceted\": [\"tower_sun\",",
-  "replace": "\"faceted\": [\"hero_ironvow\", \"tower_sun\",",
-  "test": "map_models_are_faceted_without_an_outline_and_characters_keep_their_look"
- },
- {
   "name": "the map's shadows are not drawn",
   "file": "crates/core/src/scene.rs",
   "find": "        b.tint(Mesh::Facet, &a, f.models.named(\"dress_shadow\"), alpha);\n",
@@ -495,5 +488,68 @@
   "find": "        if next(100) >= ll.creep_pct {",
   "replace": "        if true {",
   "test": "the_lanes_are_paved_and_their_dirt_varies"
+ },
+ {
+  "name": "round 7b: no cliff edge on the surface",
+  "file": "crates/core/src/scene.rs",
+  "find": "            let on_cliff = touches(&high) && touches(&low);",
+  "replace": "            let on_cliff = false;",
+  "test": "a_plateau_keeps_its_edge_and_drops_to_the_low_ground_within_half_a_cell"
+ },
+ {
+  "name": "round 7b: the riverbed is not sunk",
+  "file": "crates/core/src/scene.rs",
+  "find": "        map::T_RIVER => level_height(map::RIVER) - ONE / 2,",
+  "replace": "        map::T_RIVER => level_height(map::RIVER),",
+  "test": "the_riverbed_sinks_below_the_water"
+ },
+ {
+  "name": "round 7b: a point takes one corner's height",
+  "file": "crates/core/src/scene.rs",
+  "find": "    let (a, b) = (row(j), row(j + 1));\n    a + fx::mul(b - a, v)",
+  "replace": "    let (a, _b) = (row(j), row(j + 1));\n    a + fx::mul(0, v)",
+  "test": "a_point_stands_on_the_surface_between_its_corners"
+ },
+ {
+  "name": "round 7b: heroes keep the old look",
+  "file": "crates/core/src/models.rs",
+  "find": "        for m in self.list.iter_mut().filter(|m| !keep.contains(&m.name)) {",
+  "replace": "        for m in self.list.iter_mut().filter(|m| !keep.contains(&m.name) && !m.name.starts_with(\"hero_\")) {",
+  "test": "every_model_is_faceted_without_an_outline_and_glows_stay_smooth"
+ },
+ {
+  "name": "round 7b: keep_smooth is ignored",
+  "file": "crates/core/src/models.rs",
+  "find": "        for m in self.list.iter_mut().filter(|m| !keep.contains(&m.name)) {",
+  "replace": "        for m in self.list.iter_mut().filter(|m| !m.name.is_empty()) {",
+  "test": "a_model_named_to_keep_smooth_keeps_its_round_outlined_look"
+ },
+ {
+  "name": "round 7b: missiles keep their outline",
+  "file": "crates/core/src/marks.rs",
+  "find": "const SOLID: usize = crate::render::LAYER_PLAIN;",
+  "replace": "const SOLID: usize = crate::render::LAYER_INKED;",
+  "test": "the_match_draws_nothing_outlined_and_soft_shadows_under_units_and_the_map"
+ },
+ {
+  "name": "round 7b: no shadow under units",
+  "file": "crates/core/src/scene.rs",
+  "find": "        if model.faceted && !flying && !invisible && !illusion {",
+  "replace": "        if model.faceted && d.kind.is_building() && !flying && !invisible && !illusion {",
+  "test": "the_match_draws_nothing_outlined_and_soft_shadows_under_units_and_the_map"
+ },
+ {
+  "name": "round 7b: no rocks along the cliffs",
+  "file": "crates/core/src/scene.rs",
+  "find": "        for r in 0..gl.cliff_rocks {",
+  "replace": "        for r in 0..0 {",
+  "test": "the_ground_is_one_faceted_surface_with_rocks_along_its_cliffs"
+ },
+ {
+  "name": "round 7b: creeps drawn at full size",
+  "file": "crates/core/src/scene.rs",
+  "find": "    let kind = if d.kind == Kind::Creep { lk.creep_scale_pct } else { 100 };",
+  "replace": "    let kind = 100;",
+  "test": "lane_creeps_are_drawn_smaller_than_heroes_and_neutrals"
  }
 ]

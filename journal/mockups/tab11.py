@@ -19,7 +19,9 @@ ART = HERE.parent / "art5"
 e = lambda s: html.escape(str(s), quote=True)
 
 NAMES = ["river", "lane", "base", "road"]
-missing = [f"{n}_{k}.jpg" for n in NAMES for k in ("before", "after") if not (ART / f"{n}_{k}.jpg").exists()]
+BUILT_NAMES = ["b_cliff", "b_river", "b_lane", "b_heroes1", "b_heroes2", "b_lineup"]
+missing = [f"{n}_{k}.jpg" for n in NAMES + BUILT_NAMES for k in ("before", "after") if not (ART / f"{n}_{k}.jpg").exists()]
+missing += [f"{n}.jpg" for n in ("b_fight", "b_casts") if not (ART / f"{n}.jpg").exists()]
 
 
 def pic(path, cap):
@@ -94,9 +96,18 @@ STEPS = [
     ("Checks", "Tests with hand-worked heights and break rows; the browser check's pictures retaken.", "Small"),
 ]
 
+BUILT2 = [
+    ("b_cliff", "The Sunward base's east cliff", "The plateau keeps its edge and drops within half a cell; the face turns to rock and boulders line its foot. Before: a step of blocks."),
+    ("b_river", "The river at the middle of the map", "One water sheet over a sunken bed; the banks slope into it, so the shoreline follows the slope."),
+    ("b_lane", "The middle lane", "The lane's patches, edges and flagstones on the faceted surface, under the lower, warmer sun and the haze."),
+    ("b_heroes1", "Heroes, first five", "Every round part faceted, no outline; glowing parts stay smooth. The game's own model viewer."),
+    ("b_heroes2", "Heroes, second five", "Tectus, Kestrel, Hexwright, Longwick and Tempest."),
+    ("b_lineup", "Creeps, a tower and the shop", "Characters and buildings now share one look. (The model viewer draws every model at one scale; in a match lane creeps are drawn at 85%.)"),
+]
+
 QUESTIONS = [
-    ["R7.8", "Build the faceted ground into the game, as in the pairs above?"],
-    ["R7.9", "After it, which next: the forest's outline (2), shadows under heroes and creeps (3), or a darker ground (4)?"],
+    ["R7.8", "Build the faceted ground into the game, as in the pairs above? <b>Answered:</b> \"build the faceted ground with the rock cliff edges, also update all the models in the game to use the mage tower visuals\". Built; see Part 5."],
+    ["R7.9", "After it, which next: the forest's outline (2) or a darker ground (4)? Shadows under heroes and creeps (3) came with Part 5."],
     ["R7.2", "Selling is instant on a right-click and pays half. Should it ask first, or give the full price back for a few seconds after buying?"],
     ["R7.3", "Play All Random All Mid at the new pace. Too fast, too slow, or right?"],
 ]
@@ -118,9 +129,9 @@ CSS = """/*GROUND*/
 PANEL = f'''<!-- ======================================================= TAB 11 -->
 <div class="panel-tab" role="tabpanel" id="p-ground" aria-labelledby="t-ground" hidden>
 <header style="display:grid;gap:12px">
-  <div class="eyebrow">Entry 11 · 18 October 2026 · selling, the lane's ground, All Random All Mid's pace (T20 to T22), and a look study</div>
+  <div class="eyebrow">Entry 11 · 18 October 2026 · selling, the lane's ground, All Random All Mid's pace (T20 to T22), a look study (T23), then the look built (T24, T25)</div>
   <h2>One surface for the ground</h2>
-  <p class="lede">Part 1 is what was built and published this round. Part 2 compares the game with Dota 2, League of Legends and well-made stylised games, and ranks what separates them. Part 3 recommends the biggest change, a faceted ground, and shows it before and after in the game's own renderer. Part 4 says what building it would take, with questions for you. Click any picture to see it larger.</p>
+  <p class="lede">Part 1 is what was built and published this round. Part 2 compares the game with Dota 2, League of Legends and well-made stylised games, and ranks what separates them. Part 3 recommends the biggest change, a faceted ground, and shows it before and after in the game's own renderer. Part 4 says what building it would take, with questions for you. Part 5 is what was built once you answered: the faceted ground, and every model in tab 10's look. Click any picture to see it larger.</p>
 </header>
 
 <section>
@@ -170,6 +181,13 @@ PANEL = f'''<!-- ======================================================= TAB 11 
     <thead><tr><th>#</th><th>Question</th></tr></thead>
     <tbody>{table(QUESTIONS)}</tbody>
   </table></div>
+</section>
+<section>
+  <div class="section-head"><div class="eyebrow">Part 5 · built (T24, T25)</div><h2>The faceted ground, and every model in tab 10's look</h2></div>
+  <p>You asked for the faceted ground with rock cliff edges, and every model in tab 10's look. In the game now: the ground is one faceted surface whose cliffs keep their edge and turn to rock, with boulders along their foot. Every model, heroes and creeps included, is faceted and drawn without an outline, standing on a soft shadow; glowing parts stay smooth. The light is tab 10's late afternoon: a lower, warmer sun from the Sunward corner, a cool sky fill, a green bounce from the grass and haze the colour of the far sky. Lane creeps are drawn at 85% of their size (T25). Every ability still shows: all 41 are cast in the tests, and no shape anywhere is outlined. Each pair is the game before and after, from the same spot; matches pick their own seed, so the pairs are fixed map spots and the model viewer.</p>
+  <div>{"".join(pair(n, "before", "built", t, c) for n, t, c in BUILT2)}</div>
+  <figure class="gpair"><div>{pic("b_fight", "A lane fight in the built game")}</div><figcaption><b>In a match.</b> A hero by the Sunward outer tower, the base cliff with its boulders behind.</figcaption></figure>
+  <figure class="gpair"><div>{pic("b_casts", "Four abilities in the built game")}</div><figcaption><b>Abilities in the new look.</b> Vow Hammer, Rift Stomp's faceted rocks, Carrion Cloud and Winter's Ring, from the game's cast stage.</figcaption></figure>
 </section>
 <footer>Pictures from <code>tools/shots.py</code> with <code>seed=7</code>. The "faceted" ones come from the branch <code>mockup/smooth-ground</code> (not published), with <code>map_look.smooth</code> on. The share of a frame that changes counts the pixels that differ between the two pictures, leaving out the minimap. Shape counts come from <code>cargo run --release -p pots_core --example count</code> on that branch. This tab is written by <code>journal/mockups/tab11.py</code>.</footer>
 </div>

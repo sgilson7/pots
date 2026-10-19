@@ -17,6 +17,7 @@
  ],
  "missile": 30,
  "unit_scale": 200,
+ "creep_scale_pct": 85,
  "cam_distance": 5200,
  "cam_pitch": 56,
  "cam_fov": 52,
@@ -26,28 +27,28 @@
  "zoom_max": 6200,
  "zoom_step": 300,
  "light_dir": [
-  -35,
-  80,
+  -60,
+  50,
   45
  ],
  "sky": [
-  159,
+  226,
   212,
-  255
+  190
  ],
  "fog": [
-  96,
-  112,
-  128
+  233,
+  214,
+  184
  ],
  "fog_range": [
-  9000,
-  16000
+  5400,
+  13500
  ],
  "light": [
-  150,
-  141,
-  128
+  168,
+  142,
+  110
  ],
  "ink": [
   43,
@@ -66,45 +67,19 @@
   55
  ],
  "ambient": [
-  50,
-  53,
-  62
+  42,
+  48,
+  58
  ],
  "ground": [
-  40,
-  34,
-  30
+  30,
+  38,
+  22
  ],
  "max_ticks_per_frame": 6,
  "map_look": {
-  "_note": "T19: the map in the look of Mage Tower Battle's 1.6.0 (journal tab 10). The person chose it for every map asset and kept the current look for characters, so heroes, creeps, the forest's creatures, the courier and the critter are not listed.",
-  "faceted": [
-   "tower_sun",
-   "tower_moon",
-   "barracks_melee_sun",
-   "barracks_melee_moon",
-   "barracks_ranged_sun",
-   "barracks_ranged_moon",
-   "fountain_sun",
-   "fountain_moon",
-   "sphere_sun",
-   "sphere_moon",
-   "shop",
-   "cannon_sun",
-   "cannon_moon",
-   "tree_sun",
-   "tree_moon",
-   "fissure_rock",
-   "relic",
-   "rune_double",
-   "rune_haste",
-   "rune_illusion",
-   "rune_invis",
-   "rune_regen",
-   "observer_ward",
-   "sentry_ward",
-   "healing_ward"
-  ],
+  "_note": "T19: the map in the look of Mage Tower Battle's 1.6.0 (journal tab 10). Round 7: every model in it, characters included; keep_smooth lists any model to draw as before, smooth and outlined.",
+  "keep_smooth": [],
   "shadow_pct": 110,
   "shadow_alpha": 30,
   "tree_shadow": 260,
@@ -120,6 +95,16 @@
    "stone_pct": 24,
    "stone_most": 2,
    "creep_pct": 55
+  },
+  "ground": {
+   "_note": "Round 7: the faceted ground (journal tab 11).",
+   "bed_pct": 30,
+   "floor_pct": 25,
+   "shade_pct": 6,
+   "steep_pct": 80,
+   "water_lift": 12,
+   "cliff_rocks": 4,
+   "rock_size": 160
   }
  },
  "ping": 70,

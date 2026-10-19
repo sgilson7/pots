@@ -24,6 +24,8 @@ The state measured rather than recalled, so later changes can be compared with i
 | Frame rate, round 3 | `.venv/bin/python tests/browser/fps.py` | a custom 5v5 on this Mac (Metal): 60 frames a second at 5 s and at 90 s with solid units | 16 Oct 2026 |
 | WebAssembly size, round 3 | printed by `scripts/wasm_imports.py` | 1421 KB | 16 Oct 2026 |
 | Online, round 3 | `.venv/bin/python tests/online/smoke.py --rejoin` | two browsers through the public relays: the dropped one rejoined at its seat, and the checksums at ticks 1350 to 1800 agreed | 16 Oct 2026 |
+| Frame rate, round 7 | `.venv/bin/python tests/browser/fps.py 90` | a custom 5v5 on this Mac (Metal), with the faceted ground and every model faceted: 60 frames a second at 5 s and at 90 s (the browser's cap) | 18 Oct 2026 |
+| WebAssembly size, round 7 | printed by `./scripts/build.sh` | 1474 KB | 18 Oct 2026 |
 
 ## Not measured
 

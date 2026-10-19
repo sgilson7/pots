@@ -223,17 +223,17 @@ impl Models {
         })
     }
 
-    /// Puts the named models in the map's look (T19, after Mage Tower
-    /// Battle's newer one): every part takes the faceted form of its shape
-    /// and loses its outline, except glowing parts, which stay smooth so
-    /// their light fades evenly (Mage Tower's R7.5). Heroes, creeps and
-    /// creatures are left out of the list and keep their look.
-    pub fn facet(&mut self, names: &[String]) -> Result<(), String> {
-        for name in names {
-            let k = self
-                .find(name)
+    /// Puts every model but those named in Mage Tower Battle's newer look
+    /// (T19 for the map, round 7 for every model): every part takes the
+    /// faceted form of its shape and loses its outline, except glowing
+    /// parts, which stay smooth so their light fades evenly (Mage Tower's
+    /// R7.5).
+    pub fn facet_all_but(&mut self, keep: &[String]) -> Result<(), String> {
+        for name in keep {
+            self.find(name)
                 .ok_or_else(|| format!("presentation.json: map_look names no model \"{name}\"."))?;
-            let m = &mut self.list[k];
+        }
+        for m in self.list.iter_mut().filter(|m| !keep.contains(&m.name)) {
             m.faceted = true;
             for p in m.parts.iter_mut().filter(|p| p.style != crate::scene::STYLE_GLOW) {
                 p.mesh = p.mesh.faceted();

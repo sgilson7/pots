@@ -24,6 +24,10 @@ pub const GAME_UNITS_PER_SCENE: i32 = 32;
 
 /// The shader style drawn unlit (glows, the Spheres' cores, runes).
 pub const STYLE_GLOW: i32 = 4;
+/// The style the water's shapes carry.
+pub const STYLE_WATER: i32 = 9;
+/// Surface corners to a tree cell's side (round 7): every half cell.
+pub const SURFACE_SUB: i32 = 2;
 
 /// Height of each ground level in Q16 scene units.
 pub fn level_height(level: u8) -> i32 {
@@ -52,13 +56,92 @@ pub fn sub_to_scene(x: i32, y: i32, h: i32) -> V3 {
     )
 }
 
-/// The height of the ground under a map point, smoothed on ramps.
+/// The height of the drawn ground under a map point: the surface's corners
+/// round it, blended by where the point lies between them, so a unit stands
+/// on the faceted ground as drawn.
 pub fn ground_at(t: &Terrain, p: P) -> i32 {
-    let lv = t.level_at(p[0], p[1]);
-    if t.mark_at(p[0], p[1]) == map::T_RAMP {
-        return level_height(map::HIGH) / 2;
+    let step = (t.tree_cell / SURFACE_SUB).max(1);
+    let (k, j) = (p[0].div_euclid(step), p[1].div_euclid(step));
+    let (u, v) = (
+        p[0].rem_euclid(step) * ONE / step,
+        p[1].rem_euclid(step) * ONE / step,
+    );
+    let row = |j: i32| {
+        let (a, b) = (t.surface_corner(k, j), t.surface_corner(k + 1, j));
+        a + fx::mul(b - a, u)
+    };
+    let (a, b) = (row(j), row(j + 1));
+    a + fx::mul(b - a, v)
+}
+
+/// A seeded unevenness in -16..16 for a surface corner at map point (x, y),
+/// the same in every browser.
+pub fn surface_jitter(x: i32, y: i32) -> i32 {
+    let h = ((x as u32).wrapping_mul(73_856_093) ^ (y as u32).wrapping_mul(19_349_663))
+        .wrapping_mul(2_654_435_761);
+    ((h >> 20) & 31) as i32 - 16
+}
+
+/// The drawn ground's corner heights for a map (round 7), in Q16 scene
+/// units, `SURFACE_SUB` corners to a tree cell's side. A corner where high
+/// ground meets low ground (neither a ramp) is high, so a plateau keeps its
+/// edge and drops to the low ground within half a cell: a cliff. Elsewhere a corner
+/// blends the cells within three quarters of a cell of it, so ramps, river
+/// banks and the riverbed slope. Every corner carries a small seeded
+/// unevenness, so the facets catch the light.
+pub fn surface(level: &[u8], mark: &[u8], tw: i32, tc: i32) -> Vec<i32> {
+    let n = tw * SURFACE_SUB + 1;
+    let step = tc / SURFACE_SUB;
+    let cell = |x: i32, y: i32| (y.clamp(0, tw - 1) * tw + x.clamp(0, tw - 1)) as usize;
+    let top = |i: usize| match mark.get(i).copied().unwrap_or(map::T_GRASS) {
+        map::T_RAMP => level_height(map::HIGH) / 2,
+        map::T_RIVER => level_height(map::RIVER) - ONE / 2,
+        _ => level_height(level.get(i).copied().unwrap_or(map::LOW)),
+    };
+    let ramp = |i: usize| mark.get(i) == Some(&map::T_RAMP);
+    let high = |i: usize| level.get(i) == Some(&map::HIGH) && !ramp(i);
+    let low = |i: usize| level.get(i) != Some(&map::HIGH) && !ramp(i);
+    let mut out = Vec::with_capacity((n * n) as usize);
+    for j in 0..n {
+        for k in 0..n {
+            let (px, py) = (k * step, j * step);
+            // the cells whose square holds this corner, edges included
+            let (gx, gy) = (px / tc, py / tc);
+            let xs = if px % tc == 0 { [gx - 1, gx] } else { [gx, gx] };
+            let ys = if py % tc == 0 { [gy - 1, gy] } else { [gy, gy] };
+            // a cliff's top edge: high ground on one side, low on the other
+            let touches = |f: &dyn Fn(usize) -> bool| xs.iter().any(|&x| ys.iter().any(|&y| f(cell(x, y))));
+            let on_cliff = touches(&high) && touches(&low);
+            let h = if on_cliff {
+                level_height(map::HIGH)
+            } else {
+                let (mut wsum, mut acc) = (0i64, 0i64);
+                for yy in gy - 1..=gy + 1 {
+                    for xx in gx - 1..=gx + 1 {
+                        let (dx, dy) = ((px - xx * tc - tc / 2) as i64, (py - yy * tc - tc / 2) as i64);
+                        let d = fx::isqrt((dx * dx + dy * dy) as u64) as i32;
+                        let w = (tc * 3 / 4 - d).max(0) as i64;
+                        wsum += w;
+                        acc += top(cell(xx, yy)) as i64 * w;
+                    }
+                }
+                (acc / wsum.max(1)) as i32
+            };
+            out.push(h + surface_jitter(px, py) * ONE / 160);
+        }
     }
-    level_height(lv)
+    out
+}
+
+/// A unit's drawn scale, Q16: its own scale, the scene's, and for a lane
+/// creep the creeps' share.
+pub fn drawn_scale(lk: &Look, d: &crate::rules::UnitDef) -> i32 {
+    let kind = if d.kind == Kind::Creep {
+        lk.creep_scale_pct
+    } else {
+        100
+    };
+    (d.scale as i64 * lk.unit_scale as i64 * kind as i64 * ONE as i64 / 1_000_000) as i32
 }
 
 /// The model index carried by an attack missile: its source's kind.
@@ -180,6 +263,9 @@ pub struct Look {
     pub missile: i32,
     /// Percent of scene: model scale.
     pub unit_scale: i32,
+    /// Percent of their size lane creeps are drawn at, so they read apart
+    /// from heroes (round 7). Drawing only: collision is the rules' radius.
+    pub creep_scale_pct: i32,
     /// The camera: distance in hundredths of a scene unit, pitch and field of view in degrees.
     pub cam_distance: i32,
     pub cam_pitch: i32,
@@ -221,16 +307,17 @@ pub struct Look {
     pub map_look: MapLook,
 }
 
-/// The map's look (T19, after Mage Tower Battle's newer one; journal tab
-/// 10): which models are faceted, their soft shadows, and the ground's
-/// dressing. Characters keep round 2's look.
+/// The look of Mage Tower Battle's newer version (journal tab 10): faceted
+/// models with no outline on soft shadows, and the ground's dressing. T19
+/// gave it to the map; round 7 to every model, characters included.
 #[derive(Debug, Clone, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct MapLook {
     #[serde(default, rename = "_note")]
     pub note: String,
-    /// Models drawn faceted, with no outline and a soft shadow.
-    pub faceted: Vec<String>,
+    /// Models kept smooth and outlined; every other model is drawn
+    /// faceted, with no outline and a soft shadow.
+    pub keep_smooth: Vec<String>,
     /// The shadow disc: percent of a building's footprint across, and how
     /// dark (percent); a tree's disc across, hundredths of a scene unit.
     pub shadow_pct: i32,
@@ -244,6 +331,32 @@ pub struct MapLook {
     pub vary_pct: i32,
     /// The lanes' ground (round 7).
     pub lane: LaneLook,
+    /// The faceted ground (round 7).
+    pub ground: GroundLook,
+}
+
+/// The faceted ground (round 7, journal tab 11): numbers the surface, the
+/// water and the cliffs are drawn with.
+#[derive(Debug, Clone, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct GroundLook {
+    #[serde(default, rename = "_note")]
+    pub note: String,
+    /// Percent of the way the riverbed's dirt goes to the water's colour.
+    pub bed_pct: i32,
+    /// Percent darker the forest floor is under a standing tree.
+    pub floor_pct: i32,
+    /// How much a corner's seeded unevenness shades it (sixteenths of this
+    /// many percent at the most).
+    pub shade_pct: i32,
+    /// Percent of the way a steep face turns to rock.
+    pub steep_pct: i32,
+    /// Hundredths of a scene unit the water stands above the river's level.
+    pub water_lift: i32,
+    /// Boulders along each cliff side of a cell, and their least size in
+    /// hundredths of a scene unit.
+    pub cliff_rocks: i32,
+    pub rock_size: i32,
 }
 
 /// The lanes' ground (round 7): patches of darker and lighter dirt a few
@@ -310,7 +423,13 @@ pub fn river_side(river: &[P], p: P) -> usize {
     }
 }
 
-/// The ground and trees near the camera.
+/// The ground and trees near the camera (round 7: one faceted surface).
+/// Each triangle of the surface is the core's flat triangle mesh stretched
+/// onto three corners of `Terrain::surface`; its colour blends the cells
+/// around its corners, so the edges between grass, lane, river and base
+/// are gradients and the fog's edge is soft. Steep faces turn to rock,
+/// faceted boulders line the foot of every cliff, and the river is one
+/// flat sheet the sloping banks run down into.
 pub fn ground(f: &Frame, b: &mut Batch) {
     let t = f.ctx.terrain;
     let tc = t.tree_cell;
@@ -320,6 +439,9 @@ pub fn ground(f: &Frame, b: &mut Batch) {
     let x1 = ((cx + lk.reach_x) / tc).min(t.tw - 1);
     let y0 = ((cy - lk.reach_south) / tc).max(0);
     let y1 = ((cy + lk.reach_north) / tc).min(t.tw - 1);
+    if x1 < x0 || y1 < y0 {
+        return;
+    }
     let fog = lk.fog_pct * ONE / 100;
     let m = f.models;
     let grass = [m.named("grass_sun"), m.named("grass_moon")];
@@ -328,69 +450,146 @@ pub fn ground(f: &Frame, b: &mut Batch) {
     let stone = [m.named("stone_sun"), m.named("stone_moon")];
     let path = m.named("path");
     let ll = &lk.map_look.lane;
+    let gl = &lk.map_look.ground;
     let lane_dark = m.named("lane_dark");
     let lane_light = m.named("lane_light");
+    let bed = mix(lane_dark, water, gl.bed_pct * ONE / 100);
     let tree_models = [m.find("tree_sun"), m.find("tree_moon")];
+    // one margin cell round the window, so corners on its edge blend fully
+    let (mx0, my0) = ((x0 - 1).max(0), (y0 - 1).max(0));
+    let (mx1, my1) = ((x1 + 1).min(t.tw - 1), (y1 + 1).min(t.tw - 1));
+    let cw = mx1 - mx0 + 1;
+    // each cell's colour before fog, and how lit it is (fog or not)
+    let mut cells: Vec<(Rgb, i32)> = Vec::with_capacity((cw * (my1 - my0 + 1)) as usize);
+    for y in my0..=my1 {
+        for x in mx0..=mx1 {
+            let i = (y * t.tw + x) as usize;
+            let c = t.tree_centre(i);
+            let side = river_side(&f.ctx.rules.map.river, c);
+            let vary = ONE - ((i as i32 * 7919) & 15) * lk.map_look.vary_pct * ONE / 1500;
+            let col = match t.mark[i] {
+                map::T_LANE => {
+                    // patches of darker and lighter dirt, blended cell to cell
+                    let d = dirt_at(x, y, ll.patch);
+                    let c0 = if d < ONE / 2 {
+                        mix(lane, lane_dark, (ONE - d * 2) * ll.dark_pct / 100)
+                    } else {
+                        mix(lane, lane_light, (d * 2 - ONE) * ll.light_pct / 100)
+                    };
+                    edge_blend(c0, grass[side], 4 - lane_sides(t, x, y), ll.edge_pct)
+                }
+                map::T_RIVER => bed,
+                map::T_BASE | map::T_RAMP => stone[side],
+                kind => {
+                    let mut c0 = if kind == map::T_PATH { path } else { grass[side] };
+                    // the forest floor is darker under standing trees
+                    if kind == map::T_GRASS && matches!(f.w.trees[i], Tree::Standing) {
+                        c0 = mulc(c0, ONE - gl.floor_pct * ONE / 100);
+                    }
+                    edge_blend(c0, lane, lane_sides(t, x, y), ll.edge_pct / 2)
+                }
+            };
+            let lit = if visible_cell(f, i) { ONE } else { fog };
+            cells.push((mulc(col, vary), lit));
+        }
+    }
+    let cell = |x: i32, y: i32| cells[((y.clamp(my0, my1) - my0) * cw + x.clamp(mx0, mx1) - mx0) as usize];
+    // the corners of the window's surface: position, colour and light, the
+    // colour blended from the cells within a cell and a quarter of it
+    let sub = SURFACE_SUB;
+    let step = tc / sub;
+    let (nx, ny) = ((x1 - x0 + 1) * sub + 1, (y1 - y0 + 1) * sub + 1);
+    let mut verts: Vec<(V3, Rgb, i32)> = Vec::with_capacity((nx * ny) as usize);
+    for j in 0..ny {
+        for k in 0..nx {
+            let (px, py) = (x0 * tc + k * step, y0 * tc + j * step);
+            let (gx, gy) = (px.div_euclid(tc), py.div_euclid(tc));
+            let (mut wsum, mut acc, mut lit) = (0i64, [0i64; 3], 0i64);
+            for yy in gy - 1..=gy + 1 {
+                for xx in gx - 1..=gx + 1 {
+                    let (dx, dy) = ((px - xx * tc - tc / 2) as i64, (py - yy * tc - tc / 2) as i64);
+                    let d = fx::isqrt((dx * dx + dy * dy) as u64) as i32;
+                    let wgt = (tc * 5 / 4 - d).max(0) as i64;
+                    if wgt == 0 {
+                        continue;
+                    }
+                    let (c, l) = cell(xx, yy);
+                    wsum += wgt;
+                    for (a, v) in acc.iter_mut().zip(c) {
+                        *a += v as i64 * wgt;
+                    }
+                    lit += l as i64 * wgt;
+                }
+            }
+            let ws = wsum.max(1);
+            let mut col = [(acc[0] / ws) as i32, (acc[1] / ws) as i32, (acc[2] / ws) as i32];
+            // the same seeded unevenness the heights carry, in the shade
+            col = mulc(col, ONE + surface_jitter(px, py) * gl.shade_pct * ONE / 1600);
+            let h = t.surface_corner(x0 * sub + k, y0 * sub + j);
+            verts.push((to_scene([px, py], h), col, (lit / ws) as i32));
+        }
+    }
+    let rock = m.named("cliff_rock");
+    for j in 0..ny - 1 {
+        for k in 0..nx - 1 {
+            let v = |a: i32, bb: i32| verts[((j + bb) * nx + k + a) as usize];
+            let q = [v(0, 0), v(1, 0), v(1, 1), v(0, 1)];
+            // split along alternating diagonals, so the facets do not all lean one way
+            let tris = if (j + k) % 2 == 0 {
+                [[q[0], q[1], q[2]], [q[0], q[2], q[3]]]
+            } else {
+                [[q[0], q[1], q[3]], [q[1], q[2], q[3]]]
+            };
+            for tri in tris {
+                terrain_tri(b, tri, rock, gl.steep_pct, 6);
+            }
+        }
+    }
+    // the water: one flat sheet over every cell within a cell of the river,
+    // lit at the same corners as the ground, so its fog has no steps
+    let sheet = level_height(map::RIVER) + ONE * gl.water_lift / 100;
+    let wet = |x: i32, y: i32| {
+        (-1..=1).any(|dy| {
+            (-1..=1).any(|dx| {
+                let (nx, ny) = (x + dx, y + dy);
+                nx >= 0
+                    && ny >= 0
+                    && nx < t.tw
+                    && ny < t.tw
+                    && t.mark[(ny * t.tw + nx) as usize] == map::T_RIVER
+            })
+        })
+    };
+    for j in 0..ny - 1 {
+        for k in 0..nx - 1 {
+            if !wet(x0 + k / sub, y0 + j / sub) {
+                continue;
+            }
+            let v = |a: i32, bb: i32| {
+                let (p, _, lit) = verts[((j + bb) * nx + k + a) as usize];
+                (v3(p.x, sheet, p.z), water, lit)
+            };
+            let q = [v(0, 0), v(1, 0), v(1, 1), v(0, 1)];
+            terrain_tri(b, [q[0], q[1], q[2]], water, 0, STYLE_WATER);
+            terrain_tri(b, [q[0], q[2], q[3]], water, 0, STYLE_WATER);
+        }
+    }
     for y in y0..=y1 {
         for x in x0..=x1 {
             let i = (y * t.tw + x) as usize;
             let c = t.tree_centre(i);
-            // which bank of the river the cell is on, by the river's own line
             let side = river_side(&f.ctx.rules.map.river, c);
-            let lv = t.level[i];
-            let top = if t.mark[i] == map::T_RAMP {
-                level_height(map::HIGH) / 2
-            } else {
-                level_height(lv)
-            };
-            // a little seeded variation per cell keeps the grass from looking tiled
-            let vary = ONE - ((i as i32 * 7919) & 15) * lk.map_look.vary_pct * ONE / 1500;
-            let mut col = match t.mark[i] {
-                map::T_LANE => lane,
-                map::T_RIVER => water,
-                map::T_BASE | map::T_RAMP => stone[side],
-                map::T_PATH => path,
-                _ => grass[side],
-            };
-            // the lanes: patches of dirt, and an edge that blends both ways
-            let lane_sides = lane_sides(t, x, y);
-            if t.mark[i] == map::T_LANE {
-                let d = dirt_at(x, y, ll.patch);
-                col = if d < ONE / 2 {
-                    mix(col, lane_dark, (ONE - d * 2) * ll.dark_pct / 100)
-                } else {
-                    mix(col, lane_light, (d * 2 - ONE) * ll.light_pct / 100)
-                };
-                let open = 4 - lane_sides;
-                col = edge_blend(col, grass[side], open, ll.edge_pct);
-            } else if matches!(t.mark[i], map::T_GRASS | map::T_PATH) {
-                col = edge_blend(col, lane, lane_sides, ll.edge_pct / 2);
-            }
-            col = mulc(col, vary);
             let seen = visible_cell(f, i);
-            if !seen {
-                col = mulc(col, fog);
-            }
-            let bottom = -ONE * 3;
-            let h = top - bottom;
-            let at = to_scene(c, bottom + h / 2);
-            let w = tc * ONE / GAME_UNITS_PER_SCENE;
-            let a = Affine::translate(at).then(&Affine::scale(v3(w, h, w)));
-            b.push(
-                LAYER_PLAIN,
-                Mesh::Cube,
-                &a,
-                col,
-                if t.mark[i] == map::T_RIVER { 9 } else { 6 },
-            );
+            let dim = if seen { ONE } else { fog };
+            let top = ground_at(t, c);
+            cliff_rocks(f, b, x, y, dim);
             if matches!(f.w.trees[i], Tree::None) && t.mark[i] != map::T_RIVER {
                 // open grass takes every kind; the lanes, paths and bases
                 // only stones and pebbles, and fewer of them
                 let open = t.mark[i] == map::T_GRASS;
-                dress(f, b, i, c, top, if seen { ONE } else { fog }, open);
+                dress(f, b, i, c, top, dim, open);
                 if t.mark[i] == map::T_LANE {
-                    let dim = if seen { ONE } else { fog };
-                    road(f, b, i, c, top, dim, lane_sides < 4, grass[side]);
+                    road(f, b, i, c, top, dim, lane_sides(t, x, y) < 4, grass[side]);
                 }
             }
             if let Tree::Standing = f.w.trees[i] {
@@ -424,6 +623,92 @@ pub fn ground(f: &Frame, b: &mut Batch) {
             }
         }
     }
+}
+
+/// Faceted boulders along the foot of a cliff (round 7): on a low cell,
+/// along each side it shares with high ground that is not a ramp. Seeded by
+/// the cell, so every browser draws the same rocks.
+fn cliff_rocks(f: &Frame, b: &mut Batch, x: i32, y: i32, dim: i32) {
+    let t = f.ctx.terrain;
+    let i = (y * t.tw + x) as usize;
+    if t.level[i] == map::HIGH || t.mark[i] == map::T_RAMP {
+        return;
+    }
+    let gl = &f.look.map_look.ground;
+    let tc = t.tree_cell;
+    let c = t.tree_centre(i);
+    for (s, (dx, dy)) in [(1, 0), (-1, 0), (0, 1), (0, -1)].into_iter().enumerate() {
+        let (nx, ny) = (x + dx, y + dy);
+        if nx < 0 || ny < 0 || nx >= t.tw || ny >= t.tw {
+            continue;
+        }
+        let k = (ny * t.tw + nx) as usize;
+        if t.level[k] != map::HIGH || t.mark[k] == map::T_RAMP {
+            continue;
+        }
+        let mut h = (i as u32 * 4 + s as u32).wrapping_mul(2_654_435_761) ^ 0x2545_f491;
+        let mut next = |n: u32| {
+            h ^= h << 13;
+            h ^= h >> 17;
+            h ^= h << 5;
+            (h % n.max(1)) as i32
+        };
+        for r in 0..gl.cliff_rocks {
+            // spread along the shared side, just in front of the face
+            let along = -tc / 2 + (r * 2 + 1) * tc / (gl.cliff_rocks * 2).max(1) + next(17) - 8;
+            let out = tc / 2 - tc / 5 - next(tc as u32 / 6);
+            let at = [
+                c[0] + dx * out + dy.abs() * along,
+                c[1] + dy * out + dx.abs() * along,
+            ];
+            let size = ONE * gl.rock_size / 100 + next(40) * ONE / 100;
+            let shade = ONE - next(18) * ONE / 100;
+            let a = Affine::translate(to_scene(at, ground_at(t, at) + size / 4))
+                .then(&Affine::rot_y(next(fx::TURN as u32)))
+                .then(&Affine::rot_z(next(30) * fx::TURN / 360 - fx::TURN / 24))
+                .then(&Affine::scale(v3(size, size * 6 / 5, size * 4 / 5)));
+            let col = if r % 2 == 0 {
+                "cliff_rock"
+            } else {
+                "cliff_rock_dark"
+            };
+            b.push(
+                LAYER_PLAIN,
+                Mesh::Facet,
+                &a,
+                mulc(mulc(f.models.named(col), shade), dim),
+                0,
+            );
+        }
+    }
+}
+
+/// One triangle of the faceted ground: the core's flat triangle mesh
+/// stretched onto three points, lit by its own slope, its colour the mean
+/// of its corners', turning `steep_pct` percent of the way to rock where it
+/// is steeper than about 35°.
+fn terrain_tri(b: &mut Batch, tri: [(V3, Rgb, i32); 3], rock: Rgb, steep_pct: i32, style: i32) {
+    let (p0, mut p1, mut p2) = (tri[0].0, tri[1].0, tri[2].0);
+    let mid = |p1: V3, p2: V3| v3((p1.x + p2.x) / 2, (p1.y + p2.y) / 2, (p1.z + p2.z) / 2);
+    let mut c0 = p1.sub(p2);
+    let mut c2 = p0.sub(mid(p1, p2));
+    // keep the reference triangle's turn, so its face is not culled
+    if (c0.x as i64 * c2.z as i64 - c0.z as i64 * c2.x as i64) < 0 {
+        core::mem::swap(&mut p1, &mut p2);
+        c0 = p1.sub(p2);
+        c2 = p0.sub(mid(p1, p2));
+    }
+    let mut n = p1.sub(p0).cross(p2.sub(p0)).norm();
+    if n.y < 0 {
+        n = n.neg();
+    }
+    let avg = |k: usize| (tri[0].1[k] + tri[1].1[k] + tri[2].1[k]) / 3;
+    let mut col = [avg(0), avg(1), avg(2)];
+    let steep = (ONE * 4 / 5 - n.y).clamp(0, ONE / 5) * 5;
+    col = mix(col, rock, steep * steep_pct / 100);
+    col = mulc(col, (tri[0].2 + tri[1].2 + tri[2].2) / 3);
+    let a = Affine { c0, c1: n, c2, t: p0 };
+    b.push(LAYER_PLAIN, Mesh::Tri, &a, col, style);
 }
 
 /// The map's soft shadow (T19): a dark see-through disc `d` across, on the
@@ -732,7 +1017,7 @@ pub fn units(f: &Frame, b: &mut Batch) {
         let (x, y, face) = drawn_at(f, u);
         let p = [x / SUB, y / SUB];
         let h = ground_at(f.ctx.terrain, p);
-        let scale = d.scale * lk.unit_scale * ONE / 10_000;
+        let scale = drawn_scale(lk, d);
         // a hero thrown by the cannon: hidden in the barrel, then high on
         // its arc and tumbling (All Random All Mid)
         let (lift, tumble, flying) = match u.act {
@@ -766,7 +1051,8 @@ pub fn units(f: &Frame, b: &mut Batch) {
                 let critter = &m.list[ci];
                 let place = Affine::translate(sub_to_scene(x, y, h)).then(&Affine::rot_y(face));
                 pose_parts(critter, &pose, &place, |pt, a| {
-                    b.push(LAYER_INKED, pt.mesh, &a, m.color(u.team, pt.color), pt.style);
+                    let layer = if pt.plain { LAYER_PLAIN } else { LAYER_INKED };
+                    b.push(layer, pt.mesh, &a, m.color(u.team, pt.color), pt.style);
                 });
                 continue;
             }
@@ -938,7 +1224,8 @@ pub fn effects(f: &Frame, b: &mut Batch) {
                 };
                 let place = Affine::translate(to_scene(at, h));
                 pose_parts(&m.list[mi], &pose, &place, |pt, a| {
-                    b.push(LAYER_INKED, pt.mesh, &a, m.color(NEUTRAL, pt.color), pt.style);
+                    let layer = if pt.plain { LAYER_PLAIN } else { LAYER_INKED };
+                    b.push(layer, pt.mesh, &a, m.color(NEUTRAL, pt.color), pt.style);
                 });
             }
         }

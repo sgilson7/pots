@@ -98,6 +98,10 @@ pub struct Terrain {
     /// Path cells blocked by something that never changes (cliff, rim,
     /// building footprint).
     pub fixed_block: Vec<bool>,
+    /// The drawn ground's height at each corner of a grid
+    /// `scene::SURFACE_SUB` times finer than the tree cells, in Q16 scene
+    /// units (round 7). Drawing only: no rule reads it.
+    pub surface: Vec<i32>,
 }
 
 impl Terrain {
@@ -139,6 +143,15 @@ impl Terrain {
             cx * self.path_cell + self.path_cell / 2,
             cy * self.path_cell + self.path_cell / 2,
         ]
+    }
+
+    /// The drawn ground's height at surface corner (k, j), clamped to the map.
+    pub fn surface_corner(&self, k: i32, j: i32) -> i32 {
+        let n = self.tw * crate::scene::SURFACE_SUB + 1;
+        self.surface
+            .get((j.clamp(0, n - 1) * n + k.clamp(0, n - 1)) as usize)
+            .copied()
+            .unwrap_or(0)
     }
 
     /// The tree cell holding path cell i.
@@ -244,6 +257,7 @@ pub fn generate(map: &MapDef, footprints: &[(P, i32)]) -> Generated {
         level: level.clone(),
         mark: mark.clone(),
         fixed_block: Vec::new(),
+        surface: Vec::new(),
     };
     for (j, block) in fixed_block.iter_mut().enumerate() {
         let p = terrain_probe.path_centre(j);
@@ -272,6 +286,7 @@ pub fn generate(map: &MapDef, footprints: &[(P, i32)]) -> Generated {
             }
         }
     }
+    let surface = crate::scene::surface(&level, &mark, tw, tc);
     Generated {
         terrain: Terrain {
             size: map.size,
@@ -282,6 +297,7 @@ pub fn generate(map: &MapDef, footprints: &[(P, i32)]) -> Generated {
             level,
             mark,
             fixed_block,
+            surface,
         },
         trees,
     }

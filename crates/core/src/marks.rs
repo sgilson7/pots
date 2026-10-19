@@ -21,6 +21,10 @@ use crate::mesh::Mesh;
 use crate::render::{Batch, Rgb, LAYER_PLAIN};
 use crate::rules::{Kind, P, SUB, TPS};
 use crate::scene::{ground_at, to_scene, Frame, GAME_UNITS_PER_SCENE, STYLE_GLOW};
+
+/// Solid shapes in effects and missiles (a hammer, a hook, a rock): faceted
+/// and drawn without an outline, as every model is (round 7).
+const SOLID: usize = crate::render::LAYER_PLAIN;
 use crate::world::{Act, Hit, Mark, Unit, M, MK_CAST, MK_FIRE, MK_LAND, MK_PROC, NO_UNIT};
 
 /// One shape of an ability's look.
@@ -121,8 +125,7 @@ pub(crate) fn heights(f: &Frame, u: &Unit) -> (i32, i32) {
         .find(&d.model)
         .map(|i| f.models.list[i].height)
         .unwrap_or(ONE * 3);
-    let scale = d.scale * f.look.unit_scale * ONE / 10_000;
-    let top = fx::mul(top, scale);
+    let top = fx::mul(top, crate::scene::drawn_scale(f.look, d));
     (top / 2, top)
 }
 
@@ -257,7 +260,7 @@ fn shape(f: &Frame, b: &mut Batch, k: usize, m: &Mark, s: &Shape, col: Rgb) {
                 let h = fx::mul(size, rise);
                 let a =
                     Affine::translate(p.add(v3(0, h / 2, 0))).then(&Affine::scale(v3(size / 2, h, size / 2)));
-                b.push(crate::render::LAYER_INKED, Mesh::Cone, &a, col, 0);
+                b.push(SOLID, Mesh::FacetCone, &a, col, 0);
             }
         }
         "rise" => {
@@ -473,21 +476,9 @@ pub fn draw_missile(f: &Frame, b: &mut Batch, at: V3, ms: &crate::world::Missile
         }
         "arrow" => {
             let shaft = along(at.sub(dir.scale(r * 2)), dir, r * 4, r / 4);
-            b.push(
-                crate::render::LAYER_INKED,
-                Mesh::Cyl,
-                &shaft,
-                f.models.named("wood"),
-                0,
-            );
+            b.push(SOLID, Mesh::FacetCyl, &shaft, f.models.named("wood"), 0);
             let tip = along(at.add(dir.scale(r / 2)), dir, r, r * 2 / 3);
-            b.push(
-                crate::render::LAYER_INKED,
-                Mesh::Cone,
-                &tip,
-                f.models.named("steel_bright"),
-                0,
-            );
+            b.push(SOLID, Mesh::FacetCone, &tip, f.models.named("steel_bright"), 0);
             let fletch = along(at.sub(dir.scale(r * 4)), dir, r, r * 3 / 4);
             b.push(crate::render::LAYER_PLAIN, Mesh::Cone, &fletch, col, STYLE_GLOW);
             trail(b, at.sub(dir.scale(r * 4)), 4, r, col);
@@ -518,7 +509,7 @@ pub fn draw_missile(f: &Frame, b: &mut Batch, at: V3, ms: &crate::world::Missile
             let rock = Affine::translate(p)
                 .then(&Affine::rot_x(spin))
                 .then(&Affine::scale(v3(r * 2, r * 2, r * 2)));
-            b.push(crate::render::LAYER_INKED, Mesh::Sphere, &rock, col, 0);
+            b.push(SOLID, Mesh::Facet, &rock, col, 0);
             trail(b, p, 3, r, f.models.named("cloud"));
         }
         "spark" => {
@@ -539,36 +530,18 @@ pub fn draw_missile(f: &Frame, b: &mut Batch, at: V3, ms: &crate::world::Missile
                 .then(&Affine::rot_y(fx::atan2(dir.x, dir.z)))
                 .then(&Affine::rot_x(spin * 2));
             let head = turn.then(&Affine::scale(v3(r * 2, r * 2, r * 3)));
-            b.push(
-                crate::render::LAYER_INKED,
-                Mesh::Cube,
-                &head,
-                f.models.named("steel_bright"),
-                0,
-            );
+            b.push(SOLID, Mesh::Cube, &head, f.models.named("steel_bright"), 0);
             let handle = turn
                 .then(&Affine::translate(v3(0, -r * 2, 0)))
                 .then(&Affine::scale(v3(r / 2, r * 3, r / 2)));
-            b.push(
-                crate::render::LAYER_INKED,
-                Mesh::Cyl,
-                &handle,
-                f.models.named("wood"),
-                0,
-            );
+            b.push(SOLID, Mesh::FacetCyl, &handle, f.models.named("wood"), 0);
             let halo = Affine::translate(at).then(&Affine::scale(v3(r * 4, r * 4, r * 4)));
             b.tint(Mesh::Sphere, &halo, col, ONE / 3);
             trail(b, at, 5, r, col);
         }
         "hook" => {
             let tip = along(at, dir, r * 2, r);
-            b.push(
-                crate::render::LAYER_INKED,
-                Mesh::Cone,
-                &tip,
-                f.models.named("steel_bright"),
-                0,
-            );
+            b.push(SOLID, Mesh::FacetCone, &tip, f.models.named("steel_bright"), 0);
             if let Some(u) = f.w.get(ms.src) {
                 let (chest, _) = heights(f, u);
                 let from = to_scene(u.pos(), ground(f, u.pos()) + chest);
@@ -576,13 +549,7 @@ pub fn draw_missile(f: &Frame, b: &mut Batch, at: V3, ms: &crate::world::Missile
                     let p = from.lerp(at, fx::div(i, 12));
                     let c = r * 2 / 5;
                     let a = Affine::translate(p).then(&Affine::scale(v3(c, c, c)));
-                    b.push(
-                        crate::render::LAYER_INKED,
-                        Mesh::Sphere,
-                        &a,
-                        f.models.named("iron"),
-                        0,
-                    );
+                    b.push(SOLID, Mesh::Facet, &a, f.models.named("iron"), 0);
                 }
             }
             glow(b, at, r / 2, col, ONE);
