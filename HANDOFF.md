@@ -88,6 +88,8 @@ The session before this one stopped after T19 was published (build `82d435b` liv
 - **The lane's ground (T21):** `scene::ground` now shades the lane's dirt from darker to lighter across patches of four cells, blended cell to cell (`dirt_at`); a cell at the lane's edge blends into the grass and the grass beside it into the lane (`edge_blend`); grass creeps onto the edge and flagstones lie down the middle (`road`). Numbers in `data/presentation.json` `map_look.lane`, colours `lane_dark`, `lane_light`, `lane_stone` in `data/models.json`.
 - **All Random All Mid pace (T22, R7.3):** heroes start at level 3 with three points and full health, earn one and a half times the experience and twice the gold each second (`aram::start_level`, `aram::xp`, `aram::periodic_gold`; numbers in `data/rules.json` `aram`). `PROTOCOL` 5.
 - Break tests: 9 of 9 round-7 breaks caught, after two misses fixed the test (R7.4).
+- **Look study (T23):** journal tab 11 (`journal/mockups/tab11.py`, pictures in `journal/art5/`) compares the game with Dota 2, League and stylised games and recommends a faceted ground. The "after" pictures come from the game's own renderer on the local branch `mockup/smooth-ground` (`map_look.smooth` in `data/presentation.json`; `scene::ground` stretches the `Tri` mesh onto each facet; the page takes `?seed=` there only). The branch is not pushed or published. Its known gap: the high-ground edge blends away (R7.10). Journal artifact version 9.
+- **Checked and live:** `./scripts/check.sh` BUILDER CHECK PASSED before the publish of `d2d1e4d` (Chromium, Firefox, WebKit); `./scripts/count-tests.sh` 144 passed, 0 failed, 4 ignored; the online smoke test (`tests/online/smoke.py --rejoin`) met through the relays, rejoined, and the checksums agreed; `BUILDER_ORIGIN=https://sgilson7.github.io/pots tests/browser/check.py` passed in all three engines on build `d2d1e4d`. The scholar site was not changed: its tile and page did not need it.
 
 
 Recorded at the end of this round; the counts come from the commands, not from memory.
@@ -103,6 +105,8 @@ Recorded at the end of this round; the counts come from the commands, not from m
 Each row of `SECOND-ORDER.md` with status *person*, by number:
 
 - **R7.2**: selling is instant on a right-click and pays half. Ask first, or give a full refund for a few seconds after buying?
+- **R7.8**: build the faceted ground (journal tab 11)?
+- **R7.9**: after the ground, which next: the forest's outline, shadows under heroes and creeps, or a darker ground?
 - **R7.3**: play All Random All Mid at the new pace (level 3, 1.5× experience, 2× gold per second) and say whether it is too fast or too slow.
 - **R1.2**: the names and looks of heroes, items and creeps. Are they far enough from their DotA sources?
 - **R1.10**: one free courier per side from the start (DotA sold it). Keep?
