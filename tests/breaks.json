@@ -803,5 +803,40 @@
   "find": "        let tree = crate::ability::first_tree(w, ctx, l.here, end, a.v(\"latch\", level))?;\n        let c = ctx.terrain.tree_centre(tree);",
   "replace": "        let c = crate::ability::first_tree(w, ctx, l.here, end, a.v(\"latch\", level))\n            .map(|t| ctx.terrain.tree_centre(t))\n            .unwrap_or(end);",
   "test": "a_computer_chipper_throws_the_claw_only_with_a_tree_past_the_foe"
+ },
+ {
+  "name": "base push: creeps walk to the Sphere at the lane's end",
+  "file": "crates/core/src/lanes.rs",
+  "find": "    if wp + 1 == path.len() {",
+  "replace": "    if false {",
+  "test": "middle_lane_creeps_alone_take_both_base_towers_and_the_sphere"
+ },
+ {
+  "name": "base push: the lane's end ignores the far tower",
+  "file": "crates/core/src/lanes.rs",
+  "find": "    if wp + 1 == path.len() {",
+  "replace": "    if false {",
+  "test": "a_creep_at_the_lane_s_end_walks_to_the_tower_it_may_still_hurt"
+ },
+ {
+  "name": "base push: a shielded building counts",
+  "file": "crates/core/src/lanes.rs",
+  "find": "                && !v.has(M::Invulnerable)\n                && matches!(",
+  "replace": "                && matches!(",
+  "test": "a_creep_at_the_lane_s_end_walks_to_the_tower_it_may_still_hurt"
+ },
+ {
+  "name": "blocking: creeps walk through heroes",
+  "file": "crates/core/src/orders.rs",
+  "find": "        if d.kind.is_building() || d.kind == Kind::Ward {",
+  "replace": "        if d.kind.is_building() || d.kind == Kind::Ward || o.hero.is_some() {",
+  "test": "a_hero_stepping_in_front_of_a_creep_delays_it_by_a_second"
+ },
+ {
+  "name": "blocking: no way round a hero",
+  "file": "crates/core/src/orders.rs",
+  "find": "const SIDESTEPS: [i32; 6] = [30, -30, 60, -60, 90, -90];",
+  "replace": "const SIDESTEPS: [i32; 6] = [0, 0, 0, 0, 0, 0];",
+  "test": "a_held_wave_gets_past_a_hero_who_stands_still"
  }
 ]

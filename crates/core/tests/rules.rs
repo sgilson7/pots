@@ -217,3 +217,99 @@ fn a_hero_keeps_its_gold_when_it_dies() {
     assert_eq!(w.players[0].deaths, 1);
     assert_eq!(w.players[0].gold, 1000, "all 1000 gold kept");
 }
+
+/// The Moonward base with only its two towers by the Sphere and the Sphere
+/// left: every lower tower and barracks gone.
+fn bare_moon_base(w: &mut World, f: &common::Fixture) {
+    for u in w.units.iter_mut() {
+        let k = f.rules.units[u.def as usize].kind;
+        if u.team == MOON && ((k == Kind::Tower && u.tier < 4) || k == Kind::Barracks) {
+            u.alive = false;
+        }
+    }
+}
+
+/// The person's report: middle-lane creeps took one tower by the Sphere,
+/// then stood behind the Sphere and never attacked the other, so the match
+/// could not end. The lane's last waypoint is the Sphere's centre, inside
+/// its footprint; with the Sphere shielded, creeps pressed against it about
+/// 1,000 map units from the far tower, out of their 500 to 800 reach. With
+/// every other creep taken away each tick, the Sunward middle lane's creeps
+/// alone must take both towers and the Sphere. A wave reaches the base
+/// about 48 s after the horn (15,600 map units from (3000, 3000) to the
+/// Sphere at 325 a second); the test allows ten waves, 300 s.
+#[test]
+fn middle_lane_creeps_alone_take_both_base_towers_and_the_sphere() {
+    let f = common::fixture();
+    let ctx = f.ctx();
+    let mut w = f.world(5);
+    bare_moon_base(&mut w, &f);
+    let end = w.horn_at + 300 * TPS as u32;
+    while w.tick < end && w.winner.is_none() {
+        for u in w.units.iter_mut() {
+            if f.rules.units[u.def as usize].kind == Kind::Creep && !(u.team == SUN && u.lane == 1) {
+                u.alive = false;
+            }
+        }
+        w.step(&ctx, &[]);
+    }
+    let towers = w
+        .units
+        .iter()
+        .filter(|u| u.alive && u.team == MOON && f.rules.units[u.def as usize].kind == Kind::Tower)
+        .count();
+    assert_eq!(towers, 0, "{towers} Moonward towers still stand");
+    assert_eq!(w.winner, Some(SUN), "the Sunward creeps took the Sphere");
+}
+
+/// The cause itself: a creep on its lane's last leg, east of the Sphere
+/// where the first tower fell, with the other tower (at 13434, 14334, about
+/// 1,010 map units away) out of its reach, walks to that tower and hits it
+/// within 10 s (about 3 s of walking at 325 a second, then its attacks).
+#[test]
+fn a_creep_at_the_lane_s_end_walks_to_the_tower_it_may_still_hurt() {
+    let f = common::fixture();
+    let ctx = f.ctx();
+    let mut w = f.world(5);
+    while w.tick < w.horn_at {
+        w.step(&ctx, &[]);
+    }
+    bare_moon_base(&mut w, &f);
+    let base_tower = |w: &World, at: [i32; 2]| {
+        w.units
+            .iter()
+            .find(|u| u.alive && u.team == MOON && u.tier == 4 && u.pos() == at)
+            .expect("a tower by the Sphere")
+            .id
+    };
+    let east = base_tower(&w, [14334, 13434]);
+    let west = base_tower(&w, [13434, 14334]);
+    w.get_mut(east).unwrap().alive = false;
+    let melee = f.rules.unit("creep_melee_sun").unwrap();
+    let c = w.spawn(&ctx, melee, SUN, [14420, 14100]);
+    let last = f.rules.map.sides[SUN as usize].lanes["mid"].len() - 1;
+    let whole = {
+        let u = w.get_mut(c).unwrap();
+        u.lane = 1;
+        u.lane_name = 1;
+        u.waypoint = last as u8;
+        u.hp
+    };
+    let before = w.get(west).unwrap().hp;
+    for _ in 0..(10 * TPS) {
+        for u in w.units.iter_mut() {
+            if f.rules.units[u.def as usize].kind == Kind::Creep && u.id != c {
+                u.alive = false;
+            }
+        }
+        // the tower's shots are not the question: the creep is kept whole
+        w.get_mut(c).unwrap().hp = whole;
+        w.step(&ctx, &[]);
+    }
+    assert!(
+        w.get(west).unwrap().hp < before,
+        "the creep hit the other tower: {} of {} health left",
+        w.get(west).unwrap().hp / 1000,
+        before / 1000
+    );
+}
