@@ -178,7 +178,16 @@
   "online.signal_failed": "The connection could not be set up. Try again.",
   "menu.autopilot_on": "Let the computer play my hero",
   "menu.autopilot_off": "Take my hero back",
-  "hud.autopilot": "The computer is playing your hero."
+  "hud.autopilot": "The computer is playing your hero.",
+  "heroes.hint": "Choose a hero to see them up close and watch each ability.",
+  "heroes.all": "All heroes",
+  "heroes.attack": "Attack",
+  "heroes.attack.melee": "A melee attack, every {t} s.",
+  "heroes.attack.ranged": "A ranged attack, range {r}, every {t} s. The shot flies {s} a second.",
+  "heroes.stats": "At level 1: {hp} health, {mana} mana, {dmg} damage, {armor} armor, {speed} speed.",
+  "heroes.drag": "Drag the hero to turn the camera, and scroll to zoom. Choose the attack or an ability to watch it.",
+  "heroes.playing": "Plays on loop. Choose it again to stop.",
+  "tip.range": "Range: {v}"
  },
  "missions": {
   "first_steps": {

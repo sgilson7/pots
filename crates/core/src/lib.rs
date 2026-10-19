@@ -32,6 +32,7 @@ pub mod render;
 pub mod rng;
 pub mod rules;
 pub mod scene;
+pub mod showcase;
 pub mod stats;
 pub mod text;
 pub mod ui;

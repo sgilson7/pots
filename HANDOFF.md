@@ -142,12 +142,20 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 
 - The person said "deploy the new characters". `hackle` and `chipper` moved from `preview_heroes` to `heroes` (the roster is twelve); `PROTOCOL` is 7 in `crates/core/src/online.rs` and `web/net/config.js`. Names, looks and the 20/30/40 drain shipped as proposed (R7.28, R7.29).
 - Computer players: builds in `data/ai.json`; `ai::switch_form` turns Berserker Rage and calls the Chakram back; `useful_cast` throws Timber Chain only with a tree past the foe (R7.37). Tests: three more in `tests/heroes2.rs`; break rows "round 7h".
-- CHECKS_T33
+- Checks: see the round's checks below.
+
+## Round 7, continued (19 October 2026): the heroes screen's inspector, and creeps that end a match (T34, T35)
+
+- **Heroes screen (T34):** its cards did nothing (R7.41). Each now opens the inspector (`crates/core/src/showcase.rs`, `ui::heroes`): the hero drawn in the game's renderer, a drag turns the camera, the wheel zooms; buttons for the attack and each ability (and the second forms) play a demonstration on loop beside its description, mana, cooldown and range (R7.42, R7.43). The page sends a button's release (`game.release`). Tests: `tests/showcase.rs` (6); break rows "heroes screen" (11, all caught after one row was repointed, R7.45).
+- **Creeps (T35, a subagent's work, merged):** a creep on its lane's last leg with nothing in reach goes for the nearest enemy building it may hurt, so middle-lane creeps alone take both base towers and the Sphere (`crates/core/src/lanes.rs` `siege_target`, R7.50, R7.51). Creep blocking measured and working (R7.52, R7.53). A fallen building still blocks the ground (R7.54, open).
+- **Break list:** four rows named renamed tests and one had rotted (R7.40); `scripts/break_tests.py` now reports a row whose test runs nothing. 131 of 131 caught.
+- **Checks:** CHECKS_FINAL
 
 ## Open for the person
 
 Each row of `SECOND-ORDER.md` with status *person*, by number:
 
+- **R7.44**: open each hero on the heroes screen and play each ability: does every demonstration read clearly?
 - **R7.2**: selling is instant on a right-click and pays half. Ask first, or give a full refund for a few seconds after buying?
 - **R7.9**: next for the look: the forest's outline, or a darker ground? (Shadows under heroes and creeps came with T24.)
 - **R7.3**: play All Random All Mid at the new pace (level 3, 1.5× experience, 2× gold per second) and say whether it is too fast or too slow.

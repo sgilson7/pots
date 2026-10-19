@@ -130,7 +130,7 @@ pub fn view(g: &Game) -> View {
         "title" => title(g),
         "arcade" => arcade(g),
         "pick" => pick(g, true),
-        "heroes" => pick(g, false),
+        "heroes" => heroes(g),
         "help" => help(g),
         "match" => hud(g),
         s if s.starts_with("online") => crate::online::view(g),
@@ -549,6 +549,203 @@ fn pick(g: &Game, choosing: bool) -> Node {
                 vec![with(node("div", "hero-grid"), cards), detail],
             ),
         ],
+    )
+}
+
+/// The heroes screen (round 7, T34): every hero to click, and once one is
+/// clicked, the inspector: the hero in the game's renderer behind a panel
+/// with its numbers, a button for its attack and each ability, and the
+/// chosen one's description while its demonstration plays on loop.
+fn heroes(g: &Game) -> Node {
+    let Some(sc) = g.showcase.as_ref() else {
+        let mut cards = Vec::new();
+        for (k, &u) in g.rules.heroes[..g.rules.roster].iter().enumerate() {
+            let def = &g.rules.units[u];
+            let named = g.strings.hero(&def.id);
+            let mut card = with(
+                button("hero-card", "", "heroes.view", k.to_string()),
+                vec![
+                    Node {
+                        t: "img",
+                        c: "portrait".into(),
+                        i: art(&format!("heroes/{}", def.id)),
+                        ..Node::default()
+                    },
+                    text("strong", "", named.name.clone()),
+                    text("span", "fine", named.title.clone()),
+                ],
+            );
+            card.tip = Some(hero_tip(g, k));
+            cards.push(keyed(card, format!("h{k}")));
+        }
+        return with(
+            node("div", "menu pick heroes-list"),
+            vec![
+                with(
+                    node("header", "menu-head"),
+                    vec![
+                        text("h1", "", g.strings.ui("heroes.title")),
+                        button("back", g.strings.ui("back"), "screen", "title"),
+                    ],
+                ),
+                text("p", "fine", g.strings.ui("heroes.hint")),
+                with(node("div", "hero-grid"), cards),
+            ],
+        );
+    };
+    use crate::showcase::Demo;
+    let s = &g.strings;
+    let u = g.rules.heroes[sc.hero];
+    let def = &g.rules.units[u];
+    let named = s.hero(&def.id);
+    let ctx = g.ctx();
+    // the numbers at level 1, whatever level the demonstration plays at
+    let mut facts = Vec::new();
+    {
+        let st = &sc.level1;
+        facts.push(
+            s.ui("heroes.stats")
+                .replace("{hp}", &st.max_hp.to_string())
+                .replace("{mana}", &st.max_mana.to_string())
+                .replace("{dmg}", &format!("{}–{}", st.damage[0], st.damage[1]))
+                .replace("{armor}", &hundredths(st.armor - st.armor % 10))
+                .replace("{speed}", &st.move_speed.to_string()),
+        );
+    }
+    let attrs = def.attrs.as_ref();
+    let sub = match attrs.map(|a| a.primary) {
+        Some(crate::rules::Attr::Str) => s.ui("attr.str"),
+        Some(crate::rules::Attr::Agi) => s.ui("attr.agi"),
+        _ => s.ui("attr.int"),
+    };
+    // the demonstrations: the attack, then each ability and the second
+    // form of any that has one
+    let mut list: Vec<usize> = Vec::new();
+    for &k in &g.rules.unit_abilities[u] {
+        list.push(k);
+        if let Some(alt) = g.rules.ability_alt[k] {
+            list.push(alt);
+        }
+    }
+    let mut buttons = vec![keyed(
+        {
+            let mut b = button(
+                if sc.demo == Demo::Attack {
+                    "demo attack chosen"
+                } else {
+                    "demo attack"
+                },
+                s.ui("heroes.attack"),
+                "heroes.demo",
+                "attack",
+            );
+            b.tip = None;
+            b
+        },
+        "attack",
+    )];
+    for &k in &list {
+        let a = &g.rules.abilities[k];
+        let tip = ability_tip(g, k, 0);
+        let mut b = with(
+            button(
+                if sc.demo == Demo::Ability(k) {
+                    "demo chosen"
+                } else {
+                    "demo"
+                },
+                "",
+                "heroes.demo",
+                a.id.clone(),
+            ),
+            vec![Node {
+                t: "img",
+                c: "icon".into(),
+                i: tip.icon.clone(),
+                ..Node::default()
+            }],
+        );
+        b.tip = Some(tip);
+        buttons.push(keyed(b, format!("d{}", a.id)));
+    }
+    // what the chosen demonstration shows
+    let about = match sc.demo {
+        Demo::Stand => vec![text("p", "fine", s.ui("heroes.drag"))],
+        Demo::Attack => {
+            let st = sc.hero_unit().map(|h| stats::of(&ctx, &sc.world, h));
+            let every = st
+                .map(|st| st.bat * 100 / (100 + st.attack_speed).max(1))
+                .unwrap_or(0);
+            let missile = crate::stats::missile(&ctx, &sc.world, sc.hero_unit().unwrap_or(NO_UNIT));
+            let line = if missile > 0 {
+                s.ui("heroes.attack.ranged")
+                    .replace("{r}", &st.map(|st| st.range).unwrap_or(0).to_string())
+                    .replace("{t}", &hundredths(every))
+                    .replace("{s}", &missile.to_string())
+            } else {
+                s.ui("heroes.attack.melee").replace("{t}", &hundredths(every))
+            };
+            vec![
+                text("h3", "", s.ui("heroes.attack")),
+                text("p", "", line),
+                text("p", "fine", s.ui("heroes.playing")),
+            ]
+        }
+        Demo::Ability(k) => {
+            let a = &g.rules.abilities[k];
+            let tip = ability_tip(g, k, 0);
+            let mut v = vec![text("h3", "", tip.title)];
+            if !tip.sub.is_empty() {
+                v.push(text("span", "fine", tip.sub));
+            }
+            v.push(text("p", "", tip.text));
+            let mut lines = tip.lines;
+            if !a.range.is_empty() && a.range.iter().any(|&r| r > 0) {
+                let r: Vec<String> = a.range.iter().map(|r| r.to_string()).collect();
+                lines.push(s.ui("tip.range").replace("{v}", &r.join(" / ")));
+            }
+            for l in lines {
+                v.push(text("p", "mech", l));
+            }
+            v.push(text("p", "fine", s.ui("heroes.playing")));
+            v
+        }
+    };
+    with(
+        node("div", "inspect"),
+        vec![with(node("section", "panel inspect-panel"), {
+            let mut v = vec![
+                button("back", s.ui("heroes.all"), "heroes.close", ""),
+                with(
+                    node("div", "inspect-head"),
+                    vec![
+                        Node {
+                            t: "img",
+                            c: "portrait".into(),
+                            i: art(&format!("heroes/{}", def.id)),
+                            ..Node::default()
+                        },
+                        with(
+                            node("div", ""),
+                            vec![
+                                text("h2", "", named.name),
+                                text("span", "fine", format!("{} · {sub}", named.title)),
+                            ],
+                        ),
+                    ],
+                ),
+                text("p", "", named.text),
+            ];
+            for f in facts {
+                v.push(text("p", "mech", f));
+            }
+            v.push(with(node("div", "demo-row"), buttons));
+            v.push(keyed(
+                with(node("div", "demo-about"), about),
+                format!("about{:?}", sc.demo),
+            ));
+            v
+        })],
     )
 }
 

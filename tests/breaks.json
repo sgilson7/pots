@@ -838,5 +838,82 @@
   "find": "const SIDESTEPS: [i32; 6] = [30, -30, 60, -60, 90, -90];",
   "replace": "const SIDESTEPS: [i32; 6] = [0, 0, 0, 0, 0, 0];",
   "test": "a_held_wave_gets_past_a_hero_who_stands_still"
+ },
+ {
+  "name": "heroes screen: the cards do nothing",
+  "file": "crates/core/src/ui.rs",
+  "find": "button(\"hero-card\", \"\", \"heroes.view\", k.to_string())",
+  "replace": "button(\"hero-card\", \"\", \"\", k.to_string())",
+  "test": "every_hero_on_the_heroes_screen_opens_its_inspector"
+ },
+ {
+  "name": "heroes screen: no button for an ability's second form",
+  "file": "crates/core/src/ui.rs",
+  "find": "        if let Some(alt) = g.rules.ability_alt[k] {\n            list.push(alt);\n        }\n",
+  "replace": "",
+  "test": "every_hero_on_the_heroes_screen_opens_its_inspector"
+ },
+ {
+  "name": "heroes screen: a drag does not turn the camera",
+  "file": "crates/core/src/showcase.rs",
+  "find": "        self.yaw -= (x - x0) * per;\n",
+  "replace": "",
+  "test": "a_drag_turns_the_camera_and_the_wheel_zooms_within_its_limits"
+ },
+ {
+  "name": "heroes screen: the camera turns under the ground",
+  "file": "crates/core/src/showcase.rs",
+  "find": ".clamp(fx::deg(lk.min_pitch), fx::deg(lk.max_pitch))",
+  "replace": ".max(0)",
+  "test": "a_drag_turns_the_camera_and_the_wheel_zooms_within_its_limits"
+ },
+ {
+  "name": "heroes screen: letting go keeps dragging",
+  "file": "crates/core/src/game.rs",
+  "find": "        if let Some(s) = self.showcase.as_mut() {\n            s.drag = None;\n        }",
+  "replace": "",
+  "test": "a_drag_turns_the_camera_and_the_wheel_zooms_within_its_limits"
+ },
+ {
+  "name": "heroes screen: the wheel zooms without limit",
+  "file": "crates/core/src/showcase.rs",
+  "find": "d.clamp(lk.min_distance * fx::ONE / 100, lk.max_distance * fx::ONE / 100)",
+  "replace": "d",
+  "test": "a_drag_turns_the_camera_and_the_wheel_zooms_within_its_limits"
+ },
+ {
+  "name": "heroes screen: a demonstration plays once",
+  "file": "crates/core/src/showcase.rs",
+  "find": "self.again != 0 && self.world.tick >= self.again",
+  "replace": "false",
+  "test": "an_ability_plays_on_loop_and_choosing_it_again_stops_it"
+ },
+ {
+  "name": "heroes screen: choosing a demonstration again does not stop it",
+  "file": "crates/core/src/game.rs",
+  "find": "self.show(hero, if same { Demo::Stand } else { demo })?;",
+  "replace": "self.show(hero, demo)?;",
+  "test": "an_ability_plays_on_loop_and_choosing_it_again_stops_it"
+ },
+ {
+  "name": "heroes screen: the attack's creep is a friend",
+  "file": "crates/core/src/game.rs",
+  "find": "let c = w.spawn(&ctx, def, 1, [spot[0] + reach.min(450), spot[1]]);",
+  "replace": "let c = w.spawn(&ctx, def, 0, [spot[0] + reach.min(450), spot[1]]);",
+  "test": "the_attack_plays_against_a_creep"
+ },
+ {
+  "name": "heroes screen: numbers at the demonstration's level",
+  "file": "crates/core/src/ui.rs",
+  "find": "        let st = &sc.level1;",
+  "replace": "        let st = &stats::of(&ctx, &sc.world, sc.hero_unit().unwrap_or(NO_UNIT));",
+  "test": "the_numbers_shown_are_level_1_whatever_the_demonstration_plays_at"
+ },
+ {
+  "name": "heroes screen: the inspector outlives the screen",
+  "file": "crates/core/src/game.rs",
+  "find": "                self.stage = None;\n                self.showcase = None;\n",
+  "replace": "                self.stage = None;\n",
+  "test": "leaving_the_heroes_screen_closes_the_inspector"
  }
 ]

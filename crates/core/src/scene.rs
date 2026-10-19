@@ -307,6 +307,8 @@ pub struct Look {
     pub map_look: MapLook,
     /// The title screen's backdrop match (round 7).
     pub backdrop: crate::backdrop::BackdropLook,
+    /// The heroes screen's inspector (round 7, T34).
+    pub showcase: crate::showcase::ShowcaseLook,
 }
 
 /// The look of Mage Tower Battle's newer version (journal tab 10): faceted

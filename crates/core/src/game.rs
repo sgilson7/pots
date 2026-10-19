@@ -171,6 +171,9 @@ pub struct Game {
     /// The reader's browser asks for reduced motion: the backdrop stands
     /// still once drawn.
     pub reduced_motion: bool,
+    /// The heroes screen's inspector: one hero, alone or in a
+    /// demonstration on loop (round 7, T34).
+    pub showcase: Option<crate::showcase::Showcase>,
 }
 
 /// A still scene set up for a screenshot (`?tile=...`).
@@ -285,6 +288,7 @@ impl Game {
             last: (Vec::new(), Vec::new()),
             backdrop: None,
             reduced_motion: false,
+            showcase: None,
         })
     }
 
@@ -416,6 +420,10 @@ impl Game {
             self.backdrop_frame(dt);
             return;
         }
+        if self.screen == "heroes" {
+            self.showcase_frame(dt);
+            return;
+        }
         if self.screen != "match" {
             return;
         }
@@ -474,6 +482,113 @@ impl Game {
             self.look.max_ticks_per_frame,
         );
         self.backdrop = Some(b);
+    }
+
+    /// Runs the heroes screen's inspector for one display frame, and
+    /// starts a demonstration again once it has played out.
+    fn showcase_frame(&mut self, dt: i64) {
+        let Some(mut s) = self.showcase.take() else { return };
+        if s.done() {
+            if let Ok(mut again) = self.showcase_world(s.hero, s.demo, Some(s.level1)) {
+                again.keep_camera(&s);
+                again.distance = s.distance;
+                s = again;
+            }
+        }
+        let ctx = Ctx {
+            rules: &self.rules,
+            terrain: &self.terrain,
+        };
+        s.frame(&ctx, &self.look.showcase, dt, self.look.max_ticks_per_frame);
+        self.showcase = Some(s);
+    }
+
+    /// The inspector's world for hero `roster` playing `demo`: the hero
+    /// alone on open ground; or attacking a creep; or the cast stage's
+    /// world for an ability, which casts at three creeps beside an enemy
+    /// hero with an ally at its side.
+    /// `known` is the hero's numbers at level 1 when an earlier showcase
+    /// of it measured them.
+    pub fn showcase_world(
+        &self,
+        roster: usize,
+        demo: crate::showcase::Demo,
+        known: Option<crate::stats::Stats>,
+    ) -> Result<crate::showcase::Showcase, String> {
+        use crate::showcase::{Demo, Showcase};
+        if roster >= self.rules.roster {
+            return Err("There is no such hero.".into());
+        }
+        let lk = &self.look.showcase;
+        let ctx = self.ctx();
+        let spot = [self.rules.map.size / 2 - 900, self.rules.map.size / 2 - 900];
+        // the hero alone at level 1 on open ground
+        let plain = || {
+            let mut w = self.new_world(self.seed);
+            w.cut_trees_in(&ctx, [spot[0] + 250, spot[1]], lk.open);
+            w.players[0].present = true;
+            let h = w.add_hero(&ctx, 0, roster);
+            let u = w.get_mut(h).expect("just added");
+            u.x = spot[0] * SUB;
+            u.y = spot[1] * SUB;
+            u.path.clear();
+            u.facing = fx::deg(-60);
+            (w, h)
+        };
+        let mut level1 = known;
+        let (w, again) = match demo {
+            Demo::Ability(k) => {
+                let id = self.rules.abilities[k].id.clone();
+                let mine = self.rules.unit_abilities[self.rules.heroes[roster]]
+                    .iter()
+                    .any(|&a| a == k || self.rules.ability_alt[a] == Some(k));
+                if !mine {
+                    return Err(format!("This hero has no \"{id}\"."));
+                }
+                let w = self.cast_world_for(roster, &id, 1, lk.open)?;
+                if level1.is_none() {
+                    let (pw, h) = plain();
+                    level1 = Some(crate::stats::of(&ctx, &pw, h));
+                }
+                let secs = lk.demo_s_for.get(&id).copied().unwrap_or(lk.demo_s);
+                (w, (secs * TPS) as u32)
+            }
+            Demo::Stand | Demo::Attack => {
+                let (mut w, h) = plain();
+                level1 = Some(crate::stats::of(&ctx, &w, h));
+                if demo == Demo::Stand {
+                    w.step(&ctx, &[]);
+                    (w, 0)
+                } else {
+                    let def = self.rules.unit("creep_melee_moon").ok_or("no Moonward creep")?;
+                    let reach = self.rules.units[self.rules.heroes[roster]].range.max(150);
+                    let c = w.spawn(&ctx, def, 1, [spot[0] + reach.min(450), spot[1]]);
+                    if let Some(u) = w.get_mut(c) {
+                        u.lane = 0;
+                    }
+                    w.step(&ctx, &[(0, Cmd::Attack(c))]);
+                    (w, (lk.demo_s * TPS) as u32)
+                }
+            }
+        };
+        let level1 = level1.ok_or("The hero was not measured.")?;
+        Ok(Showcase::new(roster, demo, w, lk, again, level1))
+    }
+
+    /// Opens the inspector on hero `roster` playing `demo`, keeping the
+    /// camera when the hero is the one already shown.
+    fn show(&mut self, roster: usize, demo: crate::showcase::Demo) -> Result<(), String> {
+        let known = self
+            .showcase
+            .as_ref()
+            .filter(|o| o.hero == roster)
+            .map(|o| o.level1);
+        let mut s = self.showcase_world(roster, demo, known)?;
+        if let Some(old) = self.showcase.as_ref().filter(|o| o.hero == roster) {
+            s.keep_camera(old);
+        }
+        self.showcase = Some(s);
+        Ok(())
     }
 
     /// Remembers where every unit stands before a tick, for smooth drawing.
@@ -648,6 +763,23 @@ impl Game {
             };
             return Some(f(&frame));
         }
+        if self.screen == "heroes" {
+            // the inspector's world, all of it seen
+            let s = self.showcase.as_ref()?;
+            let frame = Frame {
+                ctx: &ctx,
+                w: &s.world,
+                models: &self.models,
+                look: &self.look,
+                team: crate::world::NEUTRAL,
+                alpha: s.alpha,
+                prev: &s.prev,
+                hover: NO_UNIT,
+                selected: NO_UNIT,
+                view: self.stage_view(),
+            };
+            return Some(f(&frame));
+        }
         let m = self.m.as_ref()?;
         let frame = Frame {
             ctx: &ctx,
@@ -686,6 +818,9 @@ impl Game {
         self.pointer = (x, y);
         self.pointer_in = true;
         self.pointer_view = over_view;
+        if let Some(s) = self.showcase.as_mut().filter(|_| self.screen == "heroes") {
+            s.drag_to(&self.look.showcase, x, y);
+        }
         if self.screen == "match" {
             self.hover = if over_view { self.unit_at(x, y) } else { NO_UNIT };
         }
@@ -718,6 +853,13 @@ impl Game {
 
     /// A mouse button on the 3D view: 0 is the main button, 2 the second.
     pub fn click(&mut self, button: i32, x: i32, y: i32) {
+        if self.screen == "heroes" {
+            // a drag on the inspector's view turns its camera
+            if let Some(s) = self.showcase.as_mut().filter(|_| button == 0) {
+                s.drag = Some((x, y));
+            }
+            return;
+        }
         if self.screen != "match" || self.m.is_none() {
             return;
         }
@@ -920,7 +1062,20 @@ impl Game {
         }
     }
 
+    /// A mouse button went up anywhere: a drag on the inspector ends.
+    pub fn release(&mut self) {
+        if let Some(s) = self.showcase.as_mut() {
+            s.drag = None;
+        }
+    }
+
     pub fn wheel(&mut self, dy: i32) {
+        if self.screen == "heroes" {
+            if let Some(s) = self.showcase.as_mut() {
+                s.zoom(&self.look.showcase, dy);
+            }
+            return;
+        }
         let step = self.look.zoom_step * ONE / 100;
         let d = self.view.distance + dy.signum() * step;
         self.view.distance = d.clamp(self.look.zoom_min * ONE / 100, self.look.zoom_max * ONE / 100);
@@ -1058,8 +1213,12 @@ impl Game {
     }
 
     pub fn camera(&self) -> render::Camera {
-        let g = scene::view_ground(&self.terrain, &self.view);
-        self.view.camera(g)
+        let v = self.stage_view();
+        let mut g = scene::view_ground(&self.terrain, &v);
+        if let Some(s) = self.showcase.as_ref().filter(|_| self.screen == "heroes") {
+            g += s.lift(&self.look.showcase);
+        }
+        v.camera(g)
     }
 
     pub fn mats(&self) -> Vec<i32> {
@@ -1318,23 +1477,42 @@ impl Game {
         let base = (0..self.rules.abilities.len())
             .find(|&b| self.rules.ability_alt[b] == Some(k))
             .unwrap_or(k);
+        let roster = (0..self.rules.heroes.len())
+            .find(|&r| self.rules.unit_abilities[self.rules.heroes[r]].contains(&base))
+            .ok_or_else(|| format!("No hero casts \"{id}\"."))?;
+        self.cast_world_for(roster, id, ticks, 0)
+    }
+
+    /// The `cast:` stage's world for hero `roster`, which must have the
+    /// ability, with the trees within `open` of where it plays cut, so a
+    /// camera turning round it meets none (the heroes screen's inspector;
+    /// 0 for none).
+    pub fn cast_world_for(&self, roster: usize, id: &str, ticks: u32, open: i32) -> Result<World, String> {
+        let k = self
+            .rules
+            .abilities
+            .iter()
+            .position(|a| a.id == id)
+            .ok_or_else(|| format!("There is no ability \"{id}\"."))?;
+        let base = (0..self.rules.abilities.len())
+            .find(|&b| self.rules.ability_alt[b] == Some(k))
+            .unwrap_or(k);
         let first = if base == k {
             ""
         } else {
             self.rules.abilities[base].alt_when.as_str()
         };
-        let (roster, slot) = (0..self.rules.heroes.len())
-            .find_map(|r| {
-                self.rules.unit_abilities[self.rules.heroes[r]]
-                    .iter()
-                    .position(|&a| a == base)
-                    .map(|s| (r, s))
-            })
-            .ok_or_else(|| format!("No hero casts \"{id}\"."))?;
+        let slot = self.rules.unit_abilities[self.rules.heroes[roster]]
+            .iter()
+            .position(|&a| a == base)
+            .ok_or_else(|| format!("This hero has no \"{id}\"."))?;
         let ctx = self.ctx();
         let mut w = self.new_world(self.seed);
         let n = self.rules.roster;
         let spot = [self.rules.map.size / 2 - 900, self.rules.map.size / 2 - 900];
+        if open > 0 {
+            w.cut_trees_in(&ctx, [spot[0] + 250, spot[1]], open);
+        }
         let put = |w: &mut World, player: usize, r: usize, at: P| {
             w.players[player].present = true;
             let h = w.add_hero(&ctx, player, r);
@@ -1510,7 +1688,10 @@ impl Game {
                 fov: fx::deg(50),
                 yaw: 0,
             },
-            None => self.view,
+            None => match self.showcase.as_ref().filter(|_| self.screen == "heroes") {
+                Some(s) => s.view(&self.look.showcase, self.view.fov),
+                None => self.view,
+            },
         }
     }
 
@@ -1584,7 +1765,38 @@ impl Game {
                 }
                 self.screen = value.to_string();
                 self.stage = None;
+                self.showcase = None;
             }
+            "heroes.view" => {
+                let k = num()?;
+                if k < 0 {
+                    return Err("There is no such hero.".into());
+                }
+                self.show(k as usize, crate::showcase::Demo::Stand)?;
+            }
+            "heroes.demo" => {
+                use crate::showcase::Demo;
+                let hero = self
+                    .showcase
+                    .as_ref()
+                    .map(|s| s.hero)
+                    .ok_or("Choose a hero first.")?;
+                let demo = match value {
+                    "stand" => Demo::Stand,
+                    "attack" => Demo::Attack,
+                    id => Demo::Ability(
+                        self.rules
+                            .abilities
+                            .iter()
+                            .position(|a| a.id == id)
+                            .ok_or_else(|| format!("There is no ability \"{id}\"."))?,
+                    ),
+                };
+                // the demonstration shown is chosen again: back to the hero alone
+                let same = self.showcase.as_ref().map(|s| s.demo == demo).unwrap_or(false);
+                self.show(hero, if same { Demo::Stand } else { demo })?;
+            }
+            "heroes.close" => self.showcase = None,
             "mission" => {
                 let k = num()? as usize;
                 let ms = self

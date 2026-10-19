@@ -91,6 +91,10 @@ impl Game {
         self.inner.minimap_click(button, x as i32, y as i32)
     }
 
+    pub fn release(&mut self) {
+        self.inner.release()
+    }
+
     pub fn wheel(&mut self, dy: f64) {
         self.inner.wheel(dy as i32)
     }

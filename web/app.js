@@ -289,6 +289,8 @@ function wireInput(canvas) {
       if (ask && ask.catch) ask.catch(() => {});
     }
   });
+  // a button let go anywhere ends a drag on the heroes screen's view
+  document.addEventListener("mouseup", () => game.release());
   document.addEventListener("click", (e) => {
     // under the lock the click is the body's: hand it to the element under the cursor
     if (!locked() || e.target !== document.body) return;

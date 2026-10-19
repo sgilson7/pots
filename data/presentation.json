@@ -848,5 +848,26 @@
   "cut": 2200,
   "slow_ms": 150,
   "slow_frames": 5
+ },
+ "showcase": {
+  "_note": "Round 7, T34: the heroes screen's inspector. Distances in hundredths of a scene unit, angles in degrees.",
+  "idle_distance": 1500,
+  "demo_distance": 2600,
+  "min_distance": 450,
+  "max_distance": 4200,
+  "zoom_step": 250,
+  "pitch": 20,
+  "min_pitch": 4,
+  "max_pitch": 80,
+  "yaw": 0,
+  "drag_deg": 40,
+  "drift_deg": 12,
+  "demo_s": 4,
+  "demo_s_for": {"chakram": 6, "return_chakram": 4, "timber_chain": 3, "berserker_rage": 3},
+  "demo_ahead": 250,
+  "shift_pct": 22,
+  "idle_lift": 110,
+  "demo_lift": 40,
+  "open": 1150
  }
 }
