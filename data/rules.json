@@ -313,9 +313,7 @@
   {
    "unit": "tempest",
    "_after": "Zeus"
-  }
- ],
- "preview_heroes": [
+  },
   {
    "unit": "hackle",
    "_after": "Troll Warlord"
@@ -324,5 +322,6 @@
    "unit": "chipper",
    "_after": "Goblin Shredder (Timbersaw)"
   }
- ]
+ ],
+ "preview_heroes": []
 }

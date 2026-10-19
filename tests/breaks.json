@@ -389,28 +389,28 @@
   "file": "crates/core/src/models.rs",
   "find": "                p.mesh = p.mesh.faceted();\n",
   "replace": "",
-  "test": "map_models_are_faceted_without_an_outline_and_characters_keep_their_look"
+  "test": "every_model_is_faceted_without_an_outline_and_glows_stay_smooth"
  },
  {
   "name": "a map model keeps its outline",
   "file": "crates/core/src/models.rs",
   "find": "                p.plain = true;\n",
   "replace": "",
-  "test": "the_match_draws_no_faceted_shape_with_an_outline_and_soft_shadows_under_the_map"
+  "test": "the_match_draws_nothing_outlined_and_soft_shadows_under_units_and_the_map"
  },
  {
   "name": "glowing parts are faceted too",
   "file": "crates/core/src/models.rs",
   "find": ".filter(|p| p.style != crate::scene::STYLE_GLOW)",
   "replace": "",
-  "test": "map_models_are_faceted_without_an_outline_and_characters_keep_their_look"
+  "test": "every_model_is_faceted_without_an_outline_and_glows_stay_smooth"
  },
  {
   "name": "the map's shadows are not drawn",
   "file": "crates/core/src/scene.rs",
   "find": "        b.tint(Mesh::Facet, &a, f.models.named(\"dress_shadow\"), alpha);\n",
   "replace": "",
-  "test": "the_match_draws_no_faceted_shape_with_an_outline_and_soft_shadows_under_the_map"
+  "test": "the_match_draws_nothing_outlined_and_soft_shadows_under_units_and_the_map"
  },
  {
   "name": "the ground is never dressed",
@@ -548,7 +548,7 @@
  {
   "name": "round 7b: creeps drawn at full size",
   "file": "crates/core/src/scene.rs",
-  "find": "    let kind = if d.kind == Kind::Creep { lk.creep_scale_pct } else { 100 };",
+  "find": "    let kind = if d.kind == Kind::Creep {\n        lk.creep_scale_pct\n    } else {\n        100\n    };",
   "replace": "    let kind = 100;",
   "test": "lane_creeps_are_drawn_smaller_than_heroes_and_neutrals"
  },
@@ -763,10 +763,45 @@
   "test": "buzz_blade_flies_out_spins_drains_mana_and_comes_back_on_recall"
  },
  {
-  "name": "round 7g: preview heroes on the roster",
+  "name": "round 7h: the roster stops at the first ten heroes",
   "file": "crates/core/src/rules.rs",
   "find": "        let roster = r.heroes.len();",
-  "replace": "        let roster = r.heroes.len() + r.preview_heroes.len();",
-  "test": "preview_heroes_cannot_be_chosen"
+  "replace": "        let roster = r.heroes.len().min(10);",
+  "test": "hackle_and_chipper_can_be_chosen"
+ },
+ {
+  "name": "round 7h: a computer Hackle never goes melee",
+  "file": "crates/core/src/ai.rs",
+  "find": "near(w, l.here, 350) > 0",
+  "replace": "false",
+  "test": "a_computer_hackle_goes_melee_with_an_enemy_hero_close_and_back_without"
+ },
+ {
+  "name": "round 7h: a computer Hackle never goes back to range",
+  "file": "crates/core/src/ai.rs",
+  "find": "near(w, l.here, 700) == 0",
+  "replace": "false",
+  "test": "a_computer_hackle_goes_melee_with_an_enemy_hero_close_and_back_without"
+ },
+ {
+  "name": "round 7h: a computer Chipper never recalls its blade",
+  "file": "crates/core/src/ai.rs",
+  "find": "Some(z) => near(w, z.at, z.radius + 100) == 0,",
+  "replace": "Some(_) => false,",
+  "test": "a_computer_chipper_recalls_its_blade_once_no_enemy_hero_is_in_it"
+ },
+ {
+  "name": "round 7h: a computer Chipper recalls its blade at once",
+  "file": "crates/core/src/ai.rs",
+  "find": "Some(z) => near(w, z.at, z.radius + 100) == 0,",
+  "replace": "Some(_) => true,",
+  "test": "a_computer_chipper_recalls_its_blade_once_no_enemy_hero_is_in_it"
+ },
+ {
+  "name": "round 7h: a computer Chipper throws the claw with no tree",
+  "file": "crates/core/src/ai.rs",
+  "find": "        let tree = crate::ability::first_tree(w, ctx, l.here, end, a.v(\"latch\", level))?;\n        let c = ctx.terrain.tree_centre(tree);",
+  "replace": "        let c = crate::ability::first_tree(w, ctx, l.here, end, a.v(\"latch\", level))\n            .map(|t| ctx.terrain.tree_centre(t))\n            .unwrap_or(end);",
+  "test": "a_computer_chipper_throws_the_claw_only_with_a_tree_past_the_foe"
  }
 ]

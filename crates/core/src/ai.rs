@@ -378,6 +378,10 @@ fn decide(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize) {
     let Some(tree) = ai.trees.get(&tree_name).or_else(|| ai.trees.get("hero")) else {
         return;
     };
+    if w.live(l.hero).is_some() {
+        // a toggle goes off at once and takes no order, so the tree still runs
+        switch_form(w, ctx, p, &l);
+    }
     let held = w.players[p].brain.rule;
     let mut trace = vec![0u8; tree.rules.len()];
     let mut chosen = None;
@@ -436,7 +440,20 @@ fn useful_cast(w: &World, ctx: &Ctx, l: &Look, slot: usize) -> Option<(Uid, P)> 
     let range = a.range_at(level).max(a.v("radius", level)) + 200;
     let foes = visible_enemy_heroes(w, ctx, l, range);
     let foe = *foes.first()?;
-    let at = w.get(foe)?.pos();
+    let mut at = w.get(foe)?.pos();
+    if a.logic == "timber_chain" {
+        // the chain needs a tree: aim through the foe at one on the far side
+        let end = crate::ability::toward(l.here, at, a.range_at(level));
+        let tree = crate::ability::first_tree(w, ctx, l.here, end, a.v("latch", level))?;
+        let c = ctx.terrain.tree_centre(tree);
+        if dist2(l.here, c) < dist2(l.here, at) {
+            return None;
+        }
+        at = c;
+    }
+    if a.logic == "return_chakram" {
+        return None;
+    }
     let t = if a.on == "ally" { l.hero } else { foe };
     if !crate::ability::can_start(w, ctx, l.hero, slot, t, at) {
         return None;
@@ -446,6 +463,51 @@ fn useful_cast(w: &World, ctx: &Ctx, l: &Look, slot: usize) -> Option<(Uid, P)> 
         return None;
     }
     Some((t, at))
+}
+
+/// Turns a held form or a thrown blade the way the fight needs: Berserker
+/// Rage on with an enemy hero close and off with none near, and the
+/// Chakram called back once no enemy hero stands in it.
+fn switch_form(w: &mut World, ctx: &Ctx, p: usize, l: &Look) {
+    let near = |w: &World, at: P, r: i32| {
+        w.near(at, r, |u| {
+            u.team == other(l.team) && u.hero.is_some() && !u.has(M::Illusion) && w.sees(ctx, l.team, u)
+        })
+        .len()
+    };
+    for slot in 0..4usize {
+        let Some((k, level)) = crate::ability::slot_info(ctx, w, l.hero, slot) else {
+            continue;
+        };
+        if level <= 0 {
+            continue;
+        }
+        let a = &ctx.rules.abilities[k];
+        let want = match a.logic.as_str() {
+            "berserker_rage" => {
+                let on = w.get(l.hero).map(crate::ability::berserk).unwrap_or(false);
+                if on {
+                    near(w, l.here, 700) == 0
+                } else {
+                    near(w, l.here, 350) > 0
+                }
+            }
+            "return_chakram" => {
+                let out = w.zones.iter().find(|z| {
+                    z.src == l.hero && ctx.rules.abilities[z.ability as usize].logic == "chakram" && z.a == 1
+                });
+                match out {
+                    Some(z) => near(w, z.at, z.radius + 100) == 0,
+                    None => false,
+                }
+            }
+            _ => false,
+        };
+        if want && crate::ability::can_start(w, ctx, l.hero, slot, l.hero, l.here) {
+            orders::apply(w, ctx, p, Cmd::Cast(slot as u8, l.hero, l.here));
+            return;
+        }
+    }
 }
 
 /// The point a laning hero holds: a little behind its own creeps' front.

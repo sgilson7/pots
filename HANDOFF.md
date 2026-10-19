@@ -138,13 +138,16 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **Journal:** tab 12 (`journal/mockups/tab12.py`, `journal/art6/`).
 - **Not published:** nothing a player sees changed. Before these heroes go live, `PROTOCOL` must rise (the world's shape changed).
 
+## Round 7, continued (19 October 2026): the two heroes live (T33)
+
+- The person said "deploy the new characters". `hackle` and `chipper` moved from `preview_heroes` to `heroes` (the roster is twelve); `PROTOCOL` is 7 in `crates/core/src/online.rs` and `web/net/config.js`. Names, looks and the 20/30/40 drain shipped as proposed (R7.28, R7.29).
+- Computer players: builds in `data/ai.json`; `ai::switch_form` turns Berserker Rage and calls the Chakram back; `useful_cast` throws Timber Chain only with a tree past the foe (R7.37). Tests: three more in `tests/heroes2.rs`; break rows "round 7h".
+- CHECKS_T33
+
 ## Open for the person
 
 Each row of `SECOND-ORDER.md` with status *person*, by number:
 
-- **R7.28**: Hackle and Chipper's names, looks and ability names (journal tab 12).
-- **R7.29**: Chakram's drain, 20/30/40 (6.73) or 20/25/30 (6.73c).
-- **R7.30**: build the two heroes fully?
 - **R7.2**: selling is instant on a right-click and pays half. Ask first, or give a full refund for a few seconds after buying?
 - **R7.9**: next for the look: the forest's outline, or a darker ground? (Shadows under heroes and creeps came with T24.)
 - **R7.3**: play All Random All Mid at the new pace (level 3, 1.5× experience, 2× gold per second) and say whether it is too fast or too slow.

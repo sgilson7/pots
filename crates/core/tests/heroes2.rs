@@ -1,4 +1,4 @@
-//! Two added heroes (round 7, preview: not yet on the roster): Hackle plays
+//! Two added heroes (round 7, on the roster as its last two): Hackle plays
 //! as DotA 6.73's Troll Warlord and Chipper as Goblin Shredder (Dota 2's
 //! Timbersaw), per notes/LITERATURE.md section 7. Expected values are
 //! worked out by hand from that section and data/rules.json's tables: a
@@ -18,7 +18,7 @@ const HACKLE: usize = 0;
 const CHIPPER: usize = 1;
 
 fn roster(f: &common::Fixture, which: usize) -> usize {
-    f.rules.roster + which
+    f.rules.roster - 2 + which
 }
 
 fn put(w: &mut World, id: Uid, at: P) {
@@ -408,10 +408,12 @@ fn buzz_blade_flies_out_spins_drains_mana_and_comes_back_on_recall() {
 }
 
 #[test]
-fn preview_heroes_cannot_be_chosen() {
+fn hackle_and_chipper_can_be_chosen() {
     let f = common::fixture();
-    assert_eq!(f.rules.roster, 10, "the roster is the first ten");
-    assert_eq!(f.rules.heroes.len(), 12, "two preview heroes after it");
+    assert_eq!(f.rules.roster, 12, "ten heroes and the two added");
+    assert_eq!(f.rules.heroes.len(), 12, "no preview hero left over");
+    let id = |i: usize| f.rules.units[f.rules.heroes[i]].id.as_str();
+    assert_eq!((id(10), id(11)), ("hackle", "chipper"));
 }
 
 #[test]
@@ -455,4 +457,98 @@ fn a_stunned_chipper_is_not_pulled_when_the_claw_holds() {
     let at = w.get(c).unwrap().pos();
     assert!((at[0] - from[0]).abs() < 100, "not pulled: {at:?} from {from:?}");
     assert!(matches!(w.trees[tree], Tree::Standing), "the tree still stands");
+}
+
+// ------------------------------------------------------ computer players
+
+/// Seat 0 handed to a computer player, with no skill point to spend so
+/// the build does not change what the test set up.
+fn bot(w: &mut World, id: Uid) {
+    w.players[0].bot = Some(2);
+    w.players[0].present = true;
+    w.get_mut(id).unwrap().hero.as_mut().unwrap().points = 0;
+}
+
+fn run(w: &mut World, ctx: &Ctx, secs: i32) {
+    for _ in 0..(secs * TPS) {
+        w.step(ctx, &[]);
+    }
+}
+
+#[test]
+fn a_computer_hackle_goes_melee_with_an_enemy_hero_close_and_back_without() {
+    let f = common::fixture();
+    let ctx = f.ctx();
+    let mut w = f.world(21);
+    let h = w.add_hero(&ctx, 0, roster(&f, HACKLE));
+    let foe = w.add_hero(&ctx, 5, 6);
+    learn(&mut w, h, [1, 0, 0, 0]);
+    let spot = open(&f, &mut w, [8192, 8192], 600);
+    put(&mut w, h, spot);
+    put(&mut w, foe, [spot[0] + 200, spot[1]]);
+    bot(&mut w, h);
+    run(&mut w, &ctx, 2);
+    assert!(ability::berserk(w.get(h).unwrap()), "melee with a foe 200 away");
+    // the foe leaves for the far side of the map
+    put(&mut w, foe, [2000, 2000]);
+    run(&mut w, &ctx, 2);
+    assert!(
+        !ability::berserk(w.get(h).unwrap()),
+        "ranged again with none near"
+    );
+}
+
+#[test]
+fn a_computer_chipper_recalls_its_blade_once_no_enemy_hero_is_in_it() {
+    let f = common::fixture();
+    let ctx = f.ctx();
+    let mut w = f.world(22);
+    let c = w.add_hero(&ctx, 0, roster(&f, CHIPPER));
+    let foe = w.add_hero(&ctx, 5, 6);
+    learn(&mut w, c, [0, 0, 0, 1]);
+    let spot = open(&f, &mut w, [8192, 8192], 1000);
+    put(&mut w, c, spot);
+    let target = [spot[0] + 600, spot[1]];
+    put(&mut w, foe, target);
+    cast(&mut w, &ctx, 3, target);
+    w.get_mut(foe).unwrap().hp = 1_000_000_000;
+    bot(&mut w, c);
+    // the foe holds its ground inside the spinning blade
+    w.step(&ctx, &[(5, Cmd::Hold)]);
+    run(&mut w, &ctx, 2);
+    assert!(
+        w.zones.iter().any(|z| z.src == c && z.a == 1),
+        "a foe stands in the blade: it keeps spinning"
+    );
+    put(&mut w, foe, [2000, 2000]);
+    run(&mut w, &ctx, 3);
+    assert!(w.zones.is_empty(), "no foe in it: called back and home");
+}
+
+#[test]
+fn a_computer_chipper_throws_the_claw_only_with_a_tree_past_the_foe() {
+    let f = common::fixture();
+    let ctx = f.ctx();
+    let t = &f.terrain;
+    let mut w = f.world(23);
+    let c = w.add_hero(&ctx, 0, roster(&f, CHIPPER));
+    let foe = w.add_hero(&ctx, 5, 6);
+    learn(&mut w, c, [0, 1, 0, 0]);
+    let spot = open(&f, &mut w, [8192, 8192], 1600);
+    put(&mut w, c, spot);
+    put(&mut w, foe, [spot[0] + 400, spot[1]]);
+    w.get_mut(foe).unwrap().hp = 1_000_000_000;
+    bot(&mut w, c);
+    run(&mut w, &ctx, 4);
+    assert_eq!(w.get(c).unwrap().abil[1].ready_at, 0, "no tree: the claw stays");
+    // a tree 700 past Chipper, beyond the foe on the same line
+    let i = ((spot[1] / t.tree_cell) * t.tw + (spot[0] + 700) / t.tree_cell) as usize;
+    w.trees[i] = Tree::Standing;
+    put(&mut w, c, spot);
+    put(&mut w, foe, [spot[0] + 400, spot[1]]);
+    run(&mut w, &ctx, 4);
+    assert!(
+        w.get(c).unwrap().abil[1].ready_at > 0,
+        "a tree past the foe: thrown"
+    );
 }

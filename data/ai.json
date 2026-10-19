@@ -602,6 +602,74 @@
     "point_booster",
     "ultimate_orb"
    ]
+  },
+  "hackle": {
+   "skills": [
+    1,
+    0,
+    1,
+    2,
+    1,
+    3,
+    1,
+    2,
+    2,
+    2,
+    3,
+    0,
+    0,
+    0,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "slippers",
+    "circlet",
+    "boots",
+    "gloves",
+    "mask_death",
+    "elvenskin",
+    "yasha",
+    "ultimate_orb",
+    "manta",
+    "demon_edge",
+    "claymore",
+    "daedalus"
+   ]
+  },
+  "chipper": {
+   "skills": [
+    1,
+    0,
+    0,
+    2,
+    0,
+    3,
+    0,
+    1,
+    1,
+    1,
+    3,
+    2,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "salve",
+    "branch",
+    "branch",
+    "boots",
+    "gauntlets",
+    "circlet",
+    "ring_health",
+    "vitality",
+    "vanguard",
+    "blink"
+   ]
   }
  }
 }

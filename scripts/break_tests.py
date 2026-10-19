@@ -51,7 +51,12 @@ def main(words):
             )
         finally:
             path.write_text(original)
-        if run.returncode == 0:
+        ran = sum(int(w.split()[1]) for w in run.stdout.splitlines() if w.startswith("running ") and w.split()[1].isdigit())
+        if run.returncode == 0 and ran == 0:
+            # a filter that names no test runs nothing, and nothing passes
+            print(f"  NO TEST {b['name']}: no test is called {b['test']}")
+            bad.append(b["name"])
+        elif run.returncode == 0:
             print(f"  MISSED  {b['name']}: {b['test']} still passes with the behaviour broken")
             bad.append(b["name"])
         else:

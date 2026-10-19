@@ -40,7 +40,7 @@ use crate::ui::Node;
 use crate::world::{Ctx, World, PLAYERS};
 
 /// Changes when a message changes shape; `web/net/config.js` carries it too.
-pub const PROTOCOL: u32 = 6;
+pub const PROTOCOL: u32 = 7;
 /// Ticks between an order and the tick it acts on.
 pub const DELAY: u32 = 2;
 /// Ticks a browser may run past its confirmed tick before it waits.

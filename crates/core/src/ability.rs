@@ -427,7 +427,7 @@ pub fn enemies_near(w: &World, ctx: &Ctx, team: u8, at: P, r: i32, pierce: bool)
     })
 }
 
-fn toward(from: P, to: P, len: i32) -> P {
+pub(crate) fn toward(from: P, to: P, len: i32) -> P {
     let (dx, dy) = ((to[0] - from[0]) as i64, (to[1] - from[1]) as i64);
     let d = fx::isqrt((dx * dx + dy * dy) as u64) as i64;
     if d == 0 {
@@ -935,7 +935,7 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
 
 /// The first standing tree (not the map's rim) within `r` of the segment
 /// from `a` to `b`, nearest `a` first.
-fn first_tree(w: &World, ctx: &Ctx, a: P, b: P, r: i32) -> Option<usize> {
+pub(crate) fn first_tree(w: &World, ctx: &Ctx, a: P, b: P, r: i32) -> Option<usize> {
     let t = ctx.terrain;
     let len = dist(a, b).max(1);
     let step = 16;
