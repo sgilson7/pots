@@ -1,0 +1,75 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{xcolor}
+\definecolor{arcane}{HTML}{8752C4}
+\definecolor{arcanetab}{HTML}{9A62D6}
+\definecolor{armaments}{HTML}{6E7FA0}
+\definecolor{attributes}{HTML}{3FA79A}
+\definecolor{basics}{HTML}{C9A46A}
+\definecolor{blood}{HTML}{C2303C}
+\definecolor{bone}{HTML}{EFE6CF}
+\definecolor{caster}{HTML}{C24FA6}
+\definecolor{cloth}{HTML}{E9DCC0}
+\definecolor{cloud}{HTML}{EEF4FA}
+\definecolor{common}{HTML}{8DB05A}
+\definecolor{consumables}{HTML}{E36A8A}
+\definecolor{earth}{HTML}{9A6838}
+\definecolor{ember}{HTML}{D8421E}
+\definecolor{fire}{HTML}{EE7F22}
+\definecolor{flame}{HTML}{FF9A1F}
+\definecolor{flamehot}{HTML}{FFE15A}
+\definecolor{frost}{HTML}{4F9BDB}
+\definecolor{gold}{HTML}{F4BF3A}
+\definecolor{golddark}{HTML}{B9821F}
+\definecolor{heal}{HTML}{6ED36A}
+\definecolor{ice}{HTML}{C9EEFF}
+\definecolor{icedeep}{HTML}{6FC2EE}
+\definecolor{ink}{HTML}{2B1631}
+\definecolor{iron}{HTML}{5C6470}
+\definecolor{leaf}{HTML}{5DB04A}
+\definecolor{leather}{HTML}{8E5A36}
+\definecolor{life}{HTML}{E2364A}
+\definecolor{mana}{HTML}{3E7BE0}
+\definecolor{moss}{HTML}{6E8F45}
+\definecolor{night}{HTML}{3A2E5C}
+\definecolor{paper}{HTML}{FFF8EC}
+\definecolor{protect}{HTML}{2F6BB5}
+\definecolor{relictab}{HTML}{E8B330}
+\definecolor{rot}{HTML}{62A43A}
+\definecolor{secret}{HTML}{3D3F86}
+\definecolor{shade}{HTML}{5A4560}
+\definecolor{skin}{HTML}{F1C6A0}
+\definecolor{skingrey}{HTML}{A8A2B4}
+\definecolor{skinpale}{HTML}{E6D7C3}
+\definecolor{snow}{HTML}{FFFFFF}
+\definecolor{spark}{HTML}{FFF27A}
+\definecolor{steel}{HTML}{C9D2DC}
+\definecolor{steeldark}{HTML}{7D8896}
+\definecolor{steelrim}{HTML}{7F8C9C}
+\definecolor{stone}{HTML}{A99A86}
+\definecolor{stonedark}{HTML}{73665A}
+\definecolor{storm}{HTML}{9CCBEB}
+\definecolor{support}{HTML}{48B7C9}
+\definecolor{venom}{HTML}{9BD13B}
+\definecolor{violet}{HTML}{B57BF0}
+\definecolor{weapons}{HTML}{B8402F}
+\definecolor{wood}{HTML}{B57A45}
+\definecolor{wooddark}{HTML}{7E4F2A}
+\newlength{\Ink}\setlength{\Ink}{2.2pt}
+\tikzset{inked/.style={draw=ink,line width=\Ink,line join=round,line cap=round}}
+\begin{document}
+\begin{tikzpicture}
+\useasboundingbox (0,0) rectangle (2,2);
+\clip (0,0) rectangle (2,2);
+\filldraw[inked,fill=blood] (1,1) circle (0.9);
+\filldraw[inked,fill=blood!34!paper] (1,1) circle (0.74);
+\draw[draw=blood!45!paper,line width=2pt,line cap=round,line join=round] (0.615,1.724) -- (0.565,1.695) -- (0.518,1.663) -- (0.473,1.628) -- (0.43,1.59) -- (0.391,1.549) -- (0.354,1.505) -- (0.32,1.459) -- (0.29,1.41);
+\draw[draw=snow,line width=2.6pt,line cap=round,line join=round] plot[smooth, tension=0.6] coordinates {(1.62,1) (1.614,1.086) (1.596,1.171) (1.566,1.252) (1.526,1.329) (1.475,1.399) (1.415,1.461) (1.347,1.514) (1.272,1.557) (1.192,1.59) (1.108,1.611) (1.022,1.62) (0.935,1.617) (0.85,1.602) (0.768,1.575) (0.69,1.537) (0.618,1.489) (0.554,1.431) (0.498,1.364) (0.453,1.291) (0.417,1.212) (0.394,1.129) (0.382,1.043) (0.382,0.957) (0.394,0.871) (0.417,0.788) (0.453,0.709) (0.498,0.636) (0.554,0.569) (0.618,0.511) (0.69,0.463) (0.768,0.425) (0.85,0.398) (0.935,0.383) (1.022,0.38) (1.108,0.389) (1.192,0.41) (1.272,0.443) (1.347,0.486) (1.415,0.539) (1.475,0.601) (1.526,0.671) (1.566,0.748) (1.596,0.829) (1.614,0.914) (1.62,1)};
+\filldraw[inked,fill=wood,rounded corners=0.015cm] (0.735,0.975) -- (0.735,1.025) -- (0.21,1.025) -- (0.21,0.975) -- cycle;
+\filldraw[inked,fill=steel] (0.42,1) -- (0.558,1.155) -- (0.536,1.189) -- (0.504,1.219) -- (0.464,1.241) -- (0.418,1.255) -- (0.37,1.26) -- (0.322,1.255) -- (0.276,1.241) -- (0.236,1.219) -- (0.204,1.189) -- (0.182,1.155) -- (0.3,1) -- cycle;
+\draw[draw=steeldark,line width=1.2pt,line cap=round,line join=round] (0.4,1.02) -- (0.32,1.02);
+\filldraw[inked,fill=wood,rounded corners=0.015cm] (1.265,1.025) -- (1.265,0.975) -- (1.79,0.975) -- (1.79,1.025) -- cycle;
+\filldraw[inked,fill=steel] (1.58,1) -- (1.442,0.845) -- (1.464,0.811) -- (1.496,0.781) -- (1.536,0.759) -- (1.582,0.745) -- (1.63,0.74) -- (1.678,0.745) -- (1.724,0.759) -- (1.764,0.781) -- (1.796,0.811) -- (1.818,0.845) -- (1.7,1) -- cycle;
+\draw[draw=steeldark,line width=1.2pt,line cap=round,line join=round] (1.6,0.98) -- (1.68,0.98);
+\draw[draw=ink,line width=2.2pt,line cap=round,line join=round] plot[smooth, tension=0.6] coordinates {(1.036,1) (1.041,1.01) (1.043,1.021) (1.042,1.035) (1.037,1.048) (1.028,1.061) (1.015,1.072) (0.998,1.079) (0.978,1.083) (0.957,1.081) (0.936,1.074) (0.916,1.061) (0.899,1.043) (0.885,1.02) (0.878,0.993) (0.876,0.964) (0.883,0.934) (0.896,0.905) (0.917,0.878) (0.944,0.857) (0.977,0.842) (1.014,0.835) (1.053,0.836) (1.092,0.847) (1.128,0.868) (1.16,0.897) (1.185,0.934) (1.202,0.977) (1.208,1.024) (1.203,1.072) (1.186,1.12) (1.159,1.163) (1.121,1.2) (1.074,1.228)};
+\end{tikzpicture}
+\end{document}

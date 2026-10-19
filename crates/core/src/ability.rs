@@ -15,9 +15,37 @@ use crate::fx;
 use crate::rules::{Kind, Target, P, SUB, TPS};
 use crate::stats;
 use crate::world::{
-    dist2, other, within, Act, Ctx, Hit, Missile, Mod, Order, Uid, World, Zone, EV_CAST, M, MK_CAST, MK_FIRE,
-    MK_LAND, MK_PROC, NEUTRAL, NO_UNIT,
+    dist, dist2, other, within, Act, Ctx, Hit, Missile, Mod, Order, Uid, Unit, World, Zone, EV_CAST, M,
+    MK_CAST, MK_FIRE, MK_LAND, MK_PROC, NEUTRAL, NO_UNIT,
 };
+
+/// `Tag` modifier codes the stats and combat read (round 7, two added
+/// heroes): Berserker Rage's melee form (`a` = flat move speed), a miss
+/// chance on the unit's own attacks (`a` = percent), Chakram's blade out,
+/// and a primary-attribute cut (`b` = `TAG_ATTR_PCT` + attribute index,
+/// `a` = percent).
+pub const TAG_BERSERK: i32 = 3001;
+pub const TAG_BLIND: i32 = 3002;
+pub const TAG_BLADE_OUT: i32 = 3011;
+pub const TAG_ATTR_PCT: i32 = 1100;
+
+fn tagged(u: &Unit, code: i32) -> bool {
+    u.mods.iter().any(|m| m.kind == M::Tag && m.b == code)
+}
+
+/// Whether Berserker Rage's melee form is on.
+pub fn berserk(u: &Unit) -> bool {
+    tagged(u, TAG_BERSERK)
+}
+
+/// Whether an ability's `alt` holds its slot now.
+fn alt_holds(u: &Unit, when: &str) -> bool {
+    match when {
+        "berserk" => tagged(u, TAG_BERSERK),
+        "blade_out" => tagged(u, TAG_BLADE_OUT),
+        _ => false,
+    }
+}
 
 fn tag(ability: usize) -> u16 {
     ability as u16 + 1
@@ -28,9 +56,16 @@ fn secs_x100(w: &World, hundredths: i32) -> u32 {
 }
 
 /// The ability index and level in a unit's slot.
+/// The ability index and level in a unit's slot: the ability's `alt` while
+/// its condition holds (Whirling Axes up close, Return Chakram).
 pub fn slot_info(ctx: &Ctx, w: &World, id: Uid, slot: usize) -> Option<(usize, i32)> {
     let u = w.get(id)?;
-    let k = *ctx.rules.unit_abilities[u.def as usize].get(slot)?;
+    let mut k = *ctx.rules.unit_abilities[u.def as usize].get(slot)?;
+    if let Some(alt) = ctx.rules.ability_alt[k] {
+        if alt_holds(u, &ctx.rules.abilities[k].alt_when) {
+            k = alt;
+        }
+    }
     Some((k, u.abil.get(slot)?.level))
 }
 
@@ -128,7 +163,8 @@ pub fn can_start(w: &World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, _p: P) -> b
     if a.target == Target::Toggle {
         return !u.has(M::Silence) && !u.has(M::Hex);
     }
-    if u.abil[slot].ready_at > w.tick || u.mana < a.mana_at(level) * 1000 {
+    // an ability with no cooldown (Return Chakram) ignores its slot's timer
+    if (a.cooldown_at(level) > 0 && u.abil[slot].ready_at > w.tick) || u.mana < a.mana_at(level) * 1000 {
         return false;
     }
     if u.has(M::Silence) || u.has(M::Hex) || u.has(M::Stun) {
@@ -243,7 +279,9 @@ pub fn fire(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
     {
         let u = w.get_mut(id).expect("checked");
         u.mana -= cost;
-        u.abil[slot].ready_at = ready;
+        if a.cooldown_at(level) > 0 {
+            u.abil[slot].ready_at = ready;
+        }
     }
     let here = w.get(id).expect("checked").pos();
     w.event(EV_CAST, k as i32, 0, here);
@@ -473,6 +511,8 @@ fn zone(w: &mut World, src: Uid, at: P, radius: i32, k: usize, level: i32, delay
         until,
         next: start + delay,
         a,
+        to: at,
+        done: Vec::new(),
     });
 }
 
@@ -756,12 +796,210 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
                 combat::damage(w, ctx, id, t, a.v("damage", lv), Dmg::Magic);
             }
         }
+        // Whirling Axes, ranged: five axes fan out in a cone from a tip `tip`
+        // wide to a base `base` wide, `range` ahead (DotA 6.72c; the
+        // guide's measured triangle, notes/LITERATURE.md 7.1)
+        "whirling_axes" => {
+            let range = a.range_at(lv);
+            let end = toward(here, at, range);
+            let (dx, dy) = ((end[0] - here[0]) as i64, (end[1] - here[1]) as i64);
+            let len = (fx::isqrt((dx * dx + dy * dy) as u64) as i64).max(1);
+            let n = a.v("axes", lv).max(1);
+            for i in 0..n {
+                // -1..1 across the fan, in hundredths
+                let f = if n == 1 {
+                    0
+                } else {
+                    (i * 200 / (n - 1) - 100) as i64
+                };
+                let side = |w: i32| {
+                    let off = w as i64 / 2 * f / 100;
+                    [(-dy * off / len) as i32, (dx * off / len) as i32]
+                };
+                let (s0, s1) = (side(a.v("tip", lv)), side(a.v("base", lv)));
+                let from = [here[0] + s0[0], here[1] + s0[1]];
+                let to = [end[0] + s1[0], end[1] + s1[1]];
+                point_missile(w, id, from, to, a.v("speed", lv), k, lv, missile_of(ctx, k));
+            }
+        }
+        // Whirling Axes, melee: two axes spin out round the caster and back
+        "whirling_axes_melee" => {
+            let out = secs_x100(w, a.v("out", lv)) - w.tick;
+            zone(w, id, here, a.v("radius", lv), k, lv, 0, w.tick + out * 2, 0);
+        }
+        // Battle Trance: every allied hero on the map, twice as long on the caster
+        "battle_trance" => {
+            let heroes: Vec<Uid> = w
+                .units
+                .iter()
+                .filter(|u| u.alive && u.team == team && u.hero.is_some() && !u.has(M::Illusion))
+                .map(|u| u.id)
+                .collect();
+            for h in heroes {
+                let d = if h == id {
+                    a.v("self_duration", lv)
+                } else {
+                    a.v("duration", lv)
+                };
+                let until = secs_x100(w, d);
+                add(w, h, M::AttackPct, id, until, a.v("attack_speed", lv), tg, true);
+            }
+        }
+        // Whirling Death: cuts trees; pure damage if any fell, magic if not;
+        // enemy heroes lose a share of their primary attribute (the debuff
+        // pierces spell immunity, the damage does not)
+        "whirling_death" => {
+            let r = a.v("radius", lv);
+            let before = w.tree_version;
+            w.cut_trees_in(ctx, here, r);
+            let kind = if w.tree_version != before {
+                Dmg::Pure
+            } else {
+                Dmg::Magic
+            };
+            let until = secs_x100(w, a.v("duration", lv));
+            for v in enemies_near(w, ctx, team, here, r, true) {
+                let Some(u) = w.get(v) else { continue };
+                if !u.has(M::SpellImmune) {
+                    combat::damage(w, ctx, id, v, a.v("damage", lv), kind);
+                }
+                let Some(u) = w.live(v) else { continue };
+                let d = &ctx.rules.units[u.def as usize];
+                let Some(attrs) = d.attrs.as_ref().filter(|_| u.hero.is_some()) else {
+                    continue;
+                };
+                let idx = match attrs.primary {
+                    crate::rules::Attr::Str => 0,
+                    crate::rules::Attr::Agi => 1,
+                    crate::rules::Attr::Int => 2,
+                };
+                let was = stats::of(ctx, w, v);
+                w.add_mod(
+                    v,
+                    Mod {
+                        kind: M::Tag,
+                        src: id,
+                        until,
+                        a: a.v("attr_pct", lv),
+                        b: TAG_ATTR_PCT + idx,
+                        tag: tg,
+                    },
+                );
+                keep_share(w, ctx, v, was);
+            }
+        }
+        // Timber Chain: the chain flies toward the point and holds the first
+        // tree within `latch` of its path; with no tree it flies its full
+        // range and nothing follows
+        "timber_chain" => {
+            let end = toward(here, at, a.range_at(lv));
+            let to = match first_tree(w, ctx, here, end, a.v("latch", lv)) {
+                Some(i) => ctx.terrain.tree_centre(i),
+                None => end,
+            };
+            point_missile(w, id, here, to, a.v("speed", lv), k, lv, missile_of(ctx, k));
+        }
+        // Chakram: the blade flies out, spins, and comes back (`pulse`); the
+        // caster cannot attack while it is out, and Return Chakram holds the slot
+        "chakram" => {
+            let to = toward(here, at, dist(here, at).min(a.range_at(lv)));
+            zone(w, id, here, a.v("radius", lv), k, lv, 0, u32::MAX, 0);
+            if let Some(z) = w.zones.last_mut() {
+                z.to = to;
+            }
+            add(w, id, M::Disarm, id, 0, 0, tg, true);
+            w.add_mod(
+                id,
+                Mod {
+                    kind: M::Tag,
+                    src: id,
+                    until: 0,
+                    a: 0,
+                    b: TAG_BLADE_OUT,
+                    tag: tg,
+                },
+            );
+        }
+        // Return Chakram: the blade turns for home
+        "return_chakram" => {
+            for z in w.zones.iter_mut() {
+                if z.src == id && ctx.rules.abilities[z.ability as usize].logic == "chakram" && z.a < 2 {
+                    z.a = 2;
+                    z.done.clear();
+                }
+            }
+        }
         _ => {}
     }
 }
 
+/// The first standing tree (not the map's rim) within `r` of the segment
+/// from `a` to `b`, nearest `a` first.
+fn first_tree(w: &World, ctx: &Ctx, a: P, b: P, r: i32) -> Option<usize> {
+    let t = ctx.terrain;
+    let len = dist(a, b).max(1);
+    let step = 16;
+    let mut d = 0;
+    while d <= len {
+        let p = [a[0] + (b[0] - a[0]) * d / len, a[1] + (b[1] - a[1]) * d / len];
+        let tc = t.tree_cell;
+        let (x0, y0) = ((p[0] - r) / tc, (p[1] - r) / tc);
+        let (x1, y1) = ((p[0] + r) / tc, (p[1] + r) / tc);
+        let mut best: Option<(i64, usize)> = None;
+        for cy in y0.max(2)..=y1.min(t.tw - 3) {
+            for cx in x0.max(2)..=x1.min(t.tw - 3) {
+                let i = (cy * t.tw + cx) as usize;
+                if matches!(w.trees[i], crate::map::Tree::Standing) {
+                    let d2 = dist2(t.tree_centre(i), p);
+                    if d2 <= r as i64 * r as i64 && best.map(|(b, _)| d2 < b).unwrap_or(true) {
+                        best = Some((d2, i));
+                    }
+                }
+            }
+        }
+        if let Some((_, i)) = best {
+            return Some(i);
+        }
+        d += step;
+    }
+    None
+}
+
 fn toggled(w: &mut World, ctx: &Ctx, id: Uid, k: usize, lv: i32, on: bool) {
     let a = &ctx.rules.abilities[k];
+    if a.logic == "berserker_rage" {
+        // Berserker Rage: melee form on or off, keeping the share of health;
+        // Whirling Axes keeps a cooldown for each form, so the two timers
+        // swap (the other form's in the slot's `count`)
+        let before = stats::of(ctx, w, id);
+        if on {
+            add(w, id, M::Damage, id, 0, a.v("damage", lv), tag(k), true);
+            add(w, id, M::Armor, id, 0, a.v("armor", lv), tag(k), true);
+            w.add_mod(
+                id,
+                Mod {
+                    kind: M::Tag,
+                    src: id,
+                    until: 0,
+                    a: a.v("move", lv),
+                    b: TAG_BERSERK,
+                    tag: tag(k),
+                },
+            );
+        } else {
+            w.remove_mods(id, tag(k));
+        }
+        if let Some((slot, _, _)) = has_logic(ctx, w, id, "whirling_axes") {
+            if let Some(u) = w.get_mut(id) {
+                let s = &mut u.abil[slot];
+                let other = s.count.max(0) as u32;
+                s.count = s.ready_at as i32;
+                s.ready_at = other;
+            }
+        }
+        keep_share(w, ctx, id, before);
+        return;
+    }
     if a.logic == "rot" {
         if on {
             let here = w.get(id).expect("checked").pos();
@@ -802,6 +1040,162 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
     let tg = tag(k);
     let src_alive = w.live(z.src).is_some();
     match a.logic.as_str() {
+        // two axes on a circle round the caster, out to `radius` (less an
+        // axe's own reach) and back, a turn a second; each enemy hit once
+        "whirling_axes_melee" => {
+            let Some(u) = w.live(z.src) else {
+                z.until = 0;
+                return;
+            };
+            z.at = u.pos();
+            let out = (z.until - z.start).max(2) / 2;
+            let t = w.tick - z.start;
+            let orbit = z.radius - a.v("axe_radius", lv);
+            let r = if t < out {
+                orbit * t as i32 / out as i32
+            } else {
+                orbit * (2 * out - t.min(2 * out)) as i32 / out as i32
+            };
+            let turn = (t as i32 * fx::TURN / TPS) & (fx::TURN - 1);
+            let until = secs_x100(w, a.v("duration", lv));
+            for half in [0, fx::TURN / 2] {
+                let ang = turn + half;
+                let axe = [
+                    z.at[0] + fx::mul(fx::cos(ang), fx::int(r)) / fx::ONE,
+                    z.at[1] + fx::mul(fx::sin(ang), fx::int(r)) / fx::ONE,
+                ];
+                for v in enemies_near(w, ctx, z.team, axe, a.v("axe_radius", lv), false) {
+                    if z.done.contains(&v) {
+                        continue;
+                    }
+                    z.done.push(v);
+                    combat::damage(w, ctx, z.src, v, a.v("damage", lv), Dmg::Magic);
+                    w.add_mod(
+                        v,
+                        Mod {
+                            kind: M::Tag,
+                            src: z.src,
+                            until,
+                            a: a.v("miss", lv),
+                            b: TAG_BLIND,
+                            tag: tg,
+                        },
+                    );
+                }
+            }
+            z.next = w.tick + 1;
+        }
+        // Timber Chain's pull: the caster flies to the tree, cutting enemies
+        // within `radius` of his path once each; the tree falls when he lands
+        "timber_chain" => {
+            let Some(u) = w.live(z.src) else {
+                z.until = 0;
+                return;
+            };
+            let here = u.pos();
+            let step = (z.a / TPS).max(1);
+            let left = dist(here, z.to);
+            let next = if left <= step + 32 {
+                z.to
+            } else {
+                toward(here, z.to, step)
+            };
+            for v in in_line(w, ctx, z.team, here, next, z.radius, false) {
+                if !z.done.contains(&v) {
+                    z.done.push(v);
+                    combat::damage(w, ctx, z.src, v, a.v("damage", lv), Dmg::Pure);
+                }
+            }
+            if let Some(u) = w.get_mut(z.src) {
+                u.x = next[0] * SUB;
+                u.y = next[1] * SUB;
+                u.path.clear();
+            }
+            if next == z.to {
+                if let Some(i) = ctx.terrain.tree_index(z.to[0], z.to[1]) {
+                    w.cut_tree(ctx, i);
+                }
+                w.remove_mods(z.src, tg);
+                z.until = 0;
+                return;
+            }
+            z.next = w.tick + 1;
+        }
+        // Chakram: out to its point (phase 0), spinning there (1), back to
+        // the caster (2). Pure damage to enemies it passes, once each way;
+        // trees on its path and in its circle fall; spinning, every `tick`
+        // it deals its damage and takes its mana, and slows enemies in it
+        // by 5% for each 5% of health they are missing. It turns home when
+        // the caster is out of mana or more than `leash` away.
+        "chakram" => {
+            let Some(u) = w.live(z.src) else {
+                z.until = 0;
+                return;
+            };
+            let caster = u.pos();
+            let step = (a.v("speed", lv) / TPS).max(1);
+            if z.a == 2 {
+                z.to = caster;
+            }
+            if z.a != 1 {
+                let left = dist(z.at, z.to);
+                let next = if left <= step {
+                    z.to
+                } else {
+                    toward(z.at, z.to, step)
+                };
+                for v in in_line(w, ctx, z.team, z.at, next, z.radius, false) {
+                    if !z.done.contains(&v) {
+                        z.done.push(v);
+                        combat::damage(w, ctx, z.src, v, a.v("pass_damage", lv), Dmg::Pure);
+                    }
+                }
+                z.at = next;
+                w.cut_trees_in(ctx, z.at, z.radius);
+                if next == z.to {
+                    if z.a == 2 {
+                        w.remove_mods(z.src, tg);
+                        z.until = 0;
+                        return;
+                    }
+                    z.a = 1;
+                    z.done.clear();
+                    // the first spin tick comes one tick-length after it stops
+                    z.start = secs_x100(w, a.v("tick", lv));
+                }
+            } else {
+                let every = secs_x100(w, a.v("tick", lv)) - w.tick;
+                for v in enemies_near(w, ctx, z.team, z.at, z.radius, false) {
+                    let s = stats::of(ctx, w, v);
+                    let hp = w.get(v).map(|u| u.hp).unwrap_or(0);
+                    let missing = 100 - (hp as i64 * 100 / (s.max_hp.max(1) as i64 * 1000)) as i32;
+                    let pct = ((missing / 5) * 5 + 5).min(100);
+                    slow(w, z.src, v, pct, 0, a.v("tick", lv), tg);
+                }
+                if w.tick >= z.start {
+                    let cost = a.v("drain", lv) * 1000 * a.v("tick", lv) / 100;
+                    let mana = w.get(z.src).map(|u| u.mana).unwrap_or(0);
+                    if mana < cost || dist(caster, z.at) > a.v("leash", lv) {
+                        z.a = 2;
+                        z.done.clear();
+                    } else {
+                        if let Some(u) = w.get_mut(z.src) {
+                            u.mana -= cost;
+                        }
+                        let dmg = a.v("dps", lv) * 1000 * a.v("tick", lv) / 100;
+                        for v in enemies_near(w, ctx, z.team, z.at, z.radius, false) {
+                            combat::damage_milli(w, ctx, z.src, v, dmg, Dmg::Pure, false);
+                        }
+                        z.start = w.tick + every;
+                    }
+                }
+                if dist(caster, z.at) > a.v("leash", lv) {
+                    z.a = 2;
+                    z.done.clear();
+                }
+            }
+            z.next = w.tick + 1;
+        }
         "light_strike" => {
             w.mark(MK_LAND, k, z.src, NO_UNIT, z.at);
             for v in enemies_near(w, ctx, z.team, z.at, z.radius, false) {
@@ -1019,6 +1413,21 @@ pub fn missile_passes(w: &mut World, ctx: &Ctx, m: &mut Missile) {
     let a = &ctx.rules.abilities[k];
     let at = [m.x / SUB, m.y / SUB];
     match a.logic.as_str() {
+        // Whirling Axes, ranged: each enemy is hit once a cast, by the first
+        // axe to reach it (its slow from this cast marks it)
+        "whirling_axes" => {
+            for v in enemies_near(w, ctx, m.team, at, a.v("radius", level), false) {
+                let hit = w
+                    .get(v)
+                    .map(|u| u.mods.iter().any(|x| x.tag == tag(k) && x.src == m.src))
+                    .unwrap_or(true);
+                if !hit && !m.done.contains(&v) {
+                    m.done.push(v);
+                    combat::damage(w, ctx, m.src, v, a.v("damage", level), Dmg::Magic);
+                    slow(w, m.src, v, a.v("slow", level), 0, a.v("duration", level), tag(k));
+                }
+            }
+        }
         "dragon_slave" => {
             let r = a.v("width", level);
             for v in enemies_near(w, ctx, m.team, at, r, false) {
@@ -1090,6 +1499,40 @@ pub fn missile_arrives(w: &mut World, ctx: &Ctx, m: &Missile) {
         "assassinate" | "laguna_missile" => {
             combat::damage(w, ctx, m.src, m.t, a.v("damage", level), Dmg::Magic);
             stun(w, ctx, m.src, m.t, a.v("stun", level), tag(k));
+        }
+        // Timber Chain: holding a tree, the chain pulls the caster to it,
+        // unless he is stunned as it holds (DotA 6.73's rule)
+        "timber_chain" => {
+            let to = [m.to[0] / SUB, m.to[1] / SUB];
+            let held = ctx.terrain.tree_index(to[0], to[1]).filter(|&i| {
+                matches!(w.trees[i], crate::map::Tree::Standing) && ctx.terrain.tree_centre(i) == to
+            });
+            let Some(caster) = w.live(m.src) else { return };
+            if held.is_none() || caster.has(M::Stun) {
+                return;
+            }
+            let at = caster.pos();
+            zone(
+                w,
+                m.src,
+                at,
+                a.v("radius", level),
+                k,
+                level,
+                0,
+                u32::MAX,
+                a.v("speed", level),
+            );
+            if let Some(z) = w.zones.last_mut() {
+                z.to = to;
+            }
+            // pulled: no walking or attacking until he lands
+            add(w, m.src, M::Root, m.src, 0, 0, tag(k), true);
+            add(w, m.src, M::Disarm, m.src, 0, 0, tag(k), true);
+            if let Some(u) = w.get_mut(m.src) {
+                u.path.clear();
+                u.act = Act::None;
+            }
         }
         _ => {}
     }
@@ -1168,6 +1611,65 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
             stun(w, ctx, src, dst, a.v("stun", lv), tag(k));
         }
     }
+    // Fervor: each attack on the same target adds to the attack speed, up to
+    // `stacks`; a new target starts the count again at one (the slot's
+    // `count` holds the stacks, its unused `ready_at` the last target)
+    if let Some((slot, k, lv)) = has_logic(ctx, w, src, "fervor") {
+        let a = &ctx.rules.abilities[k];
+        if w.get(dst).map(|v| v.team != team).unwrap_or(false) {
+            let stacks = if let Some(u) = w.get_mut(src) {
+                let s = &mut u.abil[slot];
+                s.count = if s.ready_at == dst {
+                    (s.count + 1).min(a.v("stacks", lv))
+                } else {
+                    1
+                };
+                s.ready_at = dst;
+                s.count
+            } else {
+                0
+            };
+            add(
+                w,
+                src,
+                M::AttackPct,
+                src,
+                0,
+                stacks * a.v("attack_speed", lv),
+                tag(k),
+                true,
+            );
+        }
+    }
+    // Berserker Rage's bash, in melee form only: plain random as in DotA
+    // (pseudo-random came with the Dota 2 port), and its stun pierces
+    // spell immunity
+    if let Some((_, k, lv)) = has_logic(ctx, w, src, "berserker_rage") {
+        let a = &ctx.rules.abilities[k];
+        let melee = w.get(src).map(berserk).unwrap_or(false);
+        let foe = w
+            .get(dst)
+            .map(|v| v.team != team && !ctx.rules.units[v.def as usize].kind.is_building())
+            .unwrap_or(false);
+        if melee && foe && w.rng.below(100) < a.v("bash_chance", lv) as u32 {
+            w.mark(MK_PROC, k, src, dst, dst_pos);
+            combat::damage(w, ctx, src, dst, a.v("bash_damage", lv), Dmg::Magic);
+            let until = secs_x100(w, a.v("bash_stun", lv));
+            if let Some(v) = w.get_mut(dst) {
+                if v.alive && !v.mods.iter().any(|m| m.kind == M::Stun && m.until >= until) {
+                    v.mods.retain(|m| m.kind != M::Stun);
+                    v.mods.push(Mod {
+                        kind: M::Stun,
+                        src,
+                        until,
+                        a: 0,
+                        b: 0,
+                        tag: tag(k),
+                    });
+                }
+            }
+        }
+    }
     if let Some((_, k, lv)) = has_logic(ctx, w, src, "bash") {
         let a = &ctx.rules.abilities[k];
         if combat::prd(w, src, 1, a.v("chance", lv)) {
@@ -1189,6 +1691,40 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
             }
         }
     }
+}
+
+/// An attack on `dst` begins (Warcraft III's "unit is attacked"): Reactive
+/// Armor gains a stack, each with its own timer, the oldest giving way at
+/// the most.
+pub fn attacked(w: &mut World, ctx: &Ctx, dst: Uid, _src: Uid) {
+    let Some((_, k, lv)) = has_logic(ctx, w, dst, "reactive_armor") else {
+        return;
+    };
+    let a = &ctx.rules.abilities[k];
+    let tg = tag(k);
+    let Some(u) = w.get_mut(dst) else { return };
+    let held: Vec<u32> = u
+        .mods
+        .iter()
+        .filter(|m| m.tag == tg && m.kind == M::Armor)
+        .map(|m| m.until)
+        .collect();
+    if held.len() as i32 >= a.v("stacks", lv) {
+        if let Some(&oldest) = held.iter().min() {
+            for kind in [M::Armor, M::Regen] {
+                if let Some(i) = u
+                    .mods
+                    .iter()
+                    .position(|m| m.tag == tg && m.kind == kind && m.until == oldest)
+                {
+                    u.mods.remove(i);
+                }
+            }
+        }
+    }
+    let until = secs_x100(w, a.v("duration", lv));
+    add(w, dst, M::Armor, dst, until, a.v("armor", lv), tg, false);
+    add(w, dst, M::Regen, dst, until, a.v("regen", lv), tg, false);
 }
 
 /// Auras, renewed every tick for the units in reach: Brilliance Aura,
@@ -1234,7 +1770,7 @@ fn auras(w: &mut World, ctx: &Ctx) {
                     // 6.72: each ranged ally gains a share of its own base damage
                     let allies = w.near(here, reach, |u| {
                         u.team == team
-                            && ctx.rules.units[u.def as usize].missile > 0
+                            && (ctx.rules.units[u.def as usize].missile > 0 && !berserk(u))
                             && !ctx.rules.units[u.def as usize].kind.is_building()
                     });
                     for ally in allies {

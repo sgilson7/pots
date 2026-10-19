@@ -1,0 +1,77 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{xcolor}
+\definecolor{arcane}{HTML}{8752C4}
+\definecolor{arcanetab}{HTML}{9A62D6}
+\definecolor{armaments}{HTML}{6E7FA0}
+\definecolor{attributes}{HTML}{3FA79A}
+\definecolor{basics}{HTML}{C9A46A}
+\definecolor{blood}{HTML}{C2303C}
+\definecolor{bone}{HTML}{EFE6CF}
+\definecolor{caster}{HTML}{C24FA6}
+\definecolor{cloth}{HTML}{E9DCC0}
+\definecolor{cloud}{HTML}{EEF4FA}
+\definecolor{common}{HTML}{8DB05A}
+\definecolor{consumables}{HTML}{E36A8A}
+\definecolor{earth}{HTML}{9A6838}
+\definecolor{ember}{HTML}{D8421E}
+\definecolor{fire}{HTML}{EE7F22}
+\definecolor{flame}{HTML}{FF9A1F}
+\definecolor{flamehot}{HTML}{FFE15A}
+\definecolor{frost}{HTML}{4F9BDB}
+\definecolor{gold}{HTML}{F4BF3A}
+\definecolor{golddark}{HTML}{B9821F}
+\definecolor{heal}{HTML}{6ED36A}
+\definecolor{ice}{HTML}{C9EEFF}
+\definecolor{icedeep}{HTML}{6FC2EE}
+\definecolor{ink}{HTML}{2B1631}
+\definecolor{iron}{HTML}{5C6470}
+\definecolor{leaf}{HTML}{5DB04A}
+\definecolor{leather}{HTML}{8E5A36}
+\definecolor{life}{HTML}{E2364A}
+\definecolor{mana}{HTML}{3E7BE0}
+\definecolor{moss}{HTML}{6E8F45}
+\definecolor{night}{HTML}{3A2E5C}
+\definecolor{paper}{HTML}{FFF8EC}
+\definecolor{protect}{HTML}{2F6BB5}
+\definecolor{relictab}{HTML}{E8B330}
+\definecolor{rot}{HTML}{62A43A}
+\definecolor{secret}{HTML}{3D3F86}
+\definecolor{shade}{HTML}{5A4560}
+\definecolor{skin}{HTML}{F1C6A0}
+\definecolor{skingrey}{HTML}{A8A2B4}
+\definecolor{skinpale}{HTML}{E6D7C3}
+\definecolor{snow}{HTML}{FFFFFF}
+\definecolor{spark}{HTML}{FFF27A}
+\definecolor{steel}{HTML}{C9D2DC}
+\definecolor{steeldark}{HTML}{7D8896}
+\definecolor{steelrim}{HTML}{7F8C9C}
+\definecolor{stone}{HTML}{A99A86}
+\definecolor{stonedark}{HTML}{73665A}
+\definecolor{storm}{HTML}{9CCBEB}
+\definecolor{support}{HTML}{48B7C9}
+\definecolor{venom}{HTML}{9BD13B}
+\definecolor{violet}{HTML}{B57BF0}
+\definecolor{weapons}{HTML}{B8402F}
+\definecolor{wood}{HTML}{B57A45}
+\definecolor{wooddark}{HTML}{7E4F2A}
+\newlength{\Ink}\setlength{\Ink}{2.2pt}
+\tikzset{inked/.style={draw=ink,line width=\Ink,line join=round,line cap=round}}
+\begin{document}
+\begin{tikzpicture}
+\useasboundingbox (0,0) rectangle (2,2);
+\clip (0,0) rectangle (2,2);
+\filldraw[inked,fill=blood] (1,1) circle (0.9);
+\filldraw[inked,fill=blood!34!paper] (1,1) circle (0.74);
+\draw[draw=blood!45!paper,line width=2pt,line cap=round,line join=round] (0.615,1.724) -- (0.565,1.695) -- (0.518,1.663) -- (0.473,1.628) -- (0.43,1.59) -- (0.391,1.549) -- (0.354,1.505) -- (0.32,1.459) -- (0.29,1.41);
+\draw[draw=ink,line width=2.4pt,line cap=round,line join=round] plot[smooth, tension=0.6] coordinates {(1.47,0.997) (1.441,1.048) (1.405,1.095) (1.36,1.138) (1.308,1.175) (1.25,1.206) (1.187,1.231) (1.121,1.248) (1.052,1.258) (0.983,1.26) (0.913,1.254) (0.845,1.24) (0.781,1.22) (0.72,1.192) (0.665,1.157) (0.617,1.117) (0.576,1.072) (0.543,1.023)};
+\draw[draw=ink,line width=2.4pt,line cap=round,line join=round] plot[smooth, tension=0.6] coordinates {(1.62,1.041) (1.583,1.108) (1.534,1.17) (1.475,1.227) (1.406,1.276) (1.33,1.317) (1.247,1.35) (1.16,1.372) (1.069,1.385) (0.977,1.388) (0.885,1.38) (0.796,1.362) (0.711,1.335) (0.631,1.298) (0.558,1.252) (0.494,1.199) (0.44,1.14) (0.397,1.075)};
+\draw[draw=ink,line width=2.4pt,line cap=round,line join=round] plot[smooth, tension=0.6] coordinates {(1.771,1.084) (1.724,1.168) (1.663,1.246) (1.59,1.316) (1.505,1.377) (1.41,1.428) (1.307,1.468) (1.198,1.497) (1.086,1.512) (0.971,1.516) (0.858,1.506) (0.747,1.484) (0.641,1.45) (0.541,1.404) (0.451,1.348) (0.372,1.282) (0.305,1.208) (0.251,1.127)};
+\filldraw[inked,fill=leather] (1,0.72) ellipse (0.42 and 0.14);
+\filldraw[inked,fill=flame] (0.58,0.44) -- (1.42,0.44) -- (1.42,0.72) -- (0.58,0.72) -- cycle;
+\filldraw[inked,fill=leather] (1,0.44) ellipse (0.42 and 0.14);
+\filldraw[inked,fill=skin] (1,0.72) ellipse (0.36 and 0.1);
+\draw[draw=golddark,line width=1.6pt,line cap=round,line join=round] (0.86,0.72) -- (0.86,0.44);
+\draw[draw=golddark,line width=1.6pt,line cap=round,line join=round] (1.14,0.72) -- (1.14,0.44);
+\draw[draw=wooddark,line width=3pt,line cap=round,line join=round] (0.5,1.2) -- (0.86,0.8);
+\end{tikzpicture}
+\end{document}

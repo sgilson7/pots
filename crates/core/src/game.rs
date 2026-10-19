@@ -328,7 +328,7 @@ impl Game {
     pub fn arcade_deal(&self) -> [u8; PLAYERS] {
         let mut rerolled = [false; PLAYERS];
         rerolled[0] = self.setup.rerolled;
-        crate::aram::deal(self.arcade_seed(), self.rules.heroes.len(), &rerolled)
+        crate::aram::deal(self.arcade_seed(), self.rules.roster, &rerolled)
     }
 
     pub fn start_arcade(&mut self) {
@@ -833,7 +833,8 @@ impl Game {
         };
         let (range, area, color, on) = match aim {
             Aim::Ability(s) => {
-                let Some(&k) = self.rules.unit_abilities[u.def as usize].get(s as usize) else {
+                // the slot's ability as it stands (Whirling Axes' form, Return Chakram)
+                let Some((k, _)) = crate::ability::slot_info(&self.ctx(), &m.world, hero, s as usize) else {
                     return o;
                 };
                 let a = &self.rules.abilities[k];
@@ -1011,9 +1012,11 @@ impl Game {
         let Some(m) = self.m.as_ref() else { return };
         let Some(u) = m.world.get(hero) else { return };
         let target = match aim {
-            Aim::Ability(s) => self.rules.unit_abilities[u.def as usize]
-                .get(s as usize)
-                .map(|&k| self.rules.abilities[k].target),
+            Aim::Ability(s) => {
+                let ctx = self.ctx();
+                crate::ability::slot_info(&ctx, &m.world, hero, s as usize)
+                    .map(|(k, _)| self.rules.abilities[k].target)
+            }
             Aim::Item(s) => u
                 .items
                 .get(s as usize)
@@ -1182,13 +1185,20 @@ impl Game {
                 // cast:<ability id>,<ticks>: its hero, at full levels and mana,
                 // casts it at three enemy creeps beside an enemy hero, with an
                 // ally at its side; the picture is `ticks` after the order
-                let (id, t) = arg.split_once(',').unwrap_or((arg, "30"));
+                // a third part, `close`, brings the camera to its nearest (round 7)
+                let mut parts = arg.splitn(3, ',');
+                let id = parts.next().unwrap_or(arg);
+                let t = parts.next().unwrap_or("30");
+                let close = parts.next() == Some("close");
                 let ticks: u32 = t.parse().map_err(|_| format!("\"{t}\" is not a number."))?;
                 let w = self.cast_world(id, ticks)?;
                 let hero = w.players[0].hero;
                 self.begin(w, 0, None, false);
                 if let Some(u) = self.m.as_ref().and_then(|m| m.world.get(hero)) {
                     self.view.target = [u.pos()[0] + 250, u.pos()[1]];
+                }
+                if close {
+                    self.view.distance = self.look.zoom_min * ONE / 100;
                 }
                 if let Some(m) = self.m.as_mut() {
                     m.paused = true;
@@ -1244,7 +1254,7 @@ impl Game {
                 targets[side as usize].push(id);
             }
         }
-        let ranged: Vec<usize> = (0..self.rules.heroes.len())
+        let ranged: Vec<usize> = (0..self.rules.roster)
             .filter(|&r| self.rules.units[self.rules.heroes[r]].missile > 0)
             .collect();
         let mut shooters = Vec::new();
@@ -1303,17 +1313,27 @@ impl Game {
             .iter()
             .position(|a| a.id == id)
             .ok_or_else(|| format!("There is no ability \"{id}\"."))?;
+        // an ability that takes another's slot (round 7: Whirling Axes up
+        // close, Return Chakram) is cast from that slot, its condition first
+        let base = (0..self.rules.abilities.len())
+            .find(|&b| self.rules.ability_alt[b] == Some(k))
+            .unwrap_or(k);
+        let first = if base == k {
+            ""
+        } else {
+            self.rules.abilities[base].alt_when.as_str()
+        };
         let (roster, slot) = (0..self.rules.heroes.len())
             .find_map(|r| {
                 self.rules.unit_abilities[self.rules.heroes[r]]
                     .iter()
-                    .position(|&a| a == k)
+                    .position(|&a| a == base)
                     .map(|s| (r, s))
             })
             .ok_or_else(|| format!("No hero casts \"{id}\"."))?;
         let ctx = self.ctx();
         let mut w = self.new_world(self.seed);
-        let n = self.rules.heroes.len();
+        let n = self.rules.roster;
         let spot = [self.rules.map.size / 2 - 900, self.rules.map.size / 2 - 900];
         let put = |w: &mut World, player: usize, r: usize, at: P| {
             w.players[player].present = true;
@@ -1354,13 +1374,50 @@ impl Game {
         } else {
             creeps[1]
         };
-        let at = w.get(t).map(|u| u.pos()).unwrap_or(spot);
+        let mut at = w.get(t).map(|u| u.pos()).unwrap_or(spot);
+        // Timber Chain is aimed at the nearest tree in range, so the pull shows
+        if self.rules.abilities[k].logic == "timber_chain" {
+            let here = w.get(me).map(|u| u.pos()).unwrap_or(spot);
+            let range = self.rules.abilities[k].range_at(4);
+            let tt = &self.terrain;
+            let near = (0..(tt.tw * tt.tw) as usize)
+                .filter(|&i| matches!(w.trees[i], crate::map::Tree::Standing))
+                .map(|i| (crate::world::dist(tt.tree_centre(i), here), i))
+                .filter(|&(d, _)| d > 300 && d < range)
+                .min();
+            if let Some((_, i)) = near {
+                at = tt.tree_centre(i);
+            }
+        }
         let cmd = match self.rules.abilities[k].target {
             crate::rules::Target::Passive => Cmd::Attack(creeps[1]),
             _ => Cmd::Cast(slot as u8, t, at),
         };
         let _ = foe;
+        match first {
+            // Berserker Rage on, for the melee Whirling Axes
+            "berserk" => {
+                let rage = self.rules.unit_abilities[self.rules.heroes[roster]]
+                    .iter()
+                    .position(|&a| self.rules.abilities[a].logic == "berserker_rage");
+                if let Some(s) = rage {
+                    w.step(&ctx, &[(0, Cmd::Cast(s as u8, NO_UNIT, at))]);
+                }
+            }
+            // the blade out and spinning, for Return Chakram
+            "blade_out" => {
+                w.step(&ctx, &[(0, Cmd::Cast(slot as u8, t, at))]);
+                for _ in 0..TPS * 2 {
+                    w.step(&ctx, &[]);
+                }
+            }
+            _ => {}
+        }
         w.step(&ctx, &[(0, cmd)]);
+        // Berserker Rage: in melee form, Hackle then swings at the creep
+        if self.rules.abilities[k].logic == "berserker_rage" {
+            w.step(&ctx, &[(0, Cmd::Attack(creeps[1]))]);
+        }
         for _ in 1..ticks {
             w.step(&ctx, &[]);
         }
@@ -1593,7 +1650,7 @@ impl Game {
             }
             "pick" => {
                 let k = num()?;
-                if k < 0 || k as usize >= self.rules.heroes.len() {
+                if k < 0 || k as usize >= self.rules.roster {
                     return Err("There is no such hero.".into());
                 }
                 let online_aram = self.screen.starts_with("online") && self.online.aram;

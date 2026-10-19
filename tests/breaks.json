@@ -642,5 +642,131 @@
   "find": "    sell.off = value.is_none();",
   "replace": "    sell.off = false;",
   "test": "with_the_shop_open_a_carried_item_can_be_picked_and_sold_with_a_button"
+ },
+ {
+  "name": "round 7g: melee form keeps the ranged range",
+  "file": "crates/core/src/stats.rs",
+  "find": "                    s.range = a.v(\"range\", 1);\n",
+  "replace": "",
+  "test": "red_tusk_turns_hackle_to_melee_with_its_bonuses_and_back"
+ },
+ {
+  "name": "round 7g: melee form loses the share of health",
+  "file": "crates/core/src/ability.rs",
+  "find": "        keep_share(w, ctx, id, before);\n        return;\n    }\n    if a.logic == \"rot\" {",
+  "replace": "        return;\n    }\n    if a.logic == \"rot\" {",
+  "test": "red_tusk_turns_hackle_to_melee_with_its_bonuses_and_back"
+ },
+ {
+  "name": "round 7g: one cooldown for both hatchet forms",
+  "file": "crates/core/src/ability.rs",
+  "find": "                s.ready_at = other;",
+  "replace": "                let _ = other;",
+  "test": "hatchet_storm_is_the_ranged_cone_from_range_and_the_whirl_up_close_each_with_its_own_cooldown"
+ },
+ {
+  "name": "round 7g: every thrown hatchet hits",
+  "file": "crates/core/src/ability.rs",
+  "find": "                if !hit && !m.done.contains(&v) {",
+  "replace": "                if !m.done.contains(&v) {",
+  "test": "thrown_hatchets_hit_each_enemy_once_for_75_and_slow_it"
+ },
+ {
+  "name": "round 7g: the whirl hits again and again",
+  "file": "crates/core/src/ability.rs",
+  "find": "                    if z.done.contains(&v) {\n                        continue;\n                    }\n                    z.done.push(v);\n                    combat::damage(w, ctx, z.src, v, a.v(\"damage\", lv), Dmg::Magic);",
+  "replace": "                    z.done.push(v);\n                    combat::damage(w, ctx, z.src, v, a.v(\"damage\", lv), Dmg::Magic);",
+  "test": "the_whirl_up_close_hits_for_125_and_makes_enemies_miss"
+ },
+ {
+  "name": "round 7g: grudge never starts again",
+  "file": "crates/core/src/ability.rs",
+  "find": "                    1\n                };\n                s.ready_at = dst;",
+  "replace": "                    (s.count + 1).min(a.v(\"stacks\", lv))\n                };\n                s.ready_at = dst;",
+  "test": "grudge_adds_attack_speed_on_the_same_target_and_starts_again_on_a_new_one"
+ },
+ {
+  "name": "round 7g: grudge has no limit",
+  "file": "crates/core/src/ability.rs",
+  "find": "(s.count + 1).min(a.v(\"stacks\", lv))\n                } else {",
+  "replace": "s.count + 1\n                } else {",
+  "test": "grudge_adds_attack_speed_on_the_same_target_and_starts_again_on_a_new_one"
+ },
+ {
+  "name": "round 7g: war drums last as long on Hackle",
+  "file": "crates/core/src/ability.rs",
+  "find": "                    a.v(\"self_duration\", lv)\n",
+  "replace": "                    a.v(\"duration\", lv)\n",
+  "test": "war_drums_speeds_every_allied_hero_and_hackle_twice_as_long"
+ },
+ {
+  "name": "round 7g: splinter spin is never pure",
+  "file": "crates/core/src/ability.rs",
+  "find": "            let kind = if w.tree_version != before {",
+  "replace": "            let kind = if false {",
+  "test": "splinter_spin_is_pure_damage_when_it_cuts_a_tree"
+ },
+ {
+  "name": "round 7g: the attribute cut does nothing",
+  "file": "crates/core/src/stats.rs",
+  "find": "            *v -= *v * m.a / 100;",
+  "replace": "            let _ = v;",
+  "test": "splinter_spin_deals_magic_damage_without_trees_and_cuts_the_main_attribute"
+ },
+ {
+  "name": "round 7g: the claw never pulls",
+  "file": "crates/core/src/ability.rs",
+  "find": "                u.x = next[0] * SUB;\n                u.y = next[1] * SUB;\n                u.path.clear();\n            }\n            if next == z.to {",
+  "replace": "                u.path.clear();\n            }\n            if next == z.to {",
+  "test": "grapple_claw_pulls_chipper_to_the_first_tree_and_cuts_enemies_on_the_way"
+ },
+ {
+  "name": "round 7g: a stunned chipper is pulled",
+  "file": "crates/core/src/ability.rs",
+  "find": "            if held.is_none() || caster.has(M::Stun) {",
+  "replace": "            if held.is_none() {",
+  "test": "a_stunned_chipper_is_not_pulled_when_the_claw_holds"
+ },
+ {
+  "name": "round 7g: thick bark has no limit",
+  "file": "crates/core/src/ability.rs",
+  "find": "    if held.len() as i32 >= a.v(\"stacks\", lv) {",
+  "replace": "    if false {",
+  "test": "thick_bark_stacks_on_each_attack_begun_up_to_its_limit"
+ },
+ {
+  "name": "round 7g: thick bark never wears off",
+  "file": "crates/core/src/ability.rs",
+  "find": "    let until = secs_x100(w, a.v(\"duration\", lv));\n    add(w, dst, M::Armor,",
+  "replace": "    let until = 0;\n    add(w, dst, M::Armor,",
+  "test": "thick_bark_stacks_on_each_attack_begun_up_to_its_limit"
+ },
+ {
+  "name": "round 7g: chipper attacks with the blade out",
+  "file": "crates/core/src/ability.rs",
+  "find": "            add(w, id, M::Disarm, id, 0, 0, tg, true);",
+  "replace": "",
+  "test": "buzz_blade_flies_out_spins_drains_mana_and_comes_back_on_recall"
+ },
+ {
+  "name": "round 7g: the spinning blade costs no mana",
+  "file": "crates/core/src/ability.rs",
+  "find": "                        if let Some(u) = w.get_mut(z.src) {\n                            u.mana -= cost;\n                        }",
+  "replace": "",
+  "test": "buzz_blade_flies_out_spins_drains_mana_and_comes_back_on_recall"
+ },
+ {
+  "name": "round 7g: recall does nothing",
+  "file": "crates/core/src/ability.rs",
+  "find": "                    z.a = 2;\n                    z.done.clear();\n                }\n            }\n        }",
+  "replace": "                    z.a = z.a.min(1);\n                }\n            }\n        }",
+  "test": "buzz_blade_flies_out_spins_drains_mana_and_comes_back_on_recall"
+ },
+ {
+  "name": "round 7g: preview heroes on the roster",
+  "file": "crates/core/src/rules.rs",
+  "find": "        let roster = r.heroes.len();",
+  "replace": "        let roster = r.heroes.len() + r.preview_heroes.len();",
+  "test": "preview_heroes_cannot_be_chosen"
  }
 ]

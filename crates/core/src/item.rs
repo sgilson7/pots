@@ -682,7 +682,7 @@ pub fn before_attack(w: &mut World, ctx: &Ctx, src: Uid, raw: i32) -> Option<i32
 pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
     let Some(u) = w.get(src) else { return };
     let team = u.team;
-    let melee = ctx.rules.units[u.def as usize].missile == 0;
+    let melee = stats::missile(ctx, w, src) == 0;
     let items: Vec<usize> = u
         .items
         .iter()

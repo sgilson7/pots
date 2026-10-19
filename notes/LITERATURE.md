@@ -2592,3 +2592,185 @@ Each line below is a judgement drawn from the sources in §1–§5. The reason i
 - Lane creep armor type: "Unarmored" per playdota or "Medium" per Dota 2 (§2.3). It changes pierce damage by 2x.
 - Periodic gold: 0.875 or 0.8 s per gold before 6.79.
 - Creep aggro radius and duration in DotA 1, collision sizes, per-hero turn rates, map size, and the tower deny threshold. Read these from the 6.83d .w3x with a World Editor or an MPQ/SLK extractor (the object editor holds collision, turn rate, damage point and acquisition range directly).
+
+## 7. Round 7: two added heroes, Troll Warlord (Jah'rakal) and Goblin Shredder (Rizzrak, Dota 2's Timbersaw)
+
+Compiled 19 October 2026 by a research agent, with the same method as the sections above: playdota.com hero pages and IceFrog changelogs through the Wayback Machine (raw captures, compared against each other), the Dota 2 Wiki (Gamepedia) 2013–2015 snapshots and its DotA-era hero changelogs, and 2011–2012 player guides on playdota. fandom.com and Liquipedia returned 429 to direct fetches, so those were reached only through archived Gamepedia copies. Every number carries a source key; the keys are at the end of this section.
+
+### 7.0 Version findings
+
+1. **Goblin Shredder was added in 6.73, not 6.74.** The 6.73 changelog opens his entry with "New Strength Hero: Rizzrak, Goblin Shredder" [CL-6.73]; 6.73b and 6.73c fixed his growth values, attack range and Chakram drain [CL-6.73b], [CL-6.73c]. The first playdota hero-page capture is 2012-01-07 [PD-Shred-6.73]; the Dota 2 Wiki: "6.73: Created." [D2W-TimbCL]. **He is inside this game's 6.72/6.73 pin.**
+2. **Troll Warlord's 6.72/6.73 kit is Berserker Rage / Whirling Axes (ranged and melee) / Fervor / Battle Trance.** 6.60 replaced Rampage with Battle Trance and made Fervor a stacking on-attack buff [D2W-TrollCL]; **6.72 replaced Blind with Whirling Axes** [CL-6.72]; 6.72c gave the ranged axes their 75 damage and rescaled Fervor [CL-6.72c]; 6.73 let Fervor build on towers [CL-6.73].
+3. **Pin used:** both heroes as of **6.73** (Shredder with the 6.73b growth and attack-range fixes). Open choice: Chakram's drain, 20/30/40 a second in 6.73 or 20/25/30 in 6.73c; playdota still showed 20/30/40 on 2012-01-07 [PD-Shred-6.73].
+
+### 7.1 Troll Warlord (Jah'rakal), Sentinel, Agility
+
+| Stat | 6.72/6.73 | Notes |
+|---|---|---|
+| Primary | AGI | [PD-Troll-6.72] |
+| STR | 17 + 2.2 | same in every snapshot 2010–2013 |
+| AGI | 21 + 2.75 | same |
+| INT | 13 + 1 | same |
+| Damage (level 1) | 38–56 | raw base 17–35 (6.35: "total damage is now 38-56") [D2W-TrollCL] |
+| Armor (level 1) | 1.94 | base armor −1 |
+| HP / mana (level 1) | 473 / 169; 573 HP in melee form | +100 HP in Berserker Rage |
+| Move speed | 300 | 6.50 [D2W-TrollCL] |
+| Attack range | 500 ranged; 128 melee | 128 from [D2W15-Troll], DotA melee range otherwise UNVERIFIED |
+| Missile speed | 1200 | [PD-Troll-6.72] |
+| Base attack time | 1.7 ranged / 1.55 melee | [PD-Troll-6.72] |
+| Attack point / backswing | 0.3 / 0.3 | [PD-Troll-6.72] |
+| Cast point / backswing | 0.2 / 0.3 | 6.72 "cast point reduced by 0.3" [CL-6.72], [D2W-TrollCL] |
+| Acquisition range | 600 | UNVERIFIED (inferred from Dota 2 6.82) |
+| Turn rate, collision | 0.5, 24 | Dota 2 port values, UNVERIFIED for DotA |
+| Vision day / night | 1800 / 800 | [PD-Troll-6.72] |
+
+Hotkeys (playdota): Berserker Rage G, Whirling Axes E (both forms), Fervor F, Battle Trance R.
+
+**Berserker Rage** (toggle, instant). *"Jah'rakal goes berserk, using his throwing axes as melee weapons. He gains bonus damage, movement speed, attack speed, hit points, armor, and the Bash ability, but can only attack at melee range."*
+
+| Level | Mana | CD | Damage | Armor | HP | MS | BAT | Bash chance | Bash damage (magical) | Bash stun |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 0 | 0 | +15 | +3 | +100 | +20 | 1.55 | 10% | 20 | 0.8 s |
+| 2 | 0 | 0 | +15 | +3 | +100 | +20 | 1.55 | 10% | 30 | 1.2 s |
+| 3 | 0 | 0 | +15 | +3 | +100 | +20 | 1.55 | 10% | 40 | 1.6 s |
+| 4 | 0 | 0 | +15 | +3 | +100 | +30 | 1.55 | 10% | 50 | 2.0 s |
+
+Armor +3 from [D2W-TrollCL] (6.35), [G-Axe], [D2W13-Troll]; the rest [PD-Troll-6.72]. Rules: no mana, no cooldown, and since 6.72 no transformation time [CL-6.72]. Bash only in melee form; its stun pierces magic immunity; it does not stack with Cranium Basher; plain random in DotA (pseudo-random only in the Dota 2 port) [D2W15-Troll]. Switching keeps the health percentage (the guide's worked example: 120/744 in melee becomes 103/644 in ranged) [G-Axe]. Illusions made by Manta die when Troll changes form [G-Basic]. Reverting to ranged form on death: Dota 2 behaviour, DotA UNVERIFIED but likely the same.
+
+**Whirling Axes** (learned once; two spells, one per form, each with its own cooldown and mana: "you can cast one, transform into your other form, and cast the second ability immediately") [PD-Troll-6.72], [CL-6.72].
+
+*Ranged* (point, E). *"Troll hurls a fistful of five axes in a cone shape. Axes travel up to 900 range, slowing and damaging enemy units."*
+
+| Level | Mana | CD | Range | Axe radius | Slow | Duration | Damage (magical) |
+|---|---|---|---|---|---|---|---|
+| 1 | 50 | 20 | 900 | 100 | 30% MS | 3 s | 75 |
+| 2 | 50 | 20 | 900 | 100 | 30% | 3.75 s | 75 |
+| 3 | 50 | 20 | 900 | 100 | 30% | 4.5 s | 75 |
+| 4 | 50 | 20 | 900 | 100 | 30% | 5.25 s | 75 |
+
+Five axes spread forward in a cone; the 2011 guide measured "100 (triangle tip) / 900 (distance) / 600 (triangle base)" [G-Axe]; the Dota 2 port uses a 25° spread and 1500 speed (DotA speed UNVERIFIED). Hit once per cast (UNVERIFIED for DotA; Dota 2). Vision where cast [G-Axe].
+
+*Melee* (no target, E). *"Troll unleashes a set of magical axes which whirl around him in a circle. Nearby enemies take damage and have a chance to miss on their attacks."*
+
+| Level | Mana | CD | Area | Damage (magical) | Miss chance | Duration |
+|---|---|---|---|---|---|---|
+| 1 | 50 | 12 | 450 | 125 | 60% | 4 s |
+| 2 | 50 | 12 | 450 | 175 | 60% | 5 s |
+| 3 | 50 | 12 | 450 | 225 | 60% | 6 s |
+| 4 | 50 | 12 | 450 | 275 | 60% | 7 s |
+
+Two axes spin out from Troll to 450 and back, centred on him; out and back 1.5 s each [D2W-TrollCL] or 2 s each [G-Axe] (UNVERIFIED). Only units an axe touches are hit, once a cast (UNVERIFIED). True Strike ignores the miss chance [G-Axe].
+
+**Fervor** (passive). *"... With each continuous blow on the same target, Jah'rakal ... increasing his attack speed by 20 per attack."* +20 attack speed a consecutive attack on the same target, at most 40/60/80/100 (2/3/4/5 stacks) [PD-Troll-6.72], [CL-6.72c]. On a change of target the count starts again: on each attack, stacks + 1 (capped) if the target is the last one, else 1. When the stack is added is UNVERIFIED (Dota 2: at the attack point). From 6.73 it builds on towers too [CL-6.73].
+
+**Battle Trance** (ultimate, no target). *"... Greatly increases attack speed for a short duration, and lasts twice the duration on Jah'rakal."*
+
+| Level | Mana | CD | Area | Attack speed | Duration allies / self |
+|---|---|---|---|---|---|
+| 1 | 75 | 20 | the whole map | +60 | 5 s / 10 s |
+| 2 | 75 | 20 | the whole map | +100 | 5 s / 10 s |
+| 3 | 75 | 20 | the whole map | +140 | 5 s / 10 s |
+
+Allied heroes and Troll; not illusions [PD-Troll-6.72].
+
+How players described him (2011): Whirling Axes gave him burst and a chase for the first time; the chase is a form-switch combo (axes in one form, switch, axes in the other, ult, attack); max Whirling Axes first, Berserker Rage at rank 1; a late-game carry that reaches the attack-speed cap [G-Axe], [G-Basic].
+
+### 7.2 Goblin Shredder (Rizzrak), Sentinel, Strength
+
+| Stat | 6.73 | Notes |
+|---|---|---|
+| Primary | STR | [CL-6.73] |
+| STR | 22 + 2.4 | 6.75: gain 2.1 |
+| AGI | 16 + 1.3 | 6.73b fixed growth to these values |
+| INT | 21 + 1.8 | 6.78: gain 2.4 |
+| Damage (level 1) | 48–52 | raw base 26–30 |
+| Armor (level 1) | 0.24 | base armor −2; the 6.73 changelog's "Starting Armor: 0" disagrees with playdota and the Dota 2 port |
+| HP / mana (level 1) | 568 / 273 | |
+| Move speed | 290 | |
+| Attack range | 128 (melee) | 6.73b fix [CL-6.73b] |
+| Base attack time | 1.7 | |
+| Attack point / backswing | 0.36 / 0.64 | [PD-Shred-6.73] |
+| Cast point / backswing | 0.3 / 0.6 | [PD-Shred-6.73] |
+| Turn rate, collision | 0.5, 24 | Dota 2 port, UNVERIFIED |
+| Vision day / night | 1800 / 800 | |
+
+Hotkeys: Whirling Death D, Timber Chain T, Reactive Armor (passive), Chakram C; Return Chakram takes Chakram's button while the blade is out.
+
+**Whirling Death** (no target, D). *"... whirls extremely sharp edges dealing damage and reducing primary attribute of any unfortunate enemy hero who comes in a 300 AOE around him. Deals Pure damage if it cuts down trees in the process. Lowers primary attribute by 15% for 7 seconds."*
+
+| Level | Mana | CD | Area | Damage | Primary attribute (heroes) | Duration |
+|---|---|---|---|---|---|---|
+| 1 | 70 | 8 | 300 | 100 | −15% | 7 s |
+| 2 | 80 | 8 | 300 | 150 | −15% | 7 s |
+| 3 | 90 | 8 | 300 | 200 | −15% | 7 s |
+| 4 | 100 | 8 | 300 | 250 | −15% | 7 s |
+
+Damage 100/150/200/250 per [CL-6.73], [PD-Shred-6.73] and the port; 6.73 in-game tooltip copies show 50/100/150/200 and 6.73b "fixed Whirling Death damage tooltip" [CL-6.73b], [G-DotaBlog]. Destroys trees within 300; damage is magical, or pure if this cast cuts at least one tree. Against magic immunity the damage is blocked and the debuff is not [D2W13-Timb]. A STR loss lowers max HP, keeping the percentage. 15% of base or total attribute UNVERIFIED (Dota 2: total).
+
+**Timber Chain** (point, T). *"Fires a chain that embeds itself in the first tree it hits, pulling you to it and cutting any enemy in your path for pure damage."*
+
+| Level | Mana | CD | Range | Damage radius | Tree latch radius | Damage (pure) |
+|---|---|---|---|---|---|---|
+| 1 | 60 | 4 | 800 | 225 | 90 | 80 |
+| 2 | 70 | 4 | 1000 | 225 | 90 | 120 |
+| 3 | 80 | 4 | 1200 | 225 | 90 | 160 |
+| 4 | 90 | 4 | 1400 | 225 | 90 | 200 |
+
+6.74 raised the damage to 100/140/180/220 [CL-6.74]. The chain latches on the first tree within 90 of its path; Shredder is pulled to it and the tree is destroyed; enemies within 225 of his path take pure damage once. No tree: the chain retracts. **6.73: "You will not be pulled in if you are stunned when the chain latches onto a tree"** [PD-Shred-6.73] (the 2014 rule, stopping the pull on any disable, is later). He crosses cliffs. Chain and pull speed UNVERIFIED (port: 1600/2000/2400/2800, twice the range a second).
+
+**Reactive Armor** (passive). *"What doesn't kill ya makes ya stronger! Every physical attack made on Rizzrak increases his armor and gives him bonus hp regen. Each stack lasts for 16 seconds."* +1 armor and +1 HP a second a stack; at most 4/8/12/16 stacks; 16 s each. A stack comes when an attack on him begins (the WC3 "unit is attacked" event; the port changed it to landing in 6.84) [D2W-TimbCL]; any attacker counts [D2W15-Timb]; each stack its own timer (UNVERIFIED for DotA; the tooltip suggests it).
+
+**Chakram** (ultimate, point, C; Return Chakram no target). *"Fires your main saw blade at the target location, and once there the blade will spin, dealing damage in an AoE around it and slowing enemies by 5% for every 5% of health they are missing. The blade deals pure damage and cuts down trees in its path when fired and retracted. You lose the ability to attack while the blade is out."*
+
+| Level | Mana | Mana a second while spinning | CD | Range | Radius | Pass damage (pure) | Damage a second (pure) | Slow |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 125 | 20 | 8 | 1200 | 200 | 100 | 50 | 5% per 5% HP missing |
+| 2 | 150 | 30 (6.73c: 25) | 8 | 1200 | 200 | 140 | 75 | same |
+| 3 | 175 | 40 (6.73c: 30) | 8 | 1200 | 200 | 180 | 100 | same |
+
+Blade speed 1000 in 6.73 (6.75 −20%, 6.78 900) [CL-6.75], [CL-6.78c]. Disarmed while the blade is out; it cuts trees on its path out and back and in its area; returns by itself if Shredder is more than 2000 away [PD-Shred-6.73]. Pass damage once out and once back [D2W13-Timb]. Spin damage and drain in 0.5 s ticks from 0.5 s after arrival (port; DotA UNVERIFIED). Slow: 5% for each 5% of max HP missing, an aura lingering 0.5 s (port). Out of mana: UNVERIFIED (port: the blade returns). The cooldown starts at the cast [G-SHR]. Vision 800 while flying, 3.34 s after (6.73) [CL-6.76].
+
+How players described him (6.73–6.74): a chaser and tank, Timber Chain "like a blink but can be used in combat, as long as you're not stunned", "almost all his damage is pure", heavy mana use; max Timber Chain first, one early point of Reactive Armor, Chakram whenever possible [G-SHR], [G-DotaBlog].
+
+### 7.3 Hard to reproduce on a fixed tick, in integers
+
+- Troll's form toggle swaps base attack time, range, missile or instant hit, and the castable Whirling Axes, and rescales current HP (cur × newMax / oldMax, fixed rounding).
+- Fervor needs a last-attack target per hero and a fixed moment for the stack.
+- Melee Whirling Axes: two point hitboxes (r 100) on an orbit stepped each tick, a hit-once set; ranged: five hitboxes on fanned headings.
+- Trees as gameplay objects: Whirling Death counts trees cut; Timber Chain sweeps a circle of 90 along a segment against trees, forced movement across terrain, a stun check at latch time.
+- Whirling Death's percentage attribute loss changes max HP and mana and restores them on expiry, with fixed rounding.
+- Reactive Armor keeps up to 16 independent timers.
+- Chakram is a state machine: out at 1000, spin with 0.5 s ticks and drain, back to the moving caster, hit-once sets each way, a 2000 leash, disarm, Return in its slot, a slow from missing HP.
+
+### 7.4 Source keys for this section
+
+| Key | Title | URL |
+|---|---|---|
+| [PD-Troll-6.6x] | playdota Troll Warlord, Jan 2010 | https://web.archive.org/web/20100127135845/http://www.playdota.com:80/heroes/troll-warlord |
+| [PD-Troll-6.72] | playdota Troll Warlord, Dec 2011 (6.72/6.73) | https://web.archive.org/web/20111207045014/http://www.playdota.com:80/heroes/troll-warlord |
+| [PD-Troll-2012-01] | playdota Troll Warlord, Jan 2012 | https://web.archive.org/web/20120106214915/http://www.playdota.com:80/heroes/troll-warlord |
+| [PD-Shred-6.73] | playdota Goblin Shredder, Jan 2012 (6.73) | https://web.archive.org/web/20120107195913/http://www.playdota.com:80/heroes/goblin-shredder |
+| [PD-Shred-6.74] | playdota Goblin Shredder, Mar 2012 | https://web.archive.org/web/20120309043425/http://www.playdota.com:80/heroes/goblin-shredder |
+| [PD-Shred-2014] | playdota Goblin Shredder, Jul 2014 | https://web.archive.org/web/20140703195549/http://www.playdota.com/heroes/goblin-shredder |
+| [CL-6.72] | changelog 6.72 | https://web.archive.org/web/20110502144633/http://www.playdota.com/changelogs/6.72 |
+| [CL-6.72b] | 6.72b | https://web.archive.org/web/20110511135337/http://www.playdota.com/changelogs/6.72b |
+| [CL-6.72c] | 6.72c | https://web.archive.org/web/20110606060843/http://www.playdota.com/changelogs/6.72c |
+| [CL-6.72d] | 6.72d | https://web.archive.org/web/20110731144954/http://www.playdota.com/changelogs/6.72d |
+| [CL-6.73] | 6.73 | https://web.archive.org/web/20120104134752/http://www.playdota.com/changelogs/6.73 |
+| [CL-6.73b] | 6.73b | https://web.archive.org/web/20120102055914/http://www.playdota.com/changelogs/6.73b |
+| [CL-6.73c] | 6.73c | https://web.archive.org/web/20120113004153/http://www.playdota.com/changelogs/6.73c |
+| [CL-6.74] | 6.74 | https://web.archive.org/web/20120313011356/http://www.playdota.com/changelogs/6.74 |
+| [CL-6.75] | 6.75 | https://web.archive.org/web/20121006104138/http://www.playdota.com/changelogs/6.75 |
+| [CL-6.76] | 6.76 | https://web.archive.org/web/20121022184640/http://www.playdota.com/changelogs/6.76 |
+| [CL-6.78c] | 6.78c | https://web.archive.org/web/20130703094839/http://www.playdota.com/changelogs/6.78c |
+| [CL-6.79c] | 6.79c | https://web.archive.org/web/20131215181329/http://www.playdota.com/changelogs/6.79c |
+| [D2W13-Troll] | Dota 2 Wiki Troll Warlord, Jun 2013 | https://web.archive.org/web/20130630214538/http://dota2.gamepedia.com/Troll_Warlord |
+| [D2W15-Troll] | Dota 2 Wiki Troll Warlord, Feb 2015 | https://web.archive.org/web/20150207075530/http://dota2.gamepedia.com/Troll_Warlord |
+| [D2W-TrollCL] | Dota 2 Wiki Troll Warlord/Changelogs | https://web.archive.org/web/20200806200025/http://dota2.gamepedia.com/Troll_Warlord/Changelogs |
+| [D2W13-Timb] | Dota 2 Wiki Timbersaw, 2013 and 2014 | https://web.archive.org/web/20130629214450/http://dota2.gamepedia.com/Timbersaw |
+| [D2W15-Timb] | Dota 2 Wiki Timbersaw, Feb 2015 | https://web.archive.org/web/20150207202452/http://dota2.gamepedia.com/Timbersaw |
+| [D2W-TimbCL] | Dota 2 Wiki Timbersaw/Changelogs | https://web.archive.org/web/20200922212528/http://dota2.gamepedia.com/Timbersaw/Changelogs |
+| [G-Axe] | playdota guide "Master of the Axe", Jul 2011 (6.72c) | https://web.archive.org/web/20110906042009/http://www.playdota.com/guides/master-of-the-axe |
+| [G-Basic] | playdota guide "Basic Guide to Troll Warlord", 2011 | https://web.archive.org/web/20110923151404/http://www.playdota.com/guides/i-kill-for-you |
+| [G-SHR] | playdota guide "SHRredderR!", Jan 2012 | https://web.archive.org/web/20120306085344/http://www.playdota.com:80/guides/shrredderr |
+| [G-DotaBlog] | DotA-Blog "Rizzrak Guide", Dec 2011 | http://www.dota-blog.com/2011/12/rizzrak-guide-goblin-shredder-build.html |

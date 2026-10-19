@@ -554,11 +554,83 @@ pub fn draw_missile(f: &Frame, b: &mut Batch, at: V3, ms: &crate::world::Missile
             }
             glow(b, at, r / 2, col, ONE);
         }
+        // Hackle's thrown hatchet (round 7): head over haft, tumbling end
+        // over end along its flight
+        "axe" => {
+            let base = Affine::translate(at)
+                .then(&Affine::rot_y(fx::atan2(dir.x, dir.z)))
+                .then(&Affine::rot_x(spin * 3));
+            hatchet(f, b, &base, r);
+            trail(b, at, 4, r, col);
+        }
+        // Chipper's chain claw (round 7): three prongs ahead, the chain back
+        // to his arm
+        "claw" => {
+            if let Some(u) = f.w.get(ms.src) {
+                let (chest, _) = heights(f, u);
+                let from = to_scene(u.pos(), ground(f, u.pos()) + chest);
+                chain(f, b, from, at, r);
+            }
+            claw(f, b, at, dir, r);
+            glow(b, at, r / 2, col, ONE / 2);
+        }
         _ => {
             glow(b, at, r, col, ONE);
             trail(b, at, 4, r, col);
         }
     }
+}
+
+/// A hatchet: a wooden haft along `base`'s y, a steel head to one side.
+fn hatchet(f: &Frame, b: &mut Batch, base: &Affine, r: i32) {
+    let haft = base.then(&Affine::scale(v3(r / 3, r * 3, r / 3)));
+    b.push(SOLID, Mesh::FacetCyl, &haft, f.models.named("wood"), 0);
+    let head = base
+        .then(&Affine::translate(v3(0, r, r * 3 / 4)))
+        .then(&Affine::scale(v3(r / 3, r * 3 / 2, r * 2)));
+    b.push(SOLID, Mesh::Facet, &head, f.models.named("steel_bright"), 0);
+}
+
+/// Links of chain from `a` to `c`.
+fn chain(f: &Frame, b: &mut Batch, a: V3, c: V3, r: i32) {
+    let n = (a.dist(c) / (r * 2 / 3).max(1)).clamp(2, 40);
+    for i in 1..n {
+        let p = a.lerp(c, fx::div(i, n));
+        let s = r * 2 / 5;
+        let l = Affine::translate(p).then(&Affine::scale(v3(s, s, s)));
+        b.push(SOLID, Mesh::Facet, &l, f.models.named("iron"), 0);
+    }
+}
+
+/// Three steel prongs closing ahead along `dir`.
+fn claw(f: &Frame, b: &mut Batch, at: V3, dir: V3, r: i32) {
+    let yaw = fx::atan2(dir.x, dir.z);
+    for i in 0..3 {
+        let a = Affine::translate(at)
+            .then(&Affine::rot_y(yaw + (i - 1) * fx::TURN / 14))
+            .then(&Affine::rot_x(fx::TURN / 4))
+            .then(&Affine::scale(v3(r / 2, r * 2, r / 2)));
+        b.push(SOLID, Mesh::FacetCone, &a, f.models.named("steel_bright"), 0);
+    }
+}
+
+/// A spinning saw blade lying flat at `at`.
+fn saw(f: &Frame, b: &mut Batch, at: V3, r: i32, spin: i32) {
+    let disc_ = Affine::translate(at)
+        .then(&Affine::rot_y(spin))
+        .then(&Affine::scale(v3(r * 2, r / 4, r * 2)));
+    b.push(SOLID, Mesh::FacetCyl, &disc_, f.models.named("steel_bright"), 0);
+    for i in 0..10 {
+        let a = spin + fx::TURN * i / 10;
+        let p = at.add(v3(fx::mul(fx::cos(a), r), 0, fx::mul(fx::sin(a), r)));
+        let tooth = Affine::translate(p)
+            .then(&Affine::rot_y(-a))
+            .then(&Affine::rot_z(fx::TURN / 4))
+            .then(&Affine::scale(v3(r / 3, r / 2, r / 4)));
+        b.push(SOLID, Mesh::FacetCone, &tooth, f.models.named("steel_bright"), 0);
+    }
+    let hub = Affine::translate(at.add(v3(0, r / 6, 0))).then(&Affine::scale(v3(r / 2, r / 4, r / 2)));
+    b.push(SOLID, Mesh::Facet, &hub, f.models.named("gold"), 0);
 }
 
 /// A zone in its ability's way; returns false to leave it to the plain disc.
@@ -635,6 +707,78 @@ pub fn draw_zone(f: &Frame, b: &mut Batch, z: &crate::world::Zone) -> bool {
             let left = ONE - fx::div(t.min(life), life);
             disc(b, floor, r, col, left / 2);
         }
+        // Hackle's whirling hatchets (round 7): the two axes on the rule's
+        // own orbit, out and back round him, tumbling as they go
+        "axes" => {
+            let span = (z.until.saturating_sub(z.start)).max(2) as i32;
+            let out = span / 2;
+            let tt = (f.w.tick.saturating_sub(z.start)) as i32;
+            let axe_r = 100;
+            let orbit = scene_len(z.radius - axe_r);
+            let k_ = if tt < out {
+                fx::div(tt * ONE + f.alpha, out * ONE)
+            } else {
+                fx::div((2 * out - tt.min(2 * out)) * ONE - f.alpha, out * ONE)
+            };
+            let rr = fx::mul(orbit, k_.clamp(0, ONE));
+            let turn = (tt * fx::TURN / crate::rules::TPS + fx::mul(f.alpha, fx::TURN / crate::rules::TPS))
+                & (fx::TURN - 1);
+            let hr = big(f, ONE / 2);
+            for half in [0, fx::TURN / 2] {
+                let ang = turn + half;
+                let p = floor.add(v3(
+                    fx::mul(fx::cos(ang), rr),
+                    big(f, ONE * 3 / 2),
+                    -fx::mul(fx::sin(ang), rr),
+                ));
+                let base = Affine::translate(p)
+                    .then(&Affine::rot_y(ang))
+                    .then(&Affine::rot_x(turn * 3));
+                hatchet(f, b, &base, hr);
+                glow(b, p, hr, col, ONE / 3);
+            }
+            ring(b, floor, r, col, ONE / 4);
+        }
+        // Chipper's Buzz Blade (round 7): the saw spins wherever the blade
+        // is; stopped, its circle shows on the ground
+        "chakram" => {
+            let spin = fx::mul(t, fx::TURN / 6);
+            let p = floor.add(v3(0, big(f, ONE * 3 / 2), 0));
+            saw(f, b, p, big(f, ONE), spin);
+            if z.a == 1 {
+                ring(b, floor, r, col, ONE / 2 + beat / 6);
+                disc(b, floor, r, col, ONE / 8);
+                for i in 0..4 {
+                    let a = spin * 2 + fx::TURN * i / 4;
+                    let q = p.add(v3(
+                        fx::mul(fx::cos(a), big(f, ONE)),
+                        0,
+                        fx::mul(fx::sin(a), big(f, ONE)),
+                    ));
+                    glow(b, q, big(f, ONE / 8), f.models.named("fx_gold"), ONE);
+                }
+            }
+            if let Some(u) = f.w.get(z.src) {
+                if z.a == 2 {
+                    let (chest, _) = heights(f, u);
+                    let home = to_scene(u.pos(), ground(f, u.pos()) + chest);
+                    rod(b, p, p.lerp(home, ONE / 5), big(f, ONE / 10), col, ONE / 2);
+                }
+            }
+        }
+        // Timber Chain's pull (round 7): the chain from Chipper to the tree
+        // he is flying to, the claw shut on it
+        "pull" => {
+            if let Some(u) = f.w.get(z.src) {
+                let (chest, _) = heights(f, u);
+                let from = to_scene(u.pos(), ground(f, u.pos()) + chest);
+                let tree = to_scene(z.to, ground(f, z.to) + chest);
+                let rr = big(f, ONE / 2);
+                chain(f, b, from, tree, rr);
+                let dir = tree.sub(from).norm();
+                claw(f, b, tree, dir, rr);
+            }
+        }
         "none" => {}
         _ => return false,
     }
@@ -687,11 +831,55 @@ pub fn draw_status(f: &Frame, b: &mut Batch, u: &Unit, foot: V3) {
             ONE,
         );
     }
+    // a miss chance (round 7): grey puffs circling the eyes
+    if u.mods
+        .iter()
+        .any(|m| m.kind == M::Tag && m.b == crate::ability::TAG_BLIND)
+    {
+        for i in 0..3 {
+            let a = fx::mul(now, fx::TURN / 24) + fx::TURN * i / 3;
+            let p = foot.add(v3(
+                fx::mul(fx::cos(a), one * 2 / 3),
+                top - one / 3,
+                fx::mul(fx::sin(a), one * 2 / 3),
+            ));
+            glow(b, p, one / 4, f.models.named("cloud"), ONE * 3 / 4);
+        }
+    }
+    // a primary attribute cut (round 7): a steel arrow pointing down over the head
+    let cut = crate::ability::TAG_ATTR_PCT;
+    if u.mods
+        .iter()
+        .any(|m| m.kind == M::Tag && m.b >= cut && m.b < cut + 3)
+    {
+        let bob = fx::sin(fx::mul(now, fx::TURN / 30)) / 8;
+        let a = Affine::translate(head.add(v3(0, one + fx::mul(bob, one), 0)))
+            .then(&Affine::rot_x(fx::TURN / 2))
+            .then(&Affine::scale(v3(one / 2, one * 2 / 3, one / 2)));
+        b.push(
+            LAYER_PLAIN,
+            Mesh::Cone,
+            &a,
+            f.models.named("fx_steel"),
+            STYLE_GLOW,
+        );
+    }
     let slowed = u.mods.iter().any(|m| m.kind == M::MovePct && m.a < 0);
     if slowed && !u.has(M::Stun) {
         ring(b, foot, one * 3 / 2, f.models.named("fx_frost"), ONE * 3 / 4);
     }
-    if u.has(M::Root) {
+    // held by a root that is not a chain's pull (Timber Chain roots its caster in flight)
+    let iced = u.mods.iter().any(|m| {
+        m.kind == M::Root
+            && !(m.tag != 0
+                && f.ctx
+                    .rules
+                    .abilities
+                    .get(m.tag as usize - 1)
+                    .map(|a| a.logic == "timber_chain")
+                    .unwrap_or(false))
+    });
+    if iced {
         // frozen in place: an ice block round the unit
         let a = Affine::translate(foot.add(v3(0, chest, 0))).then(&Affine::scale(v3(one * 3, top, one * 3)));
         b.tint(Mesh::Cyl, &a, f.models.named("fx_frost"), ONE * 2 / 5);

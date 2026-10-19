@@ -31,6 +31,8 @@ ELEMENT = {
     "hexwright": "arcane",
     "longwick": "steelrim",
     "tempest": "storm",
+    "hackle": "blood",
+    "chipper": "earth",
     "warden": "earth",
 }
 
@@ -55,6 +57,10 @@ def owners():
     for unit, row in rows:
         for a in row.get("abilities", []):
             out.setdefault(a, unit)
+    # an ability that takes another's slot (round 7) belongs to that hero
+    for row in _load("abilities.json", "abilities"):
+        if row.get("alt") and row["id"] in out:
+            out.setdefault(row["alt"], out[row["id"]])
     return out
 
 

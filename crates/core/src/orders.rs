@@ -123,7 +123,7 @@ pub fn apply(w: &mut World, ctx: &Ctx, player: usize, cmd: Cmd) {
     match cmd {
         Cmd::Cannon(at) => crate::aram::throw(w, ctx, hero, at),
         Cmd::Pick(k) => {
-            if hero == NO_UNIT && (k as usize) < ctx.rules.heroes.len() {
+            if hero == NO_UNIT && (k as usize) < ctx.rules.roster {
                 w.add_hero(ctx, player, k as usize);
             }
         }
@@ -202,8 +202,7 @@ pub fn apply(w: &mut World, ctx: &Ctx, player: usize, cmd: Cmd) {
 }
 
 fn ability_target(ctx: &Ctx, w: &World, id: Uid, slot: usize) -> Option<Target> {
-    let u = w.get(id)?;
-    let k = *ctx.rules.unit_abilities[u.def as usize].get(slot)?;
+    let (k, _) = crate::ability::slot_info(ctx, w, id, slot)?;
     Some(ctx.rules.abilities[k].target)
 }
 

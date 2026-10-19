@@ -444,7 +444,7 @@ fn pick(g: &Game, choosing: bool) -> Node {
     let s = &g.strings;
     let dealt = choosing && g.setup.aram && g.setup.mission.is_none();
     let mut cards = Vec::new();
-    for (k, &u) in g.rules.heroes.iter().enumerate() {
+    for (k, &u) in g.rules.heroes[..g.rules.roster].iter().enumerate() {
         let def = &g.rules.units[u];
         let named = s.hero(&def.id);
         let chosen = choosing && g.setup.hero == k as i32;
@@ -869,7 +869,11 @@ fn bottom(g: &Game, w: &World, me: usize, hero: Uid) -> Node {
     if let Some(u) = w.get(hero) {
         let points = u.hero.as_ref().map(|h| h.points).unwrap_or(0);
         let mut row = Vec::new();
-        for (slot, &k) in g.rules.unit_abilities[u.def as usize].iter().enumerate() {
+        for slot in 0..g.rules.unit_abilities[u.def as usize].len() {
+            // the slot's ability as it stands (Whirling Axes' form, Return Chakram)
+            let Some((k, _)) = crate::ability::slot_info(&ctx, w, hero, slot) else {
+                continue;
+            };
             let a = &g.rules.abilities[k];
             let st = u.abil[slot];
             let tip = ability_tip(g, k, st.level);
@@ -1446,7 +1450,7 @@ pub fn online_view(g: &Game) -> Node {
         .and_then(|k| o.seats.get(k))
         .map(|s| s.pick)
         .unwrap_or(-1);
-    for (k, &u) in g.rules.heroes.iter().enumerate() {
+    for (k, &u) in g.rules.heroes[..g.rules.roster].iter().enumerate() {
         let id = &g.rules.units[u].id;
         let taken = o.seats.iter().any(|s| s.pick == k as i32) && mine != k as i32;
         let mut card = with(

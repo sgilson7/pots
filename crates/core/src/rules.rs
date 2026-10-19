@@ -228,6 +228,14 @@ pub struct AbilityDef {
     /// The hotkey's code (`KeyQ`), for the HUD.
     #[serde(default)]
     pub key: String,
+    /// Another ability that takes this one's slot while `alt_when` holds
+    /// (round 7): Whirling Axes' melee form while Berserker Rage is on,
+    /// Return Chakram while the blade is out.
+    #[serde(default)]
+    pub alt: String,
+    /// When `alt` takes the slot: "berserk" or "blade_out".
+    #[serde(default)]
+    pub alt_when: String,
     #[serde(default, rename = "_after")]
     pub after: String,
 }
@@ -608,6 +616,11 @@ pub struct RulesFile {
     #[serde(default)]
     pub aram: Option<AramDef>,
     pub heroes: Vec<HeroPick>,
+    /// Heroes built and shown in the design journal, not yet chosen by
+    /// anyone (round 7): the cast stage can show them, no pick screen,
+    /// deal, computer player or room can.
+    #[serde(default)]
+    pub preview_heroes: Vec<HeroPick>,
 }
 
 /// All Random All Mid (round 4, T13 and T14): what the mode changes. Points
@@ -654,10 +667,15 @@ pub struct Rules {
     pub map: MapDef,
     pub t: Tables,
     pub damage: DamageTable,
-    /// Hero unit indices in roster order.
+    /// Hero unit indices: the roster, then the preview heroes.
     pub heroes: Vec<usize>,
+    /// How many of `heroes` can be chosen (the roster); the rest are
+    /// preview heroes.
+    pub roster: usize,
     /// For each unit: its ability indices.
     pub unit_abilities: Vec<Vec<usize>>,
+    /// For each ability: the index of its `alt`, if it has one.
+    pub ability_alt: Vec<Option<usize>>,
     /// For each unit: attack-type and armor-type indices.
     pub unit_attack: Vec<usize>,
     pub unit_armor: Vec<usize>,
@@ -697,9 +715,11 @@ impl Rules {
                 .position(|d| d.id == id)
                 .ok_or_else(|| format!("No unit is called \"{id}\"."))
         };
+        let roster = r.heroes.len();
         let heroes = r
             .heroes
             .iter()
+            .chain(&r.preview_heroes)
             .map(|h| find_unit(&h.unit))
             .collect::<Result<Vec<_>, _>>()?;
         let mut unit_abilities = Vec::new();
@@ -760,7 +780,26 @@ impl Rules {
                 }
             }
         }
+        let mut ability_alt = Vec::new();
+        for a in &abilities {
+            if a.alt.is_empty() {
+                ability_alt.push(None);
+                continue;
+            }
+            let k = abilities
+                .iter()
+                .position(|b| b.id == a.alt)
+                .ok_or_else(|| format!("{} names no ability \"{}\" as its alt.", a.id, a.alt))?;
+            if !matches!(a.alt_when.as_str(), "berserk" | "blade_out") {
+                return Err(format!(
+                    "{}: alt_when \"{}\" is not berserk or blade_out.",
+                    a.id, a.alt_when
+                ));
+            }
+            ability_alt.push(Some(k));
+        }
         Ok(Rules {
+            ability_alt,
             units,
             abilities,
             items,
@@ -768,6 +807,7 @@ impl Rules {
             t: r.tables,
             damage: r.damage,
             heroes,
+            roster,
             unit_abilities,
             unit_attack,
             unit_armor,

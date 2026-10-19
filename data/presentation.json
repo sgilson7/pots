@@ -173,6 +173,11 @@
    "shape": "flame",
    "color": "fx_fire",
    "size": 45
+  },
+  "hackle": {
+   "shape": "axe",
+   "color": "steel_bright",
+   "size": 55
   }
  },
  "fx": {
@@ -739,6 +744,95 @@
      "dur": 30
     }
    ]
+  },
+  "berserker_rage": {
+   "color": "fx_fire",
+   "fire": [
+    {
+     "kind": "flash",
+     "r": 90,
+     "dur": 30
+    },
+    {
+     "kind": "rise",
+     "r": 80,
+     "dur": 40
+    }
+   ],
+   "proc": [
+    {
+     "kind": "flash",
+     "r": 70,
+     "dur": 30
+    }
+   ]
+  },
+  "whirling_axes": {
+   "color": "fx_steel",
+   "cast": true,
+   "missile": {
+    "shape": "axe",
+    "size": 75
+   }
+  },
+  "whirling_axes_melee": {
+   "color": "fx_steel",
+   "cast": true,
+   "zone": "axes"
+  },
+  "fervor": {
+   "color": "fx_fire"
+  },
+  "battle_trance": {
+   "color": "fx_fire",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "ring",
+     "r": 300,
+     "dur": 60
+    },
+    {
+     "kind": "rise",
+     "r": 120,
+     "dur": 50
+    }
+   ]
+  },
+  "whirling_death": {
+   "color": "fx_steel",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "spin",
+     "key": "radius",
+     "dur": 40
+    },
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 40
+    }
+   ]
+  },
+  "timber_chain": {
+   "color": "fx_steel",
+   "missile": {
+    "shape": "claw",
+    "size": 65
+   },
+   "zone": "pull"
+  },
+  "reactive_armor": {
+   "color": "fx_earth"
+  },
+  "chakram": {
+   "color": "fx_steel",
+   "cast": true,
+   "zone": "chakram"
+  },
+  "return_chakram": {
+   "color": "fx_steel"
   }
  },
  "backdrop": {

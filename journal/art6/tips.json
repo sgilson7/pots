@@ -1,0 +1,625 @@
+[
+  {
+    "id": "storm_bolt",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/storm_bolt.png",
+      "lines": [
+        "Mana: 140",
+        "Cooldown: 15 s"
+      ],
+      "text": "Hurls a hammer at an enemy. Enemies within 255 of the target take 100 / 175 / 250 / 325 magic damage and are stunned for 2 seconds.",
+      "title": "Vow Hammer"
+    }
+  },
+  {
+    "id": "great_cleave",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/great_cleave.png",
+      "sub": "Passive",
+      "text": "Melee attacks also hit enemies within 200 of the target for 20% / 30% / 40% / 50% of their damage.",
+      "title": "Wide Arc"
+    }
+  },
+  {
+    "id": "warcry",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/warcry.png",
+      "lines": [
+        "Mana: 25",
+        "Cooldown: 36 / 30 / 24 / 18 s"
+      ],
+      "text": "Allied heroes within 700 gain 3 / 6 / 9 / 12 armor and 12% move speed for 6 seconds.",
+      "title": "Rallying Shout"
+    }
+  },
+  {
+    "id": "gods_strength",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/gods_strength.png",
+      "lines": [
+        "Mana: 100 / 150 / 200",
+        "Cooldown: 80 s"
+      ],
+      "sub": "Ultimate",
+      "text": "Raises attack damage by 100% / 125% / 150% for 25 seconds.",
+      "title": "Iron Oath"
+    }
+  },
+  {
+    "id": "crystal_nova",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/crystal_nova.png",
+      "lines": [
+        "Mana: 100 / 120 / 140 / 160",
+        "Cooldown: 15 s"
+      ],
+      "text": "Blasts enemies within 400 of a point for 100 / 150 / 200 / 250 magic damage. They are slowed by 30% move speed and 20 attack speed for 3.5 / 4 / 4.5 / 5 seconds.",
+      "title": "Hoarfrost Burst"
+    }
+  },
+  {
+    "id": "frostbite",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/frostbite.png",
+      "lines": [
+        "Mana: 115 / 125 / 140 / 150",
+        "Cooldown: 10 s"
+      ],
+      "text": "Freezes an enemy in place for 1.5 / 2 / 2.5 / 3 seconds. It cannot move or attack, and it loses 105 / 140 / 175 / 210 health over that time.",
+      "title": "Ice Shackle"
+    }
+  },
+  {
+    "id": "brilliance_aura",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/brilliance_aura.png",
+      "sub": "Passive",
+      "text": "Allied heroes anywhere on the map regain 0.5 / 1 / 1.5 / 2 extra mana a second.",
+      "title": "Clear Mind"
+    }
+  },
+  {
+    "id": "freezing_field",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/freezing_field.png",
+      "lines": [
+        "Mana: 200 / 400 / 600",
+        "Cooldown: 150 / 120 / 90 s"
+      ],
+      "sub": "Ultimate",
+      "text": "Channels for up to 4 seconds. Every 0.1 seconds, an ice blast lands between 195 and 630 from Rime and hits enemies within 190 of it.",
+      "title": "Winter's Ring"
+    }
+  },
+  {
+    "id": "dragon_slave",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/dragon_slave.png",
+      "lines": [
+        "Mana: 90 / 105 / 125 / 140",
+        "Cooldown: 8.5 s"
+      ],
+      "text": "Sends a wave of fire 1075 forward. Each enemy it passes through takes 100 / 170 / 230 / 280 magic damage.",
+      "title": "Flame Wave"
+    }
+  },
+  {
+    "id": "light_strike_array",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/light_strike_array.png",
+      "lines": [
+        "Mana: 90 / 100 / 110 / 125",
+        "Cooldown: 7 s"
+      ],
+      "text": "After 0.5 seconds, fire strikes the ground. Enemies within 225 take 90 / 150 / 210 / 280 magic damage and are stunned for 1.6 seconds.",
+      "title": "Pillar of Flame"
+    }
+  },
+  {
+    "id": "fiery_soul",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/fiery_soul.png",
+      "sub": "Passive",
+      "text": "Each spell Cinder casts gives her 30 / 40 / 50 / 60 attack speed and 3% / 4% / 5% / 6% move speed for 7 seconds. Stacks up to 3 times.",
+      "title": "Kindled Step"
+    }
+  },
+  {
+    "id": "laguna_blade",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/laguna_blade.png",
+      "lines": [
+        "Mana: 280 / 420 / 680",
+        "Cooldown: 120 / 90 / 55 s"
+      ],
+      "sub": "Ultimate",
+      "text": "After 0.25 seconds, a lance of fire strikes one enemy for 450 / 675 / 950 magic damage.",
+      "title": "Searing Lance"
+    }
+  },
+  {
+    "id": "frost_arrows",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/frost_arrows.png",
+      "lines": [
+        "Mana: 12"
+      ],
+      "sub": "Turned on and off",
+      "text": "While on, each attack on an enemy costs mana and slows it by 10% / 20% / 30% / 40% for 1.5 seconds.",
+      "title": "Rimed Arrows"
+    }
+  },
+  {
+    "id": "silence",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/silence.png",
+      "lines": [
+        "Mana: 90",
+        "Cooldown: 15 s"
+      ],
+      "text": "Silences enemies within 275 of a point for 3 / 4 / 5 / 6 seconds. Silenced units cannot cast spells.",
+      "title": "Hush"
+    }
+  },
+  {
+    "id": "trueshot_aura",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/trueshot_aura.png",
+      "sub": "Passive",
+      "text": "Ranged allies within 900 gain 7% / 14% / 21% / 28% of their base attack damage.",
+      "title": "Hunter's Eye"
+    }
+  },
+  {
+    "id": "marksmanship",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/marksmanship.png",
+      "sub": "Passive",
+      "text": "Gives Thistle 15 / 30 / 45 agility.",
+      "title": "Steady Hand"
+    }
+  },
+  {
+    "id": "meat_hook",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/meat_hook.png",
+      "lines": [
+        "Mana: 110 / 120 / 130 / 140",
+        "Cooldown: 14 / 13 / 12 / 11 s"
+      ],
+      "text": "Throws a hook in a line. The first unit it hits is dragged back to Gristle, and an enemy takes 90 / 180 / 270 / 360 pure damage.",
+      "title": "Gutting Hook"
+    }
+  },
+  {
+    "id": "rot",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/rot.png",
+      "sub": "Turned on and off",
+      "text": "While on, enemies within 250 take 35 / 60 / 85 / 110 magic damage a second and are slowed by 20%. Gristle takes the same damage.",
+      "title": "Carrion Cloud"
+    }
+  },
+  {
+    "id": "flesh_heap",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/flesh_heap.png",
+      "sub": "Passive",
+      "text": "Gives 4% / 8% / 12% / 16% magic resistance. Each enemy hero that dies within 450 of Gristle adds 0.9 / 1.2 / 1.5 / 1.8 strength for the rest of the game.",
+      "title": "Grave Bulk"
+    }
+  },
+  {
+    "id": "dismember",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/dismember.png",
+      "lines": [
+        "Mana: 100 / 130 / 170",
+        "Cooldown: 30 s"
+      ],
+      "sub": "Ultimate",
+      "text": "Channels on an enemy for up to 3 seconds. The enemy is stunned and takes 75 / 125 / 175 magic damage a second.",
+      "title": "Butcher's Feast"
+    }
+  },
+  {
+    "id": "fissure",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/fissure.png",
+      "lines": [
+        "Mana: 125 / 140 / 155 / 170",
+        "Cooldown: 15 s"
+      ],
+      "text": "Splits the ground in a line 1200 long. Enemies in it take 125 / 175 / 225 / 275 magic damage and are stunned for 1 / 1.25 / 1.5 / 1.75 seconds. Rocks block the line for 8 seconds.",
+      "title": "Rift Stomp"
+    }
+  },
+  {
+    "id": "enchant_totem",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/enchant_totem.png",
+      "lines": [
+        "Mana: 50",
+        "Cooldown: 7 s"
+      ],
+      "text": "Tectus's next attack within 14 seconds deals 75% / 150% / 225% / 300% extra damage.",
+      "title": "Horn Charge"
+    }
+  },
+  {
+    "id": "aftershock",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/aftershock.png",
+      "sub": "Passive",
+      "text": "Each spell Tectus casts deals 25 / 45 / 75 / 115 magic damage to enemies within 300 and stuns them for 0.3 / 0.7 / 1.2 / 1.5 seconds.",
+      "title": "Ground Tremor"
+    }
+  },
+  {
+    "id": "echo_slam",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/echo_slam.png",
+      "lines": [
+        "Mana: 145 / 205 / 265",
+        "Cooldown: 150 / 130 / 110 s"
+      ],
+      "sub": "Ultimate",
+      "text": "Deals 160 / 210 / 270 magic damage to enemies within 500. Each enemy hit takes 40 / 55 / 70 more for every other enemy hit.",
+      "title": "Resonant Slam"
+    }
+  },
+  {
+    "id": "blade_fury",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/blade_fury.png",
+      "lines": [
+        "Mana: 110",
+        "Cooldown: 30 / 28 / 26 / 24 s"
+      ],
+      "text": "Kestrel spins for 5 seconds, dealing 80 / 100 / 120 / 140 magic damage a second to enemies within 250. Spells cannot affect him while he spins, and he cannot attack.",
+      "title": "Whirling Edge"
+    }
+  },
+  {
+    "id": "healing_ward",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/healing_ward.png",
+      "lines": [
+        "Mana: 80 / 100 / 120 / 140",
+        "Cooldown: 60 s"
+      ],
+      "text": "Places a totem that follows Kestrel for 25 seconds. Allies within 500 of it regain 2% / 3% / 4% / 5% of their maximum health a second.",
+      "title": "Mending Totem"
+    }
+  },
+  {
+    "id": "blade_dance",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/blade_dance.png",
+      "sub": "Passive",
+      "text": "Each attack has a 15% / 20% / 25% / 35% chance to deal 2x damage.",
+      "title": "Keen Edge"
+    }
+  },
+  {
+    "id": "omnislash",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/omnislash.png",
+      "lines": [
+        "Mana: 200 / 275 / 350",
+        "Cooldown: 130 / 120 / 110 s"
+      ],
+      "sub": "Ultimate",
+      "text": "Kestrel leaps between enemies within 425 up to 3 / 5 / 8 times, one strike every 0.4 seconds. Each strike deals 150 to 250 physical damage, and he cannot be harmed until it ends.",
+      "title": "Thousand Cuts"
+    }
+  },
+  {
+    "id": "earth_spike",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/earth_spike.png",
+      "lines": [
+        "Mana: 100 / 120 / 145 / 170",
+        "Cooldown: 12 s"
+      ],
+      "text": "Spikes erupt in a line 700 long. Enemies hit take 60 / 130 / 200 / 260 magic damage and are stunned for 0.5 / 1 / 1.5 / 2 seconds.",
+      "title": "Thornburst"
+    }
+  },
+  {
+    "id": "hex",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/hex.png",
+      "lines": [
+        "Mana: 110 / 140 / 170 / 200",
+        "Cooldown: 13 s"
+      ],
+      "text": "Turns an enemy into a harmless critter for 1.25 / 2 / 2.75 / 3.5 seconds. It cannot attack or cast spells.",
+      "title": "Toadcurse"
+    }
+  },
+  {
+    "id": "mana_drain",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/mana_drain.png",
+      "lines": [
+        "Mana: 10",
+        "Cooldown: 25 / 20 / 15 / 10 s"
+      ],
+      "text": "Channels on an enemy for up to 4 seconds, taking 20 / 40 / 60 / 120 mana a second from it. The link breaks if the enemy moves farther than 800 away or runs out of mana.",
+      "title": "Soul Siphon"
+    }
+  },
+  {
+    "id": "finger_of_death",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/finger_of_death.png",
+      "lines": [
+        "Mana: 200 / 420 / 650",
+        "Cooldown: 150 / 90 / 55 s"
+      ],
+      "sub": "Ultimate",
+      "text": "After 0.25 seconds, deals 500 / 650 / 850 magic damage to one enemy.",
+      "title": "Final Verdict"
+    }
+  },
+  {
+    "id": "shrapnel",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/shrapnel.png",
+      "lines": [
+        "Mana: 120",
+        "Cooldown: 15 s"
+      ],
+      "text": "After 0.8 seconds, shot rains on an area for 8 seconds. Enemies within 350 take 12 / 24 / 36 / 48 magic damage a second and are slowed by 15% / 20% / 25% / 30%.",
+      "title": "Scattershot"
+    }
+  },
+  {
+    "id": "headshot",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/headshot.png",
+      "sub": "Passive",
+      "text": "Each attack has a 25% / 30% / 35% / 40% chance to deal 30 / 30 / 40 / 50 extra physical damage and stun the target for 0.01 / 0.1 / 0.2 / 0.2 seconds.",
+      "title": "Clean Shot"
+    }
+  },
+  {
+    "id": "take_aim",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/take_aim.png",
+      "sub": "Passive",
+      "text": "Adds 65 / 130 / 195 / 260 to Longwick's attack range.",
+      "title": "Long Sight"
+    }
+  },
+  {
+    "id": "assassinate",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/assassinate.png",
+      "lines": [
+        "Mana: 175 / 275 / 375",
+        "Cooldown: 20 / 15 / 10 s"
+      ],
+      "sub": "Ultimate",
+      "text": "Takes careful aim, then fires at one enemy. The shot deals 355 / 505 / 655 magic damage and stuns for 0.1 seconds.",
+      "title": "Deadeye"
+    }
+  },
+  {
+    "id": "arc_lightning",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/arc_lightning.png",
+      "lines": [
+        "Mana: 65 / 70 / 75 / 80",
+        "Cooldown: 2 s"
+      ],
+      "text": "Strikes an enemy for 85 / 100 / 115 / 145 magic damage, then leaps to the nearest enemy within 500. It hits up to 5 / 7 / 9 / 15 enemies.",
+      "title": "Forked Spark"
+    }
+  },
+  {
+    "id": "lightning_bolt",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/lightning_bolt.png",
+      "lines": [
+        "Mana: 75 / 95 / 115 / 135",
+        "Cooldown: 6 s"
+      ],
+      "text": "Strikes an enemy for 100 / 175 / 275 / 350 magic damage and stuns it for 0.1 seconds.",
+      "title": "Skyfall Bolt"
+    }
+  },
+  {
+    "id": "static_field",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/static_field.png",
+      "sub": "Passive",
+      "text": "Each spell Tempest casts takes 5% / 7% / 9% / 11% of the current health of each enemy within 1000 as magic damage.",
+      "title": "Charged Air"
+    }
+  },
+  {
+    "id": "thundergods_wrath",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/thundergods_wrath.png",
+      "lines": [
+        "Mana: 225 / 325 / 450",
+        "Cooldown: 120 s"
+      ],
+      "sub": "Ultimate",
+      "text": "Strikes every living enemy hero on the map for 210 / 335 / 460 magic damage.",
+      "title": "Stormcall"
+    }
+  },
+  {
+    "id": "warden_bash",
+    "key": "",
+    "tip": {
+      "icon": "art/abilities/warden_bash.png",
+      "sub": "Passive",
+      "text": "Each attack has a 15% chance to deal 50 extra magic damage and stun the target for 1.65 seconds.",
+      "title": "Crushing Blow"
+    }
+  },
+  {
+    "id": "berserker_rage",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/berserker_rage.png",
+      "sub": "Turned on and off",
+      "text": "Hackle fights up close: 15 more damage, 3 more armor, 100 more health and 20 / 20 / 20 / 30 more move speed, and a 10% chance to deal 20 / 30 / 40 / 50 magic damage and stun for 0.8 / 1.2 / 1.6 / 2 seconds. Switch back to throw from range.",
+      "title": "Red Tusk"
+    }
+  },
+  {
+    "id": "whirling_axes",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/whirling_axes.png",
+      "lines": [
+        "Mana: 50",
+        "Cooldown: 20 s"
+      ],
+      "text": "Throws five hatchets in a cone 900 long. Enemies hit take 75 magic damage and are slowed by 30% for 3 / 3.75 / 4.5 / 5.25 seconds. Up close, the hatchets whirl round Hackle instead.",
+      "title": "Hatchet Storm"
+    }
+  },
+  {
+    "id": "whirling_axes_melee",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/whirling_axes_melee.png",
+      "lines": [
+        "Mana: 50",
+        "Cooldown: 12 s"
+      ],
+      "text": "Two hatchets whirl out to 450 round Hackle and back. Enemies they touch take 125 / 175 / 225 / 275 magic damage and miss 60% of their attacks for 4 / 5 / 6 / 7 seconds. From range, the hatchets fly in a cone instead.",
+      "title": "Hatchet Storm"
+    }
+  },
+  {
+    "id": "fervor",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/fervor.png",
+      "sub": "Passive",
+      "text": "Each attack on the same target gives 20 more attack speed, up to 2 / 3 / 4 / 5 times. A new target starts the count again.",
+      "title": "Grudge"
+    }
+  },
+  {
+    "id": "battle_trance",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/battle_trance.png",
+      "lines": [
+        "Mana: 75",
+        "Cooldown: 20 s"
+      ],
+      "sub": "Ultimate",
+      "text": "Every allied hero on the map gains 60 / 100 / 140 attack speed for 5 seconds; Hackle for 10.",
+      "title": "War Drums"
+    }
+  },
+  {
+    "id": "whirling_death",
+    "key": "KeyQ",
+    "tip": {
+      "icon": "art/abilities/whirling_death.png",
+      "lines": [
+        "Mana: 70 / 80 / 90 / 100",
+        "Cooldown: 8 s"
+      ],
+      "text": "Spins blades round Chipper, cutting trees and dealing 100 / 150 / 200 / 250 damage to enemies within 300: pure damage if a tree falls, magic damage if not. Enemy heroes lose 15% of their main attribute for 7 seconds.",
+      "title": "Splinter Spin"
+    }
+  },
+  {
+    "id": "timber_chain",
+    "key": "KeyW",
+    "tip": {
+      "icon": "art/abilities/timber_chain.png",
+      "lines": [
+        "Mana: 60 / 70 / 80 / 90",
+        "Cooldown: 4 s"
+      ],
+      "text": "Fires the chain claw up to 800 / 1000 / 1200 / 1400. It grabs the first tree near its path and pulls Chipper to it, dealing 80 / 120 / 160 / 200 pure damage to enemies within 225 of his path. A stunned Chipper is not pulled.",
+      "title": "Grapple Claw"
+    }
+  },
+  {
+    "id": "reactive_armor",
+    "key": "KeyE",
+    "tip": {
+      "icon": "art/abilities/reactive_armor.png",
+      "sub": "Passive",
+      "text": "Each attack on Chipper gives 1 armor and 1 health a second for 16 seconds, up to 4 / 8 / 12 / 16 at once.",
+      "title": "Thick Bark"
+    }
+  },
+  {
+    "id": "chakram",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/chakram.png",
+      "lines": [
+        "Mana: 125 / 150 / 175",
+        "Cooldown: 8 s"
+      ],
+      "sub": "Ultimate",
+      "text": "Fires the chest blade to a point, cutting trees and dealing 100 / 140 / 180 pure damage to enemies on the way out and back. There it spins, dealing 50 / 75 / 100 pure damage a second within 200 and slowing enemies by their missing health, while Chipper spends 20 / 30 / 40 mana a second. He cannot attack while it is out.",
+      "title": "Buzz Blade"
+    }
+  },
+  {
+    "id": "return_chakram",
+    "key": "KeyR",
+    "tip": {
+      "icon": "art/abilities/return_chakram.png",
+      "sub": "Ultimate",
+      "text": "Calls the blade back to Chipper.",
+      "title": "Recall Blade"
+    }
+  }
+]

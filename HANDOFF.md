@@ -125,9 +125,26 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **Selling (T30, R7.26):** with the shop open, sellable items show their price.
 - **The title backdrop on slow machines (R7.25):** five slow frames in a row and it stops.
 
+## Round 7, continued (19 October 2026): a Sell button (T31)
+
+- With the shop open, a click on a carried item picks it (`Game::shop_slot`, `act("shop.pick_slot")`) and `ui::sell_panel` shows it with a Sell button (R7.27). Published as `4626ab8`; the live browser check passed.
+
+## Round 7, continued (19 October 2026): two heroes for review (T32)
+
+- **Review:** `notes/LITERATURE.md` section 7, Troll Warlord and Goblin Shredder as of DotA 6.73 (Shredder was added in 6.73, inside the pin).
+- **Rules:** ten abilities in `crates/core/src/ability.rs` (`berserker_rage`, `whirling_axes` and `whirling_axes_melee`, `fervor`, `battle_trance`; `whirling_death`, `timber_chain`, `reactive_armor`, `chakram` and `return_chakram`), with `alt` slots (R7.33), `Tag` codes `TAG_BERSERK`, `TAG_BLIND`, `TAG_BLADE_OUT`, `TAG_ATTR_PCT`, a moving `Zone` (`to`, `done`), `stats::missile` for the melee form, `ability::attacked` when an attack begins, and attribute cuts that keep the health share when they end. Tests: `tests/heroes2.rs` (13); break rows "round 7g" (18, all caught after one test fix).
+- **Preview heroes (R7.34):** `hackle`, `chipper` in `data/rules.json` `preview_heroes`; `Rules::roster` is the choosable count; the host refuses a pick past it.
+- **Look:** mockups `journal/mockups/heroes2.js` ported to `data/models.json` (only the two added); portraits and icons in `tools/art/`; effects and shots in `data/presentation.json` and `crates/core/src/marks.rs` (`axe`, `claw` shots; `axes`, `chakram`, `pull` zones; miss and attribute-cut marks). The cast stage takes `,close` and handles alt abilities; `tools/castgif.py` makes GIFs from it.
+- **Journal:** tab 12 (`journal/mockups/tab12.py`, `journal/art6/`).
+- **Not published:** nothing a player sees changed. Before these heroes go live, `PROTOCOL` must rise (the world's shape changed).
+
+## Open for the person
 
 Each row of `SECOND-ORDER.md` with status *person*, by number:
 
+- **R7.28**: Hackle and Chipper's names, looks and ability names (journal tab 12).
+- **R7.29**: Chakram's drain, 20/30/40 (6.73) or 20/25/30 (6.73c).
+- **R7.30**: build the two heroes fully?
 - **R7.2**: selling is instant on a right-click and pays half. Ask first, or give a full refund for a few seconds after buying?
 - **R7.9**: next for the look: the forest's outline, or a darker ground? (Shadows under heroes and creeps came with T24.)
 - **R7.3**: play All Random All Mid at the new pace (level 3, 1.5× experience, 2× gold per second) and say whether it is too fast or too slow.

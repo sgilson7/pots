@@ -253,7 +253,7 @@ fn computer_players_ride_the_cannon_out_and_keep_to_the_middle_lane() {
     let f = common::fixture();
     let ctx = f.ctx();
     let mut w = aram_world(&f, 9);
-    let deal = aram::deal(9, f.rules.heroes.len(), &[false; PLAYERS]);
+    let deal = aram::deal(9, f.rules.roster, &[false; PLAYERS]);
     for (p, &hero) in deal.iter().enumerate() {
         w.players[p].present = true;
         w.players[p].bot = Some(2);
@@ -286,7 +286,7 @@ fn before_the_first_wave_computer_players_wait_out_in_the_lane() {
     let f = common::fixture();
     let ctx = f.ctx();
     let mut w = aram_world(&f, 12);
-    let deal = aram::deal(12, f.rules.heroes.len(), &[false; PLAYERS]);
+    let deal = aram::deal(12, f.rules.roster, &[false; PLAYERS]);
     for (p, &hero) in deal.iter().enumerate() {
         w.players[p].present = true;
         w.players[p].bot = Some(2);

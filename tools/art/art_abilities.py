@@ -563,6 +563,122 @@ def warden_bash(rng):
     return fig
 
 
+# ---- Hackle (blood), round 7 ---------------------------------------------------
+
+def saw_pts(x, y, r0, r1, teeth=12, rot=0.0):
+    pts = []
+    for i in range(teeth * 2):
+        a = math.radians(rot + i * 180.0 / teeth)
+        r = r1 if i % 2 == 0 else r0
+        pts.append((x + r * math.cos(a), y + r * math.sin(a)))
+    return pts
+
+
+def berserker_rage(rng):
+    fig = ability_fig("berserker_rage")
+    M.burst(fig, 1.0, 1.0, 0.62, "ember", n=11)
+    # an upturned tusk across the burst
+    fig.blob([(0.56, 0.62), (0.7, 0.6), (1.0, 0.86), (1.32, 1.3), (1.4, 1.5), (1.26, 1.38), (0.92, 1.0), (0.62, 0.76)], "bone", tension=0.4)
+    M.axe(fig, 1.32, 0.66, 0.7, rot=-35)
+    return fig
+
+
+def whirling_axes(rng):
+    fig = ability_fig("whirling_axes")
+    # five hatchets fanning out from the bottom, each with a short trail
+    for ang in (50, 70, 90, 110, 130):
+        a = math.radians(ang)
+        x, y = 1.0 + 0.82 * math.cos(a), 0.3 + 1.08 * math.sin(a)
+        bx, by = 1.0 + 0.4 * math.cos(a), 0.3 + 0.5 * math.sin(a)
+        fig.stroke([(bx, by), (x - 0.12 * math.cos(a), y - 0.12 * math.sin(a))], width=1.6, role="snow")
+        M.axe(fig, x, y, 0.34, rot=ang - 90)
+    return fig
+
+
+def whirling_axes_melee(rng):
+    fig = ability_fig("whirling_axes_melee")
+    M.ripple(fig, 1.0, 1.0, 0.62, 0.62, role="snow", width=2.6, a0=0, a1=360)
+    M.axe(fig, 0.46, 1.0, 0.5, rot=90)
+    M.axe(fig, 1.54, 1.0, 0.5, rot=-90)
+    M.swirl(fig, 1.0, 1.0, 0.24, role="ink", width=2.2, turns=1.2)
+    return fig
+
+
+def fervor(rng):
+    fig = ability_fig("fervor")
+    target(fig, 1.12, 0.84, 0.42)
+    for i in range(3):
+        y = 0.62 + i * 0.3
+        fig.poly([(0.32, y), (0.58, y + 0.16), (0.32, y + 0.32), (0.4, y + 0.16)], "flame")
+    return fig
+
+
+def battle_trance(rng):
+    fig = ability_fig("battle_trance")
+    for r in (0.5, 0.66, 0.82):
+        M.ripple(fig, 1.0, 0.86, r, r * 0.8, role="ink", width=2.4, a0=20, a1=160)
+    fig.ellipse(1.0, 0.72, 0.42, 0.14, "leather")
+    fig.rect(0.58, 0.44, 1.42, 0.72, "flame")
+    fig.ellipse(1.0, 0.44, 0.42, 0.14, "leather")
+    fig.ellipse(1.0, 0.72, 0.36, 0.1, "skin")
+    for x in (0.86, 1.14):
+        fig.stroke([(x, 0.72), (x, 0.44)], width=1.6, role="golddark")
+    fig.stroke([(0.5, 1.2), (0.86, 0.8)], width=3.0, role="wooddark")
+    return fig
+
+
+# ---- Chipper (earth), round 7 ---------------------------------------------------
+
+def whirling_death(rng):
+    fig = ability_fig("whirling_death")
+    fig.poly(saw_pts(1.0, 1.0, 0.42, 0.56, teeth=14), "steel")
+    fig.circle(1.0, 1.0, 0.14, "gold")
+    for a in (30, 150, 270):
+        x, y = 1.0 + 0.72 * math.cos(math.radians(a)), 1.0 + 0.72 * math.sin(math.radians(a))
+        fig.poly([(x - 0.12, y - 0.03), (x + 0.12, y + 0.03), (x + 0.1, y + 0.08), (x - 0.13, y + 0.02)], "wood")
+    M.swirl(fig, 1.0, 1.0, 0.3, role="ink", width=2.0, turns=1.0)
+    return fig
+
+
+def timber_chain(rng):
+    fig = ability_fig("timber_chain")
+    # a trunk on the right, the claw shut on it, the chain back to the left
+    fig.rect(1.28, 0.3, 1.56, 1.7, "wood")
+    for y in (0.6, 1.0, 1.4):
+        fig.stroke([(1.32, y), (1.5, y + 0.06)], width=1.4, role="wooddark")
+    M.chain(fig, [(0.34, 0.64), (1.1, 1.02)], r=0.06)
+    for dy in (-0.14, 0.0, 0.14):
+        fig.poly([(1.1, 1.02 + dy), (1.32, 1.08 + dy * 1.4), (1.12, 1.1 + dy)], "steel")
+    return fig
+
+
+def reactive_armor(rng):
+    fig = ability_fig("reactive_armor")
+    for i, (r, fill) in enumerate(((0.66, "wooddark"), (0.52, "wood"), (0.38, "wood!70!leaf"))):
+        fig.blob([(1.0 - r, 0.5), (1.0 - r * 0.8, 0.5 + r * 1.1), (1.0, 0.5 + r * 1.5), (1.0 + r * 0.8, 0.5 + r * 1.1), (1.0 + r, 0.5)], fill, tension=0.4)
+    M.plus(fig, 1.0, 0.86, 0.45, fill="heal")
+    return fig
+
+
+def chakram(rng):
+    fig = ability_fig("chakram")
+    fig.poly(saw_pts(1.12, 1.08, 0.36, 0.5, teeth=12, rot=8), "steel")
+    fig.circle(1.12, 1.08, 0.12, "gold")
+    M.motion(fig, [((0.28, 0.66), (0.62, 0.84)), ((0.3, 0.98), (0.6, 1.04)), ((0.36, 1.3), (0.64, 1.22))], width=2.6)
+    return fig
+
+
+def return_chakram(rng):
+    fig = ability_fig("return_chakram")
+    fig.poly(saw_pts(1.24, 1.16, 0.26, 0.36, teeth=10), "steel")
+    fig.circle(1.24, 1.16, 0.09, "gold")
+    # a curved arrow coming home, lower left
+    pts = arc_pts(1.0, 1.0, 0.56, 200, 320)
+    M.trail(fig, pts, "snow", w0=0.03, w1=0.12)
+    fig.poly([(0.38, 0.74), (0.6, 0.62), (0.56, 0.9)], "snow")
+    return fig
+
+
 _FUNCS = {f.__name__: f for f in (
     storm_bolt, great_cleave, warcry, gods_strength,
     crystal_nova, frostbite, brilliance_aura, freezing_field,
@@ -574,7 +690,9 @@ _FUNCS = {f.__name__: f for f in (
     earth_spike, hex, mana_drain, finger_of_death,
     shrapnel, headshot, take_aim, assassinate,
     arc_lightning, lightning_bolt, static_field, thundergods_wrath,
-    warden_bash)}
+    warden_bash,
+    berserker_rage, whirling_axes, whirling_axes_melee, fervor, battle_trance,
+    whirling_death, timber_chain, reactive_armor, chakram, return_chakram)}
 
 _missing = set(ability_ids()) ^ set(_FUNCS)
 if _missing:

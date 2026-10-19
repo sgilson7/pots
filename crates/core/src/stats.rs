@@ -76,7 +76,24 @@ pub fn attrs_x100(ctx: &Ctx, w: &World, id: Uid) -> [i32; 3] {
             out[(m.b - 1000) as usize] += m.a * 100;
         }
     }
+    // a share of an attribute taken away (Whirling Death), of the whole
+    for m in &u.mods {
+        let c = crate::ability::TAG_ATTR_PCT;
+        if m.kind == M::Tag && m.b >= c && m.b < c + 3 {
+            let v = &mut out[(m.b - c) as usize];
+            *v -= *v * m.a / 100;
+        }
+    }
     out
+}
+
+/// The speed of a unit's attack missile now, or 0 for a melee hit:
+/// Berserker Rage's melee form swings its axes instead of throwing them.
+pub fn missile(ctx: &Ctx, w: &World, id: Uid) -> i32 {
+    match w.get(id) {
+        Some(u) if !crate::ability::berserk(u) => ctx.rules.units[u.def as usize].missile,
+        _ => 0,
+    }
 }
 
 pub fn of(ctx: &Ctx, w: &World, id: Uid) -> Stats {
@@ -183,6 +200,19 @@ pub fn of(ctx: &Ctx, w: &World, id: Uid) -> Stats {
             M::Evasion => evasion_miss = evasion_miss * (100 - m.a) / 100,
             // Take Aim: extra attack range
             M::Tag if m.b == 2002 => s.range += m.a,
+            // Berserker Rage's melee form: its range, attack time and health
+            // from the ability, flat move speed in `a`
+            M::Tag if m.b == crate::ability::TAG_BERSERK => {
+                if let Some(a) = (m.tag as usize)
+                    .checked_sub(1)
+                    .and_then(|k| ctx.rules.abilities.get(k))
+                {
+                    s.range = a.v("range", 1);
+                    s.bat = a.v("bat", 1);
+                    s.max_hp += a.v("hp", 1);
+                }
+                s.move_speed += m.a;
+            }
             _ => {}
         }
     }

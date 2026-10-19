@@ -1538,6 +1538,402 @@
    "color": "",
    "key": "",
    "_after": "Roshan's Bash"
+  },
+  {
+   "id": "berserker_rage",
+   "logic": "berserker_rage",
+   "target": "toggle",
+   "on": "self",
+   "ultimate": false,
+   "mana": [],
+   "cooldown": [],
+   "range": [],
+   "cast_point": 0,
+   "values": {
+    "damage": [
+     15
+    ],
+    "armor": [
+     300
+    ],
+    "hp": [
+     100
+    ],
+    "move": [
+     20,
+     20,
+     20,
+     30
+    ],
+    "bat": [
+     155
+    ],
+    "range": [
+     128
+    ],
+    "bash_chance": [
+     10
+    ],
+    "bash_damage": [
+     20,
+     30,
+     40,
+     50
+    ],
+    "bash_stun": [
+     80,
+     120,
+     160,
+     200
+    ]
+   },
+   "icon": "abilities/berserker_rage",
+   "color": "fx_fire",
+   "key": "KeyQ",
+   "_after": "Berserker Rage"
+  },
+  {
+   "id": "whirling_axes",
+   "logic": "whirling_axes",
+   "target": "point",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    50
+   ],
+   "cooldown": [
+    2000
+   ],
+   "range": [
+    900
+   ],
+   "cast_point": 20,
+   "values": {
+    "damage": [
+     75
+    ],
+    "slow": [
+     30
+    ],
+    "duration": [
+     300,
+     375,
+     450,
+     525
+    ],
+    "radius": [
+     100
+    ],
+    "speed": [
+     1500
+    ],
+    "axes": [
+     5
+    ],
+    "tip": [
+     100
+    ],
+    "base": [
+     600
+    ]
+   },
+   "icon": "abilities/whirling_axes",
+   "color": "fx_steel",
+   "key": "KeyW",
+   "_after": "Whirling Axes (ranged)",
+   "alt": "whirling_axes_melee",
+   "alt_when": "berserk"
+  },
+  {
+   "id": "whirling_axes_melee",
+   "logic": "whirling_axes_melee",
+   "target": "none",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    50
+   ],
+   "cooldown": [
+    1200
+   ],
+   "range": [],
+   "cast_point": 20,
+   "values": {
+    "damage": [
+     125,
+     175,
+     225,
+     275
+    ],
+    "miss": [
+     60
+    ],
+    "duration": [
+     400,
+     500,
+     600,
+     700
+    ],
+    "radius": [
+     450
+    ],
+    "axe_radius": [
+     100
+    ],
+    "out": [
+     150
+    ]
+   },
+   "icon": "abilities/whirling_axes_melee",
+   "color": "fx_steel",
+   "key": "KeyW",
+   "_after": "Whirling Axes (melee)"
+  },
+  {
+   "id": "fervor",
+   "logic": "fervor",
+   "target": "passive",
+   "on": "self",
+   "ultimate": false,
+   "mana": [],
+   "cooldown": [],
+   "range": [],
+   "cast_point": 0,
+   "values": {
+    "attack_speed": [
+     20
+    ],
+    "stacks": [
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   "icon": "abilities/fervor",
+   "color": "fx_fire",
+   "key": "KeyE",
+   "_after": "Fervor"
+  },
+  {
+   "id": "battle_trance",
+   "logic": "battle_trance",
+   "target": "none",
+   "on": "self",
+   "ultimate": true,
+   "mana": [
+    75
+   ],
+   "cooldown": [
+    2000
+   ],
+   "range": [],
+   "cast_point": 20,
+   "values": {
+    "attack_speed": [
+     60,
+     100,
+     140
+    ],
+    "duration": [
+     500
+    ],
+    "self_duration": [
+     1000
+    ]
+   },
+   "icon": "abilities/battle_trance",
+   "color": "fx_fire",
+   "key": "KeyR",
+   "_after": "Battle Trance"
+  },
+  {
+   "id": "whirling_death",
+   "logic": "whirling_death",
+   "target": "none",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    70,
+    80,
+    90,
+    100
+   ],
+   "cooldown": [
+    800
+   ],
+   "range": [],
+   "cast_point": 30,
+   "values": {
+    "radius": [
+     300
+    ],
+    "damage": [
+     100,
+     150,
+     200,
+     250
+    ],
+    "attr_pct": [
+     15
+    ],
+    "duration": [
+     700
+    ]
+   },
+   "icon": "abilities/whirling_death",
+   "color": "fx_steel",
+   "key": "KeyQ",
+   "_after": "Whirling Death"
+  },
+  {
+   "id": "timber_chain",
+   "logic": "timber_chain",
+   "target": "point",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    60,
+    70,
+    80,
+    90
+   ],
+   "cooldown": [
+    400
+   ],
+   "range": [
+    800,
+    1000,
+    1200,
+    1400
+   ],
+   "cast_point": 30,
+   "values": {
+    "damage": [
+     80,
+     120,
+     160,
+     200
+    ],
+    "radius": [
+     225
+    ],
+    "latch": [
+     90
+    ],
+    "speed": [
+     1600,
+     2000,
+     2400,
+     2800
+    ]
+   },
+   "icon": "abilities/timber_chain",
+   "color": "fx_steel",
+   "key": "KeyW",
+   "_after": "Timber Chain"
+  },
+  {
+   "id": "reactive_armor",
+   "logic": "reactive_armor",
+   "target": "passive",
+   "on": "self",
+   "ultimate": false,
+   "mana": [],
+   "cooldown": [],
+   "range": [],
+   "cast_point": 0,
+   "values": {
+    "armor": [
+     100
+    ],
+    "regen": [
+     100
+    ],
+    "stacks": [
+     4,
+     8,
+     12,
+     16
+    ],
+    "duration": [
+     1600
+    ]
+   },
+   "icon": "abilities/reactive_armor",
+   "color": "fx_earth",
+   "key": "KeyE",
+   "_after": "Reactive Armor"
+  },
+  {
+   "id": "chakram",
+   "logic": "chakram",
+   "target": "point",
+   "on": "enemy",
+   "ultimate": true,
+   "mana": [
+    125,
+    150,
+    175
+   ],
+   "cooldown": [
+    800
+   ],
+   "range": [
+    1200
+   ],
+   "cast_point": 30,
+   "values": {
+    "radius": [
+     200
+    ],
+    "pass_damage": [
+     100,
+     140,
+     180
+    ],
+    "dps": [
+     50,
+     75,
+     100
+    ],
+    "drain": [
+     20,
+     30,
+     40
+    ],
+    "speed": [
+     1000
+    ],
+    "leash": [
+     2000
+    ],
+    "tick": [
+     50
+    ]
+   },
+   "icon": "abilities/chakram",
+   "color": "fx_steel",
+   "key": "KeyR",
+   "_after": "Chakram (6.73 drain 20/30/40)",
+   "alt": "return_chakram",
+   "alt_when": "blade_out"
+  },
+  {
+   "id": "return_chakram",
+   "logic": "return_chakram",
+   "target": "none",
+   "on": "self",
+   "ultimate": true,
+   "mana": [],
+   "cooldown": [],
+   "range": [],
+   "cast_point": 0,
+   "values": {},
+   "icon": "abilities/return_chakram",
+   "color": "fx_steel",
+   "key": "KeyR",
+   "_after": "Return Chakram"
   }
  ]
 }

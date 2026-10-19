@@ -176,7 +176,7 @@ pub fn think(w: &mut World, ctx: &Ctx) {
         if w.players[p].hero == NO_UNIT {
             // pick the hero this seat's index points to, skipping taken ones
             let taken: Vec<i32> = w.players.iter().map(|x| x.pick).collect();
-            let n = ctx.rules.heroes.len();
+            let n = ctx.rules.roster;
             let mut k = (p * 3 + w.tick as usize) % n;
             for _ in 0..n {
                 if !taken.contains(&(k as i32)) {
@@ -786,11 +786,8 @@ fn farm(w: &mut World, ctx: &Ctx, d: &Difficulty, p: usize, l: &Look) {
         let mut hit = avg * crate::combat::armor_keep(armor, ctx.rules.t.armor_factor) / 1000;
         let creep_at = w.get(id).map(|u| u.pos()).unwrap_or(l.here);
         let far = crate::world::dist(l.here, creep_at);
-        let flight = if hero_def.missile > 0 {
-            far * 100 / hero_def.missile
-        } else {
-            0
-        };
+        let shot = stats::missile(ctx, w, hero);
+        let flight = if shot > 0 { far * 100 / shot } else { 0 };
         let walk = (far - s.range - 48).max(0) * 100 / s.move_speed.max(1);
         let lands_in = hero_def.attack_point + flight + walk + d.reaction * 100 / TPS / 2;
         let attackers = w

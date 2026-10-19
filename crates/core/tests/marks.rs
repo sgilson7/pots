@@ -79,7 +79,9 @@ fn an_attack_passive_shows_when_it_fires() {
 fn every_ability_has_a_look_in_known_colours_and_shapes() {
     let g = Game::new(&files(), 1).unwrap();
     let shapes = ["ring", "flash", "sky", "beam", "wave", "spikes", "rise", "spin"];
-    let zones = ["", "warn", "cloud", "rain", "spin", "heal", "flash", "none"];
+    let zones = [
+        "", "warn", "cloud", "rain", "spin", "heal", "flash", "none", "axes", "chakram", "pull",
+    ];
     for a in &g.rules.abilities {
         let l = g
             .look

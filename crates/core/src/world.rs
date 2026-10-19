@@ -316,6 +316,10 @@ pub struct Zone {
     /// Next tick it acts.
     pub next: u32,
     pub a: i32,
+    /// Where a moving zone is headed (Chakram's blade, Timber Chain's
+    /// pull), map units; and the units it has hit on this pass.
+    pub to: P,
+    pub done: Vec<Uid>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -847,12 +851,43 @@ impl World {
         crate::ability::zones(self, ctx);
         crate::lanes::behave(self, ctx);
         crate::combat::deaths(self, ctx);
+        self.end_attribute_cuts(ctx);
         self.expire_mods();
         self.regrow(ctx);
         if self.tick.is_multiple_of(3) {
             crate::vision::update(self, ctx);
         }
         self.tick += 1;
+    }
+
+    /// A primary-attribute cut (Whirling Death) ending this tick gives the
+    /// attribute back keeping the share of health and mana, as Warcraft III
+    /// keeps it when strength changes.
+    fn end_attribute_cuts(&mut self, ctx: &Ctx) {
+        let t = self.tick;
+        let c = crate::ability::TAG_ATTR_PCT;
+        let ending = |m: &Mod| m.kind == M::Tag && m.b >= c && m.b < c + 3 && m.until != 0 && m.until <= t;
+        let ids: Vec<Uid> = self
+            .units
+            .iter()
+            .filter(|u| u.alive && u.mods.iter().any(ending))
+            .map(|u| u.id)
+            .collect();
+        for id in ids {
+            let before = crate::stats::of(ctx, self, id);
+            if let Some(u) = self.get_mut(id) {
+                u.mods.retain(|m| !ending(m));
+            }
+            let after = crate::stats::of(ctx, self, id);
+            if let Some(u) = self.get_mut(id) {
+                if before.max_hp > 0 {
+                    u.hp = (u.hp as i64 * after.max_hp as i64 / before.max_hp as i64) as i32;
+                }
+                if before.max_mana > 0 {
+                    u.mana = (u.mana as i64 * after.max_mana as i64 / before.max_mana as i64) as i32;
+                }
+            }
+        }
     }
 
     fn expire_mods(&mut self) {

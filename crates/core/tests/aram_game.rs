@@ -58,7 +58,7 @@ fn the_custom_match_deals_a_hero_allows_one_reroll_and_starts_in_the_mode() {
     assert!(m.world.aram, "the match is in the mode");
     let mut rr = [false; pots_core::world::PLAYERS];
     rr[0] = true;
-    let deal = pots_core::aram::deal(seed, g.rules.heroes.len(), &rr);
+    let deal = pots_core::aram::deal(seed, g.rules.roster, &rr);
     assert_eq!(deal[0] as i32, again);
     for (p, pl) in m.world.players.iter().enumerate() {
         if !pl.present {

@@ -155,9 +155,23 @@ pub fn attack_lands(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32, crit
     let (atk_def, def_def) = (a.def as usize, v.def as usize);
     let (a_pos, v_pos) = (a.pos(), v.pos());
     let v_glyph = v.has(M::Glyph);
-    let ranged = ctx.rules.units[atk_def].missile > 0;
+    let ranged = stats::missile(ctx, w, src) > 0;
     let evasion = stats::of(ctx, w, dst).evasion;
     if v_glyph {
+        return;
+    }
+    // a miss chance on the attacker's own attacks (Whirling Axes up close)
+    let blind = w
+        .get(src)
+        .and_then(|a| {
+            a.mods
+                .iter()
+                .find(|m| m.kind == M::Tag && m.b == crate::ability::TAG_BLIND)
+        })
+        .map(|m| m.a)
+        .unwrap_or(0);
+    if blind > 0 && w.rng.below(100) < blind as u32 {
+        w.event(EV_MISS, 0, 0, v_pos);
         return;
     }
     if evasion > 0 && w.rng.below(100) < evasion as u32 {
@@ -207,6 +221,7 @@ pub fn attack_lands(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32, crit
 
 /// Starts an attack swing at `t` if the attacker is ready.
 pub fn swing(w: &mut World, ctx: &Ctx, src: Uid, t: Uid) {
+    crate::ability::attacked(w, ctx, t, src);
     let s = stats::of(ctx, w, src);
     let Some(u) = w.get(src) else { return };
     let d = &ctx.rules.units[u.def as usize];
@@ -237,7 +252,8 @@ pub fn release(w: &mut World, ctx: &Ctx, src: Uid, t: Uid) {
     let Some(u) = w.live(src) else { return };
     let d = &ctx.rules.units[u.def as usize];
     let (team, x, y) = (u.team, u.x, u.y);
-    let missile = d.missile;
+    let _ = d;
+    let missile = stats::missile(ctx, w, src);
     let (mut raw, mut crit) = (roll(w, ctx, src), false);
     if let Some(bonus) = crate::ability::before_attack(w, ctx, src, t, raw) {
         raw = bonus;

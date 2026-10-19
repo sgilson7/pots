@@ -289,6 +289,16 @@
    "name": "Tempest",
    "title": "Keeper of Storms",
    "text": "An old storm caller crowned with cloud. His lightning chains through enemies, and his last word strikes every enemy hero at once."
+  },
+  "hackle": {
+   "name": "Hackle",
+   "title": "The Tusked Hatchet",
+   "text": "A boar brawler with a hatchet in each hand. He throws them from afar, then flips to fighting up close, faster with every blow on the same foe."
+  },
+  "chipper": {
+   "name": "Chipper",
+   "title": "The Lumberjack",
+   "text": "A beaver in a wooden walker. He swings from tree to tree on a chain claw and fires the saw blade off his chest, and every hit he takes thickens his armor."
   }
  },
  "abilities": {
@@ -455,6 +465,46 @@
   "warden_bash": {
    "name": "Crushing Blow",
    "text": "Each attack has a {chance:%} chance to deal {damage} extra magic damage and stun the target for {stun:s} seconds."
+  },
+  "berserker_rage": {
+   "name": "Red Tusk",
+   "text": "Hackle fights up close: {damage} more damage, {armor:s} more armor, {hp} more health and {move} more move speed, and a {bash_chance:%} chance to deal {bash_damage} magic damage and stun for {bash_stun:s} seconds. Switch back to throw from range."
+  },
+  "whirling_axes": {
+   "name": "Hatchet Storm",
+   "text": "Throws five hatchets in a cone {range} long. Enemies hit take {damage} magic damage and are slowed by {slow:%} for {duration:s} seconds. Up close, the hatchets whirl round Hackle instead."
+  },
+  "whirling_axes_melee": {
+   "name": "Hatchet Storm",
+   "text": "Two hatchets whirl out to {radius} round Hackle and back. Enemies they touch take {damage} magic damage and miss {miss:%} of their attacks for {duration:s} seconds. From range, the hatchets fly in a cone instead."
+  },
+  "fervor": {
+   "name": "Grudge",
+   "text": "Each attack on the same target gives {attack_speed} more attack speed, up to {stacks} times. A new target starts the count again."
+  },
+  "battle_trance": {
+   "name": "War Drums",
+   "text": "Every allied hero on the map gains {attack_speed} attack speed for {duration:s} seconds; Hackle for {self_duration:s}."
+  },
+  "whirling_death": {
+   "name": "Splinter Spin",
+   "text": "Spins blades round Chipper, cutting trees and dealing {damage} damage to enemies within {radius}: pure damage if a tree falls, magic damage if not. Enemy heroes lose {attr_pct:%} of their main attribute for {duration:s} seconds."
+  },
+  "timber_chain": {
+   "name": "Grapple Claw",
+   "text": "Fires the chain claw up to {range}. It grabs the first tree near its path and pulls Chipper to it, dealing {damage} pure damage to enemies within {radius} of his path. A stunned Chipper is not pulled."
+  },
+  "reactive_armor": {
+   "name": "Thick Bark",
+   "text": "Each attack on Chipper gives {armor:s} armor and {regen:s} health a second for {duration:s} seconds, up to {stacks} at once."
+  },
+  "chakram": {
+   "name": "Buzz Blade",
+   "text": "Fires the chest blade to a point, cutting trees and dealing {pass_damage} pure damage to enemies on the way out and back. There it spins, dealing {dps} pure damage a second within {radius} and slowing enemies by their missing health, while Chipper spends {drain} mana a second. He cannot attack while it is out."
+  },
+  "return_chakram": {
+   "name": "Recall Blade",
+   "text": "Calls the blade back to Chipper."
   }
  },
  "items": {

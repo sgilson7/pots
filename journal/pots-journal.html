@@ -187,7 +187,7 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
 <div class="wrap">
 
 <div class="journal-head">
-  <div class="eyebrow">Protection of the Spheres · design journal · last entry 18 October 2026</div>
+  <div class="eyebrow">Protection of the Spheres · design journal · last entry 19 October 2026</div>
   <h1>Protection of the Spheres</h1>
   <p class="lede">A browser game that plays like the Warcraft III map Defense of the Ancients, with heroes of its own. One tab for each round of work. New rounds are added as new tabs.</p>
   <div class="tabbar" role="tablist" aria-label="Journal entries">
@@ -202,6 +202,7 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
     <button role="tab" id="t-aram" aria-controls="p-aram" aria-selected="false" tabindex="-1"><small>9 · 16 Oct</small><span>All Random All Mid</span></button>
     <button role="tab" id="t-newlook" aria-controls="p-newlook" aria-selected="false" tabindex="-1"><small>10 · 17 Oct</small><span>The newer look</span></button>
     <button role="tab" id="t-ground" aria-controls="p-ground" aria-selected="false" tabindex="-1"><small>11 · 18 Oct</small><span>One surface for the ground</span></button>
+    <button role="tab" id="t-twoheroes" aria-controls="p-twoheroes" aria-selected="false" tabindex="-1"><small>12 · 19 Oct</small><span>Hackle and Chipper</span></button>
     <!--TABS-->
   </div>
 </div>
@@ -1407,6 +1408,142 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
 <footer>Pictures from <code>tools/shots.py</code> with <code>seed=7</code>. The "faceted" ones come from the branch <code>mockup/smooth-ground</code> (not published), with <code>map_look.smooth</code> on. The share of a frame that changes counts the pixels that differ between the two pictures, leaving out the minimap. Shape counts come from <code>cargo run --release -p pots_core --example count</code> on that branch. This tab is written by <code>journal/mockups/tab11.py</code>.</footer>
 </div>
 <!--/TAB 11-->
+<!-- ======================================================= TAB 12 -->
+<div class="panel-tab" role="tabpanel" id="p-twoheroes" aria-labelledby="t-twoheroes" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 12 · 19 October 2026 · two heroes for review (triage T32)</div>
+  <h2>Hackle and Chipper</h2>
+  <p class="lede">Two heroes that play as DotA's Troll Warlord and Goblin Shredder (Dota 2's Timbersaw), with names and looks of their own. Part 1 is the literature review. Part 2 is their looks. Part 3 is every ability, cast in the game itself. Part 4 is their attacks and shots. Part 5 is what is built, what is left, and three questions for you. They are in the game's rules and art but no one can choose them yet. Click any picture to see it larger.</p>
+</header>
+
+<section>
+  <div class="section-head"><div class="eyebrow">The request</div><h2>In your words</h2></div>
+  <blockquote>add troll warlord as a new character, and add timbersaw as a new character, add your designs, icons, assets in game, abilities, ability animations, auto attack animations and projectile assets. make sure the characters have different names and look different, but play the exact same. first do a lit review on how those characters played in the original warcraft3 dota, then create their abilities in game, then make all the assets necessary for showing me in the design log before I have you fully implement them and test.</blockquote>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 1</div><h2>How they played in DotA</h2></div>
+  <p>From IceFrog's changelogs and playdota's hero pages read through the Wayback Machine, the Dota 2 Wiki's DotA-era changelogs, and 2011–2012 player guides; every number with its source in <code>notes/LITERATURE.md</code>, section 7.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Hero</th><th>Which version</th><th>Sources</th></tr></thead>
+    <tbody><tr><td><b>Goblin Shredder</b></td><td>Added in 6.73, not 6.74 as first thought, so he is inside the game&#x27;s 6.72/6.73 pin. Built as of 6.73 (with the 6.73b growth and range fixes).</td><td><code>[CL-6.73], [PD-Shred-6.73]</code></td></tr><tr><td><b>Troll Warlord</b></td><td>In 6.72/6.73 his kit is Berserker Rage, Whirling Axes (ranged and melee), Fervor and Battle Trance; Whirling Axes replaced Blind in 6.72 and gained its 75 damage in 6.72c. Built as of 6.73.</td><td><code>[CL-6.72], [CL-6.72c], [CL-6.73]</code></td></tr></tbody>
+  </table></div>
+  <div class="grid2">
+    <div class="card"><h3>Troll Warlord, as players described him</h3><ul>
+      <li>Whirling Axes gave him burst and a chase for the first time: axes in one form, switch, axes in the other, ult, attack.</li>
+      <li>Max Whirling Axes first; Berserker Rage at one point, since more only adds stun time and speed.</li>
+      <li>A late carry who reaches the attack-speed cap with Fervor and Battle Trance.</li></ul></div>
+    <div class="card"><h3>Goblin Shredder, as players described him</h3><ul>
+      <li>"Timber chain for moving around fast, like a blink but can be used in combat, as long as you're not stunned."</li>
+      <li>Almost all his damage is pure; very low cooldowns; heavy mana use from the spinning blade.</li>
+      <li>Max Timber Chain first, an early point of Reactive Armor, Chakram whenever possible.</li></ul></div>
+  </div>
+  <h3 class="sub">Not settled by any source, and what the game uses</h3>
+  <ul><li>Timber Chain&#x27;s flight and pull speed: 1600 / 2000 / 2400 / 2800 a second (the Dota 2 port&#x27;s).</li><li>Thrown Whirling Axes&#x27; speed, 1500, and the melee whirl&#x27;s 1.5 s out and back (one guide measured 2 s).</li><li>Chakram spins in half-second ticks; what happens when Chipper runs out of mana (here, it comes home).</li><li>Reactive Armor&#x27;s stacks each have their own timer; Fervor counts when the hit lands.</li><li>Whirling Death&#x27;s 15% is of the whole attribute; Troll&#x27;s melee range 128; both heroes&#x27; turn rate and size (the port&#x27;s).</li><li>Deny experience in melee form: one guide reported more; left out as the review recommends.</li></ul>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 2</div><h2>Their looks</h2></div>
+  <p>Neither is a troll or a goblin, and neither borrows a Blizzard or Valve look. Each keeps an outline a player can read from the raised camera, in the same round, faceted style as the other ten.</p>
+  <figure class="gpair"><div class="gpair-row"><div><span class="chip">mockup</span><button class="zoom" data-full="art6/models/hero_hackle.jpg" data-cap="Hackle: mockup"><img loading="lazy" src="art6/models/hero_hackle.jpg" alt="Hackle: mockup"></button></div><div><span class="chip acc">in the game</span><button class="zoom" data-full="art6/game/hackle.jpg" data-cap="Hackle: in the game"><img loading="lazy" src="art6/game/hackle.jpg" alt="Hackle: in the game"></button></div></div>
+  <figcaption><b>Hackle</b> (abilities of Troll Warlord (Jah&#x27;rakal)). A boar brawler: a bristle crest in his side&#x27;s colour, upturned tusks, war paint, a bone necklace and a hatchet in each hand. Not a troll.</figcaption></figure><figure class="gpair"><div class="gpair-row"><div><span class="chip">mockup</span><button class="zoom" data-full="art6/models/hero_chipper.jpg" data-cap="Chipper: mockup"><img loading="lazy" src="art6/models/hero_chipper.jpg" alt="Chipper: mockup"></button></div><div><span class="chip acc">in the game</span><button class="zoom" data-full="art6/game/chipper.jpg" data-cap="Chipper: in the game"><img loading="lazy" src="art6/game/chipper.jpg" alt="Chipper: in the game"></button></div></div>
+  <figcaption><b>Chipper</b> (abilities of Goblin Shredder (Rizzrak; Dota 2&#x27;s Timbersaw)). A beaver lumberjack in a little wooden walker: a hard hat in his side&#x27;s colour, big front teeth, a saw blade on his chest, a chain claw on his left arm, a blade launcher on his right shoulder and a paddle tail. Not a goblin.</figcaption></figure>
+  <figure class="gpair"><div><button class="zoom" data-full="art6/game/lineup.jpg" data-cap="Hackle and Chipper beside Ironvow, Kestrel and a Sunward creep, in the game"><img loading="lazy" src="art6/game/lineup.jpg" alt="Hackle and Chipper beside Ironvow, Kestrel and a Sunward creep, in the game"></button></div><figcaption><b>Beside the roster.</b> Hackle and Chipper with Ironvow, Kestrel and a Sunward creep, in the game's model viewer.</figcaption></figure>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 3</div><h2>Every ability, cast in the game</h2></div>
+  <p>Each animation is the game itself: its cast stage puts the hero at full levels beside an ally, three enemy creeps and an enemy hero, and the frames are the following ticks (<code>tools/castgif.py</code>). The rule under each is the game's own tip. Whirling Axes has two forms, one for each of Hackle's stances, and Chakram's button turns into Recall Blade while the blade is out, so each hero shows five.</p>
+  <div class="hgroup"><div class="hhead"><img class="aicon big" src="art6/icons/hero_hackle.png" alt="" width="56" height="56"><h3>Hackle</h3></div>
+  <p class="lede" style="font-size:15px">Plays as Troll Warlord (Jah&#x27;rakal). Agility 21 + 2.75, strength 17 + 2.2, intelligence 13 + 1; 473 health; throws from 500 at 1.7 s base attack time, swings at 128 and 1.55 in melee form; 300 move speed.</p>
+  <div class="agrid"><article class="acard">
+  <header><img class="aicon" src="art6/icons/berserker_rage.png" alt="" width="44" height="44"><div><h3>Red Tusk</h3><div class="ameta">Turned on and off</div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/berserker_rage.jpg" data-cap="Red Tusk: in the game"><img loading="lazy" src="art6/abilities/berserker_rage.gif" alt="Red Tusk cast in the game: A red flash at Hackle&#x27;s feet and a ring in fire colours while it is on; his hatchets swing instead of fly, and a bash flashes on the target." width="480" height="270"></button>
+  <p><b>What you see.</b> A red flash at Hackle&#x27;s feet and a ring in fire colours while it is on; his hatchets swing instead of fly, and a bash flashes on the target.</p>
+  <p><b>How you can tell.</b> The ring under him is the melee form. Pressing it again sends him back to throwing.</p>
+  <p class="rule">Hackle fights up close: 15 more damage, 3 more armor, 100 more health and 20 / 20 / 20 / 30 more move speed, and a 10% chance to deal 20 / 30 / 40 / 50 magic damage and stun for 0.8 / 1.2 / 1.6 / 2 seconds. Switch back to throw from range. <span></span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art6/icons/whirling_axes.png" alt="" width="44" height="44"><div><h3>Hatchet Storm</h3><div class="ameta"></div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/whirling_axes.jpg" data-cap="Hatchet Storm: in the game"><img loading="lazy" src="art6/abilities/whirling_axes.gif" alt="Hatchet Storm cast in the game: Five hatchets tumble out in a fan, leaving short trails; every enemy one passes gets the frost ring of a slow." width="480" height="270"></button>
+  <p><b>What you see.</b> Five hatchets tumble out in a fan, leaving short trails; every enemy one passes gets the frost ring of a slow.</p>
+  <p><b>How you can tell.</b> The fan is the cone: wide at the end, narrow at Hackle. Each enemy is hit once, whichever axe reaches it first.</p>
+  <p class="rule">Throws five hatchets in a cone 900 long. Enemies hit take 75 magic damage and are slowed by 30% for 3 / 3.75 / 4.5 / 5.25 seconds. Up close, the hatchets whirl round Hackle instead. <span>Mana: 50 · Cooldown: 20 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art6/icons/whirling_axes_melee.png" alt="" width="44" height="44"><div><h3>Hatchet Storm</h3><div class="ameta"></div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/whirling_axes_melee.jpg" data-cap="Hatchet Storm: in the game"><img loading="lazy" src="art6/abilities/whirling_axes_melee.gif" alt="Hatchet Storm cast in the game: Two hatchets spin out round Hackle to the edge of a pale ring and back; an enemy they touch is hit and gets grey puffs circling its eyes." width="480" height="270"></button>
+  <p><b>What you see.</b> Two hatchets spin out round Hackle to the edge of a pale ring and back; an enemy they touch is hit and gets grey puffs circling its eyes.</p>
+  <p><b>How you can tell.</b> The puffs are the miss chance: that enemy misses 60% of its attacks while they show. Ranged form and melee form keep separate cooldowns, so the two can be thrown back to back.</p>
+  <p class="rule">Two hatchets whirl out to 450 round Hackle and back. Enemies they touch take 125 / 175 / 225 / 275 magic damage and miss 60% of their attacks for 4 / 5 / 6 / 7 seconds. From range, the hatchets fly in a cone instead. <span>Mana: 50 · Cooldown: 12 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art6/icons/fervor.png" alt="" width="44" height="44"><div><h3>Grudge</h3><div class="ameta">Passive</div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/fervor.jpg" data-cap="Grudge: in the game"><img loading="lazy" src="art6/abilities/fervor.gif" alt="Grudge cast in the game: Hackle&#x27;s attacks get faster on the same target; a ring at his feet marks the bonus." width="480" height="270"></button>
+  <p><b>What you see.</b> Hackle&#x27;s attacks get faster on the same target; a ring at his feet marks the bonus.</p>
+  <p><b>How you can tell.</b> No cast and no button: it builds with each hit on one target and starts again on a new one.</p>
+  <p class="rule">Each attack on the same target gives 20 more attack speed, up to 2 / 3 / 4 / 5 times. A new target starts the count again. <span></span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art6/icons/battle_trance.png" alt="" width="44" height="44"><div><h3>War Drums</h3><div class="ameta">Ultimate</div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/battle_trance.jpg" data-cap="War Drums: in the game"><img loading="lazy" src="art6/abilities/battle_trance.gif" alt="War Drums cast in the game: Drum rings roll out from Hackle and every allied hero on the map gets the attack-speed ring." width="480" height="270"></button>
+  <p><b>What you see.</b> Drum rings roll out from Hackle and every allied hero on the map gets the attack-speed ring.</p>
+  <p><b>How you can tell.</b> The ring at an ally&#x27;s feet lasts 5 seconds; on Hackle, 10.</p>
+  <p class="rule">Every allied hero on the map gains 60 / 100 / 140 attack speed for 5 seconds; Hackle for 10. <span>Mana: 75 · Cooldown: 20 s</span></p>
+</article></div></div><div class="hgroup"><div class="hhead"><img class="aicon big" src="art6/icons/hero_chipper.png" alt="" width="56" height="56"><h3>Chipper</h3></div>
+  <p class="lede" style="font-size:15px">Plays as Goblin Shredder (Rizzrak; Dota 2&#x27;s Timbersaw). Strength 22 + 2.4, agility 16 + 1.3, intelligence 21 + 1.8; 568 health; melee at 128, 1.7 s base attack time; 290 move speed.</p>
+  <div class="agrid"><article class="acard">
+  <header><img class="aicon" src="art6/icons/whirling_death.png" alt="" width="44" height="44"><div><h3>Splinter Spin</h3><div class="ameta"></div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/whirling_death.jpg" data-cap="Splinter Spin: in the game"><img loading="lazy" src="art6/abilities/whirling_death.gif" alt="Splinter Spin cast in the game: Blades spin out to a ring round Chipper; trees inside fall, and enemy heroes get a steel arrow pointing down over their heads." width="480" height="270"></button>
+  <p><b>What you see.</b> Blades spin out to a ring round Chipper; trees inside fall, and enemy heroes get a steel arrow pointing down over their heads.</p>
+  <p><b>How you can tell.</b> The arrow is the attribute cut. If a tree fell, the hit was pure damage.</p>
+  <p class="rule">Spins blades round Chipper, cutting trees and dealing 100 / 150 / 200 / 250 damage to enemies within 300: pure damage if a tree falls, magic damage if not. Enemy heroes lose 15% of their main attribute for 7 seconds. <span>Mana: 70 / 80 / 90 / 100 · Cooldown: 8 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art6/icons/timber_chain.png" alt="" width="44" height="44"><div><h3>Grapple Claw</h3><div class="ameta"></div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/timber_chain.jpg" data-cap="Grapple Claw: in the game"><img loading="lazy" src="art6/abilities/timber_chain.gif" alt="Grapple Claw cast in the game: The chain claw flies out with its links trailing; it shuts on a tree and Chipper is pulled along the chain, cutting enemies on the way; the tree falls." width="480" height="270"></button>
+  <p><b>What you see.</b> The chain claw flies out with its links trailing; it shuts on a tree and Chipper is pulled along the chain, cutting enemies on the way; the tree falls.</p>
+  <p><b>How you can tell.</b> With no tree near its path the claw comes back and nothing happens. Stunned as it grabs, Chipper stays put.</p>
+  <p class="rule">Fires the chain claw up to 800 / 1000 / 1200 / 1400. It grabs the first tree near its path and pulls Chipper to it, dealing 80 / 120 / 160 / 200 pure damage to enemies within 225 of his path. A stunned Chipper is not pulled. <span>Mana: 60 / 70 / 80 / 90 · Cooldown: 4 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art6/icons/reactive_armor.png" alt="" width="44" height="44"><div><h3>Thick Bark</h3><div class="ameta">Passive</div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/reactive_armor.jpg" data-cap="Thick Bark: in the game"><img loading="lazy" src="art6/abilities/reactive_armor.gif" alt="Thick Bark cast in the game: Each attack that starts on Chipper adds to the earth-coloured ring at his feet." width="480" height="270"></button>
+  <p><b>What you see.</b> Each attack that starts on Chipper adds to the earth-coloured ring at his feet.</p>
+  <p><b>How you can tell.</b> The ring is the armor and regeneration; each stack fades 16 seconds after the attack that made it.</p>
+  <p class="rule">Each attack on Chipper gives 1 armor and 1 health a second for 16 seconds, up to 4 / 8 / 12 / 16 at once. <span></span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art6/icons/chakram.png" alt="" width="44" height="44"><div><h3>Buzz Blade</h3><div class="ameta">Ultimate</div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/chakram.jpg" data-cap="Buzz Blade: in the game"><img loading="lazy" src="art6/abilities/chakram.gif" alt="Buzz Blade cast in the game: The saw blade flies to the point, cutting trees, then spins there inside a pale circle with sparks off its rim." width="480" height="270"></button>
+  <p><b>What you see.</b> The saw blade flies to the point, cutting trees, then spins there inside a pale circle with sparks off its rim.</p>
+  <p><b>How you can tell.</b> Inside the circle enemies take damage and slow more the more health they have lost. While the blade is out Chipper cannot attack, and his ultimate&#x27;s button becomes Recall Blade.</p>
+  <p class="rule">Fires the chest blade to a point, cutting trees and dealing 100 / 140 / 180 pure damage to enemies on the way out and back. There it spins, dealing 50 / 75 / 100 pure damage a second within 200 and slowing enemies by their missing health, while Chipper spends 20 / 30 / 40 mana a second. He cannot attack while it is out. <span>Mana: 125 / 150 / 175 · Cooldown: 8 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art6/icons/return_chakram.png" alt="" width="44" height="44"><div><h3>Recall Blade</h3><div class="ameta">Ultimate</div></div></header>
+  <button class="zoom gif" data-full="art6/abilities/return_chakram.jpg" data-cap="Recall Blade: in the game"><img loading="lazy" src="art6/abilities/return_chakram.gif" alt="Recall Blade cast in the game: The blade flies home to Chipper along its line, hitting enemies once more on the way." width="480" height="270"></button>
+  <p><b>What you see.</b> The blade flies home to Chipper along its line, hitting enemies once more on the way.</p>
+  <p><b>How you can tell.</b> Once it is back he can attack again and the button is Buzz Blade.</p>
+  <p class="rule">Calls the blade back to Chipper. <span></span></p>
+</article></div></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 4</div><h2>Attacks and shots</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>What</th><th>How it looks</th><th>Seen in</th></tr></thead>
+    <tbody><tr><td><b>Hackle, thrown</b></td><td>A hatchet tumbling end over end with a short trail, 1200 a second, his attack's own wind-up and follow-through (0.3 s each).</td><td>Grudge's animation</td></tr><tr><td><b>Hackle, up close</b></td><td>The same hatchets swung, faster (1.55 s base); a bash flashes on the target and stuns it.</td><td>Red Tusk's animation</td></tr><tr><td><b>Chipper</b></td><td>A swing of the walker's arms (0.36 s wind-up, 0.64 s follow-through).</td><td>Thick Bark's animation</td></tr><tr><td><b>Hatchet Storm's axes</b></td><td>Bigger tumbling hatchets in a fan.</td><td>Hatchet Storm</td></tr><tr><td><b>Grapple Claw</b></td><td>Three steel prongs ahead of a line of iron links back to his arm; during the pull, the chain from Chipper to the tree.</td><td>Grapple Claw</td></tr><tr><td><b>Buzz Blade</b></td><td>A flat steel saw with ten teeth and a gold hub, spinning as it flies, and in its circle when it stops.</td><td>Buzz Blade, Recall Blade</td></tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 5</div><h2>What is built, and what is left</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Step</th><th>What</th><th>State</th></tr></thead>
+    <tbody><tr><td>Rules</td><td>All ten abilities in the core with their DotA numbers; 13 tests with values worked out by hand, 18 break rows, all caught. The two heroes are preview heroes: the cast stage shows them, no pick screen, deal, computer player or room can choose them.</td><td>Done</td></tr><tr><td>Look</td><td>Both models in the game (from the mockups, faceted like the rest), portraits and ten TikZ icons, each ability's effect, the thrown hatchet and the chain claw as shots, the orbiting hatchets, the spinning blade and the pull as zones, and marks for the miss chance and the attribute cut.</td><td>Done</td></tr><tr><td>Onto the roster</td><td>Move them from <code>preview_heroes</code> to <code>heroes</code> in <code>data/rules.json</code>; the hero grid, the deal and online rooms then include them. <code>PROTOCOL</code> goes up.</td><td>Small</td></tr><tr><td>Computer players</td><td>Teach the behaviour trees the form switch, the chain to a tree and the blade's recall, and when to use each; measure them in bot matches.</td><td>Medium</td></tr><tr><td>Checks</td><td>A match each in the arcade and in All Random All Mid with them; the five-runner online test; the browser check.</td><td>Small</td></tr></tbody>
+  </table></div>
+  <h3 class="sub">Yours to decide, by number</h3>
+  <div class="table-scroll"><table>
+    <thead><tr><th>#</th><th>Question</th></tr></thead>
+    <tbody><tr><td>R7.28</td><td>The names and looks: <b>Hackle</b> (boar, twin hatchets) and <b>Chipper</b> (beaver lumberjack), and their ability names: Red Tusk, Hatchet Storm, Grudge, War Drums; Splinter Spin, Grapple Claw, Thick Bark, Buzz Blade, Recall Blade. Keep, or change any?</td></tr><tr><td>R7.29</td><td>Chakram's mana drain: 20 / 30 / 40 a second (6.73, as built) or 20 / 25 / 30 (6.73c)?</td></tr><tr><td>R7.30</td><td>Build them fully (roster, computer players, tests), as Part 4 lays out?</td></tr></tbody>
+  </table></div>
+</section>
+<footer>Mockups: <code>journal/mockups/heroes2.js</code> (three.js r160, MIT), pictures from <code>ART=art6 LOOK=ape shoot.py</code>. In-game pictures: <code>tools/shots.py</code> and <code>tools/castgif.py</code> on the build of 19 October 2026. Icons: <code>tools/art/</code> (TikZ). Tips: <code>cargo run -p pots_core --example tips</code>. This tab is written by <code>journal/mockups/tab12.py</code>.</footer>
+</div>
+<!--/TAB 12-->
 <!--PANELS-->
 
 </div>

@@ -1763,6 +1763,110 @@
    "day_vision": 0,
    "night_vision": 0,
    "_after": "shops"
+  },
+  {
+   "id": "hackle",
+   "kind": "hero",
+   "hp": 0,
+   "hp_regen": 25,
+   "mana": 0,
+   "mana_regen": 1,
+   "armor_type": "hero",
+   "attack_type": "hero",
+   "turn": 500,
+   "radius": 24,
+   "day_vision": 1800,
+   "night_vision": 800,
+   "bounty": [
+    0,
+    0
+   ],
+   "xp": 0,
+   "model": "hero_hackle",
+   "armor": -100,
+   "damage": [
+    17,
+    35
+   ],
+   "range": 500,
+   "bat": 170,
+   "attack_point": 30,
+   "backswing": 30,
+   "missile": 1200,
+   "speed": 300,
+   "acquire": 600,
+   "attrs": {
+    "primary": "agi",
+    "base": [
+     17,
+     21,
+     13
+    ],
+    "gain": [
+     220,
+     275,
+     100
+    ]
+   },
+   "abilities": [
+    "berserker_rage",
+    "whirling_axes",
+    "fervor",
+    "battle_trance"
+   ],
+   "_after": "Troll Warlord (DotA 6.73; notes/LITERATURE.md 7.1)"
+  },
+  {
+   "id": "chipper",
+   "kind": "hero",
+   "hp": 0,
+   "hp_regen": 25,
+   "mana": 0,
+   "mana_regen": 1,
+   "armor_type": "hero",
+   "attack_type": "hero",
+   "turn": 500,
+   "radius": 24,
+   "day_vision": 1800,
+   "night_vision": 800,
+   "bounty": [
+    0,
+    0
+   ],
+   "xp": 0,
+   "model": "hero_chipper",
+   "armor": -200,
+   "damage": [
+    26,
+    30
+   ],
+   "range": 128,
+   "bat": 170,
+   "attack_point": 36,
+   "backswing": 64,
+   "missile": 0,
+   "speed": 290,
+   "acquire": 800,
+   "attrs": {
+    "primary": "str",
+    "base": [
+     22,
+     16,
+     21
+    ],
+    "gain": [
+     240,
+     130,
+     180
+    ]
+   },
+   "abilities": [
+    "whirling_death",
+    "timber_chain",
+    "reactive_armor",
+    "chakram"
+   ],
+   "_after": "Goblin Shredder, Dota 2's Timbersaw (DotA 6.73; notes/LITERATURE.md 7.2)"
   }
  ]
 }

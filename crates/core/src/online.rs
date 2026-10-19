@@ -357,7 +357,7 @@ pub fn act(g: &mut Game, name: &str, value: &str) -> Result<(), String> {
         "online.host" => {
             o.role = Role::Host;
             o.seed = match_seed(g.seed);
-            o.heroes = g.rules.heroes.len();
+            o.heroes = g.rules.roster;
             o.room = code_from(g.seed ^ 0x5eed);
             o.token = code_from(g.seed ^ 0x70c3);
             o.seats = empty_seats();
@@ -747,6 +747,10 @@ fn host_receives(g: &mut Game, peer: &str, msg: Msg) {
             broadcast_lobby(o);
         }
         Msg::Pick { hero } => {
+            // only a hero on the roster, not a preview hero (round 7)
+            if hero as usize >= g.rules.roster {
+                return;
+            }
             let o = &mut g.online;
             if o.aram {
                 return;
@@ -911,7 +915,7 @@ fn begin(g: &mut Game, seed: u64, horn: u32, mode: Mode, seats: Vec<Seat>, me: u
     w.horn_at = horn;
     // in All Random All Mid every seat, computer or not, takes its dealt hero
     let rerolled: Vec<bool> = seats.iter().map(|s| s.rerolled).collect();
-    let deal = crate::aram::deal(seed, g.rules.heroes.len(), &rerolled);
+    let deal = crate::aram::deal(seed, g.rules.roster, &rerolled);
     let mut humans = [false; PLAYERS];
     for (k, seat) in seats.iter().enumerate() {
         // with the computer players off, an open seat stays empty

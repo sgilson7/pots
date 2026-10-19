@@ -1,6 +1,8 @@
 """Hero portraits: web/art/heroes/<hero id>.png, a head-and-shoulders bust on
 a round badge in the hero's element (tools/art/icons.py). Each bust shows the
 look tools/modelgen.py gives the hero's model."""
+import math
+
 from icons import M, hero_fig
 
 C = 1.0
@@ -247,5 +249,69 @@ def tempest(rng):
     return fig
 
 
+def hackle(rng):
+    """Hackle (round 7, after Troll Warlord): a boar brawler, bristle crest,
+    tusks, a hatchet over each shoulder."""
+    fig = hero_fig("hackle")
+    hide = "violet!35!skin"
+    with M.clipped(fig):
+        shoulders(fig, "leaf!70!moss", top=0.56)
+        for i in range(5):
+            x = 0.7 + i * 0.15
+            fig.poly([(x - 0.04, 0.5), (x + 0.04, 0.5), (x, 0.38)], "bone")
+        # a hatchet up behind each shoulder
+        M.axe(fig, 0.42, 0.86, 0.8, rot=25)
+        M.axe(fig, 1.58, 0.86, 0.8, rot=-25)
+        # ears and the bristle crest
+        for sgn in (-1, 1):
+            fig.poly([(C + sgn * 0.26, 1.24), (C + sgn * 0.46, 1.5), (C + sgn * 0.38, 1.16)], hide)
+        for i in range(5):
+            x = 0.8 + i * 0.1
+            fig.poly([(x - 0.06, 1.3), (x + 0.06, 1.3), (x, 1.62 - abs(i - 2) * 0.06)], "flame")
+        # the head, snout and tusks
+        fig.circle(C, 1.0, 0.36, hide)
+        fig.ellipse(C, 0.86, 0.2, 0.14, "violet!20!skin")
+        fig.ellipse(0.94, 0.86, 0.03, 0.04, "ink")
+        fig.ellipse(1.06, 0.86, 0.03, 0.04, "ink")
+        for sgn in (-1, 1):
+            fig.poly([(C + sgn * 0.14, 0.8), (C + sgn * 0.2, 0.8), (C + sgn * 0.28, 1.0)], "bone")
+            fig.rect(C + sgn * 0.2 - 0.07, 1.05, C + sgn * 0.2 + 0.07, 1.08, "flame")
+        eyes(fig, 1.12, dx=0.13)
+    return fig
+
+
+def chipper(rng):
+    """Chipper (round 7, after Timbersaw): a beaver lumberjack, hard hat,
+    front teeth, the saw blade on his chest and a chain claw."""
+    fig = hero_fig("chipper")
+    with M.clipped(fig):
+        shoulders(fig, "wood", top=0.58)
+        fig.rect(0.3, 0.3, 1.7, 0.36, "wooddark")
+        # the saw blade on the chest
+        teeth = []
+        for i in range(24):
+            a = math.radians(i * 15)
+            r = 0.26 if i % 2 == 0 else 0.2
+            teeth.append((C + r * math.cos(a), 0.3 + r * math.sin(a)))
+        fig.poly(teeth, "steel")
+        fig.circle(C, 0.3, 0.06, "gold")
+        # the chain claw over the left shoulder
+        M.chain(fig, [(0.34, 0.6), (0.4, 1.0)], r=0.05)
+        M.hook(fig, 0.42, 1.12, 0.36, rot=170)
+        # round ears, the head, muzzle and two big teeth
+        for sgn in (-1, 1):
+            fig.circle(C + sgn * 0.3, 1.22, 0.09, "wood!80!leather")
+        fig.circle(C, 0.98, 0.34, "wood!80!leather")
+        fig.ellipse(C, 0.84, 0.2, 0.13, "skin!70!wood")
+        fig.ellipse(C, 0.92, 0.05, 0.035, "ink")
+        fig.rect(0.95, 0.66, 0.995, 0.78, "snow")
+        fig.rect(1.005, 0.66, 1.05, 0.78, "snow")
+        eyes(fig, 1.04, dx=0.12)
+        # the hard hat
+        fig.ellipse(C, 1.24, 0.42, 0.06, "gold")
+        fig.blob([(0.7, 1.24), (0.74, 1.42), (1.0, 1.5), (1.26, 1.42), (1.3, 1.24)], "gold", tension=0.4)
+    return fig
+
+
 PICTURES = {f"heroes/{f.__name__}": f for f in
-            (ironvow, rime, cinder, thistle, gristle, tectus, kestrel, hexwright, longwick, tempest)}
+            (ironvow, rime, cinder, thistle, gristle, tectus, kestrel, hexwright, longwick, tempest, hackle, chipper)}
