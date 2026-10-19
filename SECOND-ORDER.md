@@ -130,6 +130,7 @@ One row per assumption, surprise or open item. **Kind** is *divergence* (what wa
 | R7.24 | divergence | Death costs unreliable gold, as in DotA (30 a level). | The person: "you should not lose gold when you die". | `death_gold_per_level` is 0; the rule stays, so a later round can bring it back. The glossary's Gold entry says gold is kept. | `tests/rules.rs` a_hero_keeps_its_gold_when_it_dies | done |
 | R7.25 | finding | A browser that draws a match draws the title's backdrop too. | The browser check's headless engines draw without a graphics card: about a second a frame on the title, so a click on Arcade never found the button stable and timed out. A real machine without a graphics card would see the same. | After five frames in a row slower than 150 ms, the backdrop stops for good and the plain title returns. | `tests/backdrop.rs` a_machine_too_slow_to_draw_it_keeps_a_plain_title | done |
 | R7.26 | finding | A right-click to sell is findable from the tip. | The person asked how to sell after it was built (T20). | With the shop open, each item that can be sold shows its price on its slot. | `tests/hand.rs` | done |
+| R7.27 | divergence | Selling stays a right-click. | The person asked for a way to click an item in the shop and press a Sell button, as League does. | With the shop open, a click on a carried item picks it (display state, never an order) and the shop's panel shows it with a Sell button and its price; off, with the reason, away from a shop. With the shop closed a click still uses the item, and the number keys always do. | `tests/hand.rs` with_the_shop_open_a_carried_item_can_be_picked_and_sold_with_a_button | done |
 
 ## Strings written by the agent
 
@@ -164,3 +165,7 @@ Each reader-visible string the agent wrote, with its key, for the person to read
 | `GLOSSARY: All Random All Mid` (added) | Heroes start a few levels up and earn experience and gold faster than in a normal match, so it plays shorter. |
 | Journal tab 11 | All of `journal/mockups/tab11.py`'s text, for the person to read. |
 | `GLOSSARY: Gold` (changed) | ... killing heroes and taking towers pays too. You keep it when you die. |
+| `shop.sell` (changed) | Click an item you carry to sell it for half its price, or right-click it near a shop. |
+| `shop.sell_button` | Sell ({v}) |
+| `shop.sell_far` | Walk to a shop to sell this. |
+| `shop.no_sale` | No shop buys this back. |

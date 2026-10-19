@@ -36,3 +36,4 @@ Compare at least one result with a case worked out by hand. **Severity** is *blo
 | T28 | "typing in the boxes is all messed up for some reason" | Every key typed stays in the box. | Each key rebuilt the box empty and moved the focus (R7.22). Fixed; the browser check types in every engine. | blocks use | small | done |
 | T29 | "you should not lose gold when you die" | A hero keeps its gold on death. | `death_gold_per_level` 0 (R7.24). | wanted | small | done |
 | T30 | "how do you sell?" | Selling is easy to find. | Answered (right-click an item near a shop); prices now show on items while the shop is open (R7.26). | wanted | small | done |
+| T31 | "there should also be some way to click on your items inthe shop, so then you can press a sell button on them" | A click on a carried item with the shop open, then a Sell button. | Built (R7.27). | wanted | small | done |

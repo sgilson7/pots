@@ -628,5 +628,19 @@
   "find": "                        b.n.push(text(\"span\", \"sell-price\", back.to_string()));",
   "replace": "",
   "test": "a_right_click_on_a_carried_item_near_a_shop_sells_it_for_half"
+ },
+ {
+  "name": "round 7f: a click in the inventory always uses the item",
+  "file": "crates/core/src/ui.rs",
+  "find": "                b.a = if g.shop { \"shop.pick_slot\" } else { \"item\" }.into();",
+  "replace": "                b.a = \"item\".into();",
+  "test": "with_the_shop_open_a_carried_item_can_be_picked_and_sold_with_a_button"
+ },
+ {
+  "name": "round 7f: the Sell button is always on",
+  "file": "crates/core/src/ui.rs",
+  "find": "    sell.off = value.is_none();",
+  "replace": "    sell.off = false;",
+  "test": "with_the_shop_open_a_carried_item_can_be_picked_and_sold_with_a_button"
  }
 ]

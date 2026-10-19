@@ -140,6 +140,9 @@ pub struct Game {
     pub shop_tab: String,
     /// The item whose build tree the shop shows, or -1.
     pub shop_pick: i32,
+    /// The carried item (inventory slot) the shop shows with its Sell
+    /// button, or -1 (round 7). Display state, never an order.
+    pub shop_slot: i32,
     pub score: bool,
     pub menu: bool,
     /// Arcade matches started, so each All Random All Mid match deals afresh.
@@ -256,6 +259,7 @@ impl Game {
             shop: false,
             shop_tab: "basics".into(),
             shop_pick: -1,
+            shop_slot: -1,
             score: false,
             menu: false,
             played: 0,
@@ -1660,6 +1664,15 @@ impl Game {
                     return Err(format!("no item {k}"));
                 }
                 self.shop_pick = k;
+                self.shop_slot = -1;
+            }
+            "shop.pick_slot" => {
+                let k = num()?;
+                if !(0..6).contains(&k) {
+                    return Err(format!("no slot {k}"));
+                }
+                self.shop_slot = k;
+                self.shop_pick = -1;
             }
             "score.toggle" => self.score = !self.score,
             "cannon" => self.aim_cannon()?,

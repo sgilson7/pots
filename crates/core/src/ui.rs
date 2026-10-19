@@ -931,8 +931,13 @@ fn bottom(g: &Game, w: &World, me: usize, hero: Uid) -> Node {
                 let k = it.item as usize - 1;
                 let def = &g.rules.items[k];
                 b.i = art(&def.icon);
-                b.a = "item".into();
+                // with the shop open a click picks the item to sell (round 7);
+                // otherwise it uses it
+                b.a = if g.shop { "shop.pick_slot" } else { "item" }.into();
                 b.v = slot.to_string();
+                if g.shop && g.shop_slot == slot as i32 {
+                    b.c.push_str(" picked");
+                }
                 let mut kids = vec![text("span", "hotkey", (slot + 1).to_string())];
                 if it.charges > 0 || def.stacks {
                     kids.push(text("span", "charges", it.charges.to_string()));
@@ -1090,9 +1095,15 @@ fn shop(g: &Game, w: &World, me: usize) -> Node {
 /// The picked item's build tree: the item and its price with a Buy
 /// button, every part below it (carried ones marked), the recipe's cost,
 /// and what the item builds into.
+///
+/// A carried item picked in the inventory shows instead, with its Sell
+/// button (round 7).
 fn build_panel(g: &Game, w: &World, me: usize) -> Node {
     let s = &g.strings;
     let ctx = g.ctx();
+    if let Some(n) = sell_panel(g, w, me) {
+        return n;
+    }
     let Some(k) = usize::try_from(g.shop_pick)
         .ok()
         .filter(|&k| k < g.rules.items.len())
@@ -1163,6 +1174,51 @@ fn build_panel(g: &Game, w: &World, me: usize) -> Node {
         kids.push(with(node("div", "builds-into"), row));
     }
     keyed(with(node("div", "build"), kids), "build")
+}
+
+/// The carried item picked in the inventory, with its Sell button: on at
+/// a shop, off with the reason elsewhere (round 7).
+fn sell_panel(g: &Game, w: &World, me: usize) -> Option<Node> {
+    let s = &g.strings;
+    let ctx = g.ctx();
+    let slot = usize::try_from(g.shop_slot).ok()?;
+    let carried = w.get(w.players[me].hero)?.items.get(slot)?.item;
+    if carried == 0 {
+        return None;
+    }
+    let k = carried as usize - 1;
+    let it = &g.rules.items[k];
+    let value = crate::item::sell_value(w, &ctx, me, slot);
+    let back = value.unwrap_or(g.rules.item_total(k) / 2);
+    let mut sell = button(
+        "buy-button sell-button",
+        s.ui("shop.sell_button").replace("{v}", &back.to_string()),
+        "sell",
+        slot.to_string(),
+    );
+    sell.off = value.is_none();
+    let mut kids = vec![with(
+        node("div", "build-head"),
+        vec![
+            Node {
+                t: "img",
+                c: "icon".into(),
+                i: art(&it.icon),
+                ..Node::default()
+            },
+            text("strong", "", s.item(&it.id).name),
+            sell,
+        ],
+    )];
+    if value.is_none() {
+        let why = if it.shop == "none" {
+            "shop.no_sale"
+        } else {
+            "shop.sell_far"
+        };
+        kids.push(text("p", "fine", s.ui(why)));
+    }
+    Some(keyed(with(node("div", "build"), kids), "build"))
 }
 
 /// One node of a build tree and the parts under it.
