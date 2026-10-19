@@ -472,12 +472,53 @@ fn creep(w: &mut World, ctx: &Ctx, id: Uid) {
     if wp >= path.len() {
         return;
     }
+    // on the lane's last leg, into the enemy base, a creep with nothing in
+    // reach pushes on to the nearest enemy building it may hurt. The last
+    // waypoint is the Sphere, which stands inside its own footprint and
+    // cannot be hurt while a tower beside it stands, so walking to it left
+    // creeps pressed against the Sphere out of reach of the other tower (R7.50).
+    if wp + 1 == path.len() {
+        if let Some(b) = siege_target(w, ctx, id, path[wp]) {
+            if !crate::orders::engage(w, ctx, id, b, true) {
+                let to = w.get(b).expect("listed").pos();
+                crate::orders::walk(w, ctx, id, to, 0);
+            }
+            return;
+        }
+    }
     let goal = path[wp];
     if crate::orders::walk(w, ctx, id, goal, 80) {
         let u = w.get_mut(id).expect("listed");
         u.waypoint = (wp + 1).min(path.len()) as u8;
         u.path.clear();
     }
+}
+
+/// How far from a lane's end an enemy building counts as part of the base a
+/// creep on its last leg pushes into: the Sphere's two towers stand about
+/// 700 from it and the middle barracks about 1,700.
+pub const BASE_REACH: i32 = 2000;
+
+/// The enemy building nearest a creep that it may hurt now (a tower,
+/// barracks or the Sphere, not shielded), within `BASE_REACH` of the lane's
+/// end. Buildings are known whether seen or not, as on DotA's map.
+fn siege_target(w: &World, ctx: &Ctx, id: Uid, end: P) -> Option<Uid> {
+    let u = w.get(id)?;
+    let (team, here) = (u.team, u.pos());
+    w.units
+        .iter()
+        .filter(|v| {
+            v.alive
+                && v.team == other(team)
+                && !v.has(M::Invulnerable)
+                && matches!(
+                    ctx.rules.units[v.def as usize].kind,
+                    Kind::Tower | Kind::Barracks | Kind::Sphere
+                )
+                && within(v.pos(), end, BASE_REACH)
+        })
+        .min_by_key(|v| (dist2(here, v.pos()), v.id))
+        .map(|v| v.id)
 }
 
 fn tower(w: &mut World, ctx: &Ctx, id: Uid) {
