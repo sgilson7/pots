@@ -637,6 +637,12 @@ pub struct AramDef {
     pub relic_back: i32,
     /// How near a hero must walk to take one, map units.
     pub relic_radius: i32,
+    /// The level every hero starts at, and the percent of the usual
+    /// experience and of the usual gold per second heroes earn (round 7,
+    /// after League of Legends' ARAM, a little slower).
+    pub start_level: i32,
+    pub xp_pct: i32,
+    pub gold_pct: i32,
 }
 
 /// Everything fixed for a match, with names resolved to indices.

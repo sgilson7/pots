@@ -48,9 +48,10 @@ pub fn clock(w: &mut World, ctx: &Ctx) {
     // periodic gold, from the horn
     let every = (t.periodic_every * TPS / 100).max(1) as u32;
     if tick > w.horn_at && tick.is_multiple_of(every) {
+        let pay = crate::aram::periodic_gold(w, ctx);
         for p in w.players.iter_mut() {
             if p.present && p.hero != NO_UNIT {
-                p.gold += t.periodic_gold;
+                p.gold += pay;
             }
         }
     }

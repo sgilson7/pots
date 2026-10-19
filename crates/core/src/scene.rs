@@ -135,6 +135,33 @@ fn mulc(c: Rgb, k: i32) -> Rgb {
     [fx::mul(c[0], k), fx::mul(c[1], k), fx::mul(c[2], k)]
 }
 
+/// `a` moved the Q16 share `k` of the way to `b`.
+fn mix(a: Rgb, b: Rgb, k: i32) -> Rgb {
+    [
+        a[0] + fx::mul(b[0] - a[0], k),
+        a[1] + fx::mul(b[1] - a[1], k),
+        a[2] + fx::mul(b[2] - a[2], k),
+    ]
+}
+
+/// A seeded number below 100 for a patch corner: the same in every browser.
+fn corner_roll(px: i32, py: i32) -> i32 {
+    let h = (px as u32).wrapping_mul(73_856_093) ^ (py as u32).wrapping_mul(19_349_663);
+    (h.wrapping_mul(2_654_435_761) >> 16) as i32 % 100
+}
+
+/// The lane's dirt at cell (x, y), Q16 from dark (0) to light (ONE): the
+/// rolls at the four corners of its patch, blended across the patch so the
+/// shade changes smoothly from cell to cell.
+fn dirt_at(x: i32, y: i32, size: i32) -> i32 {
+    let n = size.max(1);
+    let (px, py) = (x.div_euclid(n), y.div_euclid(n));
+    let (u, v) = (x.rem_euclid(n) * ONE / n, y.rem_euclid(n) * ONE / n);
+    let row = |py: i32| corner_roll(px, py) * (ONE - u) + corner_roll(px + 1, py) * u;
+    let both = (row(py) as i64 * (ONE - v) as i64 + row(py + 1) as i64 * v as i64) >> 16;
+    (both / 100) as i32
+}
+
 /// Numbers the scene reads from `data/presentation.json`.
 #[derive(Debug, Clone, serde::Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -215,6 +242,34 @@ pub struct MapLook {
     pub dress_most: i32,
     /// Percent of brightness one grass cell may differ from the next.
     pub vary_pct: i32,
+    /// The lanes' ground (round 7).
+    pub lane: LaneLook,
+}
+
+/// The lanes' ground (round 7): patches of darker and lighter dirt a few
+/// cells across, edges that blend into the grass on both sides, grass
+/// creeping in at the edges, and worn flagstones down the middle, so a
+/// lane reads as a trodden road rather than one flat strip.
+#[derive(Debug, Clone, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct LaneLook {
+    #[serde(default, rename = "_note")]
+    pub note: String,
+    /// Cells across one patch of dirt.
+    pub patch: i32,
+    /// Percent of the way the darkest dirt goes to `lane_dark`, and the
+    /// lightest to `lane_light`.
+    pub dark_pct: i32,
+    pub light_pct: i32,
+    /// Percent of the way a cell at the lane's edge blends toward the
+    /// ground beside it, with two or more sides touching.
+    pub edge_pct: i32,
+    /// Percent of the lane's inner cells that carry flagstones, and the
+    /// most on one cell.
+    pub stone_pct: i32,
+    pub stone_most: i32,
+    /// Percent of edge cells where grass creeps onto the lane.
+    pub creep_pct: i32,
 }
 
 pub struct Frame<'a> {
@@ -272,6 +327,9 @@ pub fn ground(f: &Frame, b: &mut Batch) {
     let water = m.named("water");
     let stone = [m.named("stone_sun"), m.named("stone_moon")];
     let path = m.named("path");
+    let ll = &lk.map_look.lane;
+    let lane_dark = m.named("lane_dark");
+    let lane_light = m.named("lane_light");
     let tree_models = [m.find("tree_sun"), m.find("tree_moon")];
     for y in y0..=y1 {
         for x in x0..=x1 {
@@ -294,6 +352,20 @@ pub fn ground(f: &Frame, b: &mut Batch) {
                 map::T_PATH => path,
                 _ => grass[side],
             };
+            // the lanes: patches of dirt, and an edge that blends both ways
+            let lane_sides = lane_sides(t, x, y);
+            if t.mark[i] == map::T_LANE {
+                let d = dirt_at(x, y, ll.patch);
+                col = if d < ONE / 2 {
+                    mix(col, lane_dark, (ONE - d * 2) * ll.dark_pct / 100)
+                } else {
+                    mix(col, lane_light, (d * 2 - ONE) * ll.light_pct / 100)
+                };
+                let open = 4 - lane_sides;
+                col = edge_blend(col, grass[side], open, ll.edge_pct);
+            } else if matches!(t.mark[i], map::T_GRASS | map::T_PATH) {
+                col = edge_blend(col, lane, lane_sides, ll.edge_pct / 2);
+            }
             col = mulc(col, vary);
             let seen = visible_cell(f, i);
             if !seen {
@@ -316,6 +388,10 @@ pub fn ground(f: &Frame, b: &mut Batch) {
                 // only stones and pebbles, and fewer of them
                 let open = t.mark[i] == map::T_GRASS;
                 dress(f, b, i, c, top, if seen { ONE } else { fog }, open);
+                if t.mark[i] == map::T_LANE {
+                    let dim = if seen { ONE } else { fog };
+                    road(f, b, i, c, top, dim, lane_sides < 4, grass[side]);
+                }
             }
             if let Tree::Standing = f.w.trees[i] {
                 if let Some(mi) = tree_models[side] {
@@ -462,6 +538,96 @@ fn dress(f: &Frame, b: &mut Batch, i: usize, c: P, top: i32, dim: i32, open: boo
                 0,
             );
         }
+    }
+}
+
+/// A cell at the lane's edge moved toward the ground across the edge:
+/// `pct` percent of the way with two or more of its sides touching it,
+/// half that with one.
+fn edge_blend(col: Rgb, toward: Rgb, sides: i32, pct: i32) -> Rgb {
+    mix(col, toward, pct * sides.clamp(0, 2) * ONE / 200)
+}
+
+/// How many of a cell's four neighbours are lane.
+fn lane_sides(t: &map::Terrain, x: i32, y: i32) -> i32 {
+    [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        .iter()
+        .filter(|(dx, dy)| {
+            let (nx, ny) = (x + dx, y + dy);
+            nx >= 0 && ny >= 0 && nx < t.tw && ny < t.tw && t.mark[(ny * t.tw + nx) as usize] == map::T_LANE
+        })
+        .count() as i32
+}
+
+/// A lane cell's road (round 7): worn flagstones set flat in the middle of
+/// the lane, and grass creeping in at its edges. Seeded by the cell's
+/// index, so it is the same in every browser and every frame.
+#[allow(clippy::too_many_arguments)]
+fn road(f: &Frame, b: &mut Batch, i: usize, c: P, top: i32, dim: i32, edge: bool, grass: Rgb) {
+    let ll = &f.look.map_look.lane;
+    let m = f.models;
+    let mut h = (i as u32).wrapping_mul(2_246_822_519) ^ 0x85eb_ca6b;
+    let mut next = |n: u32| {
+        h ^= h << 13;
+        h ^= h >> 17;
+        h ^= h << 5;
+        (h % n.max(1)) as i32
+    };
+    let tc = f.ctx.terrain.tree_cell;
+    let put = |b: &mut Batch, mesh: Mesh, at: P, lift: i32, turn: i32, tilt: i32, size: V3, col: Rgb| {
+        let a = Affine::translate(to_scene(at, top).add(v3(0, lift, 0)))
+            .then(&Affine::rot_y(turn))
+            .then(&Affine::rot_z(tilt))
+            .then(&Affine::scale(size));
+        b.push(crate::render::LAYER_PLAIN, mesh, &a, mulc(col, dim), 0);
+    };
+    if edge {
+        if next(100) >= ll.creep_pct {
+            return;
+        }
+        // a clump of grass blades, a shade of the bank it grows from
+        let at = [
+            c[0] - tc / 3 + next(tc as u32 * 2 / 3),
+            c[1] - tc / 3 + next(tc as u32 * 2 / 3),
+        ];
+        let col = mix(grass, m.named("dress_tuft"), ONE / 2);
+        for k in 0..2 + next(3) {
+            let tall = ONE / 6 + next(16) * ONE / 100;
+            let off = [at[0] + (k - 1) * 6, at[1] + next(9) - 4];
+            put(
+                b,
+                Mesh::FacetCone,
+                off,
+                tall / 2,
+                next(fx::TURN as u32),
+                (k - 1) * fx::TURN / 20,
+                v3(ONE / 11, tall, ONE / 11),
+                col,
+            );
+        }
+        return;
+    }
+    if next(100) >= ll.stone_pct {
+        return;
+    }
+    // flagstones: flat, a little sunk, each its own size, turn and shade
+    for _ in 0..1 + next(ll.stone_most.max(1) as u32) {
+        let at = [
+            c[0] - tc / 3 + next(tc as u32 * 2 / 3),
+            c[1] - tc / 3 + next(tc as u32 * 2 / 3),
+        ];
+        let s = ONE * 9 / 10 + next(50) * ONE / 100;
+        let shade = ONE - next(14) * ONE / 100;
+        put(
+            b,
+            Mesh::Facet,
+            at,
+            ONE / 40,
+            next(fx::TURN as u32),
+            0,
+            v3(s, ONE / 10, s * 3 / 4),
+            mulc(m.named("lane_stone"), shade),
+        );
     }
 }
 

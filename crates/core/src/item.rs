@@ -231,26 +231,35 @@ pub fn price(w: &World, ctx: &Ctx, player: usize, k: usize) -> i32 {
     price_with(w, ctx, w.players[player].hero, k, &mut used, true)
 }
 
-pub fn sell(w: &mut World, ctx: &Ctx, player: usize, slot: usize) {
-    let id = w.players[player].hero;
+/// The gold the item in `slot` would sell for now: half its whole price,
+/// at any shop, or nothing when no shop is in reach, the slot is empty or
+/// the item is one no shop sells.
+pub fn sell_value(w: &World, ctx: &Ctx, player: usize, slot: usize) -> Option<i32> {
     if slot >= 6
         || !near_shop(w, ctx, player, "home")
             && !near_shop(w, ctx, player, "side")
             && !near_shop(w, ctx, player, "secret")
     {
-        return;
+        return None;
     }
-    let Some(u) = w.get_mut(id) else { return };
-    let s = u.items[slot];
+    let s = w.get(w.players[player].hero)?.items[slot];
     if s.item == 0 {
-        return;
+        return None;
     }
     let k = s.item as usize - 1;
     if ctx.rules.items[k].shop == "none" {
-        return;
+        return None;
     }
+    Some(ctx.rules.item_total(k) / 2)
+}
+
+pub fn sell(w: &mut World, ctx: &Ctx, player: usize, slot: usize) {
+    let Some(back) = sell_value(w, ctx, player, slot) else {
+        return;
+    };
+    let id = w.players[player].hero;
+    let Some(u) = w.get_mut(id) else { return };
     u.items[slot] = ItemSlot::default();
-    let back = ctx.rules.item_total(k) / 2;
     w.players[player].gold += back;
 }
 

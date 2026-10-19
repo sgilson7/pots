@@ -307,3 +307,51 @@ fn before_the_first_wave_computer_players_wait_out_in_the_lane() {
         );
     }
 }
+
+#[test]
+fn a_hero_starts_at_level_three_with_its_points_and_full_health() {
+    // round 7: level 3 takes 500 experience (data/rules.json xp_levels),
+    // and a point comes with each level
+    let f = common::fixture();
+    let ctx = f.ctx();
+    let mut w = aram_world(&f, 5);
+    let mut normal = f.world(5);
+    let h = w.add_hero(&ctx, 0, 0);
+    let n = normal.add_hero(&ctx, 0, 0);
+    let st = w.get(h).unwrap().hero.clone().unwrap();
+    assert_eq!((st.level, st.xp, st.points), (3, 500, 3));
+    let first = normal.get(n).unwrap().hero.clone().unwrap();
+    assert_eq!(
+        (first.level, first.xp, first.points),
+        (1, 0, 1),
+        "a normal match starts at 1"
+    );
+    let max = pots_core::stats::of(&ctx, &w, h).max_hp * 1000;
+    let hp = w.get(h).unwrap().hp;
+    assert_eq!(hp, max, "full health at level 3");
+    assert!(hp > normal.get(n).unwrap().hp, "more health than at level 1");
+}
+
+#[test]
+fn heroes_earn_half_again_the_experience_and_twice_the_gold_each_second() {
+    let f = common::fixture();
+    let ctx = f.ctx();
+    let mut w = aram_world(&f, 6);
+    let mut normal = f.world(6);
+    let h = w.add_hero(&ctx, 0, 0);
+    let n = normal.add_hero(&ctx, 0, 0);
+    pots_core::combat::give_xp(&mut w, &ctx, h, 100);
+    pots_core::combat::give_xp(&mut normal, &ctx, n, 100);
+    assert_eq!(w.get(h).unwrap().hero.as_ref().unwrap().xp, 650, "500 and 150");
+    assert_eq!(normal.get(n).unwrap().hero.as_ref().unwrap().xp, 100);
+    // gold comes every 0.88 s, 26 ticks, after the horn at 60 s (tick 1800):
+    // ticks 1820 (70 × 26) to 2054 (79 × 26) are ten payments of 1 gold,
+    // 2 in this mode
+    let (g0, n0) = (w.players[0].gold, normal.players[0].gold);
+    while w.tick < 2060 {
+        w.step(&ctx, &[]);
+        normal.step(&ctx, &[]);
+    }
+    assert_eq!(normal.players[0].gold - n0, 10);
+    assert_eq!(w.players[0].gold - g0, 20);
+}

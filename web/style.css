@@ -131,6 +131,8 @@ h1, h2 { font-family: var(--hud-font); text-transform: uppercase; letter-spacing
 .inventory .slot { width: 56px; height: 56px; }
 .slot .slot-icon { position: absolute; inset: 0; width: 100%; height: 100%; }
 .slot.empty { border-style: dashed; border-color: var(--line); }
+/* in reach of a shop a right-click sells (round 7) */
+.slot.sellable:hover { border-color: var(--accent); }
 .slot.passive .slot-icon { filter: saturate(.6); }
 .slot.low-mana .slot-icon { filter: saturate(.3) brightness(.7) hue-rotate(200deg); }
 .slot.toggled, .slot.aiming { border-color: var(--good); box-shadow: 0 0 12px var(--good); }

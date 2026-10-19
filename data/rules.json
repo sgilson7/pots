@@ -257,7 +257,7 @@
   ]
  },
  "aram": {
-  "_note": "All Random All Mid (round 4, T13 and T14). Sunward points; the Moonward's are their mirrors through the centre.",
+  "_note": "All Random All Mid (round 4, T13 and T14). Sunward points; the Moonward's are their mirrors through the centre. Round 7: heroes start at level 3 and earn half again the experience and twice the gold per second, after League of Legends' ARAM but a little slower.",
   "lanes": ["mid"],
   "starting_gold": 853,
   "rerolls": 1,
@@ -268,7 +268,10 @@
   "relics": [[7060, 6800], [7757, 7656]],
   "relic_pct": 15,
   "relic_back": 60,
-  "relic_radius": 130
+  "relic_radius": 130,
+  "start_level": 3,
+  "xp_pct": 150,
+  "gold_pct": 200
  },
  "heroes": [
   {

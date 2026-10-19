@@ -10,7 +10,7 @@ An attribute. Each point adds armor and attack speed, and an agility hero's dama
 
 ### All Random All Mid
 
-A mode of the custom match and online play. Each player is dealt a random hero, and all ten fight in the middle lane.
+A mode of the custom match and online play. Each player is dealt a random hero, and all ten fight in the middle lane. Heroes start a few levels up and earn experience and gold faster than in a normal match, so it plays shorter.
 
 ### Armor
 

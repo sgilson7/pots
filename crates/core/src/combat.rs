@@ -338,6 +338,7 @@ fn heroes_near(w: &World, ctx: &Ctx, team: u8, at: crate::rules::P) -> Vec<Uid> 
 }
 
 pub fn give_xp(w: &mut World, ctx: &Ctx, id: Uid, xp: i32) {
+    let xp = crate::aram::xp(w, ctx, xp);
     let levels = &ctx.rules.t.xp_levels;
     let max = ctx.rules.t.max_level;
     let mut gained = 0;

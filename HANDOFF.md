@@ -80,7 +80,15 @@ Mockups only; **the game is unchanged**. Journal tab 10 (`journal/mockups/tab10.
 
 The person chose tab 10's look for every map asset and the current look for characters. `data/presentation.json` `map_look` lists the map's models; `Models::facet` swaps their parts to the new faceted meshes (`Mesh::Facet`, `FacetCyl`, `FacetCone`, `FacetTaper`: 80 faces, 8 sides, flat normals) and drops their outline, glowing parts excepted. `scene::shadow` puts two see-through discs under each; `scene::dress` dresses open ground. Light, haze and camera are unchanged (R6.9). Tests: `tests/map_look.rs`, `mesh.rs`'s facet test.
 
-## What passed
+## Round 7 (18 October 2026): selling, the lane's ground, the All Random All Mid pace (T20–T22)
+
+The session before this one stopped after T19 was published (build `82d435b` live); this round started from this file.
+
+- **Selling (T20, R7.1):** the rule was there from round 1 but no control reached it. Near a shop a right-click on a carried item sells it for half its whole price; the tip says so and the shop's empty panel says how. `item::sell_value` decides both. Its border lights on hover (`.slot.sellable`).
+- **The lane's ground (T21):** `scene::ground` now shades the lane's dirt from darker to lighter across patches of four cells, blended cell to cell (`dirt_at`); a cell at the lane's edge blends into the grass and the grass beside it into the lane (`edge_blend`); grass creeps onto the edge and flagstones lie down the middle (`road`). Numbers in `data/presentation.json` `map_look.lane`, colours `lane_dark`, `lane_light`, `lane_stone` in `data/models.json`.
+- **All Random All Mid pace (T22, R7.3):** heroes start at level 3 with three points and full health, earn one and a half times the experience and twice the gold each second (`aram::start_level`, `aram::xp`, `aram::periodic_gold`; numbers in `data/rules.json` `aram`). `PROTOCOL` 5.
+- Break tests: 9 of 9 round-7 breaks caught, after two misses fixed the test (R7.4).
+
 
 Recorded at the end of this round; the counts come from the commands, not from memory.
 
@@ -94,6 +102,8 @@ Recorded at the end of this round; the counts come from the commands, not from m
 
 Each row of `SECOND-ORDER.md` with status *person*, by number:
 
+- **R7.2**: selling is instant on a right-click and pays half. Ask first, or give a full refund for a few seconds after buying?
+- **R7.3**: play All Random All Mid at the new pace (level 3, 1.5× experience, 2× gold per second) and say whether it is too fast or too slow.
 - **R1.2**: the names and looks of heroes, items and creeps. Are they far enough from their DotA sources?
 - **R1.10**: one free courier per side from the start (DotA sold it). Keep?
 - **R1.12**: lane creep armor type, Unarmored (playdota) or Medium (Dota 2 port). It changes ranged-creep damage 2×.

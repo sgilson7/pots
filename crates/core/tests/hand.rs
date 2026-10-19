@@ -8,8 +8,9 @@ use pots_core::game::{Files, Game};
 use pots_core::marks::shot_for;
 use pots_core::orders::Cmd;
 use pots_core::overlay::{ability_area, Area};
+use pots_core::rules::SUB;
 use pots_core::ui::{view, Node};
-use pots_core::world::NO_UNIT;
+use pots_core::world::{ItemSlot, NO_UNIT};
 
 fn files() -> Files<'static> {
     Files {
@@ -134,6 +135,58 @@ fn a_right_click_on_an_item_in_the_shop_buys_it() {
         w.get(me).unwrap().items.iter().any(|s| s.item == k),
         "the item is in the inventory"
     );
+}
+
+#[test]
+fn a_right_click_on_a_carried_item_near_a_shop_sells_it_for_half() {
+    // round 7. A Magic Wand is a Magic Stick (200), three Branches (53
+    // each) and a 150 recipe: 509 in all, so it sells for 254.
+    let mut g = match_as("ironvow");
+    let me = g.my_hero();
+    let wand = g.rules.item("magic_wand").unwrap() as u16 + 1;
+    let gold = |g: &Game| g.m.as_ref().unwrap().world.players[0].gold;
+    {
+        let w = &mut g.m.as_mut().unwrap().world;
+        w.get_mut(me).unwrap().items[0] = ItemSlot {
+            item: wand,
+            charges: 0,
+            ready_at: 0,
+        };
+    }
+    let slot = |g: &Game| {
+        let v = view(g);
+        let mut items = Vec::new();
+        find(&v.root, "item", &mut items);
+        items
+            .into_iter()
+            .find(|n| n.v == "0")
+            .cloned()
+            .expect("the first slot")
+    };
+    // at the fountain, by the base shop
+    let n = slot(&g);
+    assert_eq!(n.alt, "sell", "a right-click on a carried item sells it");
+    let before = gold(&g);
+    g.act(&n.alt, &n.v).unwrap();
+    let mut t = 0;
+    run(&mut g, 4, 33_334, &mut t);
+    assert_eq!(gold(&g) - before, 254, "half the wand's 509, rounded down");
+    let w = &g.m.as_ref().unwrap().world;
+    assert_eq!(w.get(me).unwrap().items[0].item, 0, "the slot is empty");
+    // out in the middle of the map no shop is in reach: no sale
+    {
+        let w = &mut g.m.as_mut().unwrap().world;
+        let u = w.get_mut(me).unwrap();
+        u.items[0] = ItemSlot {
+            item: wand,
+            charges: 0,
+            ready_at: 0,
+        };
+        u.x = 8192 * SUB;
+        u.y = 8192 * SUB;
+    }
+    let n = slot(&g);
+    assert_eq!(n.alt, "", "away from a shop a right-click sells nothing");
 }
 
 #[test]

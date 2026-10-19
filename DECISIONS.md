@@ -16,3 +16,9 @@ The agent decided:
 > I DO NOT want to copy characters such that we can get in legal trouble ,so they should be distinct from the warcraft champs but with the same abilities.
 
 The agent decided: every hero, item, creep, building and boss gets an original name, look and flavour. Ability behaviour and numbers follow DotA. No Blizzard or IceFrog name, model, icon, sound or text is used. The names are a generated list the person reads (a worklist row in `SECOND-ORDER.md`).
+
+## 2026-10-18
+
+> then, deploy all of that to main, i approve any make deploys.
+
+The agent decided: the round-7 changes (T20 to T22) go to `main` and are published with `./scripts/publish.sh` once `./scripts/check.sh` passes; "make deploys" is read as the scholar site's `make deploy` too, if its page needs a change. Scope: this round.

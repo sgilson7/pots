@@ -432,5 +432,68 @@
   "find": "                face(ab, bc, ca);\n",
   "replace": "",
   "test": "the_map_s_faceted_shapes_have_flat_faces_and_few_of_them"
+ },
+ {
+  "name": "round 7: a carried item has no right-click sale",
+  "file": "crates/core/src/ui.rs",
+  "find": "                    b.alt = \"sell\".into();\n",
+  "replace": "",
+  "test": "a_right_click_on_a_carried_item_near_a_shop_sells_it_for_half"
+ },
+ {
+  "name": "round 7: an item sells for its whole price",
+  "file": "crates/core/src/item.rs",
+  "find": "    Some(ctx.rules.item_total(k) / 2)",
+  "replace": "    Some(ctx.rules.item_total(k))",
+  "test": "a_right_click_on_a_carried_item_near_a_shop_sells_it_for_half"
+ },
+ {
+  "name": "round 7: an aram hero starts at level one",
+  "file": "crates/core/src/world.rs",
+  "find": "        crate::aram::start_level(self, ctx, id);\n",
+  "replace": "",
+  "test": "a_hero_starts_at_level_three_with_its_points_and_full_health"
+ },
+ {
+  "name": "round 7: aram experience is the usual",
+  "file": "crates/core/src/aram.rs",
+  "find": "        Some(a) => xp * a.xp_pct / 100,",
+  "replace": "        Some(_) => xp,",
+  "test": "heroes_earn_half_again_the_experience_and_twice_the_gold_each_second"
+ },
+ {
+  "name": "round 7: aram gold per second is the usual",
+  "file": "crates/core/src/aram.rs",
+  "find": "        Some(a) => g * a.gold_pct / 100,",
+  "replace": "        Some(_) => g,",
+  "test": "heroes_earn_half_again_the_experience_and_twice_the_gold_each_second"
+ },
+ {
+  "name": "round 7: the lane is never paved",
+  "file": "crates/core/src/scene.rs",
+  "find": "    if next(100) >= ll.stone_pct {",
+  "replace": "    if true {",
+  "test": "the_lanes_are_paved_and_their_dirt_varies"
+ },
+ {
+  "name": "round 7: the lane's dirt is one colour",
+  "file": "crates/core/src/scene.rs",
+  "find": "                let d = dirt_at(x, y, ll.patch);",
+  "replace": "                let d = ONE / 2;",
+  "test": "the_lanes_are_paved_and_their_dirt_varies"
+ },
+ {
+  "name": "round 7: the lane's edge does not blend",
+  "file": "crates/core/src/scene.rs",
+  "find": "    mix(col, toward, pct * sides.clamp(0, 2) * ONE / 200)",
+  "replace": "    let _ = (toward, sides, pct);\n    col",
+  "test": "the_lanes_are_paved_and_their_dirt_varies"
+ },
+ {
+  "name": "round 7: no grass creeps onto the lane",
+  "file": "crates/core/src/scene.rs",
+  "find": "        if next(100) >= ll.creep_pct {",
+  "replace": "        if true {",
+  "test": "the_lanes_are_paved_and_their_dirt_varies"
  }
 ]

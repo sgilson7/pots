@@ -697,6 +697,7 @@ impl World {
         self.players[player].hero = id;
         self.players[player].pick = roster as i32;
         self.players[player].present = true;
+        crate::aram::start_level(self, ctx, id);
         id
     }
 

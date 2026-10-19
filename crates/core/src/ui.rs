@@ -948,14 +948,12 @@ fn bottom(g: &Game, w: &World, me: usize, hero: Uid) -> Node {
                 }
                 b.n = kids;
                 let mut tip = item_tip(g, k, None);
-                if crate::item::near_shop(w, &ctx, me, "home")
-                    || crate::item::near_shop(w, &ctx, me, "side")
-                    || crate::item::near_shop(w, &ctx, me, "secret")
-                {
-                    tip.lines.push(
-                        s.ui("tip.sell")
-                            .replace("{v}", &(g.rules.item_total(k) / 2).to_string()),
-                    );
+                // in reach of a shop a right-click sells, as the shop's
+                // right-click buys (round 7)
+                if let Some(back) = crate::item::sell_value(w, &ctx, me, slot) {
+                    b.alt = "sell".into();
+                    b.c.push_str(" sellable");
+                    tip.lines.push(s.ui("tip.sell").replace("{v}", &back.to_string()));
                 }
                 b.tip = Some(tip);
             } else {
@@ -1095,7 +1093,16 @@ fn build_panel(g: &Game, w: &World, me: usize) -> Node {
         .ok()
         .filter(|&k| k < g.rules.items.len())
     else {
-        return keyed(text("div", "build empty", s.ui("shop.choose")), "build");
+        return keyed(
+            with(
+                node("div", "build empty"),
+                vec![
+                    text("p", "", s.ui("shop.choose")),
+                    text("p", "fine", s.ui("shop.sell")),
+                ],
+            ),
+            "build",
+        );
     };
     let it = &g.rules.items[k];
     let price = crate::item::price(w, &ctx, me, k);

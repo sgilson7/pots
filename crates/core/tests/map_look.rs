@@ -137,3 +137,39 @@ fn the_ground_is_dressed_the_same_every_frame_and_only_when_asked() {
         "dressing adds stones, tufts and flowers: {dressed} against {bare}"
     );
 }
+
+#[test]
+fn the_lanes_are_paved_and_their_dirt_varies() {
+    // round 7: the lane was one flat colour; now its dirt changes shade
+    // from patch to patch, its edge blends into the grass, grass creeps in
+    // at the edge and flagstones lie down the middle
+    let mut g = match_game();
+    // the middle lane between the Sunward's outer and second towers, where
+    // it is wide enough to have a middle
+    g.view.target = [5600, 5600];
+    assert_eq!(g.scene(), g.scene(), "the same road every frame");
+    let both = count(&g, LAYER_PLAIN, &FACETED);
+    g.look.map_look.lane.creep_pct = 0;
+    let paved = count(&g, LAYER_PLAIN, &FACETED);
+    g.look.map_look.lane.stone_pct = 0;
+    let bare = count(&g, LAYER_PLAIN, &FACETED);
+    assert!(
+        paved > bare + 10,
+        "flagstones on the lane near the camera: {paved} against {bare}"
+    );
+    assert!(
+        both > paved + 10,
+        "grass creeping onto the lane's edge: {both} against {paved}"
+    );
+    // with the edge blend off on both sides, the patches alone change the colours
+    g.look.map_look.lane.edge_pct = 0;
+    let patched = g.scene();
+    g.look.map_look.lane.dark_pct = 0;
+    g.look.map_look.lane.light_pct = 0;
+    let flat = g.scene();
+    assert_eq!(patched.1.len(), flat.1.len());
+    assert_ne!(patched, flat, "the lane's dirt is not one colour");
+    // and the edge blend changes them too
+    g.look.map_look.lane.edge_pct = 45;
+    assert_ne!(g.scene(), flat, "the lane's edge blends into the grass");
+}

@@ -62,6 +62,50 @@ pub fn shop_of<'a>(w: &World, ctx: &'a Ctx, k: usize) -> &'a str {
     &it.shop
 }
 
+// ------------------------------------------------------------ the pace
+
+/// Experience a hero earns in this match: the mode's share of `xp`.
+pub fn xp(w: &World, ctx: &Ctx, xp: i32) -> i32 {
+    match def(w, ctx) {
+        Some(a) => xp * a.xp_pct / 100,
+        None => xp,
+    }
+}
+
+/// The gold each hero earns at each periodic payment in this match.
+pub fn periodic_gold(w: &World, ctx: &Ctx) -> i32 {
+    let g = ctx.rules.t.periodic_gold;
+    match def(w, ctx) {
+        Some(a) => g * a.gold_pct / 100,
+        None => g,
+    }
+}
+
+/// A new hero in this mode starts at the mode's level, with the
+/// experience that level takes, a point to spend for each level, and full
+/// health and mana at that level.
+pub fn start_level(w: &mut World, ctx: &Ctx, id: Uid) {
+    let Some(a) = def(w, ctx) else { return };
+    let t = &ctx.rules.t;
+    let level = a.start_level.clamp(1, t.max_level);
+    let xp = if level > 1 {
+        t.xp_levels.get((level - 2) as usize).copied().unwrap_or(0)
+    } else {
+        0
+    };
+    let Some(h) = w.get_mut(id).and_then(|u| u.hero.as_mut()) else {
+        return;
+    };
+    h.level = level;
+    h.xp = xp;
+    h.points = level;
+    let s = crate::stats::of(ctx, w, id);
+    if let Some(u) = w.get_mut(id) {
+        u.hp = s.max_hp * 1000;
+        u.mana = s.max_mana * 1000;
+    }
+}
+
 // ------------------------------------------------------------ the draw
 
 /// Each seat's hero in this mode: each side's heroes are dealt from its
