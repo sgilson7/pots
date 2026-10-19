@@ -149,7 +149,7 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **Heroes screen (T34):** its cards did nothing (R7.41). Each now opens the inspector (`crates/core/src/showcase.rs`, `ui::heroes`): the hero drawn in the game's renderer, a drag turns the camera, the wheel zooms; buttons for the attack and each ability (and the second forms) play a demonstration on loop beside its description, mana, cooldown and range (R7.42, R7.43). The page sends a button's release (`game.release`). Tests: `tests/showcase.rs` (6); break rows "heroes screen" (11, all caught after one row was repointed, R7.45).
 - **Creeps (T35, a subagent's work, merged):** a creep on its lane's last leg with nothing in reach goes for the nearest enemy building it may hurt, so middle-lane creeps alone take both base towers and the Sphere (`crates/core/src/lanes.rs` `siege_target`, R7.50, R7.51). Creep blocking measured and working (R7.52, R7.53). A fallen building still blocks the ground (R7.54, open).
 - **Break list:** four rows named renamed tests and one had rotted (R7.40); `scripts/break_tests.py` now reports a row whose test runs nothing. 131 of 131 caught.
-- **Checks:** CHECKS_FINAL
+- **Checks and live:** `./scripts/count-tests.sh` 184 passed, 0 failed, 4 ignored; `scripts/break_tests.py` 131 of 131 caught; the online smoke test (`tests/online/smoke.py --rejoin`, version 7) met through the relays, rejoined, and the checksums agreed at tick 1800; `./scripts/publish.sh` ran `./scripts/check.sh` (**BUILDER CHECK PASSED**, Chromium, Firefox, WebKit) and published build `e40edd8`; `BUILDER_ORIGIN=https://sgilson7.github.io/pots tests/browser/check.py` passed in all three engines on the live site.
 
 ## Open for the person
 
