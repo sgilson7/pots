@@ -561,3 +561,46 @@ fn with_computer_players_off_only_the_people_in_the_room_play() {
         assert!(compared >= 4 && agree, "one match in both browsers ({compared})");
     }
 }
+
+#[test]
+fn a_name_changed_in_the_lobby_reaches_every_browser() {
+    // round 7: names can change in the lobby, the host's and a joiner's,
+    // and every browser in the room sees them before the match starts
+    let mut room = Room::new(3, 3, 0, 71);
+    for _ in 0..30 {
+        room.step(false);
+    }
+    let names = |room: &Room, k: usize| -> Vec<String> {
+        room.games[k]
+            .online
+            .seats
+            .iter()
+            .filter(|s| s.human)
+            .map(|s| s.name.clone())
+            .collect()
+    };
+    for k in 0..3 {
+        let mut n = names(&room, k);
+        n.sort();
+        assert_eq!(n, ["host", "p1", "p2"], "browser {k} before");
+    }
+    room.games[2].act("online.name", "Kestrel fan").unwrap();
+    room.games[0].act("online.name", "The host").unwrap();
+    for _ in 0..30 {
+        room.step(false);
+    }
+    for k in 0..3 {
+        let mut n = names(&room, k);
+        n.sort();
+        assert_eq!(n, ["Kestrel fan", "The host", "p1"], "browser {k} after");
+    }
+    // a name loses control characters, is cut at 16 characters ("avery long
+    // name ") and shown without the trailing space
+    room.games[1]
+        .act("online.name", "a\tvery long name indeed")
+        .unwrap();
+    for _ in 0..30 {
+        room.step(false);
+    }
+    assert!(names(&room, 0).contains(&"avery long name".to_string()));
+}

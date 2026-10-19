@@ -21,9 +21,27 @@ def probe(page):
     return json.loads(page.get_attribute("body", "data-probe") or "{}")
 
 
+def typing(page, check):
+    """Round 7: a text box keeps what is typed in it, key by key. Each key
+    used to rebuild the box empty and take the focus away. Only the online
+    form is typed in, so no relay is contacted."""
+    page.click("[data-a='screen'][data-v='online']")
+    name = page.locator("input[data-a='online.name']")
+    name.click()
+    page.keyboard.type("Sam the brave", delay=30)
+    code = page.locator("input[data-a='online.code']")
+    code.click()
+    page.keyboard.type("ab12cd", delay=30)
+    check(name.input_value() == "Sam the brave", f"the name box keeps every key typed: {name.input_value()!r}")
+    check(code.input_value() == "ab12cd", f"the room code box keeps every key typed: {code.input_value()!r}")
+    page.click("[data-a='screen'][data-v='title']")
+    page.wait_for_selector("body[data-screen='title']")
+
+
 def run(page, check, engine):
     check(page.inner_text(".game-title").lower() == STRINGS["ui"]["title"].lower(), "the title from data/strings.json is drawn")
     check(page.get_attribute("body", "data-screen") == "title", "the core's title screen is shown")
+    typing(page, check)
     page.click("[data-a='screen'][data-v='arcade']")
     page.wait_for_selector("body[data-screen='arcade']")
     first = STRINGS["missions"]["first_steps"]["name"]

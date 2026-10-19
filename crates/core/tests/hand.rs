@@ -166,6 +166,14 @@ fn a_right_click_on_a_carried_item_near_a_shop_sells_it_for_half() {
     // at the fountain, by the base shop
     let n = slot(&g);
     assert_eq!(n.alt, "sell", "a right-click on a carried item sells it");
+    let price = |n: &Node| n.n.iter().find(|k| k.c == "sell-price").map(|k| k.x.clone());
+    assert_eq!(price(&n), None, "no price tag with the shop closed");
+    g.act("shop.toggle", "").unwrap();
+    assert_eq!(
+        price(&slot(&g)).as_deref(),
+        Some("254"),
+        "with the shop open the slot shows its price"
+    );
     let before = gold(&g);
     g.act(&n.alt, &n.v).unwrap();
     let mut t = 0;

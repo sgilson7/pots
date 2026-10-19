@@ -40,7 +40,7 @@ use crate::ui::Node;
 use crate::world::{Ctx, World, PLAYERS};
 
 /// Changes when a message changes shape; `web/net/config.js` carries it too.
-pub const PROTOCOL: u32 = 5;
+pub const PROTOCOL: u32 = 6;
 /// Ticks between an order and the tick it acts on.
 pub const DELAY: u32 = 2;
 /// Ticks a browser may run past its confirmed tick before it waits.
@@ -106,6 +106,10 @@ pub enum Msg {
     },
     Pick {
         hero: u8,
+    },
+    /// Joiner to host: my name, changed in the lobby (round 7).
+    Name {
+        name: String,
     },
     Start {
         seed: u64,
@@ -323,7 +327,26 @@ fn broadcast_lobby(o: &mut Online) {
 pub fn act(g: &mut Game, name: &str, value: &str) -> Result<(), String> {
     let o = &mut g.online;
     match name {
-        "online.name" => o.name = value.chars().filter(|c| !c.is_control()).take(16).collect(),
+        "online.name" => {
+            o.name = clean_name(value);
+            // in the lobby the room sees the new name before the match starts
+            if !o.started {
+                match o.role {
+                    Role::Host => {
+                        if let Some(k) = o.my_seat {
+                            o.seats[k].name = display_name(&o.name);
+                            broadcast_lobby(o);
+                        }
+                    }
+                    Role::Joiner if !o.host_peer.is_empty() => {
+                        let host = o.host_peer.clone();
+                        let m = Msg::Name { name: o.name.clone() };
+                        send(o, &host, &m, false);
+                    }
+                    _ => {}
+                }
+            }
+        }
         "online.code" => {
             o.typed = value
                 .chars()
@@ -466,6 +489,11 @@ pub fn act(g: &mut Game, name: &str, value: &str) -> Result<(), String> {
         other => return Err(format!("Unknown action \"{other}\".")),
     }
     Ok(())
+}
+
+/// A typed name: no control characters, at most 16 characters.
+fn clean_name(name: &str) -> String {
+    name.chars().filter(|c| !c.is_control()).take(16).collect()
 }
 
 fn display_name(name: &str) -> String {
@@ -691,6 +719,20 @@ fn host_receives(g: &mut Game, peer: &str, msg: Msg) {
                 o.seats[seat] = mine;
             }
             p.seat = Some(seat);
+            broadcast_lobby(o);
+        }
+        Msg::Name { name } => {
+            let o = &mut g.online;
+            let name = clean_name(&name);
+            let Some(p) = o.peers.iter_mut().find(|p| p.id == peer) else {
+                return;
+            };
+            p.name = name.clone();
+            let Some(seat) = p.seat else { return };
+            if o.started {
+                return;
+            }
+            o.seats[seat].name = display_name(&name);
             broadcast_lobby(o);
         }
         Msg::Reroll => {

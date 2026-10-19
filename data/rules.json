@@ -75,7 +75,7 @@
    350,
    400
   ],
-  "death_gold_per_level": 30,
+  "death_gold_per_level": 0,
   "deny_below": 50,
   "shop_range": 600,
   "fountain_regen": 4,

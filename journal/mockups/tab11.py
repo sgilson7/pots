@@ -21,7 +21,7 @@ e = lambda s: html.escape(str(s), quote=True)
 NAMES = ["river", "lane", "base", "road"]
 BUILT_NAMES = ["b_cliff", "b_river", "b_lane", "b_heroes1", "b_heroes2", "b_lineup"]
 missing = [f"{n}_{k}.jpg" for n in NAMES + BUILT_NAMES for k in ("before", "after") if not (ART / f"{n}_{k}.jpg").exists()]
-missing += [f"{n}.jpg" for n in ("b_fight", "b_casts") if not (ART / f"{n}.jpg").exists()]
+missing += [f"{n}.jpg" for n in ("b_fight", "b_casts", "b_title") if not (ART / f"{n}.jpg").exists()]
 
 
 def pic(path, cap):
@@ -188,6 +188,20 @@ PANEL = f'''<!-- ======================================================= TAB 11 
   <div>{"".join(pair(n, "before", "built", t, c) for n, t, c in BUILT2)}</div>
   <figure class="gpair"><div>{pic("b_fight", "A lane fight in the built game")}</div><figcaption><b>In a match.</b> A hero by the Sunward outer tower, the base cliff with its boulders behind.</figcaption></figure>
   <figure class="gpair"><div>{pic("b_casts", "Four abilities in the built game")}</div><figcaption><b>Abilities in the new look.</b> Vow Hammer, Rift Stomp's faceted rocks, Carrion Cloud and Winter's Ring, from the game's cast stage.</figcaption></figure>
+</section>
+<section>
+  <div class="section-head"><div class="eyebrow">Part 6 · built (T26 to T30)</div><h2>A match behind the title, and four fixes</h2></div>
+  <p>As in Ape Race and Mage Tower Battle, the title screen has the game moving behind it: ten computer players play a match of their own, and the camera follows the busiest fight, framing it right of the menu and cutting to the next one every few seconds. It starts as the first creep waves meet. With reduced motion set in the browser it shows a still, and a machine too slow to draw it keeps the plain title.</p>
+  <figure class="gpair"><div>{pic("b_title", "The title screen with a match behind it")}</div><figcaption><b>The title screen.</b> A fight at the river, six seconds after the page opens.</figcaption></figure>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Ask</th><th>Now</th></tr></thead>
+    <tbody>
+      <tr><td><b>Typing in the boxes</b> (T28)</td><td>Every key stays. Each key used to rebuild the box empty and take the focus away, so only the first letter stayed.</td></tr>
+      <tr><td><b>Your name in the lobby</b> (T27)</td><td>A name box in the lobby until the match starts; every browser in the room sees the new name.</td></tr>
+      <tr><td><b>Gold on death</b> (T29)</td><td>None is lost.</td></tr>
+      <tr><td><b>How to sell</b> (T30)</td><td>Near a shop, right-click an item you carry. With the shop open, each item shows what it sells for.</td></tr>
+    </tbody>
+  </table></div>
 </section>
 <footer>Pictures from <code>tools/shots.py</code> with <code>seed=7</code>. The "faceted" ones come from the branch <code>mockup/smooth-ground</code> (not published), with <code>map_look.smooth</code> on. The share of a frame that changes counts the pixels that differ between the two pictures, leaving out the minimap. Shape counts come from <code>cargo run --release -p pots_core --example count</code> on that branch. This tab is written by <code>journal/mockups/tab11.py</code>.</footer>
 </div>

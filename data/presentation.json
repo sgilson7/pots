@@ -740,5 +740,19 @@
     }
    ]
   }
+ },
+ "backdrop": {
+  "_note": "Round 7: the match behind the title screen, after Ape Race and Mage Tower Battle.",
+  "start_s": 92,
+  "catch_up": 160,
+  "skill": 2,
+  "hold_s": 8,
+  "pan_speed": 700,
+  "ease_pct": 160,
+  "seek": 900,
+  "west": 700,
+  "cut": 2200,
+  "slow_ms": 150,
+  "slow_frames": 5
  }
 }

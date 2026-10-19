@@ -954,6 +954,10 @@ fn bottom(g: &Game, w: &World, me: usize, hero: Uid) -> Node {
                     b.alt = "sell".into();
                     b.c.push_str(" sellable");
                     tip.lines.push(s.ui("tip.sell").replace("{v}", &back.to_string()));
+                    // with the shop open, each item shows what it sells for
+                    if g.shop {
+                        b.n.push(text("span", "sell-price", back.to_string()));
+                    }
                 }
                 b.tip = Some(tip);
             } else {
@@ -1434,7 +1438,18 @@ pub fn online_view(g: &Game) -> Node {
         start.off = o.started;
         head.insert(2, start);
     }
-    let mut setup = vec![text("h2", "", s.ui("online.your_hero"))];
+    // your name, changeable until the match starts (round 7)
+    let mut name = node("input", "text-input");
+    name.a = "online.name".into();
+    name.v = o.name.clone();
+    name.x = s.ui("online.name_hint");
+    name.k = "name".into();
+    name.off = o.started;
+    let mut setup = vec![
+        text("h2", "", s.ui("online.you")),
+        name,
+        text("h2", "", s.ui("online.your_hero")),
+    ];
     if o.aram {
         // the hero is dealt; the grid shows it, and a reroll waits
         for c in cards.iter_mut() {

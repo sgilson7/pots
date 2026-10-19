@@ -112,9 +112,24 @@ Recorded at the end of this round; the counts come from the commands, not from m
 
 Each row of `SECOND-ORDER.md` with status *person*, by number:
 
+## Round 7, continued (18 October 2026): a match behind the title (T26)
+
+- `crates/core/src/backdrop.rs`: ten computer players play behind the title screen; the camera follows the hero with the most enemies near, looks again every 8 s, cuts beyond 2,200 units and stands 700 west so the fight shows right of the menu. Its own world; `Game::with_frame` draws it only on the title, once it has caught up to 92 s. The title's gradient (`.menu.title-screen`) fades to clear on the right. Reduced motion (`act("motion", "reduce")`, from the browser) makes it a still (R7.21).
+- Tests: `tests/backdrop.rs` (four), break rows "round 7c" (six, all caught).
+
+## Round 7, continued (18 October 2026): names in the lobby, typing, gold on death, selling (T27–T30)
+
+- **Typing (T28, R7.22):** text boxes are updated in place by the page's sync; the one being typed in is never written over. `tests/browser/interactions.py` `typing` types a name and a room code (it failed with the fix taken out).
+- **Names in the lobby (T27, R7.23):** a name box in the lobby; `Msg::Name` from a joiner; `PROTOCOL` 6.
+- **Gold on death (T29, R7.24):** `death_gold_per_level` 0.
+- **Selling (T30, R7.26):** with the shop open, sellable items show their price.
+- **The title backdrop on slow machines (R7.25):** five slow frames in a row and it stops.
+
+
+Each row of `SECOND-ORDER.md` with status *person*, by number:
+
 - **R7.2**: selling is instant on a right-click and pays half. Ask first, or give a full refund for a few seconds after buying?
-- **R7.8**: build the faceted ground (journal tab 11)?
-- **R7.9**: after the ground, which next: the forest's outline, shadows under heroes and creeps, or a darker ground?
+- **R7.9**: next for the look: the forest's outline, or a darker ground? (Shadows under heroes and creeps came with T24.)
 - **R7.3**: play All Random All Mid at the new pace (level 3, 1.5× experience, 2× gold per second) and say whether it is too fast or too slow.
 - **R1.2**: the names and looks of heroes, items and creeps. Are they far enough from their DotA sources?
 - **R1.10**: one free courier per side from the start (DotA sold it). Keep?

@@ -112,7 +112,12 @@ function build(n) {
     node.alt = "";
   }
   const kids = n.n || [];
-  if (n.x && !kids.length) node.textContent = n.x;
+  if (n.t === "input") {
+    // a text box: its value and its hint, not text inside it
+    node.type = "text";
+    node.value = n.v || "";
+    node.placeholder = n.x || "";
+  } else if (n.x && !kids.length) node.textContent = n.x;
   for (const [k, v] of n.s || []) node.style.setProperty(k, v);
   if (n.a) {
     node.dataset.a = n.a;
@@ -143,6 +148,15 @@ function sync(parent, kids) {
     const json = JSON.stringify(k);
     const prev = byKey.get(key);
     if (prev && prev.json === json) return prev;
+    if (prev && prev.tagName === "INPUT" && k.t === "input") {
+      // keep the box (and the caret) while it is typed in; never write
+      // over what the reader is typing
+      if (document.activeElement !== prev) prev.value = k.v || "";
+      prev.placeholder = k.x || "";
+      prev.disabled = !!k.off;
+      prev.json = json;
+      return prev;
+    }
     if (prev && prev.own === ownOf(k) && (k.n || []).length) {
       sync(prev, kidsOf(k));
       prev.json = json;
@@ -376,6 +390,8 @@ async function main() {
     const r = JSON.parse(game.stage(tiles));
     if (r.error) el("notice").textContent = r.error;
   }
+  // the reader's motion preference goes to the core, which decides what moves
+  act("motion", window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "reduce" : "full");
   drawUi(true);
   document.body.dataset.ready = "true";
   requestAnimationFrame(loop);

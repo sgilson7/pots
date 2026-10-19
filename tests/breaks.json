@@ -551,5 +551,82 @@
   "find": "    let kind = if d.kind == Kind::Creep { lk.creep_scale_pct } else { 100 };",
   "replace": "    let kind = 100;",
   "test": "lane_creeps_are_drawn_smaller_than_heroes_and_neutrals"
+ },
+ {
+  "name": "round 7c: the backdrop never catches up",
+  "file": "crates/core/src/backdrop.rs",
+  "find": "            for _ in 0..lk.catch_up.max(1) {",
+  "replace": "            for _ in 0..1 {",
+  "test": "a_match_plays_behind_the_title_once_it_reaches_the_first_clash"
+ },
+ {
+  "name": "round 7c: the backdrop is drawn while it catches up",
+  "file": "crates/core/src/game.rs",
+  "find": "            let b = self.backdrop.as_ref().filter(|b| b.ready(&self.look.backdrop))?;",
+  "replace": "            let b = self.backdrop.as_ref()?;",
+  "test": "a_match_plays_behind_the_title_once_it_reaches_the_first_clash"
+ },
+ {
+  "name": "round 7c: the camera stands on the hero",
+  "file": "crates/core/src/backdrop.rs",
+  "find": "            Some(u) => [u.x / SUB - lk.west, u.y / SUB],",
+  "replace": "            Some(u) => [u.x / SUB, u.y / SUB],",
+  "test": "a_match_plays_behind_the_title_once_it_reaches_the_first_clash"
+ },
+ {
+  "name": "round 7c: the backdrop runs behind every screen",
+  "file": "crates/core/src/game.rs",
+  "find": "        self.screen == \"title\" && self.stage.is_none()",
+  "replace": "        self.stage.is_none() && self.m.is_none()",
+  "test": "the_backdrop_waits_while_another_screen_shows"
+ },
+ {
+  "name": "round 7c: the camera picks heroes in turn",
+  "file": "crates/core/src/backdrop.rs",
+  "find": "        if best.map(|(c, _)| near > c).unwrap_or(true) {",
+  "replace": "        if best.is_none() {",
+  "test": "the_camera_follows_the_hero_with_the_most_enemies_near"
+ },
+ {
+  "name": "round 7c: reduced motion still moves the backdrop",
+  "file": "crates/core/src/game.rs",
+  "find": "        if b.stopped || self.reduced_motion && b.ready(&self.look.backdrop) {",
+  "replace": "        if b.stopped || false && b.ready(&self.look.backdrop) {",
+  "test": "with_reduced_motion_the_backdrop_is_a_still"
+ },
+ {
+  "name": "round 7c: a slow machine keeps the backdrop",
+  "file": "crates/core/src/backdrop.rs",
+  "find": "        if self.slow >= lk.slow_frames {",
+  "replace": "        if self.slow >= lk.slow_frames * 1000 {",
+  "test": "a_machine_too_slow_to_draw_it_keeps_a_plain_title"
+ },
+ {
+  "name": "round 7d: the host never hears a new name",
+  "file": "crates/core/src/online.rs",
+  "find": "            o.seats[seat].name = display_name(&name);\n            broadcast_lobby(o);",
+  "replace": "            let _ = seat;",
+  "test": "a_name_changed_in_the_lobby_reaches_every_browser"
+ },
+ {
+  "name": "round 7d: the host's own new name stays local",
+  "file": "crates/core/src/online.rs",
+  "find": "                            o.seats[k].name = display_name(&o.name);\n                            broadcast_lobby(o);",
+  "replace": "                            let _ = k;",
+  "test": "a_name_changed_in_the_lobby_reaches_every_browser"
+ },
+ {
+  "name": "round 7e: death costs gold again",
+  "file": "data/rules.json",
+  "find": "  \"death_gold_per_level\": 0,",
+  "replace": "  \"death_gold_per_level\": 30,",
+  "test": "a_hero_keeps_its_gold_when_it_dies"
+ },
+ {
+  "name": "round 7e: no price tag on sellable items",
+  "file": "crates/core/src/ui.rs",
+  "find": "                        b.n.push(text(\"span\", \"sell-price\", back.to_string()));",
+  "replace": "",
+  "test": "a_right_click_on_a_carried_item_near_a_shop_sells_it_for_half"
  }
 ]

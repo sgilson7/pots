@@ -62,7 +62,7 @@ Makes every tower of your side shrug off attacks for a few seconds. Your side sh
 
 ### Gold
 
-What you buy items with. Most of it comes from last hits; killing heroes and taking towers pays too. Dying loses some of it.
+What you buy items with. Most of it comes from last hits; killing heroes and taking towers pays too. You keep it when you die.
 
 ### Health relic
 

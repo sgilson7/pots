@@ -200,3 +200,20 @@ fn files() -> pots_core::game::Files<'static> {
         arcade: include_str!("../../../data/arcade.json"),
     }
 }
+
+#[test]
+fn a_hero_keeps_its_gold_when_it_dies() {
+    // round 7, the person's ask: no gold is lost on death (DotA took 30 a
+    // level of unreliable gold)
+    let f = common::fixture();
+    let ctx = f.ctx();
+    let mut w = f.world(9);
+    let h = w.add_hero(&ctx, 0, 0);
+    w.players[0].gold = 1000;
+    w.players[0].reliable = 0;
+    w.get_mut(h).unwrap().hp = 0;
+    w.step(&ctx, &[]);
+    assert!(!w.get(h).unwrap().alive, "the hero died");
+    assert_eq!(w.players[0].deaths, 1);
+    assert_eq!(w.players[0].gold, 1000, "all 1000 gold kept");
+}

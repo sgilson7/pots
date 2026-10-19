@@ -305,6 +305,8 @@ pub struct Look {
     pub max_ticks_per_frame: i32,
     /// The map's look (T19).
     pub map_look: MapLook,
+    /// The title screen's backdrop match (round 7).
+    pub backdrop: crate::backdrop::BackdropLook,
 }
 
 /// The look of Mage Tower Battle's newer version (journal tab 10): faceted

@@ -10,6 +10,7 @@ pub mod ability;
 pub mod ai;
 pub mod api;
 pub mod aram;
+pub mod backdrop;
 pub mod combat;
 pub mod courier;
 pub mod draw;

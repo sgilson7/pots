@@ -67,6 +67,9 @@ h1, h2 { font-family: var(--hud-font); text-transform: uppercase; letter-spacing
 .menu-head::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: repeating-linear-gradient(135deg, var(--accent) 0 10px, transparent 10px 20px); opacity: .7; }
 .menu-head h1 { font-size: 34px; flex: 1; }
 .title-screen { justify-content: center; align-items: flex-start; padding-left: max(24px, 8vw); }
+/* the backdrop match shows through on the right (round 7) */
+.menu.title-screen { background: linear-gradient(90deg, rgba(10, 8, 16, .88) 0%, rgba(10, 8, 16, .62) 34%, rgba(10, 8, 16, .12) 66%, rgba(10, 8, 16, 0) 100%); }
+.title-screen .tagline, .title-screen .fine { text-shadow: 0 1px 3px rgba(0, 0, 0, .8); }
 .game-title { font-size: clamp(44px, 8vw, 96px); font-style: italic; line-height: .95; color: var(--accent); text-shadow: 0 4px 0 #6b3d10, 0 10px 30px rgba(0, 0, 0, .5); max-width: 12ch; }
 .tagline { font-size: 19px; color: var(--muted); max-width: 46ch; margin: 0; }
 .menu-buttons { display: flex; flex-direction: column; gap: 10px; min-width: 260px; }
@@ -133,6 +136,7 @@ h1, h2 { font-family: var(--hud-font); text-transform: uppercase; letter-spacing
 .slot.empty { border-style: dashed; border-color: var(--line); }
 /* in reach of a shop a right-click sells (round 7) */
 .slot.sellable:hover { border-color: var(--accent); }
+.slot .sell-price { position: absolute; left: 0; right: 0; bottom: 0; font-size: 11px; font-family: var(--hud-font); text-align: center; background: rgba(10, 8, 16, .78); color: var(--accent); }
 .slot.passive .slot-icon { filter: saturate(.6); }
 .slot.low-mana .slot-icon { filter: saturate(.3) brightness(.7) hue-rotate(200deg); }
 .slot.toggled, .slot.aiming { border-color: var(--good); box-shadow: 0 0 12px var(--good); }

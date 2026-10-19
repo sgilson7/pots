@@ -162,6 +162,12 @@ pub struct Game {
     pub notice: String,
     /// The scene built by the last `render`.
     pub last: render::Finished,
+    /// The match behind the title screen (round 7), made when the title
+    /// is first shown.
+    pub backdrop: Option<crate::backdrop::Backdrop>,
+    /// The reader's browser asks for reduced motion: the backdrop stands
+    /// still once drawn.
+    pub reduced_motion: bool,
 }
 
 /// A still scene set up for a screenshot (`?tile=...`).
@@ -273,6 +279,8 @@ impl Game {
             online: crate::online::Online::default(),
             notice: String::new(),
             last: (Vec::new(), Vec::new()),
+            backdrop: None,
+            reduced_motion: false,
         })
     }
 
@@ -400,6 +408,10 @@ impl Game {
         self.clock_us += dt;
         self.pan(dt);
         self.follow_throw();
+        if self.on_title() {
+            self.backdrop_frame(dt);
+            return;
+        }
         if self.screen != "match" {
             return;
         }
@@ -424,6 +436,40 @@ impl Game {
             self.acc_us = 0;
         }
         self.alpha = (self.acc_us * ONE as i64 / tick_us) as i32;
+    }
+
+    /// Whether the title screen shows, with its backdrop behind it.
+    pub fn on_title(&self) -> bool {
+        self.screen == "title" && self.stage.is_none()
+    }
+
+    /// Runs the title screen's backdrop match for one display frame and
+    /// moves the camera with it (round 7).
+    fn backdrop_frame(&mut self, dt: i64) {
+        let mut b = match self.backdrop.take() {
+            Some(b) => b,
+            None => crate::backdrop::Backdrop::new(
+                self.new_world(self.seed ^ 0x7417_1e5c_e4e5),
+                self.look.backdrop.skill,
+            ),
+        };
+        let ctx = Ctx {
+            rules: &self.rules,
+            terrain: &self.terrain,
+        };
+        if b.stopped || self.reduced_motion && b.ready(&self.look.backdrop) {
+            // a still of the match, not a moving one
+            self.backdrop = Some(b);
+            return;
+        }
+        self.view.target = b.frame(
+            &ctx,
+            &self.look.backdrop,
+            dt,
+            self.view.target,
+            self.look.max_ticks_per_frame,
+        );
+        self.backdrop = Some(b);
     }
 
     /// Remembers where every unit stands before a tick, for smooth drawing.
@@ -580,8 +626,25 @@ impl Game {
     }
 
     fn with_frame<T>(&self, f: impl FnOnce(&Frame) -> T) -> Option<T> {
-        let m = self.m.as_ref()?;
         let ctx = self.ctx();
+        if self.on_title() {
+            // the backdrop match, seen by neither side, so nothing is fogged
+            let b = self.backdrop.as_ref().filter(|b| b.ready(&self.look.backdrop))?;
+            let frame = Frame {
+                ctx: &ctx,
+                w: &b.world,
+                models: &self.models,
+                look: &self.look,
+                team: crate::world::NEUTRAL,
+                alpha: b.alpha,
+                prev: &b.prev,
+                hover: NO_UNIT,
+                selected: NO_UNIT,
+                view: self.view,
+            };
+            return Some(f(&frame));
+        }
+        let m = self.m.as_ref()?;
         let frame = Frame {
             ctx: &ctx,
             w: &m.world,
@@ -1441,6 +1504,9 @@ impl Game {
         };
         self.notice.clear();
         match name {
+            "motion" => {
+                self.reduced_motion = value == "reduce";
+            }
             "screen" => {
                 match value {
                     "title" | "arcade" | "heroes" | "help" | "pick" => {}
