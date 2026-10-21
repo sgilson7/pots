@@ -160,7 +160,7 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **Journal tab 13** (`journal/mockups/tab13.py`): the review, the mockup beside the game, every ability cast in the game, the shots, three questions.
 - **Tests:** `tests/shiver.rs` (11); break rows "shiver:" (21, all caught once the edge test checked both sides). Hackle and Chipper's tests no longer assume they are the roster's last two (R7.64).
 - **Not deployed:** the person did not ask for it this time.
-- **Checks (20 October 2026):** `./scripts/count-tests.sh` 195 passed, 0 failed, 4 ignored; `./scripts/check.sh` **BUILDER CHECK PASSED** (Chromium, Firefox, WebKit); `scripts/break_tests.py shiver` 21 of 21 caught after `cargo fmt` (one row repointed at the reflowed text). The other 131 rows were not re-run this time; `cargo fmt` changed only the new code.
+- **Checks (20 October 2026):** `./scripts/count-tests.sh` 195 passed, 0 failed, 4 ignored; `./scripts/check.sh` **BUILDER CHECK PASSED** (Chromium, Firefox, WebKit); `scripts/break_tests.py shiver` 21 of 21 caught after `cargo fmt` (one row repointed at the reflowed text). The other 131 rows were not re-run this time; `cargo fmt` changed only the new code. **Live:** `./scripts/publish.sh` ran `./scripts/check.sh` again (**BUILDER CHECK PASSED**) and published build `9cd7ec0`; `BUILDER_ORIGIN=https://sgilson7.github.io/pots tests/browser/check.py` passed in Chromium, Firefox and WebKit on the live site; the online smoke test on the live site (`BASE=… tests/online/smoke.py --rejoin`, version 8) met through the relays, rejoined, and the checksums agreed at tick 1800 (one relay, relay.damus.io, answered 503; the others carried it).
 
 ## Open for the person
 
