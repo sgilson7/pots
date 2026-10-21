@@ -167,7 +167,7 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **Cause:** under the pointer lock, which brings Safari's "press Esc" banner, the page sends each mouse move on to the element under the drawn cursor. That move bubbled back to the page's own handler and was sent on again until the stack ran out. In Safari it ran out inside a call into the core, which then refused every call, so the match froze. Chrome and Firefox only stuttered. Present since T4 (R7.65).
 - **Fix:** `web/app.js` `wireInput` takes only the mouse's own moves.
 - **Check:** `tests/browser/interactions.py` `locked_moves` tells the page the body holds the lock and moves the mouse; with the fix taken out it fails in all three engines (R7.66). Safari itself with a real pointer lock is the person's check.
-- **Checks:** CHECKS_T37
+- **Checks and live (21 October 2026):** with the fix taken out the new check failed in Chromium, Firefox and WebKit; `./scripts/publish.sh` ran `./scripts/check.sh` (**BUILDER CHECK PASSED**, Chromium, Firefox, WebKit) and published build `147c1c0`; `BUILDER_ORIGIN=https://sgilson7.github.io/pots tests/browser/check.py` passed in all three engines on the live site, the new check included. No core change, so the cargo tests and break list were not re-run.
 
 ## Open for the person
 
