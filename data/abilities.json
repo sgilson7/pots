@@ -1934,6 +1934,232 @@
    "color": "fx_steel",
    "key": "KeyR",
    "_after": "Return Chakram"
+  },
+  {
+   "id": "cold_feet",
+   "logic": "cold_feet",
+   "target": "unit",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    150
+   ],
+   "cooldown": [
+    1500,
+    1300,
+    1100,
+    900
+   ],
+   "range": [
+    700
+   ],
+   "cast_point": 1,
+   "values": {
+    "damage_x100": [
+     3750,
+     5000,
+     6250,
+     7500
+    ],
+    "ticks": [
+     4
+    ],
+    "tick": [
+     85
+    ],
+    "delay": [
+     400
+    ],
+    "break": [
+     740
+    ],
+    "stun": [
+     125,
+     200,
+     275,
+     350
+    ]
+   },
+   "icon": "abilities/cold_feet",
+   "color": "fx_frost",
+   "key": "KeyQ",
+   "_after": "Cold Feet (6.72/6.73: four hits by 3.4 s, break at 740)"
+  },
+  {
+   "id": "ice_vortex",
+   "logic": "ice_vortex",
+   "target": "point",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    80,
+    90,
+    100,
+    110
+   ],
+   "cooldown": [
+    600
+   ],
+   "range": [
+    1500
+   ],
+   "cast_point": 1,
+   "values": {
+    "radius": [
+     275
+    ],
+    "duration": [
+     1200
+    ],
+    "slow": [
+     18,
+     22,
+     26,
+     30
+    ],
+    "resist": [
+     10,
+     15,
+     20,
+     25
+    ]
+   },
+   "icon": "abilities/ice_vortex",
+   "color": "fx_frost",
+   "key": "KeyW",
+   "_after": "Ice Vortex"
+  },
+  {
+   "id": "chilling_touch",
+   "logic": "chilling_touch",
+   "target": "point",
+   "on": "ally",
+   "ultimate": false,
+   "mana": [
+    140
+   ],
+   "cooldown": [
+    5000,
+    4600,
+    4200,
+    3800
+   ],
+   "range": [
+    800
+   ],
+   "cast_point": 1,
+   "values": {
+    "radius": [
+     450
+    ],
+    "attacks": [
+     2,
+     3,
+     4,
+     5
+    ],
+    "damage": [
+     40,
+     50,
+     60,
+     70
+    ],
+    "duration": [
+     4000
+    ],
+    "attack_slow": [
+     15
+    ]
+   },
+   "icon": "abilities/chilling_touch",
+   "color": "fx_frost",
+   "key": "KeyE",
+   "_after": "Chilling Touch (6.72's allied buff, enemy heroes only)"
+  },
+  {
+   "id": "ice_blast",
+   "logic": "ice_blast",
+   "target": "point",
+   "on": "enemy",
+   "ultimate": true,
+   "mana": [
+    100,
+    125,
+    150
+   ],
+   "cooldown": [
+    4500
+   ],
+   "range": [],
+   "cast_point": 1,
+   "values": {
+    "global": [
+     1
+    ],
+    "tracer_speed": [
+     1500
+    ],
+    "min_radius": [
+     225
+    ],
+    "growth": [
+     50
+    ],
+    "max_radius": [
+     1000
+    ],
+    "blast_speed": [
+     750
+    ],
+    "blast_secs": [
+     200
+    ],
+    "path": [
+     275
+    ],
+    "damage": [
+     250,
+     350,
+     450
+    ],
+    "dps_x100": [
+     1250,
+     2000,
+     3200
+    ],
+    "duration": [
+     800,
+     900,
+     1000
+    ],
+    "kill_pct": [
+     10,
+     11,
+     12
+    ]
+   },
+   "icon": "abilities/ice_blast",
+   "color": "fx_frost",
+   "key": "KeyR",
+   "_after": "Ice Blast",
+   "alt": "ice_blast_release",
+   "alt_when": "tracer_out"
+  },
+  {
+   "id": "ice_blast_release",
+   "logic": "ice_blast_release",
+   "target": "none",
+   "on": "self",
+   "ultimate": true,
+   "mana": [],
+   "cooldown": [],
+   "range": [],
+   "cast_point": 0,
+   "values": {},
+   "icon": "abilities/ice_blast_release",
+   "color": "fx_frost",
+   "key": "KeyR",
+   "_after": "Release"
   }
  ]
 }

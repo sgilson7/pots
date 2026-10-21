@@ -1867,6 +1867,58 @@
     "chakram"
    ],
    "_after": "Goblin Shredder, Dota 2's Timbersaw (DotA 6.73; notes/LITERATURE.md 7.2)"
+  },
+  {
+   "id": "shiver",
+   "kind": "hero",
+   "hp": 0,
+   "hp_regen": 25,
+   "mana": 0,
+   "mana_regen": 1,
+   "armor_type": "hero",
+   "attack_type": "hero",
+   "turn": 600,
+   "radius": 24,
+   "day_vision": 1800,
+   "night_vision": 1400,
+   "bounty": [
+    0,
+    0
+   ],
+   "xp": 0,
+   "model": "hero_shiver",
+   "armor": -100,
+   "damage": [
+    19,
+    29
+   ],
+   "range": 600,
+   "bat": 170,
+   "attack_point": 45,
+   "backswing": 30,
+   "missile": 1250,
+   "speed": 295,
+   "acquire": 800,
+   "attrs": {
+    "primary": "int",
+    "base": [
+     18,
+     20,
+     25
+    ],
+    "gain": [
+     140,
+     220,
+     260
+    ]
+   },
+   "abilities": [
+    "cold_feet",
+    "ice_vortex",
+    "chilling_touch",
+    "ice_blast"
+   ],
+   "_after": "Ancient Apparition (Kaldr), DotA 6.72/6.73; notes/LITERATURE.md 8.1"
   }
  ]
 }

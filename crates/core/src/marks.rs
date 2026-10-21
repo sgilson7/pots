@@ -341,7 +341,8 @@ pub struct Shot {
     /// towers), `arrow`, `streak` (a long thin bullet), `shard` (an ice
     /// crystal), `flame` (a fireball with a smoky tail), `boulder` (a stone
     /// lobbed in an arc), `spark` (crackling lightning), `hammer` (a
-    /// spinning hammer), `hook` (a hook on its chain).
+    /// spinning hammer), `hook` (a hook on its chain), `flake` (a turning
+    /// snowflake, Shiver's).
     pub shape: String,
     /// A palette role; `team_glow` and the other team roles take the
     /// shooter's side. Empty for an ability: its look's colour.
@@ -574,10 +575,42 @@ pub fn draw_missile(f: &Frame, b: &mut Batch, at: V3, ms: &crate::world::Missile
             claw(f, b, at, dir, r);
             glow(b, at, r / 2, col, ONE / 2);
         }
+        // Shiver's snowflake (round 7): six ice arms turning as it flies,
+        // in a cold halo, with a trail of frost mist
+        "flake" => {
+            snowflake(b, at, r * 2, spin * 2, col);
+            let halo = Affine::translate(at).then(&Affine::scale(v3(r * 3, r * 3, r * 3)));
+            b.tint(Mesh::Sphere, &halo, col, ONE / 4);
+            trail(b, at, 5, r, f.models.named("ice"));
+        }
         _ => {
             glow(b, at, r, col, ONE);
             trail(b, at, 4, r, col);
         }
+    }
+}
+
+/// A snowflake `r` across its arms, standing upright and turned by `spin`:
+/// three crossed ice bars with a bud at each arm's end.
+fn snowflake(b: &mut Batch, at: V3, r: i32, spin: i32, col: Rgb) {
+    for i in 0..3 {
+        let a = Affine::translate(at)
+            .then(&Affine::rot_y(spin))
+            .then(&Affine::rot_z(fx::TURN * i / 6))
+            .then(&Affine::scale(v3(r / 6, r * 2, r / 6)));
+        b.push(LAYER_PLAIN, Mesh::Octa, &a, col, STYLE_GLOW);
+    }
+    for i in 0..6 {
+        let ang = fx::TURN * i / 6 + fx::TURN / 4;
+        let tip = Affine::translate(at)
+            .then(&Affine::rot_y(spin))
+            .then(&Affine::translate(v3(
+                fx::mul(fx::cos(ang), r),
+                fx::mul(fx::sin(ang), r),
+                0,
+            )))
+            .then(&Affine::scale(v3(r / 4, r / 4, r / 4)));
+        b.push(LAYER_PLAIN, Mesh::Octa, &tip, col, STYLE_GLOW);
     }
 }
 
@@ -779,6 +812,138 @@ pub fn draw_zone(f: &Frame, b: &mut Batch, z: &crate::world::Zone) -> bool {
                 claw(f, b, tree, dir, rr);
             }
         }
+        // Shiver's Frozen Ground (round 7): frost spreads at the spot the
+        // target stood on and ice spikes grow round it as the stun nears; a
+        // thin cold line runs to the target, and a faint ring marks how far
+        // it must go to break free
+        "frozen" => {
+            let life = (z.until.saturating_sub(z.start)).max(1) as i32 * ONE;
+            let grown = fx::div(t.min(life), life);
+            let patch = scene_len(110);
+            disc(b, floor, patch, col, ONE / 3);
+            ring(b, floor, patch, f.models.named("ice"), ONE * 3 / 4);
+            for i in 0..6 {
+                let a = fx::TURN * i / 6;
+                let p = floor.add(v3(fx::mul(fx::cos(a), patch), 0, fx::mul(fx::sin(a), patch)));
+                let h = fx::mul(big(f, ONE * 3 / 2), ONE / 4 + fx::mul(grown, ONE * 3 / 4));
+                let spike = Affine::translate(p.add(v3(0, h / 2, 0)))
+                    .then(&Affine::rot_y(a))
+                    .then(&Affine::scale(v3(big(f, ONE / 3), h, big(f, ONE / 3))));
+                b.push(SOLID, Mesh::FacetCone, &spike, f.models.named("ice"), 0);
+            }
+            ring(b, floor, r, col, ONE / 6 + beat / 12);
+            if let Some(v) = f.w.get(z.a as crate::world::Uid) {
+                let vp = v.pos();
+                let feet = to_scene(vp, ground(f, vp) + ONE / 4);
+                rod(
+                    b,
+                    floor.add(v3(0, ONE / 4, 0)),
+                    feet,
+                    big(f, ONE / 14),
+                    col,
+                    ONE / 2,
+                );
+                ring(
+                    b,
+                    to_scene(vp, ground(f, vp)),
+                    big(f, ONE + ONE / 2),
+                    f.models.named("ice"),
+                    ONE / 2 + fx::mul(grown, ONE / 2),
+                );
+            }
+        }
+        // Shiver's Snow Whirl (round 7): three arms of snow turning inward
+        // over a pale disc
+        "vortex" => {
+            disc(b, floor, r, col, ONE / 6);
+            ring(b, floor, r, col, ONE / 2);
+            let turn = fx::mul(t, fx::TURN / 40);
+            for arm in 0..3 {
+                for i in 0..6 {
+                    let k_ = fx::div(i + 1, 7);
+                    let a = turn + fx::TURN * arm / 3 + fx::mul(k_, fx::TURN / 2);
+                    let rr = fx::mul(r, ONE - k_ * 3 / 4);
+                    let p = floor.add(v3(
+                        fx::mul(fx::cos(a), rr),
+                        big(f, ONE / 2) + fx::mul(k_, big(f, ONE)),
+                        fx::mul(fx::sin(a), rr),
+                    ));
+                    glow(b, p, big(f, ONE / 7), f.models.named("ice"), ONE * 3 / 4);
+                }
+            }
+        }
+        // Shiver's Hailstar (round 7): the star flying (its own side sees it;
+        // enemies do not, as in DotA), the hail falling from Shiver to it,
+        // and the burst over the radius it grew to
+        "hail" => match z.a {
+            0 => {
+                if f.team != crate::world::NEUTRAL && f.team != z.team {
+                    return true;
+                }
+                let p = floor.add(v3(0, big(f, ONE * 2), 0));
+                snowflake(b, p, big(f, ONE / 2), fx::mul(t, fx::TURN / 6), col);
+                glow(b, p, big(f, ONE / 3), f.models.named("ice"), ONE);
+                if let Some(u) = f.w.get(z.src) {
+                    let home = to_scene(u.pos(), ground(f, u.pos()) + big(f, ONE * 2));
+                    let dir = home.sub(p).norm();
+                    rod(
+                        b,
+                        p,
+                        p.add(dir.scale(big(f, ONE * 3))),
+                        big(f, ONE / 16),
+                        col,
+                        ONE / 2,
+                    );
+                }
+            }
+            1 => {
+                let span = (z.next.saturating_sub(z.start)).max(1) as i32 * ONE;
+                let u = fx::div(t.min(span), span);
+                let from = to_scene(z.at, ground(f, z.at) + big(f, ONE * 2));
+                let to = to_scene(z.to, ground(f, z.to) + big(f, ONE / 2));
+                let p = from.lerp(to, u);
+                let s = big(f, ONE * 3 / 4);
+                let rock = Affine::translate(p)
+                    .then(&Affine::rot_x(fx::mul(t, fx::TURN / 20)))
+                    .then(&Affine::scale(v3(s * 2, s * 2, s * 2)));
+                b.push(SOLID, Mesh::Facet, &rock, f.models.named("ice"), 0);
+                glow(b, p, s, col, ONE / 2);
+                for i in 1..6 {
+                    let q = from.lerp(to, (u - i * ONE / 30).max(0));
+                    glow(b, q, s - s * i / 7, col, ONE / 2 - ONE * i / 14);
+                }
+                // where it will burst: a ring the size it will be
+                let dest = to_scene(z.to, ground(f, z.to));
+                ring(b, dest, r, col, ONE / 3 + beat / 8);
+            }
+            _ => {
+                let life = (z.until.saturating_sub(z.start)).max(1) as i32 * ONE;
+                let u = fx::div(t.min(life), life);
+                let open = ONE - fx::mul(ONE - u, ONE - u);
+                ring(
+                    b,
+                    floor,
+                    fx::mul(r, ONE / 3 + fx::mul(open, ONE * 2 / 3)),
+                    col,
+                    ONE - u,
+                );
+                disc(b, floor, fx::mul(r, open), f.models.named("ice"), (ONE - u) / 3);
+                for i in 0..8 {
+                    let a = fx::TURN * i / 8;
+                    let rr = fx::mul(r, ONE / 2);
+                    let p = floor.add(v3(fx::mul(fx::cos(a), rr), 0, fx::mul(fx::sin(a), rr)));
+                    let h = fx::mul(big(f, ONE * 2), ONE - u);
+                    if h > 0 {
+                        let spike = Affine::translate(p.add(v3(0, h / 2, 0))).then(&Affine::scale(v3(
+                            big(f, ONE / 2),
+                            h,
+                            big(f, ONE / 2),
+                        )));
+                        b.push(SOLID, Mesh::FacetCone, &spike, f.models.named("ice"), 0);
+                    }
+                }
+            }
+        },
         "none" => {}
         _ => return false,
     }
@@ -864,12 +1029,60 @@ pub fn draw_status(f: &Frame, b: &mut Batch, u: &Unit, foot: V3) {
             STYLE_GLOW,
         );
     }
+    // Frost Talons (round 7): an ice shard circling the chest for each charge left
+    if let Some(m) = u
+        .mods
+        .iter()
+        .find(|m| m.kind == M::Tag && m.b == crate::ability::TAG_CHILL)
+    {
+        for i in 0..m.a.clamp(0, 6) {
+            let a = fx::mul(now, fx::TURN / 20) + fx::TURN * i / m.a.max(1);
+            let p = foot.add(v3(
+                fx::mul(fx::cos(a), one * 3 / 2),
+                chest,
+                fx::mul(fx::sin(a), one * 3 / 2),
+            ));
+            let s = one / 3;
+            let shard = Affine::translate(p)
+                .then(&Affine::rot_y(a))
+                .then(&Affine::scale(v3(s / 2, s, s / 2)));
+            b.push(
+                LAYER_PLAIN,
+                Mesh::Octa,
+                &shard,
+                f.models.named("fx_frost"),
+                STYLE_GLOW,
+            );
+        }
+    }
+    // Hailstar's frostbite (round 7): a snowflake over the head and frost at the feet
+    if crate::ability::no_heal(u) {
+        let spin = fx::mul(now, fx::TURN / 40);
+        snowflake(
+            b,
+            head.add(v3(0, one, 0)),
+            one / 2,
+            spin,
+            f.models.named("fx_frost"),
+        );
+        disc(b, foot, one * 2, f.models.named("ice"), ONE / 3);
+    }
     let slowed = u.mods.iter().any(|m| m.kind == M::MovePct && m.a < 0);
     if slowed && !u.has(M::Stun) {
         ring(b, foot, one * 3 / 2, f.models.named("fx_frost"), ONE * 3 / 4);
     }
     // held by a root that is not a chain's pull (Timber Chain roots its caster in flight)
     let iced = u.mods.iter().any(|m| {
+        // Frozen Ground's stun holds the unit in ice too
+        m.kind == M::Stun
+            && m.tag != 0
+            && f.ctx
+                .rules
+                .abilities
+                .get(m.tag as usize - 1)
+                .map(|a| a.logic == "cold_feet")
+                .unwrap_or(false)
+    }) || u.mods.iter().any(|m| {
         m.kind == M::Root
             && !(m.tag != 0
                 && f.ctx

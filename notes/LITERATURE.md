@@ -2774,3 +2774,250 @@ How players described him (6.73–6.74): a chaser and tank, Timber Chain "like a
 | [G-Basic] | playdota guide "Basic Guide to Troll Warlord", 2011 | https://web.archive.org/web/20110923151404/http://www.playdota.com/guides/i-kill-for-you |
 | [G-SHR] | playdota guide "SHRredderR!", Jan 2012 | https://web.archive.org/web/20120306085344/http://www.playdota.com:80/guides/shrredderr |
 | [G-DotaBlog] | DotA-Blog "Rizzrak Guide", Dec 2011 | http://www.dota-blog.com/2011/12/rizzrak-guide-goblin-shredder-build.html |
+
+## 8. Round 7, continued: a third added hero, Ancient Apparition (Kaldr)
+
+Compiled 20 October 2026 by a research agent, with the same method as the sections above: the playdota.com hero page and IceFrog changelogs through the Wayback Machine (raw captures, compared against each other), the Dota 2 Wiki (Gamepedia) 2013 and 2015 snapshots and its hero changelog page for the DotA-era changes, and 2010–2011 player guides on playdota (one 2009 DotA-Blog guide for the oldest descriptions). fandom.com and Liquipedia were not fetched directly; the Gamepedia copies were reached through the Wayback Machine. Every number carries a source key; the keys are at the end of this section.
+
+### 8.0 Version findings
+
+1. **Ancient Apparition is a 6.65 hero and is inside this game's 6.72/6.73 pin.** The Dota 2 Wiki's DotA-era changelog: "6.65: Created." [D2W-AACL]; a 2011 guide: "first introduced in 6.65" [G-Coolest].
+2. **His only balance change in 6.72–6.73c is armor, in 6.72:** "Ancient Apparition – Armor reduced from 4 to 2" [CL-6.72] (the Dota 2 Wiki words it "Reduced base armor from 1 to -1 (total armor is now 1.8)" [D2W-AACL]). The rest of 6.72–6.73c is bug fixes and one engine change:
+   - 6.72: "Fixed Natural Order and Ice Vortex interaction with spell resistance items" [CL-6.72].
+   - 6.72: "Heroes now get XP if they get a kill outside of the standard XP range" [CL-6.72]. This is a general change, but a 2011 guide calls it "a huge buff" to Ice Blast, because a kill from across the map now earns him experience [G-Coolest].
+   - 6.72d: "Fixed Ice Blast being unable to kill Ethereal units" [CL-6.72d].
+   - 6.73: "Compressed Ancient Apparition model size" [CL-6.73].
+   - 6.72b, 6.72c, 6.72e, 6.72f, 6.73b and 6.73c have no entry for him [CL-6.72b], [CL-6.72c], [CL-6.72e], [CL-6.72f], [CL-6.73b], [CL-6.73c].
+3. **The playdota hero page has the same text in every capture from June 2011 to January 2012** (diffed: 2011-06-13, 2011-12-21, 2012-01-17) [PD-AA-6.72]. The April 2012 capture (6.74) changes only Chilling Touch's targeting-type label from "Area" to "Point" [PD-AA-6.74].
+4. **Chilling Touch in 6.72/6.73 is the old allied buff:** +40/50/60/70 magic damage for 2/3/4/5 attacks, radius 450, 40 s, −15% attack speed on the buffed ally, **damage only on attacks against heroes**, no slow on the enemy [PD-AA-6.72]. Later changes:
+   - 6.75 (creeps, radius 525, damage 50–80, 30 s), 6.76 (3–6 attacks), 6.77 (mana) and 6.79 (always on Kaldr, shorter cooldown) changed it in DotA [CL-6.75], [CL-6.76], [D2W-AACL].
+   - Dota 2 7.07 removed the attack-speed penalty and added a 30% movement slow on the enemy hit, still as an allied buff [D2W-AACL].
+   - **The self-only attack modifier came in Dota 2 7.20, not 7.07** [D2W-AACL].
+5. **Ice Blast in 6.72/6.73:**
+   - Radius 225 + 50 a second of tracer travel, at most 1000 [PD-AA-6.72]. 6.78 raised the base to 275 [D2W-AACL].
+   - Cooldown 45 [PD-AA-6.72]; 6.79 lowered it to 40 [D2W-AACL].
+   - **No Aghanim's Scepter upgrade.** The upgrade was added in 6.78 [D2W-AACL].
+   - **The Fountain removes the frostbite.** 6.75: "Ice Blast is no longer dispelled by the Fountain" [CL-6.75].
+6. **Cold Feet in 6.72/6.73:**
+   - Break distance **740** [PD-AA-6.72]. A 2010 capture said 765 [PD-AA-6.6x]. No source consulted gives 715; treat it as UNVERIFIED and probably a later value.
+   - Cast range 700, mana 150, cooldown 15/13/11/9 [PD-AA-6.72].
+   - Damage ticks at 0.8, 1.6, 2.5 and 3.4 s, not every second [PD-AA-6.72].
+   - These are all later Dota 2 changes: cast range 700–1000 (6.85), ticks at 0/1/2/3 (6.87), mana 125 (7.04), damage 30–90 (7.05), stun 2–3.5 s (7.06c) [D2W-AACL].
+7. **Pin used:** 6.72–6.73c, which are identical for this hero apart from the 6.72d Ethereal fix. Use the post-6.72d behaviour.
+
+### 8.1 Ancient Apparition (Kaldr), Scourge, Intelligence
+
+| Stat | 6.72/6.73 | Notes |
+|---|---|---|
+| Primary | INT | [PD-AA-6.72] |
+| STR | 18 + 1.4 | same in every snapshot 2010–2012 |
+| AGI | 20 + 2.2 | same |
+| INT | 25 + 2.6 | same |
+| Damage (level 1) | 44–54 | raw base 19–29 (44–54 minus 25 INT; the Dota 2 7.15 entry "base attack damage from 19-29" agrees) [PD-AA-6.72], [D2W-AACL] |
+| Armor (level 1) | 1.8 | base armor −1 since 6.72 (4.8 in 2010, 3.8 after 6.68) [PD-AA-6.72], [PD-AA-6.6x], [D2W-AACL] |
+| HP / mana (level 1) | 492 / 325 | 150 + 18 × 19; 25 × 13 [D2W13-AA] |
+| Move speed | 295 | [PD-AA-6.72] |
+| Attack range | 600 | Dota 2 7.06 raised it to 675 [D2W-AACL] |
+| Missile speed | 1250 | [PD-AA-6.72] |
+| Base attack time | 1.7 | [PD-AA-6.72] |
+| Attack point / backswing | 0.45 / 0.3 | [PD-AA-6.72] |
+| Cast point / backswing | 0.01 / 0.75 | [PD-AA-6.72]; Release has its own cast point of 0 in the Dota 2 port [D2W-AACL] (DotA UNVERIFIED) |
+| Vision day / night | 1800 / 1400 | 6.79 cut night vision to 800 [D2W-AACL]; a 2011 guide lists "Very good night time vision" as a strength [G-Coolest] |
+| Turn rate | 0.6 | Dota 2 Wiki 2013 [D2W13-AA]; the port "fixed turn rates" for him in May 2012, so the DotA value is UNVERIFIED |
+| Collision, acquisition range | — | UNVERIFIED (no source) |
+
+Hotkeys (playdota): Cold Feet C, Ice Vortex E, Chilling Touch G, Ice Blast T [PD-AA-6.72]. Release takes Ice Blast's button while the tracer flies (UNVERIFIED for DotA; Dota 2 does this [D2W15-AA]).
+
+**Cold Feet** (unit target, C). *"The Apparition curses his foes with The Frozen Mark which will freeze enemies to the ground. Unless target enemy moves at least 740 away from the mark within 4 seconds he is frozen still."*
+
+| Level | Mana | CD | Range | Damage a tick (magical) | Ticks | Break distance | Stun at 4 s |
+|---|---|---|---|---|---|---|---|
+| 1 | 150 | 15 | 700 | 37.5 | 4 | 740 | 1.25 s |
+| 2 | 150 | 13 | 700 | 50 | 4 | 740 | 2 s |
+| 3 | 150 | 11 | 700 | 62.5 | 4 | 740 | 2.75 s |
+| 4 | 150 | 9 | 700 | 75 | 4 | 740 | 3.5 s |
+
+All [PD-AA-6.72]; mana 150 since 6.67 [D2W-AACL].
+
+Rules:
+- Targets any enemy unit [PD-AA-6.72]. Cast instantly (0.01 cast point) [G-Coolest].
+- The mark is placed where the target stands when the spell is cast. The target takes magic damage at **0.8, 1.6, 2.5 and 3.4 s** after the cast, and is stunned at **exactly 4 s** [PD-AA-6.72], [G-Coolest]. That is 150/200/250/300 in all [D2W13-AA].
+- The effect ends for good if the target dies, moves more than 740 from the mark, or loses the debuff. Walking back inside does not restart it ("The damage stops and no stun occurs if the target moves out of range, even if he moves back in range") [PD-AA-6.72], [G-Coolest].
+- Blocked by Linken's Sphere [PD-AA-6.72].
+- "Cold feet will have no effect casted on a hexed unit", so a guide tells the player to cast Cold Feet before Guinsoo's [G-Coolest].
+- Guides and the tooltip text say "damage every second" [G-Coolest], [G-DotaBlog09]. The playdota note gives the four tick times, and this note uses them.
+- UNVERIFIED:
+  - Magic immunity: no 6.72 source says whether the debuff can be cast on, or stays on, a magic-immune unit. A guide says only "Magic immunity counters what ever he can do" [G-Coolest].
+  - Purge: the Dota 2 port lets purge remove the debuff but not the stun [D2W13-AA].
+  - How often the break distance is checked: no source.
+
+**Ice Vortex** (point, E). *"Gathers ancient frost energy into one area to create a small, immobile ice vortex at a location. Whenever enemies are near it, their movement speed and magical resistance are reduced."*
+
+| Level | Mana | CD | Range | Radius | Duration | Move slow | Magic resistance |
+|---|---|---|---|---|---|---|---|
+| 1 | 80 | 6 | 1500 | 275 | 12 s | 18% | −10% |
+| 2 | 90 | 6 | 1500 | 275 | 12 s | 22% | −15% |
+| 3 | 100 | 6 | 1500 | 275 | 12 s | 26% | −20% |
+| 4 | 110 | 6 | 1500 | 275 | 12 s | 30% | −25% |
+
+All [PD-AA-6.72].
+
+Rules:
+- An aura on enemy units in 275. "New units are checked for every 0.1 seconds" [PD-AA-6.72], and the debuff lingers 0.1 s, which 6.80 raised to 0.5 [D2W-AACL].
+- Does not affect magic-immune units, Forged Spirits, Familiars in Stone Form [PD-AA-6.72], [G-Stone].
+- The magic-resistance reduction works as damage amplification. The guide's arithmetic: with −25%, a hero takes 0.75 × 1.25 = 93.75% of magic damage instead of 75%, so a 400 Dagon does 375 instead of 300 [G-Coolest].
+- 6.72 fixed its interaction with spell-resistance items [CL-6.72]. It also boosts Chilling Touch's magic damage [G-Coolest].
+- "Gives vision of the area" [G-Coolest]. Radius UNVERIFIED (Dota 2: 200 ground vision at the point [D2W15-AA]).
+- Stacking UNVERIFIED for DotA. In Dota 2, several vortices do not stack: a unit has one debuff even where vortices overlap [D2W15-AA]. The port's June 2011 fix for "losing the debuff when moving between two patches" suggests one shared buff, as in DotA [D2W-AACL].
+- Later changes:
+  - Cooldown 5 in 6.78, then 4 in 6.79.
+  - 6.80: duration 16 s and magic resistance −15–30%.
+  - 6.81b: slow 15–30%.
+  - Dota 2 7.06: also speeds up Kaldr inside the vortex.
+  - Sources: [D2W-AACL].
+
+**Chilling Touch** (area, G). *"Releases a gust of cold wind at a target area, enchanting allied heroes with bonus magical damage on their attacks. Lasts for a limited number of attacks up to a maximum of 40 seconds. While the enchanted heroes have this chilling touch, their attack speed is reduced by 15%."*
+
+| Level | Mana | CD | Range | Radius | Attacks | Duration | Bonus damage (magical) | Ally's attack speed |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 140 | 50 | 800 | 450 | 2 | 40 s | +40 | −15% |
+| 2 | 140 | 46 | 800 | 450 | 3 | 40 s | +50 | −15% |
+| 3 | 140 | 42 | 800 | 450 | 4 | 40 s | +60 | −15% |
+| 4 | 140 | 38 | 800 | 450 | 5 | 40 s | +70 | −15% |
+
+All [PD-AA-6.72]. Radius 450 is confirmed by 6.75's "AoE increased from 450 to 525" [CL-6.75]. A 6.67c guide wrote 400 [G-Stone].
+
+Rules:
+- A buff placed once, at the cast, on allied heroes inside 450 of the point [PD-AA-6.72].
+- **Kaldr gets it only if he stands in the area.** 6.79 made it "always applied to Ancient Apparition even if he is not within the target area" [D2W-AACL].
+- Melee and ranged heroes alike: the tooltip limits only to "Allied heroes" [PD-AA-6.72]. No source says it excludes melee.
+- Illusions do not get it (Dota 2 port fix, June 2011; DotA UNVERIFIED) [D2W-AACL].
+- The bonus damage:
+  - is its own magic damage instance, not part of the attack [PD-AA-6.72];
+  - **works only on attacks against heroes** in 6.72/6.73. The note "Bonus damage only works on attacks against heroes" appears in 2011 [PD-AA-6.72], and 6.75 "now deals its bonus damage and uses a charge when attacking creeps" [CL-6.75].
+- A charge is used only when an attack lands. "If an attack is interrupted before dealing damage the count of attacks is not lowered" [PD-AA-6.72]. Whether attacks on creeps use charges in 6.72: no charge, per the 6.75 wording [CL-6.75].
+- **No slow on the enemy** in 6.72/6.73; the only side effect is the −15% attack speed on the ally carrying it [PD-AA-6.72]. A 2011 guide: "Use it only just before a team battle or your team will suffer of a -15% ASR" [G-Stone].
+- The buff ends after its attacks or 40 s, whichever comes first [PD-AA-6.72].
+- In WC3, −15% attack speed is −15 IAS. The port listed it as 15, then 20 from 6.81 [D2W-AACL].
+- Whether the damage is credited to the attacker or to Kaldr: UNVERIFIED for DotA. In Dota 2 the attacker is the damage source [D2W15-AA].
+
+**Ice Blast** (ultimate, point, global, T) and **Release** (no target). *"Ancient Apparition projects his presence out to make way for a powerful ripple of hailstone and dark magic. Once cast, it can release the spell to strike targets within the area of where his presence was upon release. It will deal damage to enemy units and apply a frostbite curse on them where their health regeneration will be frozen and will shatter if they fall close enough to death. This spell has global range depending on how long you wait for the projections to move. Frostbitten units will take minor damage over time."*
+
+| Level | Mana | CD | Range | Blast damage (magical) | Frostbite damage a second | Frostbite duration | Shatter below |
+|---|---|---|---|---|---|---|---|
+| 1 | 100 | 45 | global | 250 | 12.5 | 8 s | 10% HP |
+| 2 | 125 | 45 | global | 350 | 20 | 9 s | 11% HP |
+| 3 | 150 | 45 | global | 450 | 32 | 10 s | 12% HP |
+
+All [PD-AA-6.72]; cooldown 45 on every level since 6.68 (44/32/20 before) [D2W-AACL], [G-Stone].
+
+| Part | 6.72/6.73 value | Source |
+|---|---|---|
+| Tracer speed | 1500 | [PD-AA-6.72] |
+| Tracer stops | when Release is cast or Kaldr dies | [PD-AA-6.72] |
+| Tracer visibility | invisible; true sight reveals it, and enemies with true sight see it on the minimap | [G-Coolest], [CL-6.71] (6.71 fixed it showing on enemy minimaps near towers) |
+| Tracer vision | "clears fog in a 500 radius circle at it's end" | [PD-AA-6.72] |
+| Blast radius | 225 + 50 × (seconds the tracer travelled), at most 1000 | [PD-AA-6.72] |
+| Blast travel | a second projectile from Kaldr to where the tracer stopped; "needs about 2 seconds to reach its destination", minimum speed 750 (6.66) | [G-Stone], [D2W-AACL] |
+| Frostbite area | 275 around the blast projectile along its whole path, plus the strike area | [PD-AA-6.72] |
+
+Rules:
+- **Cast and release.**
+  - The cast sends the tracer toward the clicked point at 1500. The clicked point only sets the direction: "It is important to know that it will ONLY influence the direction Ice Blast will go" [G-Stone].
+  - The cooldown starts at the first cast ("since the cd would have already started, it means you can cast it again sooner") [G-Coolest].
+  - Release stops the tracer and launches a second projectile from Kaldr's current position toward the tracer's spot [G-Stone], [PD-AA-6.72].
+  - The radius depends on how long the tracer flew from the cast, not on where Kaldr is when he releases: "Ice Blast's AoE is increased based on where it was cast, not where AA is when he launches it" [G-Coolest].
+  - Players exploited this: cast from the fountain, teleport to the lane, release, and the large blast arrives from close by [G-Coolest].
+- **The blast projectile** takes about 2 s to arrive, with a minimum speed of 750: speed = max(750, distance / 2) [G-Stone], [D2W-AACL]. The exact formula is UNVERIFIED for DotA. The Dota 2 port states "travels at a speed of 750, or reaches the targeted point 2 seconds after launch, whichever is faster" [D2W15-AA].
+- **Damage.** At impact, 250/350/450 magic damage to enemy units within the blast radius [PD-AA-6.72].
+- **Frostbite.**
+  - Applied to enemies within 275 of the projectile's path and in the strike area [PD-AA-6.72].
+  - Deals 12.5/20/32 a second for 8/9/10 s. The port's 350/530/770 totals (blast plus eight, nine or ten seconds) agree [D2W13-AA].
+  - The tick timing is UNVERIFIED for DotA (Dota 2: every second from 1 s after it lands).
+  - A 2010 player reported a bug where the damage area and the frostbite area differ, so a unit could get the debuff without the damage, or the reverse [G-Stone].
+- **No healing.**
+  - "HP freeze prevents most kinds of healing including those from skills or items" [PD-AA-6.72]. That covers regeneration, lifesteal and heals: "It can be used to stop heals, including lifesteal" [G-Coolest].
+  - The Fountain removes the debuff in 6.72/6.73. 6.75 made it "no longer dispelled by the Fountain" [CL-6.75].
+  - The debuff can be purged; this has been so since 6.66 [PD-AA-6.72], [D2W-AACL].
+- **Shatter.**
+  - "Instant kill if damage suffered below 10%/11%/12% HP" [PD-AA-6.72].
+  - Only while frostbitten, so only during the 8/9/10 s debuff [PD-AA-6.72], [G-DotaBlog09] ("within 7 seconds after hit" in 6.65).
+  - The kill is "100000000 physical [damage] and clears all debuffs prior damaging" [PD-AA-6.72].
+  - "Kill will be granted to the source of the damage that triggers the shatter." In 2010 the kill went to Kaldr instead [PD-AA-6.72], [PD-AA-6.6x].
+  - Not on illusions or Meepo clones [PD-AA-6.72].
+  - Shallow Grave prevents it, since 6.66 [PD-AA-6.72], [D2W-AACL].
+  - Since 6.72d it kills Ethereal units [CL-6.72d].
+  - Threshold measured against maximum HP: UNVERIFIED but implied by "% HP".
+  - Whether creeps shatter, and whether frostbite takes hold on magic-immune units in DotA: UNVERIFIED. The Dota 2 port puts the debuff on heroes and a few summons only, and since December 2012 on magic-immune units too [D2W15-AA], [D2W-AACL].
+- **Release never pressed:** UNVERIFIED for DotA.
+  - The playdota note says the tracer stops only on Release or Kaldr's death [PD-AA-6.72].
+  - The Dota 2 port releases the blast when Kaldr dies, and wastes the spell if the tracer reaches the map edge [D2W15-AA]. The port's February 2012 fix "Ice Blast's secondary ability not firing off when you die" suggests DotA fired on death [D2W-AACL].
+- **Vision.**
+  - 500 at the tracer's end [PD-AA-6.72].
+  - Vision at the release point and along the blast projectile: UNVERIFIED (Dota 2: 650 for 4 s at the point; 500 on the projectile, lasting 3 s [D2W15-AA]).
+- **Aghanim's Scepter:** none in 6.72/6.73. 6.78 added frostbite duration 17 [D2W-AACL].
+- **Later changes:** base radius 275 (6.78), cooldown 40 (6.79), mana 150 on every level (7.06f), longer frostbite (7.18, 7.21c) [D2W-AACL].
+
+How players described him (2010–2011):
+- **A lane bully and ganker who also supports.**
+  - "Cold Feet ... is the crux of your laning stage. Use it to keep enemies out of exp range, and do damage" [G-Coolest].
+  - On the Cold Feet + Ice Vortex combo: "if the enemy hesitates to run for even a second, it will activate" [G-Coolest].
+  - "Cold Feet + Ice Vortex + (insert disable skill) = 100% death for the target" [G-DotaBlog09].
+- **Lanes:** solo mid or a trilane [G-Coolest].
+- **The usual build** maxes Cold Feet first, with Ice Vortex beside it, takes Ice Blast at 6/11/16, and puts Chilling Touch last:
+  - "1. Cold Feet 2. Ice Vortex 3. Cold Feet 4. Ice Vortex 5. Cold Feet 6. Ice Blast 7. Cold Feet 8-9. Ice Vortex 10. Stats 11. Ice Blast 12-15. Chilling Touch 16. Ice Blast" [G-Stone], [G-Simple], [G-Coolest].
+  - A 6.72c support build takes Chilling Touch second and Ice Vortex last [G-Freeze].
+- **Ice Blast with Ice Vortex.**
+  - "Ice Blast should be used to hit as many heroes as possible and comboed with Ice Vortex (which is easy to do with Vortex's 1500 cast range)" [G-Coolest].
+  - "As long as the carry is hit with the DoT, that is usually enough, because now they can't life steal, or be healed by the supports" [G-Coolest].
+  - Players used it as a global finisher ("Always fun when you are at your fountain and kill someone fleeing with low HP") and to push or defend lanes [G-Stone], [G-Coolest].
+  - Players timed the blast by watching the tracer on the minimap [G-DotaBlog09].
+- **Chilling Touch** was cast just before a fight [G-Stone], [G-Coolest].
+- **Weaknesses:** silence, low HP from poor strength gain, no escape, and true sight, which makes the tracer "exceptionally easy to dodge when not disabled" [G-Coolest], [G-Simple].
+
+### 8.2 Hard to reproduce on a fixed tick, in integers
+
+- Cold Feet's ticks fall at 0.8, 1.6, 2.5 and 3.4 s and the stun at 4.0 s. These need a tick rate that divides 0.1 s, or a rounding rule fixed once. The spell keeps an anchor point and a distance test (740, squared, in integer units) each tick; once broken it stays broken.
+- Fractional damage: 37.5 and 62.5 on Cold Feet and 12.5 a second on frostbite. These need sub-unit HP (for example HP × 10 or × 100) or a fixed rounding pattern.
+- Ice Vortex is an area aura with a 0.1 s rescan and a 0.1 s linger. Overlapping vortices give one debuff, not a sum (assumed from the Dota 2 port). Magic resistance combines multiplicatively, as an amplification (0.75 × 1.25), which needs a fixed-point percentage rule.
+- Chilling Touch keeps a charge count and a 40 s timer for each buffed ally. A charge is used and damage dealt only when the attack lands, only against heroes, as a separate magic damage instance (amplified by Ice Vortex). Missiles already in flight when the buff ends are a timing edge case.
+- Ice Blast is a two-part spell with a button swap:
+  - The tracer is an invisible moving point at 1500, shown only to true sight and on the minimap for enemies with true sight.
+  - The radius grows with tracer flight time (225 + 50 a second, at most 1000), counted in ticks.
+  - The blast projectile starts from Kaldr's position at release, with speed max(750, d / 2), and hits everything within 275 of its path once.
+  - At impact it deals area damage and applies frostbite.
+- Frostbite blocks every HP increase while it lasts: regeneration, lifesteal, heals and item heals. Damage then has to be checked against a per-hero threshold (10–12% of max HP) after every damage instance, from any source. The shatter credits whoever dealt that damage, clears debuffs, and is stopped by Shallow Grave, by illusion status, and by the Fountain's dispel.
+- The death and map-edge rules for an unreleased tracer must be chosen (UNVERIFIED) and written down.
+
+### 8.3 Source keys for this section
+
+| Key | Title | URL |
+|---|---|---|
+| [PD-AA-6.6x] | playdota Ancient Apparition, Feb 2010 | https://web.archive.org/web/20100202031435/http://www.playdota.com:80/heroes/ancient-apparition |
+| [PD-AA-6.72] | playdota Ancient Apparition, Dec 2011 (6.72/6.73); identical text in Jun 2011 and Jan 2012 captures | https://web.archive.org/web/20111221002818/http://www.playdota.com:80/heroes/ancient-apparition (also .../web/20110613072336/... and .../web/20120117235517/...) |
+| [PD-AA-6.74] | playdota Ancient Apparition, Apr 2012 | https://web.archive.org/web/20120413101752/http://www.playdota.com:80/heroes/ancient-apparition |
+| [CL-6.71] | changelog 6.71 | https://web.archive.org/web/20160503031334/http://www.playdota.com:80/changelogs/6.71 |
+| [CL-6.72] | changelog 6.72 | https://web.archive.org/web/20110502144633/http://www.playdota.com/changelogs/6.72 |
+| [CL-6.72b] | 6.72b | https://web.archive.org/web/20110511135337/http://www.playdota.com/changelogs/6.72b |
+| [CL-6.72c] | 6.72c | https://web.archive.org/web/20110606060843/http://www.playdota.com/changelogs/6.72c |
+| [CL-6.72d] | 6.72d | https://web.archive.org/web/20110731144954/http://www.playdota.com/changelogs/6.72d |
+| [CL-6.72e] | 6.72e | https://web.archive.org/web/20160829014306/http://www.playdota.com:80/changelogs/6.72e |
+| [CL-6.72f] | 6.72f | https://web.archive.org/web/20160825205729/http://www.playdota.com:80/changelogs/6.72f |
+| [CL-6.73] | 6.73 | https://web.archive.org/web/20120104134752/http://www.playdota.com/changelogs/6.73 |
+| [CL-6.73b] | 6.73b | https://web.archive.org/web/20120102055914/http://www.playdota.com/changelogs/6.73b |
+| [CL-6.73c] | 6.73c | https://web.archive.org/web/20120113004153/http://www.playdota.com/changelogs/6.73c |
+| [CL-6.75] | 6.75 | https://web.archive.org/web/20160924101536/http://www.playdota.com:80/changelogs/6.75 |
+| [CL-6.76] | 6.76 | https://web.archive.org/web/20160315092534/http://www.playdota.com/changelogs/6.76 |
+| [D2W13-AA] | Dota 2 Wiki Ancient Apparition, Jun 2013 | https://web.archive.org/web/20130630011237/http://dota2.gamepedia.com:80/Ancient_Apparition |
+| [D2W15-AA] | Dota 2 Wiki Ancient Apparition, Feb 2015 | https://web.archive.org/web/20150207082302/http://dota2.gamepedia.com:80/Ancient_Apparition |
+| [D2W-AACL] | Dota 2 Wiki Ancient Apparition/Changelogs (DotA 6.65–6.79 entries and Dota 2 patches) | https://web.archive.org/web/20201112020216/https://dota2.gamepedia.com/Ancient_Apparition/Changelogs |
+| [G-Coolest] | playdota guide "The 'Coolest' hero in DotA" by uo111, posted Mar 2010, text updated for 6.72 (header still says 6.67b) | https://web.archive.org/web/20111217010015/http://www.playdota.com:80/guides/the-coolest-hero-in-dota |
+| [G-Stone] | playdota guide "Stone Cold" by Darkjr, 6.67c, comments to Dec 2011 | https://web.archive.org/web/20111221003651/http://www.playdota.com:80/guides/stone-cold |
+| [G-Simple] | playdota guide "Simple Guide To Kaldr", 6.68c | https://web.archive.org/web/20120314042243/http://www.playdota.com:80/guides/simple-guide-to-kaldr |
+| [G-Freeze] | playdota guide "Freeze to Death" by JakiroX, 6.72c, Jun 2011 | https://web.archive.org/web/20111121185630/http://www.playdota.com:80/guides/freeze-to-death |
+| [G-DotaBlog09] | DotA-Blog "Kaldr Guide", Dec 2009 (6.65) with reader comments | https://web.archive.org/web/20160421220519/http://www.dota-blog.com/2009/12/kaldr-guide-ancient-apparition-guide.html |
+
+Fetch notes:
+- The playdota "Most Concise Kaldr Guide" capture (2012-03-14) held another hero's guide text and was not used.
+- The 2023 captures of several changelog pages (6.70, 6.72, 6.72b, 6.72c, 6.73b, 6.73c, 6.74b, 6.74c) are empty shells. The 2011–2012 captures were used instead.
+- No 2011–2012 DotA-Blog guide for Kaldr was found in the Wayback index.

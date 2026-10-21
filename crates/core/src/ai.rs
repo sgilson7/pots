@@ -437,7 +437,7 @@ fn useful_cast(w: &World, ctx: &Ctx, l: &Look, slot: usize) -> Option<(Uid, P)> 
     if matches!(a.target, Target::Passive | Target::Toggle) {
         return None;
     }
-    let range = a.range_at(level).max(a.v("radius", level)) + 200;
+    let range = crate::ability::cast_range(a, level).max(a.v("radius", level)) + 200;
     let foes = visible_enemy_heroes(w, ctx, l, range);
     let foe = *foes.first()?;
     let mut at = w.get(foe)?.pos();
@@ -451,8 +451,15 @@ fn useful_cast(w: &World, ctx: &Ctx, l: &Look, slot: usize) -> Option<(Uid, P)> 
         }
         at = c;
     }
-    if a.logic == "return_chakram" {
+    if a.logic == "return_chakram" || a.logic == "ice_blast_release" {
         return None;
+    }
+    if a.logic == "chilling_touch" {
+        // the touch goes on its own attacks: cast round itself with a fight close
+        if !within(l.here, at, 800) {
+            return None;
+        }
+        at = l.here;
     }
     let t = if a.on == "ally" { l.hero } else { foe };
     if !crate::ability::can_start(w, ctx, l.hero, slot, t, at) {
@@ -498,6 +505,25 @@ fn switch_form(w: &mut World, ctx: &Ctx, p: usize, l: &Look) {
                 });
                 match out {
                     Some(z) => near(w, z.at, z.radius + 100) == 0,
+                    None => false,
+                }
+            }
+            // Release once an enemy hero stands where the blast would burst
+            "ice_blast_release" => {
+                let tracer = w.zones.iter().find(|z| {
+                    z.src == l.hero
+                        && ctx.rules.abilities[z.ability as usize].logic == "ice_blast"
+                        && z.a == 0
+                });
+                match tracer {
+                    Some(z) => {
+                        let b = &ctx.rules.abilities[z.ability as usize];
+                        let lv = z.level;
+                        let flew = (w.tick - z.start) as i32;
+                        let r = (b.v("min_radius", lv) + b.v("growth", lv) * flew / TPS)
+                            .min(b.v("max_radius", lv));
+                        near(w, z.at, r) > 0
+                    }
                     None => false,
                 }
             }

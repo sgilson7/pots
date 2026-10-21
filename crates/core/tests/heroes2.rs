@@ -17,8 +17,9 @@ use pots_core::world::{Ctx, Uid, World, M, MOON, NO_UNIT};
 const HACKLE: usize = 0;
 const CHIPPER: usize = 1;
 
-fn roster(f: &common::Fixture, which: usize) -> usize {
-    f.rules.roster - 2 + which
+/// Hackle and Chipper sit after the first ten heroes.
+fn roster(_f: &common::Fixture, which: usize) -> usize {
+    10 + which
 }
 
 fn put(w: &mut World, id: Uid, at: P) {
@@ -410,8 +411,8 @@ fn buzz_blade_flies_out_spins_drains_mana_and_comes_back_on_recall() {
 #[test]
 fn hackle_and_chipper_can_be_chosen() {
     let f = common::fixture();
-    assert_eq!(f.rules.roster, 12, "ten heroes and the two added");
-    assert_eq!(f.rules.heroes.len(), 12, "no preview hero left over");
+    assert!(f.rules.roster >= 12, "ten heroes and the two added");
+    assert_eq!(f.rules.heroes.len(), f.rules.roster, "no preview hero left over");
     let id = |i: usize| f.rules.units[f.rules.heroes[i]].id.as_str();
     assert_eq!((id(10), id(11)), ("hackle", "chipper"));
 }

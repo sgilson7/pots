@@ -1,0 +1,103 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{xcolor}
+\definecolor{arcane}{HTML}{8752C4}
+\definecolor{arcanetab}{HTML}{9A62D6}
+\definecolor{armaments}{HTML}{6E7FA0}
+\definecolor{attributes}{HTML}{3FA79A}
+\definecolor{basics}{HTML}{C9A46A}
+\definecolor{blood}{HTML}{C2303C}
+\definecolor{bone}{HTML}{EFE6CF}
+\definecolor{caster}{HTML}{C24FA6}
+\definecolor{cloth}{HTML}{E9DCC0}
+\definecolor{cloud}{HTML}{EEF4FA}
+\definecolor{common}{HTML}{8DB05A}
+\definecolor{consumables}{HTML}{E36A8A}
+\definecolor{earth}{HTML}{9A6838}
+\definecolor{ember}{HTML}{D8421E}
+\definecolor{fire}{HTML}{EE7F22}
+\definecolor{flame}{HTML}{FF9A1F}
+\definecolor{flamehot}{HTML}{FFE15A}
+\definecolor{frost}{HTML}{4F9BDB}
+\definecolor{gold}{HTML}{F4BF3A}
+\definecolor{golddark}{HTML}{B9821F}
+\definecolor{heal}{HTML}{6ED36A}
+\definecolor{ice}{HTML}{C9EEFF}
+\definecolor{icedeep}{HTML}{6FC2EE}
+\definecolor{ink}{HTML}{2B1631}
+\definecolor{iron}{HTML}{5C6470}
+\definecolor{leaf}{HTML}{5DB04A}
+\definecolor{leather}{HTML}{8E5A36}
+\definecolor{life}{HTML}{E2364A}
+\definecolor{mana}{HTML}{3E7BE0}
+\definecolor{moss}{HTML}{6E8F45}
+\definecolor{night}{HTML}{3A2E5C}
+\definecolor{paper}{HTML}{FFF8EC}
+\definecolor{protect}{HTML}{2F6BB5}
+\definecolor{relictab}{HTML}{E8B330}
+\definecolor{rot}{HTML}{62A43A}
+\definecolor{secret}{HTML}{3D3F86}
+\definecolor{shade}{HTML}{5A4560}
+\definecolor{skin}{HTML}{F1C6A0}
+\definecolor{skingrey}{HTML}{A8A2B4}
+\definecolor{skinpale}{HTML}{E6D7C3}
+\definecolor{snow}{HTML}{FFFFFF}
+\definecolor{spark}{HTML}{FFF27A}
+\definecolor{steel}{HTML}{C9D2DC}
+\definecolor{steeldark}{HTML}{7D8896}
+\definecolor{steelrim}{HTML}{7F8C9C}
+\definecolor{stone}{HTML}{A99A86}
+\definecolor{stonedark}{HTML}{73665A}
+\definecolor{storm}{HTML}{9CCBEB}
+\definecolor{support}{HTML}{48B7C9}
+\definecolor{venom}{HTML}{9BD13B}
+\definecolor{violet}{HTML}{B57BF0}
+\definecolor{weapons}{HTML}{B8402F}
+\definecolor{wood}{HTML}{B57A45}
+\definecolor{wooddark}{HTML}{7E4F2A}
+\newlength{\Ink}\setlength{\Ink}{2.2pt}
+\tikzset{inked/.style={draw=ink,line width=\Ink,line join=round,line cap=round}}
+\begin{document}
+\begin{tikzpicture}
+\useasboundingbox (0,0) rectangle (2,2);
+\clip (0,0) rectangle (2,2);
+\filldraw[inked,fill=frost] (1,1) circle (0.9);
+\filldraw[inked,fill=frost!34!paper] (1,1) circle (0.74);
+\draw[draw=frost!45!paper,line width=2pt,line cap=round,line join=round] (0.615,1.724) -- (0.565,1.695) -- (0.518,1.663) -- (0.473,1.628) -- (0.43,1.59) -- (0.391,1.549) -- (0.354,1.505) -- (0.32,1.459) -- (0.29,1.41);
+\begin{scope}
+\clip (1,1) circle (0.74);
+\filldraw[inked,fill=icedeep!70!snow] plot[smooth cycle, tension=0.4] coordinates {(0.7,0) (0.22,0.1) (0.2,0.5) (0.5,0.66)};
+\filldraw[inked,fill=icedeep] (0.48,0.16) -- (0.56,0.16) -- (0.52,-0.02) -- cycle;
+\filldraw[inked,fill=icedeep] (0.38,0.16) -- (0.46,0.16) -- (0.42,-0.02) -- cycle;
+\filldraw[inked,fill=icedeep] (0.28,0.16) -- (0.36,0.16) -- (0.32,-0.02) -- cycle;
+\filldraw[inked,fill=icedeep!70!snow] plot[smooth cycle, tension=0.4] coordinates {(1.3,0) (1.78,0.1) (1.8,0.5) (1.5,0.66)};
+\filldraw[inked,fill=icedeep] (1.44,0.16) -- (1.52,0.16) -- (1.48,-0.02) -- cycle;
+\filldraw[inked,fill=icedeep] (1.54,0.16) -- (1.62,0.16) -- (1.58,-0.02) -- cycle;
+\filldraw[inked,fill=icedeep] (1.64,0.16) -- (1.72,0.16) -- (1.68,-0.02) -- cycle;
+\filldraw[inked,fill=icedeep!22!snow] plot[smooth cycle, tension=0.4] coordinates {(0.5,0) (0.5,0.48) (0.68,0.6) (1.32,0.6) (1.5,0.48) (1.5,0)};
+\filldraw[inked,fill=icedeep] (0.75,0.22) -- (0.8,0.16) -- (0.85,0.22) -- cycle;
+\filldraw[inked,fill=icedeep] (0.95,0.22) -- (1,0.16) -- (1.05,0.22) -- cycle;
+\filldraw[inked,fill=icedeep] (1.15,0.22) -- (1.2,0.16) -- (1.25,0.22) -- cycle;
+\filldraw[inked,fill=icedeep] (0.85,0.38) -- (0.9,0.32) -- (0.95,0.38) -- cycle;
+\filldraw[inked,fill=icedeep] (1.05,0.38) -- (1.1,0.32) -- (1.15,0.38) -- cycle;
+\filldraw[inked,fill=icedeep] (1.25,0.38) -- (1.3,0.32) -- (1.35,0.38) -- cycle;
+\filldraw[inked,fill=gold] (1,0.6) ellipse (0.42 and 0.08);
+\filldraw[inked,fill=ice] (0.84,1.3) -- (0.66,1.2) -- (0.44,1.72) -- cycle;
+\filldraw[inked,fill=snow] (0.7,1.24) -- (0.6,1.18) -- (0.38,1.48) -- cycle;
+\filldraw[inked,fill=ice] (1.16,1.3) -- (1.34,1.2) -- (1.56,1.72) -- cycle;
+\filldraw[inked,fill=snow] (1.3,1.24) -- (1.4,1.18) -- (1.62,1.48) -- cycle;
+\filldraw[inked,fill=icedeep!22!snow] (1,0.98) circle (0.46);
+\filldraw[draw=ink,fill=ink,line width=2\Ink,line join=round,line cap=round] (0.81,0.98) ellipse (0.21 and 0.24);
+\filldraw[draw=ink,fill=ink,line width=2\Ink,line join=round,line cap=round] (1.19,0.98) ellipse (0.21 and 0.24);
+\fill[snow] (0.81,0.98) ellipse (0.21 and 0.24);
+\fill[snow] (1.19,0.98) ellipse (0.21 and 0.24);
+\filldraw[inked,fill=ice] (0.81,1) circle (0.1);
+\filldraw[inked,fill=ink] (0.83,1) circle (0.015);
+\filldraw[inked,fill=gold] (0.94,1.2) -- (0.66,1.28) -- (0.68,1.2) -- cycle;
+\filldraw[inked,fill=ice] (1.19,1) circle (0.1);
+\filldraw[inked,fill=ink] (1.17,1) circle (0.015);
+\filldraw[inked,fill=gold] (1.06,1.2) -- (1.34,1.28) -- (1.32,1.2) -- cycle;
+\filldraw[inked,fill=stonedark] (0.94,0.9) -- (1.06,0.9) -- (1,0.76) -- cycle;
+\end{scope}
+\draw[inked] (1,1) circle (0.74);
+\end{tikzpicture}
+\end{document}

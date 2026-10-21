@@ -1589,6 +1589,16 @@ impl Game {
                     w.step(&ctx, &[]);
                 }
             }
+            // the tracer out and over the creeps, for Release
+            "tracer_out" => {
+                w.step(&ctx, &[(0, Cmd::Cast(slot as u8, t, at))]);
+                for _ in 0..TPS * 2 {
+                    if tracer_past(&w, me, at) {
+                        break;
+                    }
+                    w.step(&ctx, &[]);
+                }
+            }
             _ => {}
         }
         w.step(&ctx, &[(0, cmd)]);
@@ -1597,6 +1607,16 @@ impl Game {
             w.step(&ctx, &[(0, Cmd::Attack(creeps[1]))]);
         }
         for _ in 1..ticks {
+            // Ice Blast: released once the tracer is over the creeps (one
+            // order: a second would start the release over)
+            let casting = w
+                .get(me)
+                .map(|u| matches!(u.act, crate::world::Act::Cast { .. }))
+                .unwrap_or(true);
+            if self.rules.abilities[k].logic == "ice_blast" && !casting && tracer_past(&w, me, at) {
+                w.step(&ctx, &[(0, Cmd::Cast(slot as u8, NO_UNIT, at))]);
+                continue;
+            }
             w.step(&ctx, &[]);
         }
         Ok(w)
@@ -2218,4 +2238,17 @@ impl Game {
         })
         .to_string()
     }
+}
+
+/// Whether `caster`'s Ice Blast tracer is still flying and has reached
+/// `at`'s distance from it (the cast stage releases it there).
+fn tracer_past(w: &World, caster: Uid, at: P) -> bool {
+    let Some(c) = w.get(caster) else { return false };
+    let here = c.pos();
+    c.mods
+        .iter()
+        .any(|m| m.kind == crate::world::M::Tag && m.b == crate::ability::TAG_TRACER)
+        && w.zones.iter().any(|z| {
+            z.src == caster && z.a == 0 && crate::world::dist(here, z.at) >= crate::world::dist(here, at)
+        })
 }

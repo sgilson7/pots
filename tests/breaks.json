@@ -915,5 +915,152 @@
   "find": "                self.stage = None;\n                self.showcase = None;\n",
   "replace": "                self.stage = None;\n",
   "test": "leaving_the_heroes_screen_closes_the_inspector"
+ },
+ {
+  "name": "shiver: the thirteenth hero",
+  "file": "data/rules.json",
+  "find": "\"unit\": \"shiver\"",
+  "replace": "\"unit\": \"rime\"",
+  "test": "shiver_can_be_chosen_with_its_level_one_numbers"
+ },
+ {
+  "name": "shiver: Frozen Ground stuns one that stayed",
+  "file": "crates/core/src/ability.rs",
+  "find": "                stun(w, ctx, z.src, t, a.v(\"stun\", lv), tg);\n",
+  "replace": "",
+  "test": "frozen_ground_hits_four_times_then_stuns"
+ },
+ {
+  "name": "shiver: Frozen Ground hits for 37.5",
+  "file": "crates/core/src/ability.rs",
+  "find": "a.v(\"damage_x100\", lv) * 10,",
+  "replace": "a.v(\"damage_x100\", lv) * 5,",
+  "test": "frozen_ground_hits_four_times_then_stuns"
+ },
+ {
+  "name": "shiver: Frozen Ground breaks at 740",
+  "file": "crates/core/src/ability.rs",
+  "find": "if dist(v.pos(), z.at) > z.radius {",
+  "replace": "if false {",
+  "test": "frozen_ground_breaks_once"
+ },
+ {
+  "name": "shiver: Snow Whirl lowers magic resistance",
+  "file": "crates/core/src/ability.rs",
+  "find": "a: -a.v(\"resist\", lv),",
+  "replace": "a: 0,",
+  "test": "snow_whirl_slows_and_lowers"
+ },
+ {
+  "name": "shiver: Snow Whirl's pulse",
+  "file": "crates/core/src/ability.rs",
+  "find": "        \"ice_vortex\" => {\n            let until = secs_x100(w, 20);",
+  "replace": "        \"ice_vortex_off\" => {\n            let until = secs_x100(w, 20);",
+  "test": "snow_whirl_slows_and_lowers"
+ },
+ {
+  "name": "shiver: Frost Talons on heroes only",
+  "file": "crates/core/src/ability.rs",
+  "find": ".map(|v| v.team != team && v.hero.is_some())",
+  "replace": ".map(|v| v.team != team)",
+  "test": "frost_talons_add_magic_damage"
+ },
+ {
+  "name": "shiver: Frost Talons spends a charge a hit",
+  "file": "crates/core/src/ability.rs",
+  "find": "x.a -= 1;",
+  "replace": "x.a -= 0;",
+  "test": "frost_talons_add_magic_damage"
+ },
+ {
+  "name": "shiver: Frost Talons slows the ally's attacks",
+  "file": "crates/core/src/ability.rs",
+  "find": "                    -a.v(\"attack_slow\", lv),\n                    tg,\n                    true,",
+  "replace": "                    0,\n                    tg,\n                    true,",
+  "test": "frost_talons_add_magic_damage"
+ },
+ {
+  "name": "shiver: Release takes Hailstar's slot",
+  "file": "crates/core/src/ability.rs",
+  "find": "\"tracer_out\" => tagged(u, TAG_TRACER),",
+  "replace": "\"tracer_out\" => false,",
+  "test": "hailstar_flies_at_1500"
+ },
+ {
+  "name": "shiver: the tracer stops at the map's edge",
+  "file": "crates/core/src/ability.rs",
+  "find": "let end = edge_point(here, far, edge);",
+  "replace": "let end = far;",
+  "test": "hailstar_flies_at_1500"
+ },
+ {
+  "name": "shiver: the burst grows with the tracer's flight",
+  "file": "crates/core/src/ability.rs",
+  "find": "z.radius = (a.v(\"min_radius\", lv) + a.v(\"growth\", lv) * flew / TPS)",
+  "replace": "z.radius = (a.v(\"min_radius\", lv) + 0 * flew / TPS)",
+  "test": "released_hailstar_bursts_wider"
+ },
+ {
+  "name": "shiver: the hail lands within 2 s",
+  "file": "crates/core/src/ability.rs",
+  "find": "z.next = w.tick + slow.min(cap).max(1) as u32;",
+  "replace": "z.next = w.tick + slow.max(1) as u32;",
+  "test": "released_hailstar_bursts_wider"
+ },
+ {
+  "name": "shiver: frostbite along the hail's path",
+  "file": "crates/core/src/ability.rs",
+  "find": "let path = in_line(w, ctx, z.team, z.at, z.to, a.v(\"path\", lv), false);",
+  "replace": "let path: Vec<Uid> = Vec::new();",
+  "test": "released_hailstar_bursts_wider"
+ },
+ {
+  "name": "shiver: frostbite stops regeneration",
+  "file": "crates/core/src/stats.rs",
+  "find": "if !crate::ability::no_heal(u) {",
+  "replace": "if true {",
+  "test": "frostbite_stops_healing"
+ },
+ {
+  "name": "shiver: frostbite stops heals",
+  "file": "crates/core/src/combat.rs",
+  "find": "if u.alive && !crate::ability::no_heal(u) {",
+  "replace": "if u.alive {",
+  "test": "frostbite_stops_healing"
+ },
+ {
+  "name": "shiver: shatter below the threshold",
+  "file": "crates/core/src/ability.rs",
+  "find": "if (hp as i64) * 100 < max * m.a as i64 {",
+  "replace": "if false {",
+  "test": "frostbite_stops_healing"
+ },
+ {
+  "name": "shiver: the fountain clears frostbite",
+  "file": "crates/core/src/ability.rs",
+  "find": "            w.remove_mods(id, m.tag);\n            continue;",
+  "replace": "            continue;",
+  "test": "a_frostbitten_unit_at_its_own_fountain"
+ },
+ {
+  "name": "shiver: a computer Shiver releases over a foe",
+  "file": "crates/core/src/ai.rs",
+  "find": "near(w, z.at, r) > 0",
+  "replace": "false",
+  "test": "a_computer_shiver_releases"
+ },
+ {
+  "name": "shiver: it floats",
+  "file": "crates/core/src/models.rs",
+  "find": "fx::mul(fx::sin(pose.spin * 2) + ONE, m.hover / 2)",
+  "replace": "0",
+  "test": "shiver_floats"
+ },
+ {
+  "name": "shiver: its snowflake shot",
+  "file": "data/presentation.json",
+  "find": "\"shape\": \"flake\",",
+  "replace": "\"shape\": \"flakes\",",
+  "test": "every_shooter_has_a_shot_of_its_own"
  }
 ]

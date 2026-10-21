@@ -33,6 +33,7 @@ ELEMENT = {
     "tempest": "storm",
     "hackle": "blood",
     "chipper": "earth",
+    "shiver": "frost",
     "warden": "earth",
 }
 

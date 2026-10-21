@@ -1,0 +1,118 @@
+\documentclass[tikz,border=0pt]{standalone}
+\usepackage{xcolor}
+\definecolor{arcane}{HTML}{8752C4}
+\definecolor{arcanetab}{HTML}{9A62D6}
+\definecolor{armaments}{HTML}{6E7FA0}
+\definecolor{attributes}{HTML}{3FA79A}
+\definecolor{basics}{HTML}{C9A46A}
+\definecolor{blood}{HTML}{C2303C}
+\definecolor{bone}{HTML}{EFE6CF}
+\definecolor{caster}{HTML}{C24FA6}
+\definecolor{cloth}{HTML}{E9DCC0}
+\definecolor{cloud}{HTML}{EEF4FA}
+\definecolor{common}{HTML}{8DB05A}
+\definecolor{consumables}{HTML}{E36A8A}
+\definecolor{earth}{HTML}{9A6838}
+\definecolor{ember}{HTML}{D8421E}
+\definecolor{fire}{HTML}{EE7F22}
+\definecolor{flame}{HTML}{FF9A1F}
+\definecolor{flamehot}{HTML}{FFE15A}
+\definecolor{frost}{HTML}{4F9BDB}
+\definecolor{gold}{HTML}{F4BF3A}
+\definecolor{golddark}{HTML}{B9821F}
+\definecolor{heal}{HTML}{6ED36A}
+\definecolor{ice}{HTML}{C9EEFF}
+\definecolor{icedeep}{HTML}{6FC2EE}
+\definecolor{ink}{HTML}{2B1631}
+\definecolor{iron}{HTML}{5C6470}
+\definecolor{leaf}{HTML}{5DB04A}
+\definecolor{leather}{HTML}{8E5A36}
+\definecolor{life}{HTML}{E2364A}
+\definecolor{mana}{HTML}{3E7BE0}
+\definecolor{moss}{HTML}{6E8F45}
+\definecolor{night}{HTML}{3A2E5C}
+\definecolor{paper}{HTML}{FFF8EC}
+\definecolor{protect}{HTML}{2F6BB5}
+\definecolor{relictab}{HTML}{E8B330}
+\definecolor{rot}{HTML}{62A43A}
+\definecolor{secret}{HTML}{3D3F86}
+\definecolor{shade}{HTML}{5A4560}
+\definecolor{skin}{HTML}{F1C6A0}
+\definecolor{skingrey}{HTML}{A8A2B4}
+\definecolor{skinpale}{HTML}{E6D7C3}
+\definecolor{snow}{HTML}{FFFFFF}
+\definecolor{spark}{HTML}{FFF27A}
+\definecolor{steel}{HTML}{C9D2DC}
+\definecolor{steeldark}{HTML}{7D8896}
+\definecolor{steelrim}{HTML}{7F8C9C}
+\definecolor{stone}{HTML}{A99A86}
+\definecolor{stonedark}{HTML}{73665A}
+\definecolor{storm}{HTML}{9CCBEB}
+\definecolor{support}{HTML}{48B7C9}
+\definecolor{venom}{HTML}{9BD13B}
+\definecolor{violet}{HTML}{B57BF0}
+\definecolor{weapons}{HTML}{B8402F}
+\definecolor{wood}{HTML}{B57A45}
+\definecolor{wooddark}{HTML}{7E4F2A}
+\newlength{\Ink}\setlength{\Ink}{2.2pt}
+\tikzset{inked/.style={draw=ink,line width=\Ink,line join=round,line cap=round}}
+\begin{document}
+\begin{tikzpicture}
+\useasboundingbox (0,0) rectangle (2,2);
+\clip (0,0) rectangle (2,2);
+\filldraw[inked,fill=frost] (1,1) circle (0.9);
+\filldraw[inked,fill=frost!34!paper] (1,1) circle (0.74);
+\draw[draw=frost!45!paper,line width=2pt,line cap=round,line join=round] (0.615,1.724) -- (0.565,1.695) -- (0.518,1.663) -- (0.473,1.628) -- (0.43,1.59) -- (0.391,1.549) -- (0.354,1.505) -- (0.32,1.459) -- (0.29,1.41);
+\filldraw[inked,fill=ice] (1,0.62) ellipse (0.66 and 0.24);
+\filldraw[inked,fill=snow] (1,0.62) ellipse (0.46 and 0.15);
+\filldraw[inked,fill=icedeep] (0.42,0.96) -- (0.474,0.858) -- (0.461,0.661) -- (0.42,0.62) -- (0.379,0.661) -- (0.366,0.858) -- cycle;
+\filldraw[inked,fill=snow] (0.42,0.96) -- (0.474,0.858) -- (0.427,0.824) -- cycle;
+\filldraw[inked,fill=icedeep] (0.62,1.1) -- (0.697,0.956) -- (0.678,0.678) -- (0.62,0.62) -- (0.562,0.678) -- (0.543,0.956) -- cycle;
+\filldraw[inked,fill=snow] (0.62,1.1) -- (0.697,0.956) -- (0.63,0.908) -- cycle;
+\filldraw[inked,fill=icedeep] (1.38,1.1) -- (1.457,0.956) -- (1.438,0.678) -- (1.38,0.62) -- (1.322,0.678) -- (1.303,0.956) -- cycle;
+\filldraw[inked,fill=snow] (1.38,1.1) -- (1.457,0.956) -- (1.39,0.908) -- cycle;
+\filldraw[inked,fill=icedeep] (1.58,0.96) -- (1.634,0.858) -- (1.621,0.661) -- (1.58,0.62) -- (1.539,0.661) -- (1.526,0.858) -- cycle;
+\filldraw[inked,fill=snow] (1.58,0.96) -- (1.634,0.858) -- (1.587,0.824) -- cycle;
+\filldraw[inked,fill=leather,rounded corners=0.04cm] (0.73,0.62) -- (0.95,0.62) -- (0.95,1.02) -- (0.73,1.02) -- cycle;
+\filldraw[inked,fill=wooddark] (0.84,0.64) ellipse (0.15 and 0.08);
+\filldraw[inked,fill=leather,rounded corners=0.04cm] (1.05,0.62) -- (1.27,0.62) -- (1.27,1.02) -- (1.05,1.02) -- cycle;
+\filldraw[inked,fill=wooddark] (1.16,0.64) ellipse (0.15 and 0.08);
+\filldraw[inked,fill=ice!70!snow] (1,0.66) ellipse (0.38 and 0.1);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.42) -- (1,1.64);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.548) -- (1.042,1.598);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.548) -- (0.958,1.598);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.42) -- (0.809,1.53);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (0.889,1.484) -- (0.867,1.546);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (0.889,1.484) -- (0.824,1.472);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.42) -- (0.809,1.31);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (0.889,1.356) -- (0.824,1.368);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (0.889,1.356) -- (0.867,1.294);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.42) -- (1,1.2);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.292) -- (0.958,1.242);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.292) -- (1.042,1.242);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.42) -- (1.191,1.31);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1.111,1.356) -- (1.133,1.294);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1.111,1.356) -- (1.176,1.368);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1,1.42) -- (1.191,1.53);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1.111,1.484) -- (1.176,1.472);
+\draw[draw=ink,line width=4.6pt,line cap=round,line join=round] (1.111,1.484) -- (1.133,1.546);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.42) -- (1,1.64);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.548) -- (1.042,1.598);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.548) -- (0.958,1.598);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.42) -- (0.809,1.53);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (0.889,1.484) -- (0.867,1.546);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (0.889,1.484) -- (0.824,1.472);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.42) -- (0.809,1.31);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (0.889,1.356) -- (0.824,1.368);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (0.889,1.356) -- (0.867,1.294);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.42) -- (1,1.2);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.292) -- (0.958,1.242);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.292) -- (1.042,1.242);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.42) -- (1.191,1.31);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1.111,1.356) -- (1.133,1.294);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1.111,1.356) -- (1.176,1.368);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1,1.42) -- (1.191,1.53);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1.111,1.484) -- (1.176,1.472);
+\draw[draw=snow,line width=2pt,line cap=round,line join=round] (1.111,1.484) -- (1.133,1.546);
+\end{tikzpicture}
+\end{document}

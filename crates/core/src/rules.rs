@@ -233,7 +233,7 @@ pub struct AbilityDef {
     /// Return Chakram while the blade is out.
     #[serde(default)]
     pub alt: String,
-    /// When `alt` takes the slot: "berserk" or "blade_out".
+    /// When `alt` takes the slot: "berserk", "blade_out" or "tracer_out".
     #[serde(default)]
     pub alt_when: String,
     #[serde(default, rename = "_after")]
@@ -790,9 +790,9 @@ impl Rules {
                 .iter()
                 .position(|b| b.id == a.alt)
                 .ok_or_else(|| format!("{} names no ability \"{}\" as its alt.", a.id, a.alt))?;
-            if !matches!(a.alt_when.as_str(), "berserk" | "blade_out") {
+            if !matches!(a.alt_when.as_str(), "berserk" | "blade_out" | "tracer_out") {
                 return Err(format!(
-                    "{}: alt_when \"{}\" is not berserk or blade_out.",
+                    "{}: alt_when \"{}\" is not berserk, blade_out or tracer_out.",
                     a.id, a.alt_when
                 ));
             }

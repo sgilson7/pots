@@ -343,7 +343,9 @@ pub fn clock(w: &mut World, ctx: &Ctx) {
         let s = crate::stats::of(ctx, w, id);
         let (hp, mana) = (s.max_hp * 1000, s.max_mana * 1000);
         if let Some(u) = w.get_mut(id) {
-            u.hp = (u.hp + hp * a.relic_pct / 100).min(hp);
+            if !crate::ability::no_heal(u) {
+                u.hp = (u.hp + hp * a.relic_pct / 100).min(hp);
+            }
             u.mana = (u.mana + mana * a.relic_pct / 100).min(mana);
         }
         w.relics[i] = now + (a.relic_back * TPS) as u32;

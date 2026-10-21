@@ -51,6 +51,10 @@ struct ModelFile {
     /// Spin the whole model slowly (runes, the Spheres' cores).
     #[serde(default)]
     spin: i32,
+    /// A model that floats (round 7, Shiver): how far its body bobs,
+    /// hundredths of a scene unit; its arms beat slowly.
+    #[serde(default)]
+    hover: i32,
     /// Free text for the person.
     #[serde(default, rename = "_note")]
     note: String,
@@ -99,6 +103,8 @@ pub struct Model {
     pub parts: Vec<Part>,
     pub pivots: [V3; 8],
     pub spin: i32,
+    /// How far a floating model's body bobs, Q16 scene units (0: it stands).
+    pub hover: i32,
     /// Drawn in the map's look (T19): faceted, no outline, a soft shadow.
     pub faceted: bool,
 }
@@ -211,6 +217,7 @@ impl Models {
                 parts,
                 pivots,
                 spin: m.spin,
+                hover: m.hover * ONE / 100,
                 faceted: false,
             });
         }
@@ -320,7 +327,11 @@ pub fn joints(m: &Model, pose: &Pose) -> [Affine; 8] {
     j[Joint::LegL as usize] = about(piv(Joint::LegL), &Affine::rot_z(swing_leg));
     j[Joint::LegR as usize] = about(piv(Joint::LegR), &Affine::rot_z(-swing_leg));
     // arms: opposite the legs when walking; raised when casting
-    let raise = fx::mul(pose.cast, fx::deg(115));
+    let mut raise = fx::mul(pose.cast, fx::deg(115));
+    if m.hover > 0 {
+        // a floating model's wings beat slowly with its bob
+        raise += fx::mul(fx::sin(pose.spin * 2) + ONE, fx::deg(6));
+    }
     j[Joint::ArmL as usize] = about(piv(Joint::ArmL), &Affine::rot_z(-swing_arm + raise));
     // the weapon arm: drawn back then struck through on an attack
     let strike = strike_angle(pose);
@@ -383,7 +394,12 @@ fn lean(pose: &Pose) -> i32 {
 pub fn pose_parts(m: &Model, pose: &Pose, place: &Affine, mut emit: impl FnMut(&Part, Affine)) {
     let j = joints(m, pose);
     // the body bobs with the step and falls over in death
-    let bob = fx::mul(fx::sin(pose.walk * 2).abs(), ONE / 20);
+    let bob = if m.hover > 0 {
+        // floating: a slow rise and fall, whether it moves or not
+        fx::mul(fx::sin(pose.spin * 2) + ONE, m.hover / 2)
+    } else {
+        fx::mul(fx::sin(pose.walk * 2).abs(), ONE / 20)
+    };
     let fall = Affine::rot_x(fx::mul(pose.death, fx::deg(88)));
     let sink = Affine::translate(v3(0, bob - fx::mul(pose.death, ONE / 3), 0));
     let whirl = Affine::rot_y(pose.whirl);

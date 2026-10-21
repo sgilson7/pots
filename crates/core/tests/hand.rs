@@ -63,7 +63,7 @@ fn every_shooter_has_a_shot_of_its_own() {
     let g = Game::new(&files(), 3).unwrap();
     let known = [
         "orb", "bolt", "arrow", "streak", "shard", "flame", "boulder", "spark", "hammer", "hook", "axe",
-        "claw",
+        "claw", "flake",
     ];
     let mut looks = Vec::new();
     for d in g.rules.units.iter().filter(|d| d.missile > 0) {

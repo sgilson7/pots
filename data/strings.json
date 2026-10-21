@@ -308,6 +308,11 @@
    "name": "Chipper",
    "title": "The Lumberjack",
    "text": "A beaver in a wooden walker. He swings from tree to tree on a chain claw and fires the saw blade off his chest, and every hit he takes thickens his armor."
+  },
+  "shiver": {
+   "name": "Shiver",
+   "title": "The Glacier Owl",
+   "text": "An old snow owl woken from a glacier. It freezes enemies who stand still, softens them for spells, and drops a star of hail on them from anywhere on the map."
   }
  },
  "abilities": {
@@ -514,6 +519,26 @@
   "return_chakram": {
    "name": "Recall Blade",
    "text": "Calls the blade back to Chipper."
+  },
+  "cold_feet": {
+   "name": "Frozen Ground",
+   "text": "Ice grips an enemy where it stands. It takes {damage_x100:s} magic damage {ticks} times, and if it is still within {break} of that spot after {delay:s} seconds, it is stunned for {stun:s} seconds."
+  },
+  "ice_vortex": {
+   "name": "Snow Whirl",
+   "text": "A whirl of snow spins {radius} round a point for {duration:s} seconds. Enemies in it are slowed by {slow:%} and lose {resist:%} magic resistance."
+  },
+  "chilling_touch": {
+   "name": "Frost Talons",
+   "text": "Allied heroes within {radius} of the point, Shiver too if it stands there, deal {damage} more magic damage with each of their next {attacks} attacks on enemy heroes. Their attacks are {attack_slow:%} slower until the charges are spent or {duration:s} seconds pass."
+  },
+  "ice_blast": {
+   "name": "Hailstar",
+   "text": "Sends a star of hail toward a point anywhere on the map. Press again to burst it where it flies: the longer it flew, the wider the burst, from {min_radius} to {max_radius}. Enemies hit take {damage} magic damage and {dps_x100:s} a second for {duration:s} seconds, cannot heal, and die below {kill_pct:%} health."
+  },
+  "ice_blast_release": {
+   "name": "Hailfall",
+   "text": "Bursts the Hailstar where it is now. The hail falls from Shiver to that spot."
   }
  },
  "items": {

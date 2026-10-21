@@ -80,7 +80,8 @@ fn every_ability_has_a_look_in_known_colours_and_shapes() {
     let g = Game::new(&files(), 1).unwrap();
     let shapes = ["ring", "flash", "sky", "beam", "wave", "spikes", "rise", "spin"];
     let zones = [
-        "", "warn", "cloud", "rain", "spin", "heal", "flash", "none", "axes", "chakram", "pull",
+        "", "warn", "cloud", "rain", "spin", "heal", "flash", "none", "axes", "chakram", "pull", "frozen",
+        "vortex", "hail",
     ];
     for a in &g.rules.abilities {
         let l = g

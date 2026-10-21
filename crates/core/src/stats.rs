@@ -264,8 +264,11 @@ pub fn regen(w: &mut World, ctx: &Ctx) {
                 mana_regen += s.max_mana * ctx.rules.t.fountain_regen + ctx.rules.t.fountain_mana;
             }
         }
-        // hundredths a second → thousandths a tick: ×10 / TPS
-        u.hp = (u.hp + hp_regen * 10 / TPS).min(s.max_hp * 1000);
+        // hundredths a second → thousandths a tick: ×10 / TPS; Ice Blast's
+        // frostbite lets no health come back
+        if !crate::ability::no_heal(u) {
+            u.hp = (u.hp + hp_regen * 10 / TPS).min(s.max_hp * 1000);
+        }
         u.mana = (u.mana + mana_regen * 10 / TPS).clamp(0, s.max_mana * 1000);
         for m in &u.mods {
             if m.kind == M::Regen && m.a < 0 {

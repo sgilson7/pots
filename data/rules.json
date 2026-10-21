@@ -321,6 +321,10 @@
   {
    "unit": "chipper",
    "_after": "Goblin Shredder (Timbersaw)"
+  },
+  {
+   "unit": "shiver",
+   "_after": "Ancient Apparition"
   }
  ],
  "preview_heroes": []

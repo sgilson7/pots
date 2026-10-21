@@ -126,7 +126,7 @@ pub fn damage(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, amount: i32, kind: D
 pub fn heal(w: &mut World, ctx: &Ctx, id: Uid, amount: i32) {
     let max = stats::of(ctx, w, id).max_hp * 1000;
     if let Some(u) = w.get_mut(id) {
-        if u.alive {
+        if u.alive && !crate::ability::no_heal(u) {
             u.hp = (u.hp + amount * 1000).min(max);
         }
     }
@@ -212,7 +212,7 @@ pub fn attack_lands(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32, crit
     if ls > 0 && !ctx.rules.units[def_def].kind.is_building() {
         let gain = dealt * ls / 100;
         let max = stats::of(ctx, w, src).max_hp * 1000;
-        if let Some(a) = w.get_mut(src) {
+        if let Some(a) = w.get_mut(src).filter(|a| !crate::ability::no_heal(a)) {
             a.hp = (a.hp + gain).min(max);
         }
     }

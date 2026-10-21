@@ -313,5 +313,44 @@ def chipper(rng):
     return fig
 
 
+def shiver(rng):
+    """Shiver (round 7, after Ancient Apparition): an old snow owl, a round
+    head with a pale facial disc, two wide frost eyes, icicle ear tufts,
+    brows and a mantle in the side's colour, folded wings of ice."""
+    fig = hero_fig("shiver")
+    plume = "icedeep!22!snow"
+    with M.clipped(fig):
+        # folded wings behind the body, icicle tips at the bottom
+        for sgn in (-1, 1):
+            fig.blob([(C + sgn * 0.3, 0.0), (C + sgn * 0.78, 0.1), (C + sgn * 0.8, 0.5), (C + sgn * 0.5, 0.66)], "icedeep!70!snow", tension=0.4)
+            for i in range(3):
+                x = C + sgn * (0.48 + i * 0.1)
+                fig.poly([(x - 0.04, 0.16), (x + 0.04, 0.16), (x, -0.02)], "icedeep")
+        shoulders(fig, plume, w=0.5, top=0.6)
+        # chevron feathers on the breast
+        for row in range(2):
+            for i in range(3):
+                x, y = 0.8 + i * 0.2 + row * 0.1, 0.18 + row * 0.16
+                fig.poly([(x - 0.05, y + 0.04), (x, y - 0.02), (x + 0.05, y + 0.04)], "icedeep")
+        # the mantle
+        fig.ellipse(C, 0.6, 0.42, 0.08, "gold")
+        # icicle ear tufts, raking out
+        for sgn in (-1, 1):
+            fig.poly([(C + sgn * 0.16, 1.3), (C + sgn * 0.34, 1.2), (C + sgn * 0.56, 1.72)], "ice")
+            fig.poly([(C + sgn * 0.3, 1.24), (C + sgn * 0.4, 1.18), (C + sgn * 0.62, 1.48)], "snow")
+        # the head and its facial disc
+        fig.circle(C, 0.98, 0.46, plume)
+        with fig.union("snow"):
+            fig.ellipse(C - 0.19, 0.98, 0.21, 0.24)
+            fig.ellipse(C + 0.19, 0.98, 0.21, 0.24)
+        for sgn in (-1, 1):
+            fig.circle(C + sgn * 0.19, 1.0, 0.1, "ice")
+            fig.circle(C + sgn * 0.17, 1.0, 0.015, "ink")
+            fig.poly([(C + sgn * 0.06, 1.2), (C + sgn * 0.34, 1.28), (C + sgn * 0.32, 1.2)], "gold")
+        # the beak
+        fig.poly([(C - 0.06, 0.9), (C + 0.06, 0.9), (C, 0.76)], "stonedark")
+    return fig
+
+
 PICTURES = {f"heroes/{f.__name__}": f for f in
-            (ironvow, rime, cinder, thistle, gristle, tectus, kestrel, hexwright, longwick, tempest, hackle, chipper)}
+            (ironvow, rime, cinder, thistle, gristle, tectus, kestrel, hexwright, longwick, tempest, hackle, chipper, shiver)}

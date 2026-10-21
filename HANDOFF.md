@@ -151,10 +151,22 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **Break list:** four rows named renamed tests and one had rotted (R7.40); `scripts/break_tests.py` now reports a row whose test runs nothing. 131 of 131 caught.
 - **Checks and live:** `./scripts/count-tests.sh` 184 passed, 0 failed, 4 ignored; `scripts/break_tests.py` 131 of 131 caught; the online smoke test (`tests/online/smoke.py --rejoin`, version 7) met through the relays, rejoined, and the checksums agreed at tick 1800; `./scripts/publish.sh` ran `./scripts/check.sh` (**BUILDER CHECK PASSED**, Chromium, Firefox, WebKit) and published build `e40edd8`; `BUILDER_ORIGIN=https://sgilson7.github.io/pots tests/browser/check.py` passed in all three engines on the live site.
 
+## Round 7, continued (20 October 2026): Shiver, after Ancient Apparition (T36)
+
+- **Research:** a research agent read playdota, the changelogs and 2010–2011 guides; `notes/LITERATURE.md` section 8. 6.72/6.73 differs from Dota 2 in Cold Feet (740, four hits), Chilling Touch (an allied buff, heroes only, −15% attack speed) and Ice Blast (225 + 50 a second, the Fountain clears frostbite). Built as 6.72/6.73 (R7.56); the unsourced parts are the agent's (R7.57, R7.58, R7.63).
+- **The hero:** `shiver` in `data/units.json`, `abilities.json` (cold_feet, ice_vortex, chilling_touch, ice_blast, ice_blast_release as Hailstar's alt while the tracer flies), `rules.json` (the thirteenth on the roster), `strings.json`, `ai.json`. Rules in `crates/core/src/ability.rs`; frostbite (`ability::no_heal`) stops regeneration, heals, lifesteal, the healing ward and the relic. Online version 8.
+- **Look:** the mockup `journal/mockups/heroes3.js` → `tools/art2_models.json` → `data/models.json` (`shoot.py export`, `tools/modelport.py`); the model floats (`hover`, R7.62). Portrait and five icons in `tools/art/`. A snowflake shot (`flake`), zones `frozen`, `vortex`, `hail`, and marks for Frost Talons' charges and frostbite in `crates/core/src/marks.rs`.
+- **Computer players and the heroes screen:** `ai::switch_form` releases Hailstar over an enemy hero; it casts only at heroes within 900 (R7.59, open). The cast stage releases Hailstar by itself, so the heroes screen and the journal's animations show the burst.
+- **Journal tab 13** (`journal/mockups/tab13.py`): the review, the mockup beside the game, every ability cast in the game, the shots, three questions.
+- **Tests:** `tests/shiver.rs` (11); break rows "shiver:" (21, all caught once the edge test checked both sides). Hackle and Chipper's tests no longer assume they are the roster's last two (R7.64).
+- **Not deployed:** the person did not ask for it this time.
+- **Checks (20 October 2026):** `./scripts/count-tests.sh` 195 passed, 0 failed, 4 ignored; `./scripts/check.sh` **BUILDER CHECK PASSED** (Chromium, Firefox, WebKit); `scripts/break_tests.py shiver` 21 of 21 caught after `cargo fmt` (one row repointed at the reflowed text). The other 131 rows were not re-run this time; `cargo fmt` changed only the new code.
+
 ## Open for the person
 
 Each row of `SECOND-ORDER.md` with status *person*, by number:
 
+- **R7.55**: Shiver's name, look and ability names (Frozen Ground, Snow Whirl, Frost Talons, Hailstar, Hailfall). Keep, or change any?
 - **R7.44**: open each hero on the heroes screen and play each ability: does every demonstration read clearly?
 - **R7.2**: selling is instant on a right-click and pays half. Ask first, or give a full refund for a few seconds after buying?
 - **R7.9**: next for the look: the forest's outline, or a darker ground? (Shadows under heroes and creeps came with T24.)

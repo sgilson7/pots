@@ -178,6 +178,11 @@
    "shape": "axe",
    "color": "steel_bright",
    "size": 55
+  },
+  "shiver": {
+   "shape": "flake",
+   "color": "fx_frost",
+   "size": 50
   }
  },
  "fx": {
@@ -833,6 +838,85 @@
   },
   "return_chakram": {
    "color": "fx_steel"
+  },
+  "cold_feet": {
+   "color": "fx_frost",
+   "cast": true,
+   "zone": "frozen",
+   "land": [
+    {
+     "kind": "flash",
+     "r": 110,
+     "dur": 40
+    },
+    {
+     "kind": "ring",
+     "r": 160,
+     "dur": 40
+    }
+   ],
+   "proc": [
+    {
+     "kind": "flash",
+     "r": 60,
+     "dur": 25
+    }
+   ]
+  },
+  "ice_vortex": {
+   "color": "fx_frost",
+   "cast": true,
+   "zone": "vortex"
+  },
+  "chilling_touch": {
+   "color": "fx_frost",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 50
+    },
+    {
+     "kind": "rise",
+     "r": 120,
+     "dur": 50
+    }
+   ],
+   "proc": [
+    {
+     "kind": "flash",
+     "r": 70,
+     "dur": 25
+    }
+   ]
+  },
+  "ice_blast": {
+   "color": "fx_frost",
+   "cast": true,
+   "zone": "hail",
+   "land": [
+    {
+     "kind": "flash",
+     "r": 220,
+     "dur": 40
+    }
+   ],
+   "proc": [
+    {
+     "kind": "flash",
+     "r": 120,
+     "dur": 40
+    },
+    {
+     "kind": "rise",
+     "r": 90,
+     "dur": 40
+    }
+   ]
+  },
+  "ice_blast_release": {
+   "color": "fx_frost"
   }
  },
  "backdrop": {
@@ -863,7 +947,16 @@
   "drag_deg": 40,
   "drift_deg": 12,
   "demo_s": 4,
-  "demo_s_for": {"chakram": 6, "return_chakram": 4, "timber_chain": 3, "berserker_rage": 3},
+  "demo_s_for": {
+   "chakram": 6,
+   "return_chakram": 4,
+   "timber_chain": 3,
+   "berserker_rage": 3,
+   "ice_blast": 5,
+   "ice_blast_release": 4,
+   "cold_feet": 6,
+   "chilling_touch": 5
+  },
   "demo_ahead": 250,
   "shift_pct": 22,
   "idle_lift": 110,

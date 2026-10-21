@@ -36,6 +36,9 @@ GROUND = {"grass_sun": [143, 209, 111], "grass_moon": [126, 196, 140], "lane": [
           "fx_frost": [120, 205, 255], "fx_fire": [255, 123, 58], "fx_gold": [245, 196, 81], "fx_rot": [143, 191, 90],
           "fx_earth": [127, 227, 194], "fx_hex": [255, 122, 217], "fx_storm": [154, 216, 255], "fx_holy": [255, 242, 122]}  # the glow style, drawn unlit (data/shaders/scene.frag via uGlow)
 
+# models that float (round 7, Shiver): how far the body bobs, hundredths of a scene unit
+HOVER = {"hero_shiver": 14}
+
 # round 1's heights (tools/modelgen.py at 67ed47e): no model grows past them
 ROUND1 = {"tower_sun": 600, "tower_moon": 600, "barracks_melee_sun": 320, "barracks_ranged_sun": 320, "barracks_melee_moon": 320,
           "barracks_ranged_moon": 320, "sphere_sun": 700, "sphere_moon": 700, "fountain_sun": 300, "fountain_moon": 300, "shop": 260,
@@ -230,6 +233,8 @@ def main():
             pivots[name] = [round(g[0][3] * k), round(g[1][3] * k), round(g[2][3] * k)]
         models[mid] = {"height": round(top * k), "parts": parts, "pivots": {j: pivots[j] for j in sorted(pivots) if j != "body"},
                        "_note": "round 2: from journal/mockups (tools/modelport.py)"}
+        if mid in HOVER:
+            models[mid]["hover"] = HOVER[mid]
     missing = sorted(set(old["models"]) - set(models))
     if missing:
         sys.exit(f"models in data/models.json with no mockup: {missing}")

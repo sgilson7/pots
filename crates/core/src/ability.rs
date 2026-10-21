@@ -28,6 +28,13 @@ pub const TAG_BERSERK: i32 = 3001;
 pub const TAG_BLIND: i32 = 3002;
 pub const TAG_BLADE_OUT: i32 = 3011;
 pub const TAG_ATTR_PCT: i32 = 1100;
+/// More `Tag` codes (round 7, Shiver): Chilling Touch on an ally's attacks
+/// (`a` = attacks left), Ice Blast's tracer in flight on its caster, and
+/// Ice Blast's frostbite (`a` = the health percent below which the unit
+/// shatters), which also stops all healing.
+pub const TAG_CHILL: i32 = 3021;
+pub const TAG_TRACER: i32 = 3031;
+pub const TAG_FROZEN: i32 = 3032;
 
 fn tagged(u: &Unit, code: i32) -> bool {
     u.mods.iter().any(|m| m.kind == M::Tag && m.b == code)
@@ -38,11 +45,17 @@ pub fn berserk(u: &Unit) -> bool {
     tagged(u, TAG_BERSERK)
 }
 
+/// Whether Ice Blast's frostbite holds a unit: no health comes back to it.
+pub fn no_heal(u: &Unit) -> bool {
+    tagged(u, TAG_FROZEN)
+}
+
 /// Whether an ability's `alt` holds its slot now.
 fn alt_holds(u: &Unit, when: &str) -> bool {
     match when {
         "berserk" => tagged(u, TAG_BERSERK),
         "blade_out" => tagged(u, TAG_BLADE_OUT),
+        "tracer_out" => tagged(u, TAG_TRACER),
         _ => false,
     }
 }
@@ -213,7 +226,7 @@ pub fn approach(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
     } else {
         at
     };
-    let range = a.range_at(level);
+    let range = cast_range(a, level);
     if !within(here, goal, range + 30) {
         crate::orders::walk(w, ctx, id, goal, range);
         return;
@@ -223,6 +236,16 @@ pub fn approach(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, at: P) {
         return;
     }
     begin(w, ctx, id, slot, t, at);
+}
+
+/// How far from its target an ability may be cast: anywhere on the map for
+/// one with a `global` value (Ice Blast).
+pub fn cast_range(a: &crate::rules::AbilityDef, level: i32) -> i32 {
+    if a.values.contains_key("global") {
+        i32::MAX / 4
+    } else {
+        a.range_at(level)
+    }
 }
 
 fn idle(w: &mut World, id: Uid) {
@@ -920,6 +943,88 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
                 },
             );
         }
+        // Cold Feet: the ice holds where the target stood; it takes `ticks`
+        // hits of magic damage, and if it is still within `break` of that
+        // spot when the `delay` runs out it is frozen (stunned)
+        "cold_feet" => {
+            let p = w.live(t).map(|v| v.pos()).unwrap_or(at);
+            let delay = secs_x100(w, a.v("delay", lv)) - w.tick;
+            let every = secs_x100(w, a.v("tick", lv)) - w.tick;
+            zone(
+                w,
+                id,
+                p,
+                a.v("break", lv),
+                k,
+                lv,
+                every,
+                w.tick + delay + 1,
+                t as i32,
+            );
+        }
+        // Ice Vortex: a still vortex that slows enemies in it and lowers
+        // their magic resistance while they stay (one vortex's worth however
+        // many overlap)
+        "ice_vortex" => {
+            let until = secs_x100(w, a.v("duration", lv));
+            zone(w, id, at, a.v("radius", lv), k, lv, 0, until, 0);
+        }
+        // Chilling Touch (DotA 6.72's, before Dota 2 made it an orb): allied
+        // heroes round the point, the caster too if it stands there, add
+        // magic damage to their next `attacks` attacks on enemy heroes
+        "chilling_touch" => {
+            let until = secs_x100(w, a.v("duration", lv));
+            let allies = w.near(at, a.v("radius", lv), |u| u.team == team && u.hero.is_some());
+            for ally in allies {
+                w.add_mod(
+                    ally,
+                    Mod {
+                        kind: M::Tag,
+                        src: id,
+                        until,
+                        a: a.v("attacks", lv),
+                        b: TAG_CHILL,
+                        tag: tg,
+                    },
+                );
+                // the cold hands attack a little slower while it lasts
+                add(
+                    w,
+                    ally,
+                    M::AttackPct,
+                    id,
+                    until,
+                    -a.v("attack_slow", lv),
+                    tg,
+                    true,
+                );
+            }
+        }
+        // Ice Blast: a tracer flies from the caster toward the point until
+        // Release, stopping at the map's edge; Release holds the slot while
+        // it flies
+        "ice_blast" => {
+            let edge = ctx.rules.map.size;
+            let far = toward(here, at, edge * 2);
+            let end = edge_point(here, far, edge);
+            zone(w, id, here, a.v("min_radius", lv), k, lv, 0, u32::MAX, 0);
+            if let Some(z) = w.zones.last_mut() {
+                z.to = end;
+            }
+            w.add_mod(
+                id,
+                Mod {
+                    kind: M::Tag,
+                    src: id,
+                    until: 0,
+                    a: 0,
+                    b: TAG_TRACER,
+                    tag: tg,
+                },
+            );
+        }
+        // Release: the blast leaves the caster for where the tracer is now
+        "ice_blast_release" => release(w, ctx, id),
         // Return Chakram: the blade turns for home
         "return_chakram" => {
             for z in w.zones.iter_mut() {
@@ -1029,6 +1134,7 @@ pub fn zones(w: &mut World, ctx: &Ctx) {
     // zones made during this tick's pulses join the list
     keep.append(&mut w.zones);
     w.zones = keep;
+    shatter(w, ctx);
     auras(w, ctx);
     crate::item::auras(w, ctx);
 }
@@ -1196,6 +1302,115 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
             }
             z.next = w.tick + 1;
         }
+        // Cold Feet: broken once the target is farther than `break` from
+        // the spot; frozen if it is still near when the delay ends
+        "cold_feet" => {
+            let t = z.a as Uid;
+            let Some(v) = w.live(t) else {
+                z.until = 0;
+                return;
+            };
+            if dist(v.pos(), z.at) > z.radius {
+                w.mark(MK_PROC, k, z.src, t, z.at);
+                z.until = 0;
+                return;
+            }
+            // the hits come every `tick`, `ticks` of them (the zone keeps its
+            // count in `done`'s length: one entry a hit)
+            let every = (secs_x100(w, a.v("tick", lv)) - w.tick).max(1);
+            if (w.tick - z.start).is_multiple_of(every) && (z.done.len() as i32) < a.v("ticks", lv) {
+                z.done.push(t);
+                combat::damage_milli(w, ctx, z.src, t, a.v("damage_x100", lv) * 10, Dmg::Magic, false);
+            }
+            if w.tick + 1 >= z.until {
+                w.mark(MK_LAND, k, z.src, t, z.at);
+                stun(w, ctx, z.src, t, a.v("stun", lv), tg);
+            }
+            z.next = w.tick + 1;
+        }
+        "ice_vortex" => {
+            let until = secs_x100(w, 20);
+            for v in enemies_near(w, ctx, z.team, z.at, z.radius, false) {
+                slow(w, z.src, v, a.v("slow", lv), 0, 20, tg);
+                w.add_mod(
+                    v,
+                    Mod {
+                        kind: M::MagicResist,
+                        src: z.src,
+                        until,
+                        a: -a.v("resist", lv),
+                        b: 0,
+                        tag: tg,
+                    },
+                );
+            }
+            z.next = w.tick + 1;
+        }
+        // Ice Blast: the tracer flies (phase 0) until Release, or until its
+        // caster dies, which releases it. Released (1), the blast leaves
+        // where the caster stood (`at`) and lands where the tracer was (`to`)
+        // at `next`; it bursts there (2) over a radius set by how long the
+        // tracer flew: magic damage and frostbite (damage each second, no
+        // healing, and shattered below `kill_pct` of its health)
+        "ice_blast" => {
+            match z.a {
+                0 => {
+                    if !src_alive {
+                        release(w, ctx, z.src);
+                        // the release above changed the zone in the list,
+                        // not this copy: do the same here
+                        launch(w, ctx, z, w.get(z.src).map(|u| u.pos()).unwrap_or(z.at));
+                        return;
+                    }
+                    let step = (a.v("tracer_speed", lv) / TPS).max(1);
+                    z.at = if dist(z.at, z.to) <= step {
+                        z.to
+                    } else {
+                        toward(z.at, z.to, step)
+                    };
+                    z.next = w.tick + 1;
+                }
+                1 => {
+                    w.mark(MK_LAND, k, z.src, NO_UNIT, z.to);
+                    let until = secs_x100(w, a.v("duration", lv));
+                    // frostbite on the blast's whole path, damage where it bursts
+                    let path = in_line(w, ctx, z.team, z.at, z.to, a.v("path", lv), false);
+                    let burst = enemies_near(w, ctx, z.team, z.to, z.radius, false);
+                    let mut all = path.clone();
+                    all.extend(burst.iter().filter(|v| !path.contains(v)));
+                    for v in all {
+                        if w.get(v)
+                            .map(|u| ctx.rules.units[u.def as usize].kind.is_building())
+                            .unwrap_or(true)
+                        {
+                            continue;
+                        }
+                        add(w, v, M::Regen, z.src, until, -a.v("dps_x100", lv), tg, true);
+                        w.add_mod(
+                            v,
+                            Mod {
+                                kind: M::Tag,
+                                src: z.src,
+                                until,
+                                a: a.v("kill_pct", lv),
+                                b: TAG_FROZEN,
+                                tag: tg,
+                            },
+                        );
+                    }
+                    for v in burst {
+                        combat::damage(w, ctx, z.src, v, a.v("damage", lv), Dmg::Magic);
+                    }
+                    shatter(w, ctx);
+                    z.a = 2;
+                    z.at = z.to;
+                    z.start = w.tick;
+                    z.until = w.tick + (TPS / 2) as u32;
+                    z.next = u32::MAX;
+                }
+                _ => z.next = u32::MAX,
+            }
+        }
         "light_strike" => {
             w.mark(MK_LAND, k, z.src, NO_UNIT, z.at);
             for v in enemies_near(w, ctx, z.team, z.at, z.radius, false) {
@@ -1255,7 +1470,9 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
                 // percent of maximum health a second
                 let per_tick = max * a.v("heal_pct", lv) * 10 / TPS;
                 if let Some(u) = w.get_mut(id) {
-                    u.hp = (u.hp + per_tick).min(max * 1000);
+                    if !no_heal(u) {
+                        u.hp = (u.hp + per_tick).min(max * 1000);
+                    }
                 }
             }
             z.next = w.tick + 1;
@@ -1313,6 +1530,102 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
         }
         // shown only: the blast already happened when it was cast
         _ => z.next = u32::MAX,
+    }
+}
+
+/// The point where the line from `a` toward `b` leaves the map (a square
+/// `size` across), or `b` when it stays inside.
+fn edge_point(a: P, b: P, size: i32) -> P {
+    let (dx, dy) = ((b[0] - a[0]) as i64, (b[1] - a[1]) as i64);
+    // the largest share of the way, in millionths, that keeps both inside
+    const ALL: i64 = 1_000_000;
+    let mut keep = ALL;
+    for (p, d) in [(a[0] as i64, dx), (a[1] as i64, dy)] {
+        if d < 0 && p + d * keep / ALL < 0 {
+            keep = keep.min(-p * ALL / d);
+        }
+        if d > 0 && p + d * keep / ALL > size as i64 {
+            keep = keep.min((size as i64 - p) * ALL / d);
+        }
+    }
+    [a[0] + (dx * keep / ALL) as i32, a[1] + (dy * keep / ALL) as i32]
+}
+
+/// Release: the caster's flying tracer stops and the blast leaves `here`.
+fn release(w: &mut World, ctx: &Ctx, id: Uid) {
+    let here = w.get(id).map(|u| u.pos()).unwrap_or([0, 0]);
+    let mut zs = std::mem::take(&mut w.zones);
+    let mut blast = None;
+    for z in zs.iter_mut() {
+        if z.src == id && ctx.rules.abilities[z.ability as usize].logic == "ice_blast" && z.a == 0 {
+            launch(w, ctx, z, here);
+            blast = Some(z.ability);
+        }
+    }
+    zs.append(&mut w.zones);
+    w.zones = zs;
+    if let Some(b) = blast {
+        w.remove_mods(id, tag(b as usize));
+    }
+}
+
+/// Turns a flying tracer into the blast: its radius from how long the
+/// tracer flew, at most `max_radius`; it lands where the tracer is, after
+/// the distance at `blast_speed` or `blast_secs`, whichever is sooner (so
+/// at least 750 a second, about 2 s for a long way).
+fn launch(w: &mut World, ctx: &Ctx, z: &mut Zone, from: P) {
+    let a = &ctx.rules.abilities[z.ability as usize];
+    let lv = z.level;
+    let flew = (w.tick - z.start) as i32;
+    z.radius = (a.v("min_radius", lv) + a.v("growth", lv) * flew / TPS).min(a.v("max_radius", lv));
+    let d = dist(from, z.at);
+    let slow = d * TPS / a.v("blast_speed", lv).max(1);
+    let cap = a.v("blast_secs", lv) * TPS / 100;
+    z.to = z.at;
+    z.at = from;
+    z.a = 1;
+    z.start = w.tick;
+    z.next = w.tick + slow.min(cap).max(1) as u32;
+}
+
+/// Ice Blast's shatter: a frostbitten unit below its share of health dies
+/// at once, to the blast's caster (never an illusion). A unit at its own
+/// fountain loses the frostbite, as in DotA before 6.75.
+fn shatter(w: &mut World, ctx: &Ctx) {
+    let held: Vec<(Uid, Mod)> = w
+        .units
+        .iter()
+        .filter(|u| u.alive && u.hp > 0)
+        .filter_map(|u| {
+            u.mods
+                .iter()
+                .find(|m| m.kind == M::Tag && m.b == TAG_FROZEN)
+                .map(|m| (u.id, *m))
+        })
+        .collect();
+    for (id, m) in held {
+        let (team, here, illusion) = match w.get(id) {
+            Some(u) => (u.team, u.pos(), u.has(M::Illusion)),
+            None => continue,
+        };
+        let home = ctx.rules.map.sides.get(team as usize).map(|s| s.fountain);
+        if home
+            .map(|f| within(here, f, ctx.rules.t.fountain_range))
+            .unwrap_or(false)
+        {
+            w.remove_mods(id, m.tag);
+            continue;
+        }
+        if illusion {
+            continue;
+        }
+        let max = stats::of(ctx, w, id).max_hp as i64 * 1000;
+        let hp = w.get(id).map(|u| u.hp).unwrap_or(0);
+        if (hp as i64) * 100 < max * m.a as i64 {
+            let at = w.get(id).map(|u| u.pos()).unwrap_or([0, 0]);
+            w.mark(MK_PROC, m.tag as usize - 1, m.src, id, at);
+            combat::damage_milli(w, ctx, m.src, id, hp + 1000, Dmg::Pure, false);
+        }
     }
 }
 
@@ -1610,6 +1923,40 @@ pub fn after_attack(w: &mut World, ctx: &Ctx, src: Uid, dst: Uid, raw: i32) {
             combat::damage(w, ctx, src, dst, a.v("damage", lv), Dmg::Physical);
             stun(w, ctx, src, dst, a.v("stun", lv), tag(k));
         }
+    }
+    // Chilling Touch: an attack on an enemy hero spends a charge for the
+    // caster's magic damage, its own hit (creeps came in 6.75)
+    let chill = w.get(src).and_then(|u| {
+        u.mods
+            .iter()
+            .find(|m| m.kind == M::Tag && m.b == TAG_CHILL)
+            .copied()
+    });
+    let foe = w
+        .get(dst)
+        .map(|v| v.team != team && v.hero.is_some())
+        .unwrap_or(false);
+    if let (Some(m), true) = (chill, foe) {
+        let lv = has_logic(ctx, w, m.src, "chilling_touch")
+            .map(|(_, _, lv)| lv)
+            .unwrap_or(1);
+        let k = m.tag as usize - 1;
+        let dmg = ctx.rules.abilities[k].v("damage", lv);
+        w.mark(MK_PROC, k, src, dst, dst_pos);
+        if let Some(u) = w.get_mut(src) {
+            for x in u.mods.iter_mut() {
+                if x.kind == M::Tag && x.b == TAG_CHILL {
+                    x.a -= 1;
+                }
+            }
+            if u.mods
+                .iter()
+                .any(|x| x.kind == M::Tag && x.b == TAG_CHILL && x.a <= 0)
+            {
+                u.mods.retain(|x| x.tag != m.tag);
+            }
+        }
+        combat::damage(w, ctx, src, dst, dmg, Dmg::Magic);
     }
     // Fervor: each attack on the same target adds to the attack speed, up to
     // `stacks`; a new target starts the count again at one (the slot's

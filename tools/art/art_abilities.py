@@ -679,6 +679,68 @@ def return_chakram(rng):
     return fig
 
 
+# ---- Shiver (frost), round 7 ---------------------------------------------------
+
+def cold_feet(rng):
+    fig = ability_fig("cold_feet")
+    # a frosted patch of ground with ice spikes round two feet held fast
+    fig.ellipse(1.0, 0.62, 0.66, 0.24, "ice")
+    fig.ellipse(1.0, 0.62, 0.46, 0.15, "snow")
+    for x, h in ((0.42, 0.34), (0.62, 0.48), (1.38, 0.48), (1.58, 0.34)):
+        M.crystal(fig, x, 0.62 + h / 2, h, "icedeep")
+    for x in (0.84, 1.16):
+        fig.rect(x - 0.11, 0.62, x + 0.11, 1.02, "leather", r=0.04)
+        fig.ellipse(x, 0.64, 0.15, 0.08, "wooddark")
+    fig.ellipse(1.0, 0.66, 0.38, 0.1, "ice!70!snow")
+    M.snowflake(fig, 1.0, 1.42, 0.22, role="snow", width=2.0)
+    return fig
+
+
+def ice_vortex(rng):
+    fig = ability_fig("ice_vortex")
+    fig.ellipse(1.0, 0.92, 0.66, 0.42, "ice")
+    for r, start in ((0.58, 0), (0.42, 120), (0.26, 240)):
+        M.swirl(fig, 1.0, 0.92, r, role="snow", width=2.6, turns=1.1, start=start)
+    for x, y in ((0.52, 1.42), (1.46, 1.36), (1.2, 0.42)):
+        M.sparkle(fig, x, y, 0.1, "snow")
+    return fig
+
+
+def chilling_touch(rng):
+    fig = ability_fig("chilling_touch")
+    # three talons of ice reaching down, frost streaming off them
+    for i, x in enumerate((0.66, 1.0, 1.34)):
+        fig.poly([(x - 0.1, 1.5), (x + 0.1, 1.5), (x + 0.04, 0.82), (x - 0.06 + (i - 1) * 0.04, 0.5)], "ice")
+        fig.poly([(x - 0.1, 1.5), (x - 0.02, 1.5), (x - 0.06 + (i - 1) * 0.04, 0.5)], "snow")
+    fig.rect(0.5, 1.46, 1.5, 1.66, "icedeep", r=0.08)
+    M.sparkle(fig, 0.48, 0.66, 0.12, "snow")
+    M.sparkle(fig, 1.56, 0.86, 0.1, "snow")
+    return fig
+
+
+def ice_blast(rng):
+    fig = ability_fig("ice_blast")
+    # a star of hail streaking down from the upper left
+    pts = [(0.3 + 0.07 * i, 1.6 - 0.07 * i) for i in range(10)]
+    M.trail(fig, pts, "ice", w0=0.01, w1=0.14)
+    M.burst(fig, 1.12, 0.86, 0.42, "ice", n=8, inner=0.45)
+    M.burst(fig, 1.12, 0.86, 0.26, "snow", n=8, inner=0.5, rot=22)
+    fig.circle(1.12, 0.86, 0.08, "icedeep")
+    return fig
+
+
+def ice_blast_release(rng):
+    fig = ability_fig("ice_blast_release")
+    # the hail bursting on the ground: shards thrown up from a ring
+    fig.ellipse(1.0, 0.6, 0.66, 0.2, "ice")
+    for a in (-60, -30, 0, 30, 60):
+        x = 1.0 + 0.5 * math.sin(math.radians(a))
+        M.crystal(fig, x, 0.98 - abs(a) / 300, 0.5 - abs(a) / 300, "ice", rot=-a)
+    M.burst(fig, 1.0, 0.7, 0.28, "snow", n=8, inner=0.5)
+    M.ripple(fig, 1.0, 0.6, 0.78, 0.26, role="snow", width=2.4, a0=190, a1=350)
+    return fig
+
+
 _FUNCS = {f.__name__: f for f in (
     storm_bolt, great_cleave, warcry, gods_strength,
     crystal_nova, frostbite, brilliance_aura, freezing_field,
@@ -692,7 +754,8 @@ _FUNCS = {f.__name__: f for f in (
     arc_lightning, lightning_bolt, static_field, thundergods_wrath,
     warden_bash,
     berserker_rage, whirling_axes, whirling_axes_melee, fervor, battle_trance,
-    whirling_death, timber_chain, reactive_armor, chakram, return_chakram)}
+    whirling_death, timber_chain, reactive_armor, chakram, return_chakram,
+    cold_feet, ice_vortex, chilling_touch, ice_blast, ice_blast_release)}
 
 _missing = set(ability_ids()) ^ set(_FUNCS)
 if _missing:
