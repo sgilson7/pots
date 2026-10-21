@@ -1,0 +1,124 @@
+{
+ "missions": [
+  {
+   "id": "first_steps",
+   "allies": 0,
+   "enemies": 1,
+   "ally": 0,
+   "enemy": 0,
+   "goal": "last_hits",
+   "target": 15,
+   "minutes": 7,
+   "hero": -1
+  },
+  {
+   "id": "the_tower",
+   "allies": 0,
+   "enemies": 1,
+   "ally": 0,
+   "enemy": 1,
+   "goal": "tower",
+   "target": 1,
+   "minutes": 15,
+   "hero": -1
+  },
+  {
+   "id": "spells",
+   "allies": 0,
+   "enemies": 1,
+   "ally": 0,
+   "enemy": 1,
+   "goal": "kills",
+   "target": 2,
+   "minutes": 12,
+   "hero": -1
+  },
+  {
+   "id": "shopping",
+   "allies": 1,
+   "enemies": 2,
+   "ally": 1,
+   "enemy": 1,
+   "goal": "tower",
+   "target": 2,
+   "minutes": 18,
+   "hero": -1
+  },
+  {
+   "id": "two_lanes",
+   "allies": 1,
+   "enemies": 2,
+   "ally": 2,
+   "enemy": 1,
+   "goal": "sphere",
+   "target": 1,
+   "minutes": 0,
+   "hero": -1
+  },
+  {
+   "id": "ganks",
+   "allies": 2,
+   "enemies": 3,
+   "ally": 2,
+   "enemy": 2,
+   "goal": "sphere",
+   "target": 1,
+   "minutes": 0,
+   "hero": -1
+  },
+  {
+   "id": "the_warden",
+   "allies": 3,
+   "enemies": 3,
+   "ally": 2,
+   "enemy": 2,
+   "goal": "boss",
+   "target": 1,
+   "minutes": 0,
+   "hero": -1
+  },
+  {
+   "id": "full_five",
+   "allies": 4,
+   "enemies": 5,
+   "ally": 2,
+   "enemy": 2,
+   "goal": "sphere",
+   "target": 1,
+   "minutes": 0,
+   "hero": -1
+  },
+  {
+   "id": "hard_five",
+   "allies": 4,
+   "enemies": 5,
+   "ally": 3,
+   "enemy": 3,
+   "goal": "sphere",
+   "target": 1,
+   "minutes": 0,
+   "hero": -1
+  },
+  {
+   "id": "unfair",
+   "allies": 4,
+   "enemies": 5,
+   "ally": 3,
+   "enemy": 4,
+   "goal": "sphere",
+   "target": 1,
+   "minutes": 0,
+   "hero": -1
+  }
+ ],
+ "custom": {
+  "allies": [
+   0,
+   4
+  ],
+  "enemies": [
+   1,
+   5
+  ]
+ }
+}
