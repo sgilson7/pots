@@ -159,8 +159,15 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **Computer players and the heroes screen:** `ai::switch_form` releases Hailstar over an enemy hero; it casts only at heroes within 900 (R7.59, open). The cast stage releases Hailstar by itself, so the heroes screen and the journal's animations show the burst.
 - **Journal tab 13** (`journal/mockups/tab13.py`): the review, the mockup beside the game, every ability cast in the game, the shots, three questions.
 - **Tests:** `tests/shiver.rs` (11); break rows "shiver:" (21, all caught once the edge test checked both sides). Hackle and Chipper's tests no longer assume they are the roster's last two (R7.64).
-- **Not deployed:** the person did not ask for it this time.
+- **Deployed** on 21 October at the person's request (below).
 - **Checks (20 October 2026):** `./scripts/count-tests.sh` 195 passed, 0 failed, 4 ignored; `./scripts/check.sh` **BUILDER CHECK PASSED** (Chromium, Firefox, WebKit); `scripts/break_tests.py shiver` 21 of 21 caught after `cargo fmt` (one row repointed at the reflowed text). The other 131 rows were not re-run this time; `cargo fmt` changed only the new code. **Live:** `./scripts/publish.sh` ran `./scripts/check.sh` again (**BUILDER CHECK PASSED**) and published build `9cd7ec0`; `BUILDER_ORIGIN=https://sgilson7.github.io/pots tests/browser/check.py` passed in Chromium, Firefox and WebKit on the live site; the online smoke test on the live site (`BASE=… tests/online/smoke.py --rejoin`, version 8) met through the relays, rejoined, and the checksums agreed at tick 1800 (one relay, relay.damus.io, answered 503; the others carried it).
+
+## Round 7, continued (21 October 2026): Safari froze after a click or two (T37)
+
+- **Cause:** under the pointer lock, which brings Safari's "press Esc" banner, the page sends each mouse move on to the element under the drawn cursor. That move bubbled back to the page's own handler and was sent on again until the stack ran out. In Safari it ran out inside a call into the core, which then refused every call, so the match froze. Chrome and Firefox only stuttered. Present since T4 (R7.65).
+- **Fix:** `web/app.js` `wireInput` takes only the mouse's own moves.
+- **Check:** `tests/browser/interactions.py` `locked_moves` tells the page the body holds the lock and moves the mouse; with the fix taken out it fails in all three engines (R7.66). Safari itself with a real pointer lock is the person's check.
+- **Checks:** CHECKS_T37
 
 ## Open for the person
 

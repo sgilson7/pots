@@ -110,7 +110,29 @@ def run(page, check, engine):
     moved = probe(page)
     check((moved["x"], moved["y"]) != (start["x"], start["y"]), "a right-click on the ground walks the hero")
     check(page.inner_text("#notice") == "", "no error message is shown")
+    locked_moves(page, check)
     aram(page, check)
+
+
+def locked_moves(page, check):
+    """The mouse moving under the pointer lock (T37). A headless browser
+    cannot take the lock, so the page is told the body holds it; the moves
+    are the mouse's own. The move the page sends on to the element under the
+    drawn cursor once bubbled back and was sent on again until the stack ran
+    out, which in Safari left the core unusable after a click or two."""
+    errors = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    page.evaluate("() => Object.defineProperty(document, 'pointerLockElement', { configurable: true, get: () => document.body })")
+    box = page.locator("#view").bounding_box()
+    for k in range(10):
+        page.mouse.move(box["x"] + box["width"] * 0.5 + k * 3, box["y"] + box["height"] * 0.5)
+    page.mouse.click(box["x"] + box["width"] * 0.5, box["y"] + box["height"] * 0.5, button="right")
+    before = probe(page)["tick"]
+    page.wait_for_timeout(500)
+    page.evaluate("() => { delete document.pointerLockElement; }")
+    check(not errors, f"moving the mouse under the pointer lock raises no error {errors[:2]}")
+    after = probe(page)
+    check(after["tick"] > before, "the match still runs after moving the mouse under the pointer lock")
 
 
 def aram(page, check):

@@ -264,6 +264,9 @@ function wireInput(canvas) {
     }
   }
   document.addEventListener("mousemove", (e) => {
+    // the move point() sends on bubbles back here: only the mouse's own moves count,
+    // or each one is sent on again until the stack runs out (in Safari, inside the core)
+    if (!e.isTrusted) return;
     if (locked()) {
       // the core moves the drawn cursor and stops it at the edges
       const [x, y] = game.nudge(e.movementX, e.movementY);
