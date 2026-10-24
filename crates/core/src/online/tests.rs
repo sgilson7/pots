@@ -230,6 +230,7 @@ fn every_message_round_trips() {
             bots: 2,
             started: false,
             aram: true,
+            arena: false,
             fill: false,
         },
         Msg::In {
@@ -603,4 +604,48 @@ fn a_name_changed_in_the_lobby_reaches_every_browser() {
         room.step(false);
     }
     assert!(names(&room, 0).contains(&"avery long name".to_string()));
+}
+
+#[test]
+fn three_browsers_on_the_arena_choose_any_hero_and_play_one_match() {
+    // round 8: the host's mode switch goes Normal, All Random All Mid, the
+    // arena; each browser picks its own hero; the match is on the arena's
+    // map in every browser and agrees tick for tick
+    let mut room = Room::new(3, 4, 5, 81);
+    for _ in 0..30 {
+        room.step(false);
+    }
+    room.games[0].act("online.mode", "").unwrap();
+    room.games[0].act("online.mode", "").unwrap();
+    for _ in 0..30 {
+        room.step(false);
+    }
+    assert!(
+        room.games.iter().all(|g| g.online.arena && !g.online.aram),
+        "every browser sees the arena"
+    );
+    pick_and_start(&mut room);
+    for _ in 0..(60 * 30) {
+        room.step(true);
+    }
+    for (k, g) in room.games.iter().enumerate() {
+        let w = &g.m.as_ref().expect("in the match").world;
+        assert!(w.arena && g.on_arena, "browser {k} plays on the arena");
+        assert_eq!(g.rules.map.size, 8192, "the arena's map is in place");
+        let def = w
+            .get(w.players[g.online.my_seat.unwrap()].hero)
+            .map(|u| u.def as usize);
+        assert_eq!(
+            def,
+            Some(g.rules.heroes[k]),
+            "browser {k} plays the hero it chose"
+        );
+        assert!(w.tickets[0] > 0 && w.tickets[0] <= 500);
+    }
+    let (compared, agree) = room.checksums_agree();
+    assert!(compared >= 4, "checksums were compared: {compared}");
+    assert!(
+        agree && !room.games.iter().any(|g| g.online.desync),
+        "one match in every browser"
+    );
 }

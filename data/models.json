@@ -65,6 +65,11 @@
    33,
    64
   ],
+  "c2f3a6e": [
+   47,
+   58,
+   110
+  ],
   "c2f6f52": [
    47,
    111,
@@ -184,6 +189,11 @@
    90,
    70,
    54
+  ],
+  "c5d4a6e": [
+   93,
+   74,
+   110
   ],
   "c5d6270": [
    93,
@@ -315,6 +325,11 @@
    191,
    98
   ],
+  "c7cc66a": [
+   124,
+   198,
+   106
+  ],
   "c7f7870": [
    127,
    120,
@@ -360,6 +375,11 @@
    106,
    142
   ],
+  "c8a6f9e": [
+   138,
+   111,
+   158
+  ],
   "c8a93ae": [
    138,
    147,
@@ -384,6 +404,11 @@
    143,
    135,
    124
+  ],
+  "c8fae55": [
+   143,
+   174,
+   85
   ],
   "c8fc9f2": [
    143,
@@ -475,6 +500,11 @@
    174,
    166
   ],
+  "cb79bc4": [
+   183,
+   155,
+   196
+  ],
   "cb7a4f2": [
    183,
    164,
@@ -549,6 +579,11 @@
    201,
    210,
    222
+  ],
+  "cc9e8a0": [
+   201,
+   232,
+   160
   ],
   "cd2463c": [
    210,
@@ -710,6 +745,11 @@
    246,
    255
   ],
+  "cf3e2c0": [
+   243,
+   226,
+   192
+  ],
   "cf4efe6": [
    244,
    239,
@@ -765,6 +805,11 @@
    176,
    46
   ],
+  "cffb347": [
+   255,
+   179,
+   71
+  ],
   "cffb6c8": [
    255,
    182,
@@ -799,6 +844,11 @@
    255,
    242,
    122
+  ],
+  "cfff2a8": [
+   255,
+   242,
+   168
   ],
   "cfff6dc": [
    255,
@@ -950,10 +1000,20 @@
    30,
    40
   ],
+  "fx_dusk": [
+   150,
+   110,
+   205
+  ],
   "fx_earth": [
    127,
    227,
    194
+  ],
+  "fx_ember": [
+   255,
+   179,
+   71
   ],
   "fx_fire": [
    255,
@@ -994,6 +1054,11 @@
    60,
    40,
    80
+  ],
+  "fx_star": [
+   255,
+   236,
+   150
   ],
   "fx_steel": [
    220,
@@ -1258,6 +1323,11 @@
     190,
     60
    ],
+   "td9812b4f3a9e": [
+    217,
+    129,
+    43
+   ],
    "team": [
     230,
     160,
@@ -1280,6 +1350,11 @@
     130,
     255
    ],
+   "td9812b4f3a9e": [
+    79,
+    58,
+    158
+   ],
    "team": [
     140,
     110,
@@ -1301,6 +1376,11 @@
     230,
     210,
     120
+   ],
+   "td9812b4f3a9e": [
+    217,
+    129,
+    43
    ],
    "team": [
     150,
@@ -38068,6 +38148,7008 @@
    },
    "_note": "round 2: from journal/mockups (tools/modelport.py)",
    "hover": 14
+  },
+  "hero_skipjack": {
+   "height": 312,
+   "parts": [
+    {
+     "mesh": "sphere",
+     "at": [
+      -4,
+      48,
+      41
+     ],
+     "size": [
+      52,
+      44,
+      72
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      -20,
+      90,
+      0
+     ],
+     "joint": "leg_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      20,
+      26,
+      49
+     ],
+     "size": [
+      28,
+      16,
+      72
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      54,
+      24,
+      58
+     ],
+     "size": [
+      12,
+      12,
+      12
+     ],
+     "color": "cc9e8a0",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      54,
+      24,
+      49
+     ],
+     "size": [
+      12,
+      12,
+      12
+     ],
+     "color": "cc9e8a0",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      54,
+      24,
+      40
+     ],
+     "size": [
+      12,
+      12,
+      12
+     ],
+     "color": "cc9e8a0",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -4,
+      48,
+      -41
+     ],
+     "size": [
+      52,
+      44,
+      72
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      -20,
+      90,
+      0
+     ],
+     "joint": "leg_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      20,
+      26,
+      -49
+     ],
+     "size": [
+      28,
+      16,
+      72
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      54,
+      24,
+      -40
+     ],
+     "size": [
+      12,
+      12,
+      12
+     ],
+     "color": "cc9e8a0",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      54,
+      24,
+      -49
+     ],
+     "size": [
+      12,
+      12,
+      12
+     ],
+     "color": "cc9e8a0",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      54,
+      24,
+      -58
+     ],
+     "size": [
+      12,
+      12,
+      12
+     ],
+     "color": "cc9e8a0",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      0,
+      110,
+      0
+     ],
+     "size": [
+      136,
+      120,
+      120
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      0,
+      90,
+      0
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -14,
+      226,
+      0
+     ],
+     "size": [
+      144,
+      144,
+      144
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -12,
+      216,
+      0
+     ],
+     "size": [
+      161,
+      118,
+      141
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      5,
+      197,
+      0
+     ],
+     "size": [
+      141,
+      55,
+      115
+     ],
+     "color": "cc9e8a0",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -2,
+      263,
+      40
+     ],
+     "size": [
+      52,
+      52,
+      52
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      12,
+      271,
+      42
+     ],
+     "size": [
+      39,
+      39,
+      39
+     ],
+     "color": "cffffff",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      30,
+      276,
+      43
+     ],
+     "size": [
+      19,
+      24,
+      9
+     ],
+     "color": "c241a30",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      31,
+      282,
+      40
+     ],
+     "size": [
+      7,
+      7,
+      7
+     ],
+     "color": "cffffff",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -2,
+      263,
+      -40
+     ],
+     "size": [
+      52,
+      52,
+      52
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      12,
+      271,
+      -42
+     ],
+     "size": [
+      39,
+      39,
+      39
+     ],
+     "color": "cffffff",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      30,
+      276,
+      -43
+     ],
+     "size": [
+      19,
+      24,
+      9
+     ],
+     "color": "c241a30",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      31,
+      282,
+      -40
+     ],
+     "size": [
+      7,
+      7,
+      7
+     ],
+     "color": "cffffff",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      38,
+      208,
+      41
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -158
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      42,
+      198,
+      35
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -143
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      45,
+      191,
+      27
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -128
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      47,
+      185,
+      17
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -113
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      49,
+      182,
+      6
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -98
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      49,
+      182,
+      -6
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -83
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      47,
+      185,
+      -17
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -68
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      45,
+      191,
+      -27
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -53
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      42,
+      198,
+      -35
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -38
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      38,
+      208,
+      -41
+     ],
+     "size": [
+      4,
+      12,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -23
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      36,
+      213,
+      43
+     ],
+     "size": [
+      4,
+      4,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -165
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      36,
+      213,
+      -43
+     ],
+     "size": [
+      4,
+      4,
+      4
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -22,
+      90,
+      -165
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -42,
+      233,
+      0
+     ],
+     "size": [
+      173,
+      112,
+      130
+     ],
+     "color": "c2f3a6e",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -30,
+      198,
+      0
+     ],
+     "size": [
+      176,
+      17,
+      72
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -36,
+      258,
+      36
+     ],
+     "size": [
+      10,
+      14,
+      6
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -44,
+      260,
+      -25
+     ],
+     "size": [
+      10,
+      14,
+      6
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -67,
+      264,
+      0
+     ],
+     "size": [
+      10,
+      14,
+      6
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -86,
+      237,
+      14
+     ],
+     "size": [
+      10,
+      14,
+      6
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -67,
+      233,
+      -43
+     ],
+     "size": [
+      10,
+      14,
+      6
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "cone",
+     "at": [
+      -84,
+      244,
+      0
+     ],
+     "size": [
+      60,
+      58,
+      60
+     ],
+     "color": "c2f3a6e",
+     "rot": [
+      -53,
+      -90,
+      180
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -125,
+      178,
+      0
+     ],
+     "size": [
+      17,
+      23,
+      9
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      28,
+      135,
+      76
+     ],
+     "size": [
+      28,
+      50,
+      28
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      74,
+      -87,
+      -167
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      52,
+      128,
+      81
+     ],
+     "size": [
+      28,
+      28,
+      28
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      74,
+      -87,
+      -167
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      4,
+      141,
+      72
+     ],
+     "size": [
+      28,
+      28,
+      28
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      74,
+      -87,
+      -167
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      62,
+      127,
+      82
+     ],
+     "size": [
+      34,
+      34,
+      34
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      -70,
+      90,
+      -10
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      3,
+      189,
+      69
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      42
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      19,
+      203,
+      71
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      57
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      39,
+      212,
+      74
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      72
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      60,
+      216,
+      77
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      87
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      82,
+      214,
+      81
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      102
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      102,
+      207,
+      84
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      117
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      120,
+      194,
+      88
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      132
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      134,
+      178,
+      91
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      147
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      143,
+      158,
+      94
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      162
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      146,
+      136,
+      96
+     ],
+     "size": [
+      9,
+      23,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      177
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -4,
+      180,
+      68
+     ],
+     "size": [
+      9,
+      9,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      35
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      146,
+      125,
+      97
+     ],
+     "size": [
+      9,
+      9,
+      9
+     ],
+     "color": "c8fae55",
+     "rot": [
+      3,
+      171,
+      35
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      55,
+      110,
+      82
+     ],
+     "size": [
+      2,
+      160,
+      2
+     ],
+     "color": "cffffff",
+     "rot": [
+      -70,
+      90,
+      170
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      129,
+      83,
+      96
+     ],
+     "size": [
+      2,
+      2,
+      2
+     ],
+     "color": "cffffff",
+     "rot": [
+      -70,
+      90,
+      170
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -19,
+      137,
+      69
+     ],
+     "size": [
+      2,
+      2,
+      2
+     ],
+     "color": "cffffff",
+     "rot": [
+      -70,
+      90,
+      170
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      124,
+      120,
+      85
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      4
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      124,
+      122,
+      86
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      20
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      125,
+      124,
+      87
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      36
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      125,
+      125,
+      88
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      51
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      125,
+      126,
+      90
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      67
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      125,
+      127,
+      92
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      82
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      124,
+      127,
+      94
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      98
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      124,
+      126,
+      96
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      114
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      123,
+      125,
+      98
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      129
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      122,
+      124,
+      100
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      145
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      121,
+      122,
+      100
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      161
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      121,
+      120,
+      101
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      -20,
+      -101,
+      -176
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      120,
+      118,
+      100
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -168
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      119,
+      116,
+      100
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -152
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      119,
+      114,
+      98
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -137
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      119,
+      113,
+      96
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -121
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      119,
+      112,
+      94
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -105
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      119,
+      112,
+      92
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -90
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      120,
+      112,
+      90
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -74
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      120,
+      113,
+      88
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -58
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      121,
+      114,
+      87
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -43
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      122,
+      116,
+      86
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -27
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      123,
+      118,
+      85
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -11
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      68,
+      140,
+      75
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      4
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      69,
+      142,
+      75
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      20
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      69,
+      144,
+      76
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      36
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      69,
+      146,
+      78
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      51
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      69,
+      147,
+      80
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      67
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      69,
+      147,
+      82
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      82
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      69,
+      147,
+      84
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      98
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      68,
+      147,
+      86
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      114
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      67,
+      146,
+      88
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      129
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      67,
+      144,
+      89
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      145
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      66,
+      142,
+      90
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      161
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      65,
+      140,
+      90
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      -20,
+      -101,
+      -176
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      64,
+      138,
+      90
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -168
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      64,
+      136,
+      89
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -152
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      63,
+      135,
+      88
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -137
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      63,
+      133,
+      86
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -121
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      63,
+      133,
+      84
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -105
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      64,
+      132,
+      82
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -90
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      64,
+      133,
+      80
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -74
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      65,
+      133,
+      78
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -58
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      66,
+      135,
+      76
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -43
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      66,
+      136,
+      75
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -27
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      67,
+      138,
+      75
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -11
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      13,
+      161,
+      64
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      4
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      13,
+      163,
+      65
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      20
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      14,
+      164,
+      66
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      36
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      14,
+      166,
+      67
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      51
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      14,
+      167,
+      69
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      67
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      14,
+      167,
+      71
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      82
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      13,
+      167,
+      74
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      98
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      13,
+      167,
+      76
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      114
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      12,
+      166,
+      77
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      129
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      11,
+      164,
+      79
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      145
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      10,
+      162,
+      80
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      161
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      10,
+      160,
+      80
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      -20,
+      -101,
+      -176
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      9,
+      158,
+      80
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -168
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      8,
+      156,
+      79
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -152
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      8,
+      155,
+      77
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -137
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      8,
+      154,
+      76
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -121
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      8,
+      153,
+      74
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -105
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      8,
+      152,
+      71
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -90
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      9,
+      153,
+      69
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -74
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      9,
+      154,
+      67
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -58
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      10,
+      155,
+      66
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -43
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      11,
+      157,
+      65
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -27
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      12,
+      158,
+      64
+     ],
+     "size": [
+      5,
+      2,
+      5
+     ],
+     "color": "td9812b4f3a9e",
+     "rot": [
+      20,
+      79,
+      -11
+     ],
+     "joint": "arm_l",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      24,
+      132,
+      -85
+     ],
+     "size": [
+      28,
+      50,
+      28
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      64,
+      -95,
+      145
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      44,
+      123,
+      -97
+     ],
+     "size": [
+      28,
+      28,
+      28
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      64,
+      -95,
+      145
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      4,
+      141,
+      -72
+     ],
+     "size": [
+      28,
+      28,
+      28
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      64,
+      -95,
+      145
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      52,
+      120,
+      -102
+     ],
+     "size": [
+      34,
+      34,
+      34
+     ],
+     "color": "c7cc66a",
+     "rot": [
+      -60,
+      90,
+      30
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      77,
+      164,
+      -102
+     ],
+     "size": [
+      5,
+      72,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      26,
+      124,
+      16
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      95,
+      195,
+      -102
+     ],
+     "size": [
+      5,
+      5,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      26,
+      124,
+      16
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      59,
+      133,
+      -102
+     ],
+     "size": [
+      5,
+      5,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      26,
+      124,
+      16
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      99,
+      202,
+      -102
+     ],
+     "size": [
+      16,
+      20,
+      12
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      26,
+      124,
+      16
+     ],
+     "joint": "arm_r",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      40,
+      108,
+      0
+     ],
+     "size": [
+      100,
+      88,
+      56
+     ],
+     "color": "cc9e8a0",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cone",
+     "at": [
+      -16,
+      122,
+      0
+     ],
+     "size": [
+      144,
+      84,
+      144
+     ],
+     "color": "c2f3a6e",
+     "rot": [
+      -8,
+      90,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      12,
+      168,
+      -55
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      82,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      26,
+      168,
+      -51
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      67,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      39,
+      168,
+      -43
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      51,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      50,
+      168,
+      -32
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      35,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      57,
+      168,
+      -19
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      20,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      60,
+      168,
+      -4
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      4,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      59,
+      168,
+      11
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -12,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      54,
+      168,
+      26
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -27,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      45,
+      168,
+      38
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -43,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      33,
+      168,
+      48
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -59,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      19,
+      168,
+      54
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -74,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      4,
+      168,
+      56
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      -90,
+      90,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -11,
+      168,
+      54
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -106,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -25,
+      168,
+      48
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -121,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -37,
+      168,
+      38
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -137,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -46,
+      168,
+      26
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -153,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -51,
+      168,
+      11
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -168,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -52,
+      168,
+      -4
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      176,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -49,
+      168,
+      -19
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      160,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -42,
+      168,
+      -32
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      145,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -31,
+      168,
+      -43
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      129,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -18,
+      168,
+      -51
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      113,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -4,
+      168,
+      -55
+     ],
+     "size": [
+      18,
+      16,
+      18
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      98,
+      0
+     ]
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -72,
+      116,
+      36
+     ],
+     "size": [
+      10,
+      16,
+      8
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -72,
+      100,
+      -28
+     ],
+     "size": [
+      10,
+      16,
+      8
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -72,
+      140,
+      -4
+     ],
+     "size": [
+      10,
+      16,
+      8
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -72,
+      88,
+      12
+     ],
+     "size": [
+      10,
+      16,
+      8
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -72,
+      136,
+      -40
+     ],
+     "size": [
+      10,
+      16,
+      8
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -60,
+      136,
+      -28
+     ],
+     "size": [
+      28,
+      72,
+      28
+     ],
+     "color": "c9a6a43",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -60,
+      181,
+      -38
+     ],
+     "size": [
+      5,
+      28,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -60,
+      194,
+      -43
+     ],
+     "size": [
+      5,
+      5,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -60,
+      168,
+      -33
+     ],
+     "size": [
+      5,
+      5,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -60,
+      202,
+      -46
+     ],
+     "size": [
+      14,
+      20,
+      8
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      0,
+      90,
+      -20
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -60,
+      178,
+      -47
+     ],
+     "size": [
+      5,
+      28,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -60,
+      191,
+      -52
+     ],
+     "size": [
+      5,
+      5,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -60,
+      165,
+      -43
+     ],
+     "size": [
+      5,
+      5,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -60,
+      199,
+      -55
+     ],
+     "size": [
+      14,
+      20,
+      8
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      0,
+      90,
+      -20
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -60,
+      176,
+      -53
+     ],
+     "size": [
+      5,
+      28,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -60,
+      189,
+      -58
+     ],
+     "size": [
+      5,
+      5,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -60,
+      163,
+      -48
+     ],
+     "size": [
+      5,
+      5,
+      5
+     ],
+     "color": "c6e4a2f",
+     "rot": [
+      0,
+      90,
+      -20
+     ]
+    },
+    {
+     "mesh": "octa",
+     "at": [
+      -60,
+      196,
+      -61
+     ],
+     "size": [
+      14,
+      20,
+      8
+     ],
+     "color": "cfff2a8",
+     "rot": [
+      0,
+      90,
+      -20
+     ],
+     "style": 4,
+     "plain": true
+    }
+   ],
+   "pivots": {
+    "arm_l": [
+     4,
+     141,
+     72
+    ],
+    "arm_r": [
+     4,
+     141,
+     -72
+    ],
+    "head": [
+     0,
+     159,
+     0
+    ],
+    "leg_l": [
+     0,
+     56,
+     29
+    ],
+    "leg_r": [
+     0,
+     56,
+     -29
+    ]
+   },
+   "_note": "round 2: from journal/mockups (tools/modelport.py)"
+  },
+  "hero_tallow": {
+   "height": 351,
+   "parts": [
+    {
+     "mesh": "cyl",
+     "at": [
+      0,
+      44,
+      27
+     ],
+     "size": [
+      34,
+      40,
+      34
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      0,
+      90,
+      180
+     ],
+     "joint": "leg_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      0,
+      24,
+      27
+     ],
+     "size": [
+      34,
+      34,
+      34
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      0,
+      90,
+      180
+     ],
+     "joint": "leg_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      0,
+      64,
+      27
+     ],
+     "size": [
+      34,
+      34,
+      34
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      0,
+      90,
+      180
+     ],
+     "joint": "leg_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      7,
+      14,
+      27
+     ],
+     "size": [
+      40,
+      28,
+      52
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      0,
+      44,
+      -27
+     ],
+     "size": [
+      34,
+      40,
+      34
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      0,
+      90,
+      180
+     ],
+     "joint": "leg_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      0,
+      24,
+      -27
+     ],
+     "size": [
+      34,
+      34,
+      34
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      0,
+      90,
+      180
+     ],
+     "joint": "leg_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      0,
+      64,
+      -27
+     ],
+     "size": [
+      34,
+      34,
+      34
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      0,
+      90,
+      180
+     ],
+     "joint": "leg_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      7,
+      14,
+      -27
+     ],
+     "size": [
+      40,
+      28,
+      52
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      0,
+      90,
+      0
+     ],
+     "joint": "leg_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      0,
+      125,
+      0
+     ],
+     "size": [
+      128,
+      136,
+      120
+     ],
+     "color": "cf3e2c0",
+     "rot": [
+      0,
+      90,
+      0
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -13,
+      244,
+      0
+     ],
+     "size": [
+      136,
+      136,
+      136
+     ],
+     "color": "cf3e2c0",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -13,
+      244,
+      0
+     ],
+     "size": [
+      139,
+      139,
+      139
+     ],
+     "color": "cf3e2c0",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      33,
+      256,
+      31
+     ],
+     "size": [
+      49,
+      57,
+      35
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      47,
+      269,
+      27
+     ],
+     "size": [
+      15,
+      15,
+      15
+     ],
+     "color": "cffb347",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -29,
+      323,
+      31
+     ],
+     "size": [
+      7,
+      61,
+      7
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      -37,
+      90,
+      22
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -46,
+      346,
+      42
+     ],
+     "size": [
+      7,
+      7,
+      7
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      -37,
+      90,
+      22
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -11,
+      300,
+      19
+     ],
+     "size": [
+      7,
+      7,
+      7
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      -37,
+      90,
+      22
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -21,
+      312,
+      36
+     ],
+     "size": [
+      28,
+      8,
+      5
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -37,
+      90,
+      -8
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -27,
+      321,
+      40
+     ],
+     "size": [
+      24,
+      8,
+      5
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -37,
+      90,
+      -8
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -33,
+      329,
+      45
+     ],
+     "size": [
+      20,
+      8,
+      5
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -37,
+      90,
+      -8
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -40,
+      338,
+      49
+     ],
+     "size": [
+      16,
+      8,
+      5
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -37,
+      90,
+      -8
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      33,
+      256,
+      -31
+     ],
+     "size": [
+      49,
+      57,
+      35
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      47,
+      269,
+      -27
+     ],
+     "size": [
+      15,
+      15,
+      15
+     ],
+     "color": "cffb347",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "joint": "head",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -29,
+      323,
+      -31
+     ],
+     "size": [
+      7,
+      61,
+      7
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      -37,
+      90,
+      -22
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -46,
+      346,
+      -42
+     ],
+     "size": [
+      7,
+      7,
+      7
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      -37,
+      90,
+      -22
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -11,
+      300,
+      -19
+     ],
+     "size": [
+      7,
+      7,
+      7
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      -37,
+      90,
+      -22
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -21,
+      312,
+      -36
+     ],
+     "size": [
+      28,
+      8,
+      5
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -37,
+      90,
+      8
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -27,
+      321,
+      -40
+     ],
+     "size": [
+      24,
+      8,
+      5
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -37,
+      90,
+      8
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -33,
+      329,
+      -45
+     ],
+     "size": [
+      20,
+      8,
+      5
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -37,
+      90,
+      8
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -40,
+      338,
+      -49
+     ],
+     "size": [
+      16,
+      8,
+      5
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -37,
+      90,
+      8
+     ],
+     "joint": "head"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      57,
+      235,
+      8
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -172
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      57,
+      233,
+      8
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -158
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      57,
+      231,
+      6
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -143
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      58,
+      230,
+      5
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -128
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      58,
+      229,
+      3
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -113
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      58,
+      228,
+      1
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -98
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      58,
+      228,
+      -1
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -83
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      58,
+      229,
+      -3
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -68
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      58,
+      230,
+      -5
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -53
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      57,
+      231,
+      -6
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -38
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      57,
+      233,
+      -8
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -23
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      57,
+      235,
+      -8
+     ],
+     "size": [
+      3,
+      2,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      -8
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      56,
+      236,
+      8
+     ],
+     "size": [
+      3,
+      3,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      180
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      56,
+      236,
+      -8
+     ],
+     "size": [
+      3,
+      3,
+      3
+     ],
+     "color": "c2b2140",
+     "rot": [
+      -12,
+      90,
+      180
+     ],
+     "joint": "head",
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      14,
+      139,
+      76
+     ],
+     "size": [
+      28,
+      50,
+      28
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      24,
+      -88,
+      -161
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      24,
+      117,
+      83
+     ],
+     "size": [
+      28,
+      28,
+      28
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      24,
+      -88,
+      -161
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      4,
+      161,
+      68
+     ],
+     "size": [
+      28,
+      28,
+      28
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      24,
+      -88,
+      -161
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      29,
+      109,
+      87
+     ],
+     "size": [
+      34,
+      34,
+      34
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      -20,
+      90,
+      -18
+     ],
+     "joint": "arm_l"
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      21,
+      144,
+      -76
+     ],
+     "size": [
+      28,
+      50,
+      28
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      44,
+      -92,
+      161
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      38,
+      127,
+      -83
+     ],
+     "size": [
+      28,
+      28,
+      28
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      44,
+      -92,
+      161
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      4,
+      161,
+      -68
+     ],
+     "size": [
+      28,
+      28,
+      28
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      44,
+      -92,
+      161
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      45,
+      121,
+      -87
+     ],
+     "size": [
+      34,
+      34,
+      34
+     ],
+     "color": "c5d4a6e",
+     "rot": [
+      -40,
+      90,
+      18
+     ],
+     "joint": "arm_r"
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      58,
+      128,
+      -92
+     ],
+     "size": [
+      28,
+      28,
+      28
+     ],
+     "color": "cffb347",
+     "rot": [
+      -40,
+      90,
+      18
+     ],
+     "joint": "arm_r",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      58,
+      128,
+      -92
+     ],
+     "size": [
+      16,
+      16,
+      16
+     ],
+     "color": "cffffff",
+     "rot": [
+      -40,
+      90,
+      18
+     ],
+     "joint": "arm_r",
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      11,
+      180,
+      -52
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      82,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      25,
+      180,
+      -48
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      67,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      37,
+      180,
+      -40
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      51,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      46,
+      180,
+      -30
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      35,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      53,
+      180,
+      -17
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      20,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      56,
+      180,
+      -4
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      4,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      55,
+      180,
+      11
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -12,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      50,
+      180,
+      24
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -27,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      42,
+      180,
+      35
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -43,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      31,
+      180,
+      44
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -59,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      18,
+      180,
+      50
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -74,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      4,
+      180,
+      52
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      -90,
+      90,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -10,
+      180,
+      50
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -106,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -23,
+      180,
+      44
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -121,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -34,
+      180,
+      35
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -137,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -42,
+      180,
+      24
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -153,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -47,
+      180,
+      11
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      -168,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -48,
+      180,
+      -4
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      176,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -45,
+      180,
+      -17
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      160,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -38,
+      180,
+      -30
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      145,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -29,
+      180,
+      -40
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      129,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -17,
+      180,
+      -48
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      113,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -3,
+      180,
+      -52
+     ],
+     "size": [
+      32,
+      15,
+      32
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      90,
+      98,
+      0
+     ]
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      8,
+      136,
+      -59
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      82,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      24,
+      136,
+      -55
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      67,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      38,
+      136,
+      -47
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      51,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      49,
+      136,
+      -35
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      35,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      57,
+      136,
+      -20
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      20,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      60,
+      136,
+      -4
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      4,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      59,
+      136,
+      12
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -12,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      53,
+      136,
+      28
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -27,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      44,
+      136,
+      41
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -43,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      31,
+      136,
+      51
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -59,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      16,
+      136,
+      58
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -74,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      0,
+      136,
+      60
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -90,
+      90,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -16,
+      136,
+      58
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -106,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -31,
+      136,
+      51
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -121,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -44,
+      136,
+      41
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -137,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -53,
+      136,
+      28
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -153,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -59,
+      136,
+      12
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -168,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -60,
+      136,
+      -4
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      176,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -57,
+      136,
+      -20
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      160,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -49,
+      136,
+      -35
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      145,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -38,
+      136,
+      -47
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      129,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -24,
+      136,
+      -55
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      113,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -8,
+      136,
+      -59
+     ],
+     "size": [
+      10,
+      17,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      98,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      7,
+      112,
+      -52
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      82,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      21,
+      112,
+      -48
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      67,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      33,
+      112,
+      -40
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      51,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      42,
+      112,
+      -30
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      35,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      49,
+      112,
+      -17
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      20,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      52,
+      112,
+      -4
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      4,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      51,
+      112,
+      11
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -12,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      46,
+      112,
+      24
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -27,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      38,
+      112,
+      35
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -43,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      27,
+      112,
+      44
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -59,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      14,
+      112,
+      50
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -74,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      0,
+      112,
+      52
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -90,
+      90,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -14,
+      112,
+      50
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -106,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -27,
+      112,
+      44
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -121,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -38,
+      112,
+      35
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -137,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -46,
+      112,
+      24
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -153,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -51,
+      112,
+      11
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -168,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -52,
+      112,
+      -4
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      176,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -49,
+      112,
+      -17
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      160,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -42,
+      112,
+      -30
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      145,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -33,
+      112,
+      -40
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      129,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -21,
+      112,
+      -48
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      113,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -7,
+      112,
+      -52
+     ],
+     "size": [
+      10,
+      15,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      98,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      6,
+      88,
+      -44
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      82,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      18,
+      88,
+      -40
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      67,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      28,
+      88,
+      -34
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      51,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      36,
+      88,
+      -25
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      35,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      41,
+      88,
+      -15
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      20,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      44,
+      88,
+      -3
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      4,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      43,
+      88,
+      9
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -12,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      39,
+      88,
+      20
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -27,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      32,
+      88,
+      30
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -43,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      23,
+      88,
+      38
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -59,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      12,
+      88,
+      42
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -74,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      0,
+      88,
+      44
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -90,
+      90,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -12,
+      88,
+      42
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -106,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -23,
+      88,
+      38
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -121,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -32,
+      88,
+      30
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -137,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -39,
+      88,
+      20
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -153,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -43,
+      88,
+      9
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      -168,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -44,
+      88,
+      -3
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      176,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -41,
+      88,
+      -15
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      160,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -36,
+      88,
+      -25
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      145,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -28,
+      88,
+      -34
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      129,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -18,
+      88,
+      -40
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      113,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "cyl",
+     "at": [
+      -6,
+      88,
+      -44
+     ],
+     "size": [
+      10,
+      13,
+      10
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      90,
+      98,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -56,
+      214,
+      114
+     ],
+     "size": [
+      240,
+      168,
+      12
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      -12,
+      90,
+      -28
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -53,
+      219,
+      118
+     ],
+     "size": [
+      197,
+      134,
+      14
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -12,
+      90,
+      -28
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -53,
+      229,
+      142
+     ],
+     "size": [
+      72,
+      72,
+      15
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -51,
+      229,
+      142
+     ],
+     "size": [
+      36,
+      36,
+      17
+     ],
+     "color": "cffb347",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -39,
+      132,
+      76
+     ],
+     "size": [
+      160,
+      112,
+      12
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      -12,
+      90,
+      22
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -35,
+      131,
+      78
+     ],
+     "size": [
+      131,
+      90,
+      14
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -12,
+      90,
+      22
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -31,
+      125,
+      88
+     ],
+     "size": [
+      48,
+      48,
+      15
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -29,
+      126,
+      88
+     ],
+     "size": [
+      24,
+      24,
+      17
+     ],
+     "color": "cffb347",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -56,
+      214,
+      -114
+     ],
+     "size": [
+      240,
+      168,
+      12
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      -12,
+      90,
+      28
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -53,
+      219,
+      -118
+     ],
+     "size": [
+      197,
+      134,
+      14
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -12,
+      90,
+      28
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -53,
+      229,
+      -142
+     ],
+     "size": [
+      72,
+      72,
+      15
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -51,
+      229,
+      -142
+     ],
+     "size": [
+      36,
+      36,
+      17
+     ],
+     "color": "cffb347",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "style": 4,
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -39,
+      132,
+      -76
+     ],
+     "size": [
+      160,
+      112,
+      12
+     ],
+     "color": "c8a6f9e",
+     "rot": [
+      -12,
+      90,
+      -22
+     ]
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -35,
+      131,
+      -78
+     ],
+     "size": [
+      131,
+      90,
+      14
+     ],
+     "color": "cb79bc4",
+     "rot": [
+      -12,
+      90,
+      -22
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -31,
+      125,
+      -88
+     ],
+     "size": [
+      48,
+      48,
+      15
+     ],
+     "color": "tf2b33d7a5cd6",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "plain": true
+    },
+    {
+     "mesh": "sphere",
+     "at": [
+      -29,
+      126,
+      -88
+     ],
+     "size": [
+      24,
+      24,
+      17
+     ],
+     "color": "cffb347",
+     "rot": [
+      -12,
+      90,
+      0
+     ],
+     "style": 4,
+     "plain": true
+    }
+   ],
+   "pivots": {
+    "arm_l": [
+     4,
+     161,
+     68
+    ],
+    "arm_r": [
+     4,
+     161,
+     -68
+    ],
+    "head": [
+     0,
+     181,
+     0
+    ],
+    "leg_l": [
+     0,
+     64,
+     27
+    ],
+    "leg_r": [
+     0,
+     64,
+     -27
+    ]
+   },
+   "_note": "round 2: from journal/mockups (tools/modelport.py)"
   },
   "hero_tectus": {
    "height": 340,

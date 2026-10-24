@@ -526,6 +526,9 @@ pub struct Camp {
     pub groups: Vec<Vec<String>>,
     #[serde(default)]
     pub ancient: bool,
+    /// The arena's buff camps (round 8): the buff its last kill gives.
+    #[serde(default)]
+    pub buff: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -571,6 +574,10 @@ pub struct MapDef {
     pub shops: Vec<(String, P)>,
     /// Percent of open forest cells left without a tree.
     pub gaps: i32,
+    /// The arena (round 8): a second, round map for the arena mode, in the
+    /// same form. The game swaps it in for an arena match.
+    #[serde(default)]
+    pub arena: Option<Box<MapDef>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -615,6 +622,8 @@ pub struct RulesFile {
     pub damage: DamageTable,
     #[serde(default)]
     pub aram: Option<AramDef>,
+    #[serde(default)]
+    pub arena: Option<ArenaDef>,
     pub heroes: Vec<HeroPick>,
     /// Heroes built and shown in the design journal, not yet chosen by
     /// anyone (round 7): the cast stage can show them, no pick screen,
@@ -658,6 +667,46 @@ pub struct AramDef {
     pub gold_pct: i32,
 }
 
+/// The arena (round 8, after SMITE 2's Arena): a round map, no towers,
+/// and each side's tickets. `data/rules.json`'s `arena`; `crate::arena`
+/// holds the rules that read it.
+#[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ArenaDef {
+    #[serde(default, rename = "_note")]
+    pub note: String,
+    /// Tickets each side starts with; a side with none left loses.
+    pub tickets: i32,
+    /// Tickets a side loses for a hero's death, for a creep a hero kills,
+    /// for a creep that walks into its portal, and for a brute that does.
+    pub hero_cost: i32,
+    pub creep_cost: i32,
+    pub portal_cost: i32,
+    pub brute_cost: i32,
+    /// At or below this many tickets, creeps killed no longer cost any.
+    pub last_tickets: i32,
+    /// How near a side's Sphere an enemy creep enters its portal.
+    pub portal_radius: i32,
+    /// Seconds between waves; each wave leaves by one lane, turn about.
+    pub wave_every: i32,
+    /// Melee, ranged and siege creeps in each wave.
+    pub wave: [i32; 3],
+    /// Seconds between brutes, and each side's brute.
+    pub brute_every: i32,
+    pub brutes: [String; 2],
+    /// Seconds a cleared camp stays empty, and a buff lasts.
+    pub camp_back: i32,
+    pub buff_secs: i32,
+    /// What each buff gives: its name, the effect, and how much.
+    pub buffs: Vec<(String, String, i32)>,
+    pub starting_gold: i32,
+    pub start_level: i32,
+    pub xp_pct: i32,
+    pub gold_pct: i32,
+    /// Percent of the usual time a dead hero waits.
+    pub respawn_pct: i32,
+}
+
 /// Everything fixed for a match, with names resolved to indices.
 #[derive(Debug, Clone)]
 pub struct Rules {
@@ -685,6 +734,7 @@ pub struct Rules {
     pub ai: Option<crate::ai::AiDef>,
     /// The All Random All Mid mode's numbers.
     pub aram: Option<AramDef>,
+    pub arena: Option<ArenaDef>,
 }
 
 pub type Fail = String;
@@ -814,6 +864,7 @@ impl Rules {
             item_parts,
             ai: None,
             aram: r.aram,
+            arena: r.arena,
         })
     }
 

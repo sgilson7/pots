@@ -56,3 +56,26 @@ impl Fixture {
         World::new(&self.ctx(), self.trees.clone(), seed)
     }
 }
+
+/// The arena's map in the rules' place, as the game swaps it in for an
+/// arena match (round 8).
+pub fn arena_fixture() -> Fixture {
+    let mut rules = rules();
+    let arena = rules.map.arena.take().expect("map.json has an arena");
+    rules.map = *arena;
+    let (terrain, trees) = world::setup(&rules);
+    Fixture {
+        rules,
+        terrain,
+        trees,
+    }
+}
+
+impl Fixture {
+    /// An arena match with nobody seated yet.
+    pub fn arena_world(&self, seed: u64) -> World {
+        let mut w = World::new(&self.ctx(), self.trees.clone(), seed);
+        pots_core::arena::start(&mut w, &self.ctx());
+        w
+    }
+}

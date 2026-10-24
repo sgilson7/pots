@@ -3021,3 +3021,519 @@ Fetch notes:
 - The playdota "Most Concise Kaldr Guide" capture (2012-03-14) held another hero's guide text and was not used.
 - The 2023 captures of several changelog pages (6.70, 6.72, 6.72b, 6.72c, 6.73b, 6.73c, 6.74b, 6.74c) are empty shells. The 2011–2012 captures were used instead.
 - No 2011–2012 DotA-Blog guide for Kaldr was found in the Wayback index.
+
+## 9. Round 8: two added heroes, Vengeful Spirit (Shendelzare) and Priestess of the Moon (Mirana)
+
+Compiled 24 October 2026 by a research agent, with the method of section 8:
+- the playdota.com hero pages through the Wayback Machine, fetched as raw captures and diffed against each other;
+- IceFrog's changelogs 6.71 to 6.73c on playdota (raw 2011–2012 captures);
+- the Dota 2 Wiki (Gamepedia) 2013 and 2015 snapshots and its hero changelog pages for the DotA-era entries;
+- 2009–2011 player guides on playdota.
+
+Searches of dotafire, GameFAQs, TeamLiquid and Hive turned up nothing DotA-era for these two heroes that added to the above, so none is cited. fandom.com and Liquipedia were not fetched directly; the Gamepedia copies were reached through the Wayback Machine. Every number carries a source key; the keys are at the end of this section. A value marked "Dota 2" comes from the Dota 2 port and is not a DotA source. It is given only so the reader can see what is not DotA.
+
+### 9.0 Version findings
+
+1. **Both heroes are old (6.38 for Mirana, 0.60 for Vengeful Spirit), and neither has a balance change in 6.72–6.73c** [D2W-POMCL], [D2W-VSCL]. The only entries in 6.72–6.73c:
+   - 6.72, Vengeful Spirit: "Aghanim's Nether Swap can now target creeps" [CL-6.72]. The game skips Aghanim's Scepter, so nothing changes.
+   - 6.73, Mirana: "Fixed Elune's Arrow damaging but not stunning invisible units" [CL-6.73]. So **6.72 and 6.73 differ for the arrow**: in 6.72–6.72f an invisible unit hit by the arrow takes the damage and is not stunned; from 6.73 it is stunned too. The playdota note "Invisible units will not be stunned, but will still take damage" is in the June and December 2011 captures and gone from the January 2012 (6.73) capture [PD-POM-6.72], [PD-POM-6.73].
+   - 6.72b, 6.72c, 6.72d, 6.72e, 6.72f, 6.73b and 6.73c have no entry for either hero [CL-6.72b], [CL-6.72c], [CL-6.72d], [CL-6.72e], [CL-6.72f], [CL-6.73b], [CL-6.73c].
+   - 6.71, the version just before: "Removed the small attack damage reduction aspect of Wave of Terror" [CL-6.71]. In 6.72/6.73 Wave of Terror reduces armor only.
+2. **The playdota ability tables are identical in every capture from June 2011 to April 2012** for Vengeful Spirit (diffed: 2011-06-13, 2011-12-11, 2012-01-11, 2012-04-23) [PD-VS-6.72]. For Mirana they match from June to December 2011 [PD-POM-6.72]. After that the only differences are the 6.73 arrow note (January 2012) and Moonlight Shadow's cooldown, 180/160/140 → 160/140/120 (April 2012) [PD-POM-6.73], [PD-POM-6.74]. That cooldown change is 6.74's: "Reduced Moonlight Shadow cooldown from 180/160/140 to 160/140/120" [D2W-POMCL].
+3. **The armor shown in the stat block changed between the June and December 2011 captures, with no changelog entry.** Vengeful Spirit went from 3.1 to 3.78 and Mirana from 1.9 to 1.8 [PD-VS-6.72], [PD-POM-6.72].
+   - The later values are exactly AGI × 0.14 plus the usual base: 27 × 0.14 = 3.78 with base 0, and 20 × 0.14 − 1 = 1.8 with base −1. The Dota 2 Wiki's 2013 level-1 armor agrees: 3.78 and 1.8 [D2W13-VS], [D2W13-POM].
+   - This note uses 3.78 and 1.8, and treats the older values as a site correction. That is an inference: no source states it.
+4. **Vengeful Spirit in 6.72 has no passive on death.** Her aura is called **Command Aura** in DotA [PD-VS-6.72]. The death effect, which puts a negative aura on her killer, was added in 6.81 [D2W-VSCL]. Dota 2's Vengeance illusions on death came later still: 6.86 with Aghanim's Scepter, then 7.07 for the aura itself [D2W-VSCL].
+5. **Vengeful Spirit cannot buy Blink Dagger in 6.72/6.73.** 6.79: "Can now buy Blink Dagger" [D2W-VSCL]; Dota 2 Wiki 2013 trivia: "Blink Dagger cannot be bought on Vengeful Spirit" [D2W13-VS]. The shop rule matters if the game has Blink Dagger.
+6. **Mirana's Leap has no charges in 6.72/6.73.** Charges are a much later Dota 2 change. They appear nowhere in the DotA-era changelog, and every 6.72 source gives one cooldown of 30/26/22/18 [PD-POM-6.72], [D2W-POMCL].
+7. **The DotA and Dota 2 names differ.** Starfall and Elune's Arrow are Dota 2's Starstorm and Sacred Arrow. "Priestess of the Moon" became "Princess of the Moon" in Dota 2, for legal reasons [D2W13-POM]. Command Aura became Vengeance Aura [D2W-VSCL].
+8. **Pin used:** 6.72–6.73c. The two heroes are the same throughout, except for the arrow on invisible units. Section 8 used the latest behaviour in the range, so this note proposes the post-6.73 rule: the arrow stuns invisible units too. That is a person's decision.
+
+### 9.1 Vengeful Spirit (Shendelzare Silkwood), Sentinel, Agility
+
+| Stat | 6.72/6.73 | Notes |
+|---|---|---|
+| Primary | AGI | [PD-VS-6.72] |
+| STR | 16 + 2.3 | 6.78 raised it to 18 + 2.6; the Dota 2 Wiki 2013 page shows 18 + 2.6 [D2W-VSCL], [D2W13-VS] |
+| AGI | 27 + 2.35 | base 27 since 6.61; gain 2.8 from 6.75 [D2W-VSCL] |
+| INT | 15 + 1.75 | 6.87c cut it to 13 + 1.5 [D2W-VSCL] |
+| Damage (level 1) | 39–53 | raw base 12–26 (5.77: "base attack damage from 10-24 to 12-26") plus 27 AGI [PD-VS-6.72], [D2W-VSCL] |
+| Armor (level 1) | 3.78 | base 0 + 27 × 0.14; see 9.0 item 3 [PD-VS-6.72], [D2W13-VS] |
+| HP / mana (level 1) | 454 / 195 | 150 + 16 × 19; 15 × 13. Computed by hand; the Dota 2 Wiki's 492 HP is for 18 STR (after 6.78) [D2W13-VS] |
+| Move speed | 295 | 300 from 6.85 [PD-VS-6.72], [D2W-VSCL] |
+| Attack range | 400 | [PD-VS-6.72] |
+| Missile speed | 1500 | [PD-VS-6.72] |
+| Base attack time | 1.7 | since 6.60 [PD-VS-6.72], [D2W-VSCL] |
+| Attack point / backswing | 0.33 / 0.64 | since 6.00 [PD-VS-6.72], [D2W-VSCL] |
+| Cast point / backswing | 0.3 / 0.51 | [PD-VS-6.72] |
+| Vision day / night | 1800 / 800 | [PD-VS-6.72] |
+| Turn rate | 0.6 | Dota 2 Wiki 2013 [D2W13-VS]; UNVERIFIED for DotA |
+| Collision, acquisition range | — | UNVERIFIED (no source) |
+
+Hotkeys (playdota): Magic Missile C, Wave of Terror E, Command Aura D, Nether Swap W [PD-VS-6.72].
+
+**Magic Missile** (unit target, C). *"A magic missile is thrown at an enemy unit, causing damage. Stuns for 1.75 seconds."*
+
+| Level | Mana | CD | Range | Damage (magical) | Stun |
+|---|---|---|---|---|---|
+| 1 | 110 | 10 | 500 | 100 | 1.45 s |
+| 2 | 120 | 10 | 500 | 175 | 1.55 s |
+| 3 | 130 | 10 | 500 | 250 | 1.65 s |
+| 4 | 140 | 10 | 500 | 325 | 1.75 s |
+
+All [PD-VS-6.72]. Mana 110–140 since 6.68 (95/110/125/140 before); stun 1.45–1.75 since 6.69 (1.75 on every level before) [D2W-VSCL], [G-SSD]. The tooltip still says "Stuns for 1.75 seconds" on every level [PD-VS-6.72].
+
+Rules:
+- Targets enemy units: heroes, creeps and neutrals [PD-VS-6.72].
+- Damage type magical [PD-VS-6.72]. A 6.71c guide: "The stun increases by 0.1 second with each level ... The casting range ... is really small for a ranged stun, but is still higher than our Attack Range" [G-SSD].
+- Missile speed: UNVERIFIED for DotA. Dota 2: "Projectile travels at a speed of 1250" and it can be disjointed [D2W15-VS].
+- Linken's Sphere and magic immunity: UNVERIFIED (no 6.72 source says). In WC3 a unit-target stun of this kind does not hit magic-immune units, and the Dota 2 port has a level-25 talent "Magic Missile pierces spell immunity" [D2W-VSCL], which implies the base spell does not. Treat "blocked by magic immunity" as the likely rule, unsourced for DotA.
+- Later changes: cooldown 13/12/11/10 (6.83b), stun 1.2–1.8 (6.87), cast range 650 in later Dota 2 [D2W-VSCL].
+
+**Wave of Terror** (point, E). *"Shendelzare lets loose a wicked cry, terrorizing enemy units. Their armor is reduced."*
+
+| Level | Mana | CD | Cast range | Width (radius) | Armor debuff duration | Armor | Damage (HP removal) |
+|---|---|---|---|---|---|---|---|
+| 1 | 40 | 15 | 1400 | 300 | 20 s | −2 | 18.75 |
+| 2 | 40 | 15 | 1400 | 300 | 20 s | −3 | 37.5 |
+| 3 | 40 | 15 | 1400 | 300 | 20 s | −4 | 56.25 |
+| 4 | 40 | 15 | 1400 | 300 | 20 s | −5 | 75 |
+
+All [PD-VS-6.72].
+
+| Part | 6.72/6.73 value | Source |
+|---|---|---|
+| Travel distance | 1400, whatever point is clicked (6.58 values: cast range 1400, "wave travel distance 1400") | [D2W-VSCL] |
+| Radius around the wave | 300 (350 at creation in 6.58, "Lowered AOE slightly (350->300)" in 6.60) | [PD-VS-6.72], [G-SSD], [D2W-VSCL] |
+| Wave speed | UNVERIFIED for DotA. Dota 2: 2000 | [D2W15-VS] |
+| Vision | "The wave gives vision as it goes forward". The 6.58 note: "500 radius flying vision along the wave, which lasts for 3 seconds" | [PD-VS-6.72], [D2W-VSCL] |
+| Cast backswing | ignored until 6.79 ("Wave of Terror no longer ignores its cast backswing") | [D2W-VSCL] |
+
+Rules:
+- A wave from Vengeful Spirit toward the point. It hits each enemy unit within 300 of its path once, removing 18.75–75 HP and putting on a −2/−3/−4/−5 armor debuff for 20 s [PD-VS-6.72].
+- **HP removal, not damage, since 6.67.** "Wave of Terror now reduces HP instead of dealing damage (same overall HP loss, but now does not disable clarity/dagger/etc)" [G-SSD]. Damage was 25/50/75/100 magical before 6.67 [D2W-VSCL], [PD-VS-6.6x]. The Dota 2 Wiki: "The wave does not count as damage for purposes of removing non-combat buffs or disabling items" [D2W13-VS].
+- **It can kill and last-hit.** Players used it to last-hit creeps from range [G-WoT] (6.61b, when it was still magic damage). A 6.71c guide: "With the damage and the huge range, you can net kills when your mates can't" [G-SSD]. Kill credit for HP removal is not stated; assume Vengeful Spirit gets it (UNVERIFIED).
+- **No attack-damage reduction in 6.72** (removed 6.71) [CL-6.71]. The 2010 page had "Reduces base armor by 2 and damage by 5%" ... up to 20% [PD-VS-6.6x].
+- The 2010 page says "Reduces base armor"; the 2011 page says "Reduces armor" [PD-VS-6.6x], [PD-VS-6.72]. Treat it as a flat armor reduction (UNVERIFIED whether it can take armor below zero; in WC3 a negative armor buff can).
+- UNVERIFIED for DotA:
+  - whether a second wave refreshes or stacks the armor debuff (WC3 buffs of one type normally refresh);
+  - whether it affects magic-immune units;
+  - whether the vision starts at the caster or 100 ahead (Dota 2: 100 ahead [D2W15-VS]).
+- Later changes: damage 30/50/70/90 (6.77), armor 3/4/5/6 (6.80), cooldown 20 (6.83), duration 15 (6.83c) then 8 (7.07), pure then magical damage in Dota 2 [D2W-VSCL].
+
+**Command Aura** (passive aura, D). *"Increases nearby units' damage."*
+
+| Level | Radius | Affects | Bonus damage |
+|---|---|---|---|
+| 1 | 900 | allied units | +12% |
+| 2 | 900 | allied units | +20% |
+| 3 | 900 | allied units | +28% |
+| 4 | 900 | allied units | +36% |
+
+All [PD-VS-6.72]. Radius 900 since 6.60 (300 → 450 in 6.57, → 900 in 6.60); 12/20/28/36% since 5.78 [D2W-VSCL].
+
+Rules:
+- "The bonus damage provided by the aura is based on base damage and primary attribute" [PD-VS-6.72]. It does not raise item damage: "her aura does not improve bonus damage from items" [D2W13-VS].
+- Melee and ranged alike: "His Damage Aura helps both ranged and melee units" [G-SSD]. Allied creeps get it too, which pushes lanes [G-100], [D2W13-VS].
+- Vengeful Spirit gets it herself [D2W13-VS].
+- It does not stack with Alpha Wolf's Packleader's Aura: "Did not stack with Alpha Wolf's Packleader's Aura in DotA 1; the aura with the higher percentage took precedence" [D2W13-VS].
+- **Nothing happens when she dies** in 6.72/6.73. The negative aura on her killer is 6.81 [D2W-VSCL]. Whether the aura persists while she is dead: in WC3 a hero's aura stops while the hero is dead (UNVERIFIED in a DotA source).
+- UNVERIFIED for DotA: whether towers and buildings get it, and whether illusions get it (Dota 2 2013: "Illusions can carry the aura, but can't make use of the bonus damage" [D2W13-VS]).
+
+**Nether Swap** (ultimate, unit target, W). *"Instantaneously swaps positions with a target Hero."*
+
+| Level | Mana | CD | Range | Targets |
+|---|---|---|---|---|
+| 1 | 100 | 45 | 600 | any hero, allied or enemy |
+| 2 | 150 | 45 | 900 | any hero, allied or enemy |
+| 3 | 200 | 45 | 1200 | any hero, allied or enemy |
+
+All [PD-VS-6.72]. Range 600/900/1200 since 5.78. 6.78 raised it to 650/925/1200 and 6.82 to 700/950/1200 [D2W-VSCL]. With Aghanim's Scepter: cooldown 10 (since 6.60) and any unit (6.72) [PD-VS-6.72], [CL-6.72]. The game skips Aghanim's.
+
+Rules:
+- Instant swap of the two positions; cast point is the hero's 0.3 [PD-VS-6.72].
+- **Heroes only** without Aghanim's: creeps cannot be swapped. 6.20: "can no longer be cast on any non-hero unit" [D2W-VSCL].
+- "Works on magic immune units" [PD-VS-6.72]. Players used it to pull a magic-immune channeller out of a spell [D2W13-VS].
+- "Trees near Vengeful Spirit and the target will be destroyed upon swapping" [PD-VS-6.72], 300 around each since 6.27 [D2W-VSCL].
+- "Interrupts channeling skills of the target" [PD-VS-6.72]. Guides use it to cancel teleports [G-WoT].
+- **No free pathing after a swap onto a ledge** in 6.72. 6.79 added "Units now gain 5 seconds free pathing when moved on impassable ledges with Nether Swap" [D2W-VSCL], so before 6.79 a hero swapped onto unpathable ground was presumably left to the engine's unstick rule (UNVERIFIED).
+- UNVERIFIED for DotA: Linken's Sphere on an enemy target, whether hero illusions count as heroes for targeting, and what happens to orders in progress.
+
+How players described her (2009–2011):
+- **A roaming support and ganker who is not item-dependent.** The usual 6.71–6.72 build takes Magic Missile 1, Wave of Terror early, Nether Swap at 6/11/16, and Command Aura from about level 8 [G-SSD], [G-WoT].
+- "Wave of Terror ... gives line of sight through trees, to set up a swap ... Waving a hero in fog and then swapping him to your allies is an extremely powerful gank" [G-WoT].
+- "Use Wave to gain vision over key places like Roshan or enemy jungle" [G-SSD].
+- Swap uses: "Initiating, Saving an ally, Getting away, Holding enemy in position" [G-Detailed]. The golden rule: "Never swap enemy initiator" [G-Detailed].
+- Weaknesses: "Very squishy", "Small attack range", "Never has enough mana", "Very bad Int growth" [G-Detailed].
+
+Model and look (to inform an original design, not to copy):
+- The DotA model is the Warcraft III Vengeful Spirit model: "Vengeful Spirit's Model comes from TFT Ancients Defense (Current Warcraft III Vengeful Spirit Model)" [D2W-VSCL].
+- The rest is from general knowledge and UNVERIFIED in a source fetched this round: a translucent, ghostly Night Elf warden-woman in dark teal and violet, hovering, with a crescent glaive. The model comes from the Spirit of Vengeance units of Maiev's Avatar of Vengeance in The Frozen Throne. Her attack is a small glowing green-violet spirit bolt.
+- The playdota lore: the sister of Mortred (Phantom Assassin), killed by her chakram and given "a new body ... to harness powers from the nether-world" by Elune [PD-VS-6.72].
+- For a renamed hero, avoid the glaive, the Warden silhouette and the green-violet ghost palette.
+
+### 9.2 Priestess of the Moon (Mirana Nightshade), Sentinel, Agility
+
+| Stat | 6.72/6.73 | Notes |
+|---|---|---|
+| Primary | AGI | [PD-POM-6.72] |
+| STR | 17 + 1.85 | same 2010–2013 [PD-POM-6.72], [D2W13-POM] |
+| AGI | 20 + 2.75 | 3.3 gain from 6.85 [D2W-POMCL] |
+| INT | 17 + 1.65 | [PD-POM-6.72] |
+| Damage (level 1) | 38–49 | raw base 18–29 plus 20 AGI (computed) [PD-POM-6.72], [D2W13-POM] |
+| Armor (level 1) | 1.8 | base −1 + 20 × 0.14; see 9.0 item 3 [PD-POM-6.72], [D2W13-POM] |
+| HP / mana (level 1) | 473 / 221 | 150 + 17 × 19; 17 × 13 [D2W13-POM] |
+| Move speed | 300 | [PD-POM-6.72] |
+| Attack range | 600 | 630 from 6.86 [D2W-POMCL] |
+| Missile speed | 900 | [PD-POM-6.72] |
+| Base attack time | 1.7 | [PD-POM-6.72] |
+| Attack point / backswing | 0.3 / 0.7 | [PD-POM-6.72] |
+| Cast point / backswing | 0.5 / 0.83 | [PD-POM-6.72] |
+| Vision day / night | 1800 / 1200 | 6.79 cut night vision to 800 [D2W-POMCL] |
+| Turn rate | 0.4 | Dota 2 Wiki 2013 [D2W13-POM]; UNVERIFIED for DotA |
+| Collision size | — | Dota 2: 24 [D2W15-POM]; UNVERIFIED for DotA |
+
+Hotkeys (playdota): Starfall T, Elune's Arrow R, Leap E, Moonlight Shadow W [PD-POM-6.72].
+
+**Starfall** (no target, T). *"Calls down a wave of meteors to damage each nearby enemy. One random enemy unit within 175 aoe will get hit again for half the damage."*
+
+| Level | Mana | CD | Radius | Damage (magical) | Second star (one random enemy within 175) |
+|---|---|---|---|---|---|
+| 1 | 100 | 12 | 625 | 75 | 37.5 |
+| 2 | 120 | 12 | 625 | 150 | 75 |
+| 3 | 140 | 12 | 625 | 225 | 112.5 |
+| 4 | 160 | 12 | 625 | 300 | 150 |
+
+All [PD-POM-6.72] (the second-star column is half the damage, computed). Radius 625 since 6.65 (600 before) [D2W-POMCL]; the 2010 page said 650 and 200 [PD-POM-6.6x]; the 2011 page says 625 and 175 [PD-POM-6.72].
+
+Rules:
+- **One wave**, hitting each enemy unit within 625 of Mirana once [PD-POM-6.72]. The tooltip's "damage per wave" is a leftover. No 6.72 source describes several waves, and the Dota 2 port has one main hit per cast [D2W15-POM].
+  - Before 6.63 there was also "a 60% chance to hit enemies within 600-900 range" [D2W-POMCL]. A 6.67c guide still repeats this, out of date [G-Warriors].
+- **The second star** hits "one random enemy unit in a 175 AoE around her", "for half the damage" [PD-POM-6.72].
+  - Half in 6.72/6.73; 6.75 raised it to 75% [D2W-POMCL].
+  - **Random** in 6.72; 6.84 changed it to the closest enemy [D2W-POMCL].
+  - **No retarget**: 6.78 added "Starstorm will now choose a new target for the second star if the first died before impact" [D2W-POMCL]. So in 6.72 a second star whose target died is wasted.
+  - A 6.6x guide: the second star "takes corpses within the range into consideration -- the additional star may randomly fall on a corpse" [G-Competitive]. Whether that was still so in 6.72 is UNVERIFIED.
+- "This skill is not blocked by Linken's Sphere" [PD-POM-6.72].
+- Delay before impact: UNVERIFIED for DotA. Dota 2: "Meteors need 0.57 seconds to hit their targets" [D2W15-POM]. The second star's delay is not given anywhere.
+- Invisible units: the port fixed "Starstorm to not hit invisible units" in July 2011 [D2W-POMCL], which suggests DotA did not hit units its owner cannot see (UNVERIFIED in a DotA source).
+
+**Elune's Arrow** (point, R). *"Fires an arrow to a location with deadly precision, dealing large damage and stunning the first unit it strikes. Stun duration increases based on how far the target is, ranging from 0.5 to 5 seconds. Has 3000 range."*
+
+| Level | Mana | CD | Range | Collision radius | Damage (magical) | Stun |
+|---|---|---|---|---|---|---|
+| 1 | 100 | 25 | 3000 | 115 | 90 | 0.5–5 s |
+| 2 | 100 | 25 | 3000 | 115 | 180 | 0.5–5 s |
+| 3 | 100 | 25 | 3000 | 115 | 270 | 0.5–5 s |
+| 4 | 100 | 25 | 3000 | 115 | 360 | 0.5–5 s |
+
+All [PD-POM-6.72]. Collision radius 115 since 6.42 (130 before) [D2W-POMCL]; the 2010 page said 140 [PD-POM-6.6x]. Cooldown 25 until 6.75 (20), then 17 in 6.76 [D2W-POMCL].
+
+| Part | 6.72/6.73 value | Source |
+|---|---|---|
+| Travel | the full 3000, in the direction of the clicked point ("Elune's travels for a full range of 3000") | [G-Competitive], [PD-POM-6.72] |
+| Speed | UNVERIFIED for DotA. Dota 2: 857.14 (that is, 3000 in 3.5 s). The port had a "Minor fix to Sacred Arrow speed" in August 2011 | [D2W13-POM], [D2W-POMCL] |
+| Stun | "For every 150 distance the arrow travels, the stun duration upon impact increases by 0.5 seconds ... 300 range stuns for 1 second, and an arrow that travels at least 1500 range stuns for 5 seconds (which is the maximum)" | [PD-POM-6.72] |
+| Distance measured | "between where Mirana fired the arrow and where the arrow hits its target" | [PD-POM-6.72] |
+| Damage | flat 90/180/270/360; **no distance bonus** (the up-to-100 bonus is 6.78; 6.81b rescaled it) | [PD-POM-6.72], [D2W-POMCL] |
+| Vision | "Elune's Arrow provides vision of the area around it"; radius 800 until 6.81 ("Reduced Sacred Arrow vision radius from 800 to 650") | [G-Competitive], [D2W-POMCL] |
+
+Rules:
+- **It hits creeps.** The arrow stops at "the first unit it strikes" [PD-POM-6.72], and the target class is "Enemy unit" [PD-POM-6.72]. A 6.6x guide: "I didn't take into account the incoming creep. As such, instead of hitting Gondar, I only ended up doing a little nuke to the creep that moved in front of him". Players also shot just as the creep a hero hid behind died [G-Competitive], [G-Warriors].
+  - The hero-only reading in the request is not supported by any source. The 6.86 Dota 2 rule that kills non-hero creeps outright is later [D2W-POMCL].
+  - Allied units: presumably passed through (the target class is enemy; UNVERIFIED).
+- **Stun formula.** Stun = 0.5 s per full 150 travelled, at least 0.5 s and at most 5 s, the maximum reached at 1500 [PD-POM-6.72].
+  - Whether it rises in steps of 150 or continuously is UNVERIFIED for DotA. The wording "for every 150" suggests steps. The Dota 2 port states 0.1 s per 30 [D2W15-POM].
+  - The minimum of 0.5 is DotA's; 6.81b lowered it to 0.01 [D2W-POMCL].
+- **Invisible units**: damaged but not stunned until 6.73, stunned from 6.73 [CL-6.73], [PD-POM-6.72], [PD-POM-6.73]. See 9.0 item 1.
+- Aim: "Do not click directly on the target ... Always aim and time it and click on the ground" [G-Warriors]. "The arrow does have some curve to it ... if you're shooting it up and down planes" [G-Competitive]: in WC3 it follows terrain height.
+- The playdota notes say nothing of Linken's Sphere or magic immunity. The port fixed "Sacred Arrow getting blocked by Linken's Sphere" (March 2012) and "not stopping correctly at magic immune units" (July 2011) [D2W-POMCL], which suggests that in DotA:
+  - it was not blocked by Linken's;
+  - it stopped at a magic-immune unit, probably without effect.
+  - Both are UNVERIFIED.
+- The "-stats" (or "-st") chat command shows arrow accuracy (heroes hit / arrows fired) [PD-POM-6.72].
+
+**Leap** (no target, E). *"Mirana's wild Frostsaber leaps forward into battle, empowering allies with a ferocious roar upon landing. Speed bonus lasts 10 seconds."*
+
+| Level | Mana | CD | Distance | Roar radius | Buff duration | Attack speed (IAS) and move speed |
+|---|---|---|---|---|---|---|
+| 1 | 40 | 30 | 630 | 775 | 10 s | +4% / +4% |
+| 2 | 35 | 26 | 690 (720: see below) | 775 | 10 s | +8% / +8% |
+| 3 | 30 | 22 | 780 | 775 | 10 s | +12% / +12% |
+| 4 | 20 | 18 | 840 (870: see below) | 775 | 10 s | +16% / +16% |
+
+All [PD-POM-6.72]. Cooldown 30/26/22/18 since 6.69 (40/35/30/20 before); mana 40/35/30/20 since 6.50 [D2W-POMCL]. No charges.
+
+- **The distance is in conflict.**
+  - The playdota page says 630/**690**/780/**840** from its late-2010 revision on [PD-POM-6.72], and a 6.71b guide copies it [G-Short].
+  - The playdota page before that (Feb and Aug 2010) said 630/**720**/780/**870** [PD-POM-6.6x]. So do the Dota 2 Wiki 2013 page and the 6.82 entry "Rescaled distance from 630/720/780/870 to 600/700/800/900" [D2W13-POM], [D2W-POMCL].
+  - No changelog records a Leap distance change, so one of the two playdota revisions is a transcription error. Which one is UNRESOLVED. The person should choose, or the map's object data should be read.
+- The 2010 page also gave the roar radius as 800; it has been 775 since the same revision, and the Dota 2 port uses 775 [PD-POM-6.6x], [D2W13-POM].
+
+Rules:
+- Mirana leaps the full distance in the direction she faces; there is no target point [PD-POM-6.72] (targeting "Instant"). The Dota 2 port says "Upon cast, Mirana leaps towards the direction she is facing" [D2W15-POM]. A guide warns: "Always take that split second to orientate yourself in the direction you're wanting to go" [G-Competitive].
+- Leap speed: UNVERIFIED for DotA. The 6.82 entry "Reduced speed from 2000 to 1600" implies 2000 before 6.82 [D2W-POMCL], but that is a port-era entry, not a DotA source.
+- **Projectile dodge**: "Leap uses a 0.01 second Wind Walk to dodge any projectiles currently in route to Mirana, so if the enemy has true sight of Mirana she won't be able to dodge projectiles using Leap" [PD-POM-6.72]. Guides dodge Magic Missile and Finger of Death with it [G-Short], [G-Competitive].
+- **Not invulnerable** during the leap since 6.49 [D2W-POMCL].
+- **The buff is applied on landing, at the landing spot**, to allies within 775 [PD-POM-6.72]. 6.79 moved it to the cast location at cast and doubled the attack-speed part to 8/16/24/32 [D2W-POMCL].
+- Which allies get the buff: the playdota table says "Allied Hero" [PD-POM-6.72]; the Dota 2 port says "allied units" and gives it to illusions [D2W13-POM]. UNVERIFIED which; this note takes allied heroes only, from the DotA page.
+- Mirana gets the buff herself if she is in the radius (she always is, at the landing spot); UNVERIFIED but implied.
+- Leaping over cliffs and trees: Dota 2 allows it [D2W15-POM]; guides leap "into the trees" and then teleport [G-Competitive]. Where she ends up on unpathable ground is UNVERIFIED for DotA.
+
+**Moonlight Shadow** (ultimate, no target, global, W). *"Turns Nightshade and all allied heroes invisible. If Invisibility is broken, it gets restored after the fade time during the shadow duration."*
+
+| Level | Mana | CD | Area | Duration | Fade time |
+|---|---|---|---|---|---|
+| 1 | 175 | 180 | global | 11 s | 2.5 s |
+| 2 | 175 | 160 | global | 11 s | 2 s |
+| 3 | 175 | 140 | global | 11 s | 1.5 s |
+
+All [PD-POM-6.72]. Duration 11 on every level and cooldown 180/160/140 since 6.68 (7/9/11 s and 160 before); mana 175 since 6.66 [D2W-POMCL].
+
+Rules:
+- Applies to Mirana and every allied hero on the map at the moment of the cast [PD-POM-6.72].
+  - "Magic immune allies will be affected" [PD-POM-6.72].
+  - Illusions: UNVERIFIED for DotA. The port in July 2011: "Moonlight Shadow no longer works on illusions" [D2W-POMCL].
+  - Heroes that come into play later, for example by respawning during the 11 s: UNVERIFIED.
+- Each hero turns invisible after the fade time, not at once. The port fixed "global invis kicking in immediately instead of waiting for fadetime" in February 2011 [D2W-POMCL].
+- **Breaking and restoring.** Attacking, casting or using an item breaks a hero's invisibility. "If for any reason you break invisibility during the MS buff (activating spells, attacking, using items), you can still regain the invisibility by waiting for the fade time" [G-Competitive], [PD-POM-6.72]. The buff lasts 11 s from the cast regardless.
+- "Units affected will not auto attack enemies" [PD-POM-6.72]: an invisible hero does not acquire targets on its own.
+- Silence: the Dota 2 text says "Silence will stop Moonlight Shadow" (2013) and "Silence will prevent revealed units from becoming invisible" (2015) [D2W13-POM], [D2W15-POM]. UNVERIFIED for DotA.
+- True sight, Gem, Sentry Ward, Dust and so on reveal the invisible heroes, as for any WC3 invisibility. A guide lists true sight as the counter [G-Warriors].
+- Later changes: cooldown 160/140/120 (6.74), mana 75 (6.76), duration 15 (6.77), cooldown 140/120/100 (6.78) [D2W-POMCL].
+
+How players described her (2009–2011):
+- "One of the most balanced heroes" and a top pick in competitive play [G-Competitive], [G-Warriors].
+- The usual build takes Elune's Arrow and Leap at 1–2 and maxes Starfall first: "you will always land Starfall, while you will always miss some Arrows". Arrow stays at 1 early because its stun does not grow with level. Moonlight Shadow comes at 10–11 [G-Competitive], [G-Warriors].
+- Combo: "initiate with Elune's Arrow, Leap in, auto-attack, and finish them off with Starfall" [G-Competitive]. "Landing an Arrow from just 900 range away will still provide a whopping three-second stun" [G-Competitive].
+- Moonlight Shadow uses: saving allies, positioning for a fight, hiding an initiator or a channeller. "It's not an instant WW and has a long fade time" [G-Competitive].
+
+Model and look (to inform an original design, not to copy):
+- The ability text and sounds name a Frostsaber tiger mount: "Mirana's wild Frostsaber leaps forward"; "My tiger was trained for war" [PD-POM-6.72].
+- From general knowledge, UNVERIFIED in a source fetched this round: the DotA model is the Warcraft III Priestess of the Moon hero, a Night Elf archer in pale armour riding a white tiger. Her attack missile is the WC3 Priestess arrow, a thin glowing pale-blue arrow. Starfall in WC3 is that hero's own channelled ultimate of falling stars.
+- The lore line: "raining arrows and falling stars alike upon the shambling undead masses ... her very presence is said to be so holy that it melts away the fatigue of nearby allies, giving them greater haste" [PD-POM-6.72].
+- For a renamed hero, avoid the white tiger mount, the Night Elf archer silhouette and the moon/Elune iconography. The arrow can be any long, visible skillshot.
+
+### 9.3 Hard to reproduce on a fixed tick, in integers
+
+- **Wave of Terror** is a moving area:
+  - a wave travelling 1400 (speed UNVERIFIED; Dota 2 2000) that hits each enemy within 300 of its centre line once, tracked with a per-cast hit set;
+  - 500 flying vision dropped along the path, each patch lasting 3 s;
+  - HP removal, not damage: it must not trigger anything that damage triggers (item disables, Clarity-type breaks), but it can kill and should credit the kill;
+  - fractional amounts (18.75, 56.25) need sub-unit HP or a fixed rounding pattern;
+  - the 20 s armor debuff needs a refresh-or-stack rule (UNVERIFIED);
+  - cast backswing ignored.
+- **Command Aura** multiplies only base damage plus primary-attribute damage, not item damage. This needs the attack split into "white" and "green" damage, and a percentage in integer arithmetic (×12/100 and so on, with one rounding rule). It does not stack with Packleader's Aura; the higher one wins.
+- **Nether Swap** exchanges two positions in one tick, destroys trees within 300 of both spots, interrupts the target's channel, and ignores magic immunity. A unit landing on unpathable ground needs an unstick rule, since the 6.79 free pathing is not in 6.72.
+- **Starfall:**
+  - one area hit at 625;
+  - a second star on a *random* enemy within 175 of Mirana at cast, for half damage (37.5 at level 1, another fraction). The random pick must come from the seeded simulation random number generator, not the page;
+  - impact delays UNVERIFIED (Dota 2 0.57 s);
+  - no retarget if the target dies first.
+- **Elune's Arrow** is a long linear projectile:
+  - 3000 range, 115 collision radius, speed UNVERIFIED (Dota 2 857.14, which is not an integer; 3000 in 3.5 s gives integer distances per tick only at some tick rates);
+  - it stops at the first enemy unit, creeps included;
+  - the stun comes from the distance from the launch point to the impact point: 0.5 s per 150, from 0.5 to 5 s. The steps are probably 150 each (or 0.1 s per 30, as in Dota 2); either way it needs an integer division rule;
+  - 800 vision around it;
+  - the invisible-unit rule differs between 6.72 and 6.73;
+  - the stun in ticks must be rounded once.
+- **Leap:**
+  - a forced move of 630–870 along the facing direction (speed UNVERIFIED);
+  - a 0.01 s invisibility at the start that makes every projectile already in flight at Mirana miss unless the shooter has true sight of her. 0.01 s is shorter than any practical tick, so model it as "on cast, disjoint unless true sight";
+  - the buff is applied on landing within 775 of the landing spot;
+  - the distance table itself is in conflict (690/840 or 720/870).
+- **Moonlight Shadow:**
+  - global, on every allied hero at cast, for 11 s;
+  - each hero has its own fade timer (2.5/2/1.5 s), restarted whenever that hero attacks, casts or uses an item;
+  - while invisible, a hero does not auto-acquire targets;
+  - this needs per-hero state and the game's existing true-sight rules.
+- **Shop rule:** Vengeful Spirit cannot buy Blink Dagger in 6.72/6.73.
+
+### 9.4 Source keys for this section
+
+| Key | Title | URL |
+|---|---|---|
+| [PD-VS-6.6x] | playdota Vengeful Spirit, Feb 2010 | https://web.archive.org/web/20100202025640/http://www.playdota.com:80/heroes/vengeful-spirit |
+| [PD-VS-6.72] | playdota Vengeful Spirit, Dec 2011 (6.72/6.73); identical ability text in Jun 2011, Jan 2012 and Apr 2012 captures (stat-block armor 3.1 in Jun 2011) | https://web.archive.org/web/20111211152831/http://www.playdota.com:80/heroes/vengeful-spirit (also .../web/20110613062322/..., .../web/20120111175003/..., .../web/20120423084917/...) |
+| [PD-POM-6.6x] | playdota Priestess of the Moon, Feb and Aug 2010 | https://web.archive.org/web/20100209011523/http://www.playdota.com:80/heroes/priestess-of-the-moon (also .../web/20100826062230/...) |
+| [PD-POM-6.72] | playdota Priestess of the Moon, Dec 2011 (6.72); identical ability text in Jun 2011 | https://web.archive.org/web/20111219212134/http://www.playdota.com:80/heroes/priestess-of-the-moon (also .../web/20110613072631/...) |
+| [PD-POM-6.73] | playdota Priestess of the Moon, Jan 2012 (invisible-unit note removed) | https://web.archive.org/web/20120119090007/http://www.playdota.com/heroes/priestess-of-the-moon |
+| [PD-POM-6.74] | playdota Priestess of the Moon, Apr 2012 (Moonlight Shadow cooldown 160/140/120) | https://web.archive.org/web/20120411141941/http://www.playdota.com:80/heroes/priestess-of-the-moon |
+| [CL-6.71] | changelog 6.71 | https://web.archive.org/web/20160503031334/http://www.playdota.com:80/changelogs/6.71 |
+| [CL-6.72] | changelog 6.72 | https://web.archive.org/web/20110502144633/http://www.playdota.com/changelogs/6.72 |
+| [CL-6.72b] | 6.72b | https://web.archive.org/web/20110511135337/http://www.playdota.com/changelogs/6.72b |
+| [CL-6.72c] | 6.72c | https://web.archive.org/web/20110606060843/http://www.playdota.com/changelogs/6.72c |
+| [CL-6.72d] | 6.72d | https://web.archive.org/web/20110731144954/http://www.playdota.com/changelogs/6.72d |
+| [CL-6.72e] | 6.72e | https://web.archive.org/web/20160829014306/http://www.playdota.com:80/changelogs/6.72e |
+| [CL-6.72f] | 6.72f | https://web.archive.org/web/20160825205729/http://www.playdota.com:80/changelogs/6.72f |
+| [CL-6.73] | 6.73 | https://web.archive.org/web/20120104134752/http://www.playdota.com/changelogs/6.73 |
+| [CL-6.73b] | 6.73b | https://web.archive.org/web/20120102055914/http://www.playdota.com/changelogs/6.73b |
+| [CL-6.73c] | 6.73c | https://web.archive.org/web/20120113004153/http://www.playdota.com/changelogs/6.73c |
+| [D2W13-VS] | Dota 2 Wiki Vengeful Spirit, Jun 2013 | https://web.archive.org/web/20130630011447/http://dota2.gamepedia.com:80/Vengeful_Spirit |
+| [D2W15-VS] | Dota 2 Wiki Vengeful Spirit, Feb 2015 | https://web.archive.org/web/20150207222900/http://dota2.gamepedia.com:80/Vengeful_Spirit |
+| [D2W-VSCL] | Dota 2 Wiki Vengeful Spirit/Changelogs (DotA 0.60–6.88 entries, origin notes, Dota 2 patches) | https://web.archive.org/web/20200601145652/https://dota2.gamepedia.com/Vengeful_Spirit/Changelogs |
+| [D2W13-POM] | Dota 2 Wiki Mirana, Jul 2013 | https://web.archive.org/web/20130701144915/http://dota2.gamepedia.com:80/Mirana |
+| [D2W15-POM] | Dota 2 Wiki Mirana, Feb 2015 | https://web.archive.org/web/20150207202411/http://dota2.gamepedia.com:80/Mirana |
+| [D2W-POMCL] | Dota 2 Wiki Mirana/Changelogs (DotA 6.38–6.88 entries and Dota 2 patches) | https://web.archive.org/web/20210219200245/https://dota2.gamepedia.com/Mirana/Changelogs |
+| [G-Detailed] | playdota guide "Vengeance is best served cold" (Detailed look at VS) by Lama051, 6.72f, Oct 2011 | https://web.archive.org/web/20120127204738/http://www.playdota.com/guides/detailed-look-at-vs |
+| [G-SSD] | playdota guide "Stun, Swap and Die" by paulo_2_5, v6.71c, Mar 2011 (its changelog list runs to 6.72) | https://web.archive.org/web/20110923161955/http://www.playdota.com:80/guides/stun-swap-and-die |
+| [G-WoT] | playdota guide "Wave of Terror is a Legit Skill" by Zoness, 6.61b, Jul 2009 | https://web.archive.org/web/20111021081416/http://www.playdota.com:80/guides/wave-of-terror-is-a-legit-skill |
+| [G-100] | playdota guide "Get 100% out of Vengeful Spirit" by Audacious, 6.67c, Jul 2010 | https://web.archive.org/web/20110714192346/http://www.playdota.com:80/guides/get-100-out-of-vengeful-spirit |
+| [G-Competitive] | playdota guide "A competitive guide to Mirana" by Corsair July, 6.6x, Jul 2009 (comments to Apr 2011) | https://web.archive.org/web/20111226034145/http://www.playdota.com/guides/a-competitive-guide-to-mirana |
+| [G-Warriors] | playdota guide "Warriors of the Night, assemble!" by Tanlatos, 6.67c, Apr 2010 (comments to Oct 2011) | https://web.archive.org/web/20111218225423/http://www.playdota.com/guides/warriors-of-the-night-assemble |
+| [G-Short] | playdota guide "A short but complete PotM guide" by phantom146, 6.71b, Feb 2011 | https://web.archive.org/web/20111128231157/http://www.playdota.com/guides/a-short-but-complete-potm-guide |
+
+Fetch notes:
+- The playdota ability tables sit in a part of the page that a naive tag-stripper drops; the tables were read from the raw HTML.
+- The 2013 and 2015 Dota 2 Wiki pages are post-6.74 and give Dota 2 values; they are cited here only for stats unchanged since 6.72 (checked against the changelog) or explicitly as "Dota 2".
+- Web searches on dotafire, GameFAQs, TeamLiquid and Hive found only Dota 2 material for these heroes; none is cited.
+- No fetched DotA source gives the missile speed of Magic Missile, the speed of Wave of Terror, Elune's Arrow or Leap, or Starfall's delay. Each is marked UNVERIFIED above with the Dota 2 value beside it.
+
+## 10. Round 8: an arena mode after SMITE 2's Arena
+
+Researched 2026-10-24. Every number below has a source key (section 10.7) and names the game: **S1** (SMITE, Hi-Rez, 2014) or **S2** (SMITE 2, Titan Forge/Hi-Rez, alpha from 2024, open beta from January 2025). If a statement has no source, it is marked *unsourced*.
+
+### 10.0 Versions and sources
+
+- S2 rebuilt S1's Arena on the same plan: an oval stadium, a base and portal at each end, buff camps on the left and right, minions escorted into the enemy portal, and 500 tickets. S2 patch notes describe several changes as bringing it "closer in line with SMITE 1" [S2-CA3], "to match Smite 1 pacing" [S2-CA4], and "to match SMITE 1" for kill rewards [S2-CA5]. In this section, then, "copied from S1" means the S2 notes say so or the S1 and S2 numbers agree.
+- S2 changed the numbers many times. The ticket count went 500 → 400 (in the OB20 "pacing changes", whose numbers were not published [S2-OB20]; the 400 is implied by OB23's "400 -> 425") → 425 (OB23, 2025-11-18) → **500** (OB28, 2026-02-10) [S2-OB23, S2-OB28]. Gold and XP spooling changed five times (10.4). The S2 wiki page [S2-WIKI] states it was "last updated for Smite 2 Closed Alpha 5 patch – October 28, 2024", so its statistics table predates every Open Beta change. Where the wiki and the later patch notes disagree, this section follows the patch notes.
+- No S2 Arena change appears in the OB32–OB46 notes on the S2 wiki (checked through OB46, 2026-10). The values in force today are therefore OB28's, plus the setup time of 55 s set in OB31 (2026-03-24).
+- The S1 wiki page [S1-WIKI] describes the final S1 version (map "ArenaV3", Season 5 art). The Dignitas guide [DIG] dates from 2018-12-18.
+- **Quick Play Arena** (S2, OB13, 2025-07-01) is a separate queue on the same map. It has roguelike item picks, a dodge button and about 10-minute matches, with 400 tickets, lowered to 350 in the 2025-07-03 hotfix [S2-OB13, S2-WIKI]. It is noted here but is not the model for this round.
+- The person remembered a "Juggernaut" spawned by jungle camps. That belongs to **S1 Siege**, a separate 4v4 two-lane mode with towers, not to Arena. In Siege, clearing a jungle camp earned 9 points, a god kill 5 and a minion kill 1; every 100 points spawned a Siege Juggernaut, and killing the neutral Wild Juggernaut in the centre (first spawn at 3:00, respawn 240 s) spawned one too [S1-SIEGE]. Arena's super minion is the **Minotaur**, which spawns from kills (S1) or from a timer (S2), never from camps.
+
+### 10.1 Map
+
+- **Shape.** "A small, oval shaped map with two bases at opposite ends" (S2) [S2-MODES]. "An open map with buff camps on either side, stealth grass in the middle, a portal at either end, and columns scattered throughout" (S2) [S2-WIKI]. S1's was a Roman colosseum, "The Grand Colosseum" (S1) [WIKIPEDIA-mirror, via search summary]. The S1 map has "no lanes nor towers" and "no Titans" [S1-WIKI].
+- **Bases.** S1: "two exits to each base located on the leftmost and rightmost sides", with "an invulnerable Phoenix protecting each entrance" [S1-WIKI]. Dignitas (S1): Phoenix Guards are "invulnerable and deal strong damage to anyone who attacks them"; the fountain regenerates health and mana, is where players respawn, and damages enemy gods inside it [DIG]. S2 has base walls (OB3: "Smoothed out collision around the base walls") [S2-OB3]. Whether S2 keeps the invulnerable phoenixes at the base exits: *unsourced*.
+- **Portal.** "Each portal is at the center of the enemy's fountain" (S1) [DIG]; minions head "straight toward the enemy base's center where a portal is located" (S1) [S1-WIKI].
+- **Minion paths.** Minions spawn "from the left and right sides of each base and march on the dirt paths towards the middle of the arena"; once nothing is left to fight there, "they will head straight toward the enemy base's center" (S1) [S1-WIKI]. Spawn points alternate between waves (S1) [S1-WIKI]. So the minions leave by the two base exits and meet in the middle; there is no single straight lane.
+- **Middle.** S2 added "Stealth zones ... in the center area of Arena" in Alpha Weekend 4 (2024-07-18) [S2-AW4]. Scattered columns (S2) [S2-WIKI].
+- **Side jungles.** In both games there are three buff camps on each side, six in all: red (damage), blue (mana/cooldown) and purple (attack speed in S1, Strength/Intelligence stacking in S2) [S1-WIKI, S2-WIKI]. 10.3 gives the camp numbers.
+- **Shops.** Shopping happens at the base. Setup time is S2 45 s (CA2) → 60 s (OB30) → 55 s (OB31) [S2-CA2, S2-OB30, S2-OB31], and S1 60 s [S1-WIKI]. S1 says players "have 45 seconds to buy items and leave the fountain before the buffs spawn" [DIG], a 2018 value. Whether a shop exists outside the base: *unsourced* (no source mentions one).
+- **Gifts (S2 only).** Crowd gifts (roses) land on the field. They first appeared in AW4 [S2-AW4]. CA4 put more of them on each team's own side and fewer in the centre [S2-CA4]; 10.2 and 10.3 give the numbers.
+- **Proportions.** No source gives map dimensions or a base-to-base walk time: *unsourced*. A suggestion for this game, also *unsourced*: about 20–25 s of walking at a hero's 300 speed, so roughly 6,000–7,500 units base to base. That is under a fifth of a Dota lane's walk, and it lets the respawn timers in 10.4 (up to 60 s) mean a full return.
+
+### 10.2 Tickets
+
+| Event | Tickets | Game | Source |
+|---|---|---|---|
+| Starting tickets per team | **500** | S1; S2 at release, 400 after OB20, 425 from OB23, **500 again from OB28 (2026-02-10)** | S1-WIKI, DIG, S2-WIKI, S2-OB23, S2-OB28 |
+| Enemy god killed | **−5** to the dead god's team | S1, S2 | S1-WIKI, DIG, S2-WIKI |
+| Enemy minion killed, last hit or assisted by a god | **−1** | S1, S2 | S1-WIKI, S2-WIKI |
+| Minion killed by minions alone, with no god involved | 0 | S1 | S1-WIKI |
+| Minion walks into the enemy portal | **−1 per minion**, whatever the minion type | S1, S2 | S1-WIKI, S2-WIKI |
+| Minotaur walks into the enemy portal | **−15** | S1, S2 | S1-WIKI, DIG, S2-WIKI |
+| Match ends | when a team's tickets reach 0 | S1, S2 | S1-WIKI, S2-WIKI |
+
+- **Last ten tickets (S1).** "Once a team is down to 10 tickets, killing standard minions (Melee and Archers) will no longer deduct tickets. Killing Brute minions and escorting friendly minions through the enemy portal still deducts tickets" [S1-WIKI, DIG]. The last ten tickets therefore have to come from god kills, brute kills or minions and Minotaurs walked into the portal.
+- **Ten Ticket Phase (S2).** "When a team is 10 tickets away from winning", the crowd throws extra gifts at that team "at a random time every 15-20 seconds", and the opposing team's brutes "deal +40% more damage and receive 40% less damage" (AW4, 2024-07-18) [S2-AW4]. The current wiki says "the opposing team's minions deal more damage while taking less" and gives no figure [S2-WIKI]. Whether S2 also keeps S1's rule that melee and archer kills stop counting: *unsourced*. CA3 (2024-10-03) "added some logic to the arena ticket calculations that brings it closer in line with SMITE 1", without details [S2-CA3].
+- **Direction.** Every event takes tickets from the enemy. No source mentions a way to gain tickets back.
+- **Surrender (S2).** The earliest surrender time was 8 min, raised to 10 min in OB28 [S2-OB28]. OB17 fixed "early surrendering before 10m in Arena" [S2-OB17].
+
+### 10.3 Minions and camps
+
+**Waves (S1, the only source with numbers).**
+- One wave every **20 s**, **7 minions**: 3 melee, 3 archers, 1 brute. In S1 Arena every wave has this make-up all game, while Conquest adds brutes as the match goes on [S1-WIKI, S1-MINIONS, DIG].
+- Waves alternate between the left and right base exits [S1-WIKI].
+- Unit values, from Dignitas, 2018, S1:
+
+| Minion | HP | Damage | XP | Gold for the last hit | Gold for an assist |
+|---|---|---|---|---|---|
+| Archer | 305 | 25 | 25 | 18 | 12 |
+| Melee | 420 | 12 | 45 | 25 | 17 |
+| Brute | 805 | 50 | 65 | 25 | 17 |
+
+- **S2 values.** Minion gold in OB1 (2025-01-07): ranged 13 → 15, melee 18 → 20, and a last hit adds 25% gold after splitting [S2-OB1]. The S2 wave interval and make-up: *unsourced*. The S2 wiki says only "a variety of minions will spawn from either base and clash in the middle" [S2-WIKI].
+- **No towers or titans.** Confirmed: "This map has no lanes nor towers and there are no Titans" (S1) [S1-WIKI]; "No lanes, towers, or titans" (S1) [DIG]. S2's objective is tickets only [S2-MODES]. The only structures are the invulnerable phoenixes at the base exits (S1) [S1-WIKI, DIG].
+
+**Minotaur.**
+- S1: spawns "each time either team gets 10 kills". It has a large health pool and strong melee attacks, and walks with the regular waves ignoring enemy minions. It stops if an enemy god is near and attacks gods who stand in its way. It pushes on, ignoring enemies, when a friendly god is near it [S1-WIKI]. It cannot be crowd-controlled [DIG].
+- S2: "Siege Minotaurs now spawn every 3 minutes for both teams" (OB13, 2025-07-01) [S2-OB13]. Both teams get one at the same moment [S2-WIKI].
+- Worth 15 tickets in the portal (both games).
+
+**Buff camps.** Three per side, six in all. Each is one monster that drops a buff for the team that kills it.
+
+| Camp | S1 monster and buff [S1-JUNGLE, DIG] | S2 monster and buff [S2-WIKI, S2-OB4] |
+|---|---|---|
+| Red | Nemean Lion: +20% physical and magical damage, +10 magical power, +5 physical power | Manticore, "Caustic": attacks and abilities poison for 2.5% of max health over 3 s |
+| Blue | Basilisk: +25 MP5, 10% cooldown reduction | Satyr, "Primal": +5 mana regeneration, +20 cooldown rate (OB4, 2025-02-24) |
+| Purple | Erymanthian Boar: +15% attack speed, +15 magical and +12 physical basic attack damage | Chimera, "Inspiration": +4 Strength and Intelligence per ability or basic attack hit, up to 5 stacks |
+| Buff duration | 120 s | 120 s |
+| First spawn | 0:00 | 0:00 (CA3 fixed late spawns) |
+| Respawn | **240 s** | **180 s** |
+| Camp health | not given | 960, rising 8.3% per respawn up to 4 times |
+
+- The S2 map caption still calls purple an "attack speed buff" [S2-WIKI]; the table on the same page gives Inspiration. In AW4 the S2 camps were fixed at infamy level 3, and CA1 lowered that to 1, "simpler and incremental in power" [S2-AW4, S2-CA1].
+
+**Gifts (S2).**
+- AW4 (2024-07-18): a gift is thrown into the middle every **90 s**. Each throw cuts the overall timer by 5 s (85, 80, …), and each god kill cuts the current countdown by 10 s. A gift gives +15 Strength and Intelligence and 1% max health regeneration for 30 s, plus +10 for every 3 min of match time [S2-AW4].
+- CA1 raised the duration to 60 s [S2-CA1]. The wiki gives a 30 s respawn [S2-WIKI].
+- OB28 (2026-02-10) changed the gift to 7.5% Strength, 7.5% Intelligence and 5% protections, with no flat amount and no growth over time [S2-OB28].
+
+### 10.4 Economy and pace
+
+| Value | S1 | S2 now (OB28 onward) | S2 history |
+|---|---|---|---|
+| Team size | 5v5 [S1-WIKI] | 5v5 [S2-WIKI] | |
+| Pick | free choice of god from what the player owns (blind) [FAN; S2 "God Select lobby", S2-CA4]. Draft or ban: none mentioned, so *unsourced* | same | |
+| Starting level | 3 [S1-WIKI, DIG] | 3 [S2-WIKI] | |
+| Starting gold | 1,500 [S1-WIKI, DIG] | 1,250 [S2-WIKI] | 750 → 1,250 (CA1, 2024-08-27) |
+| Gold per second | 11 [S1-WIKI] (10 in DIG, 2018) | **15** [S2-OB28] | 11 → 12 (OB1) → 14 (OB10, 2025-05-19) → 18 (OB20, implied) → 21 (OB21 hotfix 2025-10-22) → 15 (OB28) |
+| XP per second | 11 [S1-WIKI] | **10** [S2-OB28] | 10 → 11 (CA4) → 12 (OB10) → 15 (OB20, implied) → 10 (OB28) |
+| XP bonus multiplier | — | 1.1× [S2-OB28] | 1.25× → 1.1× (OB28) |
+| Kill gold and XP | — | "match SMITE 1" (CA5, 2024-10-29) [S2-CA5] | |
+| Respawn | one timer for the whole team. A god who dies just before it ends respawns almost at once. The timer grows the further ahead the team is in score, up to **60 s** [S1-WIKI, DIG] | "Domination Respawn Time Bonus" 18 s [S2-OB28]; the base S2 formula: *unsourced* | 10 → 18 s (OB28) |
+| Setup | 60 s [S1-WIKI] | 55 s [S2-OB31] | 60 → 45 (CA2) → 60 (OB30) → 55 (OB31) |
+| Typical length | *unsourced* for S1 | about 16 min targeted [S2-OB28] | wiki 15–20 min; about 19 min before OB20, about 12.5 min after it; 500 tickets restored to bring it back to about 16 [S2-OB28] |
+| Other | Eye of the Jungle and Emperor's Armor disabled [S1-WIKI] | Battle Cry curio: 2 stacks per kill or death, 1 per assist, up to 10, +1.5% item stats and +1.5% speed per stack for 3 s [S2-OB19, S2-OB28] | Hot Streak (+20% damage dealt and taken after 3 kills) added AW4, cut to 15% CA1, disabled CA4 as "win-more" |
+
+S2's designers explained in OB28 that the faster version "at best didn't move the needle for the mode, and at worst might have turned people away given the ratio of time in queue to time in match", and that 500 tickets should bring the mode "closer to 16 minutes" [S2-OB28].
+
+### 10.5 Feel
+
+- The mode removes "the laning, ganking, jungling and other aspects that are often associated with a traditional MOBA match, constantly serving up nothing but the core of genre: the teamfight" (S1, Game Informer, 2014) [GI].
+- It is "short-and-sweet": players "quickly reach late game and finish the round before it drags on too long" (S1) [FAN]. Players can "pick your favourite god or gods and stick to them", as opposed to random modes [FAN].
+- "Smite's rawest form of pure combat" [DIG]. Dignitas also calls last hits "CRUCIAL", because each one is a ticket, and warns against trading deaths in fights, because a trade cancels the kill's 5 tickets [DIG].
+- S2's own pitch is "explosive team fights" and "winning the favor of the audience" [S2-WIKI].
+- The snowball problem: S2 spent CA4 and CA5 cutting "the snowball effect that led to more one-sided matches than intended". It moved gifts to each team's own side, removed Hot Streak and matched S1's kill rewards [S2-CA4, S2-CA5]. The S1 respawn rule works the same way: the team that is ahead waits longer [S1-WIKI].
+- Against: "fun, but lightweight and throwaway" (PC Gamer, preferring Siege) [PCG]. Steam players disagree about whether the mode could ever work competitively [STEAM].
+- What the sources point to, as an inference that is not quoted from them: income arrives without farming, the start is at level 3 with a full first item, the walk back is short, the team respawn timer brings deaths back in groups, and every kill and last hit moves a visible score. Together these keep both teams fighting in the middle almost all the time.
+
+### 10.6 How it maps onto the game
+
+The existing alternate mode is `World::aram: bool`. It reads `data/rules.json`'s `aram` block (lanes to build, starting gold, start level, `xp_pct`, `gold_pct`, cannon, relics), and `crates/core/src/aram.rs` holds its rules: `builds_lane`, `shop_of`, `xp`, `periodic_gold`, `start_level`, `deal`, `clock`. Setup flips it with `setup.mode`, and online has `online.aram`. An arena mode could follow the same pattern:
+
+1. **One mode value, not a second bool.** Replace `aram: bool` with a mode choice (normal / all-random-mid / arena), so `def()` stays one lookup per mode. This is a core change; the UI only lists the modes `act` offers.
+2. **Data (`data/rules.json` → a new `arena` block):** `tickets` 500; `ticket_kill` 5; `ticket_creep` 1; `ticket_portal` 1; `ticket_minotaur` 15; `last_tickets` 10 (S1 rule: below it, melee and ranged kills stop counting); `minotaur_every` (S2: 180 s), or `minotaur_kills` (S1: 10); `wave_every` 20 s; the wave as 3 melee, 3 ranged and 1 brute; `start_level` 3; `starting_gold`; `gold_per_sec`/`xp_per_sec` as percentages like `aram`'s; `respawn_max` 60 s; `camp_respawn` 180 or 240 s; `buff_secs` 120; `setup_secs`. Every value comes from 10.2–10.4 and is scaled to this game's numbers.
+3. **Data (`data/map.json` or a separate arena map):** a round or oval arena of its own size (the S1/S2 proportions are unsourced; suggestion in 10.1), two base exits per side, phoenix-like guard points, the portal at each fountain, two creep paths from the exits to the centre, three camp positions per side, column and blocker points, stealth-grass patches. The current map is 16,384 square with lanes and a river. The arena is a separate layout, so `map.size` and the tree/path grid need a per-mode map, or a map block per mode. That is a core loading change, not just new numbers.
+4. **New core rules:**
+   - ticket counts per team and the deductions above, with the "god involved" test for minion kills (killer or assist is a hero);
+   - the portal: a creep entering a radius of the enemy fountain is removed and costs tickets;
+   - the end of the match when tickets reach 0, replacing the throne;
+   - waves that alternate exits;
+   - the Minotaur unit: no crowd control, walks with waves, stops for nearby enemy heroes, pushes on when an allied hero is near;
+   - the team respawn timer, one per team, lengthening with the ticket lead;
+   - no towers or barracks (`builds_lane` already handles lanes, but the base buildings also have to go);
+   - the last-ten-tickets rule.
+5. **Reused:** the existing camp and buff machinery (`map.json` `camps`, `neutral_every`) for the three side camps; the `aram` pattern for starting level and gold and for income percentages; `shop_of` to put every shop at home. Picking is free choice, so the `deal`/reroll path is not used; online uses the normal pick screen.
+6. **Words:** "ticket", "portal" and "minotaur" (or this game's own name for the super minion) each need a `GLOSSARY.md` entry before they appear in a string (CLAUDE.md rule 11).
+
+### 10.7 Source keys
+
+- **S1-WIKI**: SMITE Wiki (Fandom), "Arena", wikitext read via `smite.fandom.com/api.php?action=parse&page=Arena`, 2026-10-24. Describes the final S1 version.
+- **S1-MINIONS**: SMITE Wiki, "Minions" (Arena waves: 1 brute, 3 melee, 3 archers), via the same API.
+- **S1-JUNGLE**: SMITE Wiki, "Jungle" (the Arena section and the Arena buff values), via the same API.
+- **S1-SIEGE**: SMITE Wiki, "Siege" (Siege Juggernaut, points), via the same API.
+- **DIG**: Izanami, "SMITE: Everything You Need to Know About Arena", Dignitas, 2018-12-18. https://dignitas.gg/articles/blogs/Smite/13242/smite-everything-you-need-to-know-about-arena
+- **S2-WIKI**: SMITE 2 Wiki, "Arena", https://wiki.smite2.com/w/Arena (statistics "last updated for Smite 2 Closed Alpha 5 patch – October 28, 2024"; page edited to 2025-08). It lists two official videos, not watched: "How to play: Arena!" (YouTube gDJZtDpW3v4) and "SMITE 2 - Deep Dive: Arena!" (YouTube YEMV-6CKS4k).
+- **S2-MODES**: SMITE 2 Wiki, "Game Modes", https://wiki.smite2.com/w/Game_Modes
+- **S2-AW4**: SMITE 2 Alpha Weekend 4 notes, 2024-07-18, wiki.smite2.com/w/SMITE_2_Alpha_Weekend_4
+- **S2-CA1 … S2-CA5**: SMITE 2 Closed Alpha 1–5 notes: 2024-08-27, 2024-09-17, 2024-10-03, 2024-10-17, 2024-10-29. Pages wiki.smite2.com/w/SMITE_2_Closed_Alpha_N.
+- **S2-OBn**: SMITE 2 Open Beta n notes, wiki.smite2.com/w/SMITE_2_Open_Beta_n. Cited: OB1 2025-01-07, OB3 2025-02-10, OB4 2025-02-24, OB10 2025-05-19, OB13 2025-07-01 (with the 2025-07-03 hotfix), OB17 2025-08-26, OB19 2025-09-23, OB20 2025-10-07, OB21 2025-10-21 (hotfix 2025-10-22), OB23 2025-11-18, OB28 2026-02-10, OB30 2026-03-10, OB31 2026-03-24. OB1–OB46 were all searched for "Arena".
+- **GI**: Game Informer, SMITE review, 2014-03-25. https://gameinformer.com/games/smite/b/pc/archive/2014/03/25/smite-review.aspx (quoted from a search summary, not opened).
+- **FAN**: Fanatical, "Yes, You Should Start Playing SMITE". https://www.fanatical.com/en/blog/yes-you-should-start-playing-smite (quoted from a search summary, not opened).
+- **PCG**: PC Gamer, "Why I love Smite's 4v4 Siege mode". https://pcgamer.com/why-i-love-smites-4v4-siege-mode (search summary).
+- **STEAM**: SMITE 2 Steam discussion, https://steamcommunity.com/app/2437170/discussions/0/4522262234237579257/ (search summary).
+- **WIKIPEDIA-mirror**: "Smite (video game)", IPFS mirror of Wikipedia, for "The Grand Colosseum" (search summary).
+- Reddit: none of the searches returned a Reddit thread. Tracker.gg: not consulted.

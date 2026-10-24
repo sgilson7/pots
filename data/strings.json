@@ -22,7 +22,10 @@
   "arcade.custom.start_aram": "Deal my hero",
   "arcade.mode": "Mode",
   "mode.normal": "Normal",
+  "mode.normal.text": "Three lanes with towers and barracks, as in DotA. The side whose Sphere breaks loses.",
   "mode.aram": "All Random All Mid",
+  "mode.arena": "Arena",
+  "mode.arena.text": "A small round map with a base at each end and no towers. Each side starts with 500 tickets and loses them when its heroes die, when heroes kill its creeps, and when enemy creeps walk into its portal. Camps on each side give buffs. Choose any hero.",
   "mode.aram.text": "Each player is dealt a random hero and may reroll before the start. All ten fight in the middle lane, and a cannon at each base throws heroes back to it. Heroes start a few levels up and earn experience and gold faster than in a normal match.",
   "pick.title": "Choose your hero",
   "heroes.title": "Heroes",
@@ -313,6 +316,16 @@
    "name": "Shiver",
    "title": "The Glacier Owl",
    "text": "An old snow owl woken from a glacier. It freezes enemies who stand still, softens them for spells, and drops a star of hail on them from anywhere on the map."
+  },
+  "tallow": {
+   "name": "Tallow",
+   "title": "The Lantern Moth",
+   "text": "A moth that bears a grudge and an ember. It stuns with a thrown ember, strips armor with a wave of dusk, raises the damage of every ally near, and trades places with any hero."
+  },
+  "skipjack": {
+   "name": "Skipjack",
+   "title": "The Star Frog",
+   "text": "A pond frog who reads the night sky. It calls stars down on enemies near, shoots one long arrow that stuns longer the farther it flies, leaps ahead to speed its allies, and hides every allied hero."
   }
  },
  "abilities": {
@@ -539,6 +552,38 @@
   "ice_blast_release": {
    "name": "Hailfall",
    "text": "Bursts the Hailstar where it is now. The hail falls from Shiver to that spot."
+  },
+  "magic_missile": {
+   "name": "Ember Dart",
+   "text": "Throws an ember at one enemy. It deals {damage} magic damage and stuns for {stun:s} seconds."
+  },
+  "wave_of_terror": {
+   "name": "Dusk Wave",
+   "text": "Sends a wave of dusk {length} ahead. Each enemy it passes loses {damage_x100:s} health and {armor} armor for {duration:s} seconds."
+  },
+  "command_aura": {
+   "name": "Lamplight",
+   "text": "Allies within {radius}, creeps too, gain {pct:%} of their base attack damage."
+  },
+  "nether_swap": {
+   "name": "Moth Switch",
+   "text": "Trades places with a hero, ally or enemy, even one immune to spells. Trees round both spots fall, and the hero's channel breaks."
+  },
+  "starfall": {
+   "name": "Star Shower",
+   "text": "After a moment, stars strike every enemy within {radius} for {damage} magic damage. One enemy within {second} of Skipjack is struck again for {second_pct:%} of that."
+  },
+  "elune_arrow": {
+   "name": "Comet Arrow",
+   "text": "Shoots a long arrow that stops at the first enemy it meets and deals {damage} magic damage. It stuns for {stun_min:s} seconds, longer the farther it flew, up to {stun_max:s} seconds."
+  },
+  "leap": {
+   "name": "Lily Leap",
+   "text": "Leaps {distance} the way Skipjack faces. Where it lands, allied heroes within {radius} gain {attack_pct:%} attack speed and {move_pct:%} movement speed for {duration:s} seconds."
+  },
+  "moonlight_shadow": {
+   "name": "Pond Mist",
+   "text": "Every allied hero turns invisible for {duration:s} seconds, after a fade of {fade:s} seconds. Attacking or casting shows a hero again until it waits out the fade."
   }
  },
  "items": {
@@ -932,6 +977,8 @@
   "creep_melee_mega_moon": "Elite Moonward Thrall",
   "creep_ranged_mega_moon": "Elite Moonward Caster",
   "creep_siege_mega_moon": "Elite Moonward Catapult",
+  "brute_sun": "Sunward Brute",
+  "brute_moon": "Moonward Brute",
   "tower1_moon": "Moonward Outer Tower",
   "tower2_moon": "Moonward Inner Tower",
   "tower3_moon": "Moonward Base Tower",

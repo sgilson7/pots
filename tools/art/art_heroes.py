@@ -352,5 +352,69 @@ def shiver(rng):
     return fig
 
 
+def tallow(rng):
+    """Tallow (round 8, after Vengeful Spirit): a lantern moth, a round
+    fuzzy head with two big dark eyes, feathered antennae, a ruff in the
+    side's colour and dusk wings with amber eye spots."""
+    fig = hero_fig("tallow")
+    fuzz = "cloth!70!snow"
+    with M.clipped(fig):
+        # the wings, spread behind
+        for sgn in (-1, 1):
+            fig.blob([(C + sgn * 0.2, 0.5), (C + sgn * 0.86, 0.36), (C + sgn * 0.96, 0.92), (C + sgn * 0.62, 1.22), (C + sgn * 0.3, 0.96)],
+                     "violet!60!night", tension=0.45)
+            fig.blob([(C + sgn * 0.3, 0.6), (C + sgn * 0.78, 0.5), (C + sgn * 0.84, 0.88), (C + sgn * 0.58, 1.08), (C + sgn * 0.36, 0.9)],
+                     "violet", tension=0.45)
+            fig.circle(C + sgn * 0.66, 0.8, 0.12, "gold")
+            fig.circle(C + sgn * 0.66, 0.8, 0.06, "flamehot")
+        shoulders(fig, fuzz, w=0.44, top=0.6)
+        for y in (0.16, 0.32):
+            fig.ellipse(C, y, 0.4, 0.035, "violet!50!cloth")
+        # the ruff
+        fig.ellipse(C, 0.6, 0.38, 0.1, "gold")
+        # feathered antennae
+        for sgn in (-1, 1):
+            fig.stroke([(C + sgn * 0.12, 1.32), (C + sgn * 0.26, 1.6), (C + sgn * 0.4, 1.74)], width=M.THIN, smooth=True)
+            for i in range(3):
+                x, y = C + sgn * (0.2 + i * 0.07), 1.5 + i * 0.08
+                fig.ellipse(x + sgn * 0.05, y, 0.06, 0.02, "violet", rot=sgn * 30)
+        # the head and its eyes
+        fig.circle(C, 1.0, 0.36, fuzz)
+        for sgn in (-1, 1):
+            fig.ellipse(C + sgn * 0.15, 1.02, 0.12, 0.15, "night")
+            fig.circle(C + sgn * 0.12, 1.08, 0.035, "flamehot")
+        fig.stroke([(C - 0.06, 0.82), (C, 0.79), (C + 0.06, 0.82)], width=M.THIN, smooth=True)
+    return fig
+
+
+def skipjack(rng):
+    """Skipjack (round 8, after Mirana): a pond frog, a wide head with its
+    eyes on top, a long smile, a hood of night cloth sewn with stars and a
+    reed bow over one shoulder."""
+    fig = hero_fig("skipjack")
+    frog, belly = "leaf!80!snow", "venom!30!snow"
+    with M.clipped(fig):
+        # the bow behind, over the right shoulder
+        fig.stroke([(C + 0.62, 0.1), (C + 0.82, 0.8), (C + 0.6, 1.5)], width=3.2, role="moss", smooth=True)
+        fig.stroke([(C + 0.62, 0.1), (C + 0.6, 1.5)], width=M.THIN, role="cloth")
+        # the hood and cape
+        fig.blob([(C - 0.7, 0.0), (C - 0.62, 0.8), (C - 0.36, 1.36), (C, 1.5), (C + 0.36, 1.36), (C + 0.62, 0.8), (C + 0.7, 0.0)], "night", tension=0.45)
+        for x, y in ((C - 0.42, 1.0), (C + 0.44, 0.9), (C - 0.3, 1.3), (C + 0.26, 1.34), (C - 0.5, 0.5)):
+            M.star(fig, x, y, 0.05, "spark")
+        shoulders(fig, frog, w=0.46, top=0.5)
+        fig.ellipse(C, 0.26, 0.26, 0.22, belly)
+        fig.ellipse(C, 0.52, 0.42, 0.06, "gold")
+        # the wide head, the eyes up on top
+        fig.ellipse(C, 0.86, 0.42, 0.3, frog)
+        fig.ellipse(C, 0.76, 0.34, 0.14, belly)
+        for sgn in (-1, 1):
+            fig.circle(C + sgn * 0.2, 1.12, 0.14, frog)
+            fig.circle(C + sgn * 0.2, 1.14, 0.1, "snow")
+            fig.circle(C + sgn * 0.21, 1.14, 0.03, "ink")
+        fig.stroke([(C - 0.24, 0.86), (C, 0.8), (C + 0.24, 0.86)], width=M.THIN, smooth=True)
+    return fig
+
+
 PICTURES = {f"heroes/{f.__name__}": f for f in
-            (ironvow, rime, cinder, thistle, gristle, tectus, kestrel, hexwright, longwick, tempest, hackle, chipper, shiver)}
+            (ironvow, rime, cinder, thistle, gristle, tectus, kestrel, hexwright, longwick, tempest, hackle, chipper, shiver,
+             tallow, skipjack)}

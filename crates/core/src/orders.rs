@@ -551,6 +551,14 @@ fn act_one(w: &mut World, ctx: &Ctx, id: Uid) {
     match order {
         Order::Idle => {
             let t = u.target;
+            // an invisible unit attacks only when told to, as in Warcraft III (round 8)
+            let hidden = u.has(M::Invisible);
+            if hidden {
+                if let Some(u) = w.get_mut(id) {
+                    u.target = NO_UNIT;
+                }
+                return;
+            }
             if t != NO_UNIT && w.live(t).is_some() && engage(w, ctx, id, t, true) {
                 // keep fighting what we were fighting, if it stays near home
                 return;

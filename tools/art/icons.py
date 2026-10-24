@@ -34,6 +34,8 @@ ELEMENT = {
     "hackle": "blood",
     "chipper": "earth",
     "shiver": "frost",
+    "tallow": "arcane",
+    "skipjack": "storm",
     "warden": "earth",
 }
 

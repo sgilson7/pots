@@ -187,7 +187,7 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
 <div class="wrap">
 
 <div class="journal-head">
-  <div class="eyebrow">Protection of the Spheres · design journal · last entry 20 October 2026</div>
+  <div class="eyebrow">Protection of the Spheres · design journal · last entry 24 October 2026</div>
   <h1>Protection of the Spheres</h1>
   <p class="lede">A browser game that plays like the Warcraft III map Defense of the Ancients, with heroes of its own. One tab for each round of work. New rounds are added as new tabs.</p>
   <div class="tabbar" role="tablist" aria-label="Journal entries">
@@ -204,6 +204,7 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
     <button role="tab" id="t-ground" aria-controls="p-ground" aria-selected="false" tabindex="-1"><small>11 · 18 Oct</small><span>One surface for the ground</span></button>
     <button role="tab" id="t-twoheroes" aria-controls="p-twoheroes" aria-selected="false" tabindex="-1"><small>12 · 19 Oct</small><span>Hackle and Chipper</span></button>
     <button role="tab" id="t-shiver" aria-controls="p-shiver" aria-selected="false" tabindex="-1"><small>13 · 20 Oct</small><span>Shiver</span></button>
+    <button role="tab" id="t-round8" aria-controls="p-round8" aria-selected="false" tabindex="-1"><small>14 · 24 Oct</small><span>Tallow, Skipjack, the arena</span></button>
     <!--TABS-->
   </div>
 </div>
@@ -1648,6 +1649,129 @@ dialog.lightbox button { position: absolute; top: 8px; right: 8px; font: inherit
 <footer>Mockup: <code>journal/mockups/heroes3.js</code> (three.js r160, MIT), pictures from <code>ART=art7 LOOK=ape shoot.py</code>. In-game pictures: <code>tools/shots.py</code> and <code>tools/castgif.py</code> on the build of 20 October 2026. Icons: <code>tools/art/</code> (TikZ). Tips: <code>cargo run -p pots_core --example tips</code>. This tab is written by <code>journal/mockups/tab13.py</code>.</footer>
 </div>
 <!--/TAB 13-->
+<!-- ======================================================= TAB 14 -->
+<div class="panel-tab" role="tabpanel" id="p-round8" aria-labelledby="t-round8" hidden>
+<header style="display:grid;gap:12px">
+  <div class="eyebrow">Entry 14 · 24 October 2026 · two added heroes and the arena (triage T38)</div>
+  <h2>Tallow, Skipjack and the arena</h2>
+  <p class="lede">Two heroes that play as DotA's Vengeful Spirit and Mirana, with names and looks of their own, and a new mode after SMITE 2's Arena: a small round map, tickets instead of towers, a small jungle on each side, any hero. Part 1 is the literature review. Part 2 is the mockups beside the game. Part 3 is every ability, cast in the game. Part 4 is the arena. Part 5 is what is built and four questions for you. Both heroes are on the roster and the arena is in online play and the custom match. Click any picture to see it larger.</p>
+</header>
+
+<section>
+  <div class="section-head"><div class="eyebrow">The request</div><h2>In your words</h2></div>
+  <blockquote>ok, now please add in pots renditions of wc3 dota vengeful spirit and mirana, make the mockups first, make sure they style match the game and are far from actual dota characters, abilities should be the same as usual, add to the heroes page, make sure the online still works, add a circular map like arena from smite 2 for online play where you can select any champion, with the ticket system, small jungle on the sides, etc</blockquote>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 1</div><h2>How Shendelzare and Mirana played in DotA</h2></div>
+  <p>From playdota's hero pages read through the Wayback Machine (2010–2012), IceFrog's changelogs from 6.71 to 6.73c, the Dota 2 Wiki's DotA-era pages and seven 2009–2011 playdota guides; every number with its source in <code>notes/LITERATURE.md</code>, section 9. Dota 2 changed both: Vengeful Spirit gained a death aura and illusions, Mirana's Leap charges and her arrow damage by distance.</p>
+  <div class="table-scroll"><table>
+    <thead><tr><th>What</th><th>As of 6.72/6.73</th><th>Sources</th></tr></thead>
+    <tbody><tr><td><b>Vengeful Spirit</b></td><td>No balance change in 6.72–6.73c. Wave of Terror only takes armor since 6.71 (it took attack damage before). No death aura or illusions: those came in 6.81 and later.</td><td><code>[PD-VS-6.72], [CL-6.71]</code></td></tr><tr><td><b>Wave of Terror</b></td><td>Takes health, not damage, so magic resistance does not cut it; it can still kill and last-hit. 20 s of armor loss, 15 s cooldown.</td><td><code>[PD-VS-6.72]</code></td></tr><tr><td><b>Nether Swap</b></td><td>Heroes only, ally or enemy, through spell immunity; trees fall round both spots; 600/900/1200 range.</td><td><code>[PD-VS-6.72]</code></td></tr><tr><td><b>Mirana</b></td><td>No balance change in 6.72–6.73c. 6.73 fixed Elune&#x27;s Arrow damaging but not stunning invisible units (built as 6.73).</td><td><code>[PD-POM-6.72], [CL-6.73]</code></td></tr><tr><td><b>Elune&#x27;s Arrow</b></td><td>Flat damage (distance damage came in 6.78); a stun of 0.5 s for each 150 flown, up to 5 s at 1500; it hits creeps.</td><td><code>[PD-POM-6.72], [G-Competitive]</code></td></tr><tr><td><b>Leap</b></td><td>No charges in 6.72; the buff to allies on landing, not at the cast (6.79).</td><td><code>[PD-POM-6.72], [D2W-POMCL]</code></td></tr><tr><td><b>Moonlight Shadow</b></td><td>175 mana, 11 s on every allied hero; attacking or casting shows a hero until the fade passes again; hidden heroes do not attack on their own.</td><td><code>[PD-POM-6.72]</code></td></tr></tbody>
+  </table></div>
+  <h3 class="sub">Not settled by any source, and what the game uses</h3>
+  <ul><li>Speeds and delays no DotA source gives: Magic Missile 1250, Wave of Terror 2000, Starfall&#x27;s 0.57 s, Elune&#x27;s Arrow 857, Leap 2000 (Dota 2&#x27;s).</li><li>Leap&#x27;s distances: 630/720/780/870 (older playdota, the Dota 2 wiki) against late-2010 playdota&#x27;s 630/690/780/840.</li><li>Not built: the vision Wave of Terror and Elune&#x27;s Arrow give, and Leap&#x27;s instant of invisibility that makes shots already in flight miss.</li></ul>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 2</div><h2>The mockups, then the game</h2></div>
+  <p>Drawn first, in the round-2 style the other thirteen share: round, faceted, an outline that reads from the raised camera. Then built into the game from the same shapes. Neither borrows from Blizzard or Valve: a moth instead of a winged spirit, a frog instead of a priestess on a cat.</p>
+  <figure class="gpair"><div class="gpair-row"><div><span class="chip">mockup</span><button class="zoom" data-full="art8/models/hero_tallow.jpg" data-cap="Tallow: mockup"><img loading="lazy" src="art8/models/hero_tallow.jpg" alt="Tallow: mockup"></button></div><div><span class="chip acc">in the game</span><button class="zoom" data-full="art8/game/tallow.jpg" data-cap="Tallow: in the game"><img loading="lazy" src="art8/game/tallow.jpg" alt="Tallow: in the game"></button></div></div>
+  <figcaption><b>Tallow</b> (abilities of Vengeful Spirit (Shendelzare)). A lantern moth, round and fuzzy, with two pairs of dusk wings marked with an eye spot in its side&#x27;s colour, feathered antennae, big dark eyes with an amber shine, a banded belly and a ruff in its side&#x27;s colour. It holds an ember in one hand to throw. No wings of a harpy, no spirit of vengeance.</figcaption></figure><figure class="gpair"><div class="gpair-row"><div><span class="chip">mockup</span><button class="zoom" data-full="art8/models/hero_skipjack.jpg" data-cap="Skipjack: mockup"><img loading="lazy" src="art8/models/hero_skipjack.jpg" alt="Skipjack: mockup"></button></div><div><span class="chip acc">in the game</span><button class="zoom" data-full="art8/game/skipjack.jpg" data-cap="Skipjack: in the game"><img loading="lazy" src="art8/game/skipjack.jpg" alt="Skipjack: in the game"></button></div></div>
+  <figcaption><b>Skipjack</b> (abilities of Priestess of the Moon (Mirana)). A pond frog with its eyes on top of its head, a long smile, a pale belly and long folded legs for the leap. It wears a hood of night cloth sewn with stars, trimmed in its side&#x27;s colour, carries a reed bow and a quiver of star-tipped arrows. No priestess and no great cat to ride.</figcaption></figure>
+  <figure class="gpair"><div><button class="zoom" data-full="art8/game/lineup.jpg" data-cap="Tallow and Skipjack beside Shiver, Thistle and Rime, in the game"><img loading="lazy" src="art8/game/lineup.jpg" alt="Tallow and Skipjack beside Shiver, Thistle and Rime, in the game"></button></div><figcaption><b>Beside the roster.</b> Tallow and Skipjack with Shiver, Thistle (the other archer) and Rime, in the game's model viewer.</figcaption></figure>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 3</div><h2>Every ability, cast in the game</h2></div>
+  <p>Each animation is the game itself: its cast stage puts the hero at full levels beside an ally, three enemy creeps and an enemy hero, and the frames are the following ticks (<code>tools/castgif.py</code>). The rule under each is the game's own tip.</p>
+  <div class="hgroup"><div class="hhead"><img class="aicon big" src="art8/icons/hero_tallow.png" alt="" width="56" height="56"><h3>Tallow</h3></div>
+  <p class="lede" style="font-size:15px">Plays as Vengeful Spirit (Shendelzare). Agility 27 + 2.35, strength 16 + 2.3, intelligence 15 + 1.75; 454 health, 195 mana; ranged 400 at 1.7 s base attack time, an ember shot flying 1500 a second; 295 move speed; 1800 sight by day, 800 by night.</p>
+  <div class="agrid"><article class="acard">
+  <header><img class="aicon" src="art8/icons/magic_missile.png" alt="" width="44" height="44"><div><h3>Ember Dart</h3><div class="ameta"></div></div></header>
+  <button class="zoom gif" data-full="art8/abilities/magic_missile.jpg" data-cap="Ember Dart: in the game"><img loading="lazy" src="art8/abilities/magic_missile.gif" alt="Ember Dart cast in the game: Tallow throws a glowing ember between two fluttering dusk wings, trailing sparks, straight at one enemy." width="480" height="270"></button>
+  <p><b>What you see.</b> Tallow throws a glowing ember between two fluttering dusk wings, trailing sparks, straight at one enemy.</p>
+  <p><b>How you can tell.</b> It always reaches its target. A flash and a ring where it lands; the enemy stands stunned.</p>
+  <p class="rule">Throws an ember at one enemy. It deals 100 / 175 / 250 / 325 magic damage and stuns for 1.45 / 1.55 / 1.65 / 1.75 seconds. <span>Mana: 110 / 120 / 130 / 140 · Cooldown: 10 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art8/icons/wave_of_terror.png" alt="" width="44" height="44"><div><h3>Dusk Wave</h3><div class="ameta"></div></div></header>
+  <button class="zoom gif" data-full="art8/abilities/wave_of_terror.jpg" data-cap="Dusk Wave: in the game"><img loading="lazy" src="art8/abilities/wave_of_terror.gif" alt="Dusk Wave cast in the game: A row of dusk motes rolls out along the ground, rising and falling out of step." width="480" height="270"></button>
+  <p><b>What you see.</b> A row of dusk motes rolls out along the ground, rising and falling out of step.</p>
+  <p><b>How you can tell.</b> Every enemy it passes loses health and armor: the armor stays down for 20 seconds, so it marks a target for the fight to come.</p>
+  <p class="rule">Sends a wave of dusk 1400 ahead. Each enemy it passes loses 18.75 / 37.5 / 56.25 / 75 health and 2 / 3 / 4 / 5 armor for 20 seconds. <span>Mana: 40 · Cooldown: 15 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art8/icons/command_aura.png" alt="" width="44" height="44"><div><h3>Lamplight</h3><div class="ameta">Passive</div></div></header>
+  <button class="zoom gif" data-full="art8/abilities/command_aura.jpg" data-cap="Lamplight: in the game"><img loading="lazy" src="art8/abilities/command_aura.gif" alt="Lamplight cast in the game: Nothing to see: an aura. Allies near Tallow, creeps too, hit harder." width="480" height="270"></button>
+  <p><b>What you see.</b> Nothing to see: an aura. Allies near Tallow, creeps too, hit harder.</p>
+  <p><b>How you can tell.</b> The damage on an ally&#x27;s tip shows the bonus while it stands within 900.</p>
+  <p class="rule">Allies within 900, creeps too, gain 12% / 20% / 28% / 36% of their base attack damage. <span></span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art8/icons/nether_swap.png" alt="" width="44" height="44"><div><h3>Moth Switch</h3><div class="ameta">Ultimate</div></div></header>
+  <button class="zoom gif" data-full="art8/abilities/nether_swap.jpg" data-cap="Moth Switch: in the game"><img loading="lazy" src="art8/abilities/nether_swap.gif" alt="Moth Switch cast in the game: A flash of dusk where Tallow stood and where the other hero stood, and the two have traded places." width="480" height="270"></button>
+  <p><b>What you see.</b> A flash of dusk where Tallow stood and where the other hero stood, and the two have traded places.</p>
+  <p><b>How you can tell.</b> Only heroes, ally or enemy; it works on a hero immune to spells and breaks its channel. Trees round both spots fall.</p>
+  <p class="rule">Trades places with a hero, ally or enemy, even one immune to spells. Trees round both spots fall, and the hero&#x27;s channel breaks. <span>Mana: 100 / 150 / 200 · Cooldown: 45 s</span></p>
+</article></div></div><div class="hgroup"><div class="hhead"><img class="aicon big" src="art8/icons/hero_skipjack.png" alt="" width="56" height="56"><h3>Skipjack</h3></div>
+  <p class="lede" style="font-size:15px">Plays as Priestess of the Moon (Mirana). Agility 20 + 2.75, strength 17 + 1.85, intelligence 17 + 1.65; 473 health, 221 mana; ranged 600 at 1.7 s base attack time, a star shot flying 900 a second; 300 move speed; 1800 sight by day, 1200 by night.</p>
+  <div class="agrid"><article class="acard">
+  <header><img class="aicon" src="art8/icons/starfall.png" alt="" width="44" height="44"><div><h3>Star Shower</h3><div class="ameta"></div></div></header>
+  <button class="zoom gif" data-full="art8/abilities/starfall.jpg" data-cap="Star Shower: in the game"><img loading="lazy" src="art8/abilities/starfall.gif" alt="Star Shower cast in the game: A ring opens round Skipjack and stars drop toward it; when they land, a flash and a ring the size of the area." width="480" height="270"></button>
+  <p><b>What you see.</b> A ring opens round Skipjack and stars drop toward it; when they land, a flash and a ring the size of the area.</p>
+  <p><b>How you can tell.</b> A beam of light marks the second star on one enemy close to Skipjack.</p>
+  <p class="rule">After a moment, stars strike every enemy within 625 for 75 / 150 / 225 / 300 magic damage. One enemy within 175 of Skipjack is struck again for 50% of that. <span>Mana: 100 / 120 / 140 / 160 · Cooldown: 12 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art8/icons/elune_arrow.png" alt="" width="44" height="44"><div><h3>Comet Arrow</h3><div class="ameta"></div></div></header>
+  <button class="zoom gif" data-full="art8/abilities/elune_arrow.jpg" data-cap="Comet Arrow: in the game"><img loading="lazy" src="art8/abilities/elune_arrow.gif" alt="Comet Arrow cast in the game: A big four-pointed star flies out along the ground with a long pale tail." width="480" height="270"></button>
+  <p><b>What you see.</b> A big four-pointed star flies out along the ground with a long pale tail.</p>
+  <p><b>How you can tell.</b> It stops at the first enemy it meets, creeps too. The farther it flew, the longer the stun: half a second close, five seconds from 1500.</p>
+  <p class="rule">Shoots a long arrow that stops at the first enemy it meets and deals 90 / 180 / 270 / 360 magic damage. It stuns for 0.5 seconds, longer the farther it flew, up to 5 seconds. <span>Mana: 100 · Cooldown: 25 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art8/icons/leap.png" alt="" width="44" height="44"><div><h3>Lily Leap</h3><div class="ameta"></div></div></header>
+  <button class="zoom gif" data-full="art8/abilities/leap.jpg" data-cap="Lily Leap: in the game"><img loading="lazy" src="art8/abilities/leap.gif" alt="Lily Leap cast in the game: Skipjack bounds forward the way it faces and lands in a ring of light." width="480" height="270"></button>
+  <p><b>What you see.</b> Skipjack bounds forward the way it faces and lands in a ring of light.</p>
+  <p><b>How you can tell.</b> Allied heroes inside the ring when it lands, Skipjack too, run and strike faster for 10 seconds.</p>
+  <p class="rule">Leaps 630 / 720 / 780 / 870 the way Skipjack faces. Where it lands, allied heroes within 775 gain 4% / 8% / 12% / 16% attack speed and 4% / 8% / 12% / 16% movement speed for 10 seconds. <span>Mana: 40 / 35 / 30 / 20 · Cooldown: 30 / 26 / 22 / 18 s</span></p>
+</article><article class="acard">
+  <header><img class="aicon" src="art8/icons/moonlight_shadow.png" alt="" width="44" height="44"><div><h3>Pond Mist</h3><div class="ameta">Ultimate</div></div></header>
+  <button class="zoom gif" data-full="art8/abilities/moonlight_shadow.jpg" data-cap="Pond Mist: in the game"><img loading="lazy" src="art8/abilities/moonlight_shadow.gif" alt="Pond Mist cast in the game: A ring and a rising light round Skipjack; every allied hero, anywhere on the map, fades." width="480" height="270"></button>
+  <p><b>What you see.</b> A ring and a rising light round Skipjack; every allied hero, anywhere on the map, fades.</p>
+  <p><b>How you can tell.</b> To its own side a hidden hero is drawn see-through. An attack or a spell shows it again until it waits out the fade.</p>
+  <p class="rule">Every allied hero turns invisible for 11 seconds, after a fade of 2.5 / 2 / 1.5 seconds. Attacking or casting shows a hero again until it waits out the fade. <span>Mana: 175 · Cooldown: 180 / 160 / 140 s</span></p>
+</article></div></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Shot</th><th>How it looks</th></tr></thead>
+    <tbody><tr><td><b>Tallow's attack</b></td><td>A small glowing ember between two fluttering dusk wings, 1500 a second, trailing sparks.</td></tr><tr><td><b>Skipjack's attack</b></td><td>A four-pointed star turning as it flies, 900 a second, in a pale halo with a long tail.</td></tr><tr><td><b>Ember Dart</b></td><td>A big ember with wings, the same family as Tallow's attack.</td></tr><tr><td><b>Comet Arrow</b></td><td>A big star, the same family as Skipjack's attack, with a longer tail.</td></tr><tr><td><b>Dusk Wave</b></td><td>Five dusk motes across its way, rising and falling out of step.</td></tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 4</div><h2>The arena</h2></div>
+  <p>After SMITE 2's Arena, which copied SMITE 1's (<code>notes/LITERATURE.md</code>, section 10, from the SMITE wikis, every SMITE 2 patch note and a 2018 guide). A small oval on its own map with a base at each end and no towers. Each side's tickets fall when its heroes die, when heroes kill its creeps and when enemy creeps walk into its portal; the side that runs out loses. Matches between computer players run 16 to 20 minutes, about SMITE's own.</p>
+  <figure class="gpair"><div class="gpair-row"><div><span class="chip">from above</span><button class="zoom" data-full="art8/arena/overview.jpg" data-cap="The arena from above"><img loading="lazy" src="art8/arena/overview.jpg" alt="The arena from above"></button></div><div><span class="chip acc">in a match</span><button class="zoom" data-full="art8/arena/fight.jpg" data-cap="A fight in the arena"><img loading="lazy" src="art8/arena/fight.jpg" alt="A fight in the arena"></button></div></div>
+  <figcaption><b>The map.</b> The Sunward base at the south-west, the Moonward at the north-east, each with its fountain, shop and Sphere (the portal). Two lanes curve round the open middle; waves take one, then the other. On each side, a pocket of jungle holds three camps: red, purple and blue. Everything else is forest.</figcaption></figure>
+  <figure class="gpair"><div class="gpair-row"><div><span class="chip">lobby</span><button class="zoom" data-full="art8/arena/lobby.jpg" data-cap="The online lobby with the arena chosen"><img loading="lazy" src="art8/arena/lobby.jpg" alt="The online lobby with the arena chosen"></button></div><div><span class="chip acc">tickets</span><button class="zoom" data-full="art8/arena/hud.jpg" data-cap="The top bar showing each side&#x27;s tickets"><img loading="lazy" src="art8/arena/hud.jpg" alt="The top bar showing each side&#x27;s tickets"></button></div></div>
+  <figcaption><b>Online.</b> The host's mode switch goes Normal, All Random All Mid, Arena; everyone chooses any hero. In the match the top bar shows each side's tickets where the kills would stand.</figcaption></figure>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Rule</th><th>In the game</th><th>From</th></tr></thead>
+    <tbody><tr><td><b>Tickets</b></td><td>500 a side; at none, the side loses</td><td>SMITE 1 and SMITE 2 (500 again since February 2026)</td></tr><tr><td><b>A hero dies</b></td><td>−5</td><td>both</td></tr><tr><td><b>A hero kills a creep</b></td><td>−1 (a creep&#x27;s kill costs nothing); none once the side is down to its last 10</td><td>SMITE 1&#x27;s last-ten rule</td></tr><tr><td><b>A creep walks into the portal</b></td><td>−1</td><td>both</td></tr><tr><td><b>A brute walks into the portal</b></td><td>−15 (after SMITE&#x27;s Minotaur)</td><td>both</td></tr><tr><td><b>Waves</b></td><td>every 20 s: 3 melee, 3 ranged, 1 siege; by the top lane, then the bottom, turn about</td><td>SMITE 1</td></tr><tr><td><b>Brutes</b></td><td>one for each side every 3 minutes</td><td>SMITE 2 (since July 2025)</td></tr><tr><td><b>Camps</b></td><td>three in each side&#x27;s jungle; back 3 minutes after cleared; the hero who clears one gets its buff for 2 minutes</td><td>SMITE 2</td></tr><tr><td><b>Buffs</b></td><td>red: +20% damage; blue: +3 mana a second; purple: +15% attack speed</td><td>the agent&#x27;s, in DotA&#x27;s terms (R8.9)</td></tr><tr><td><b>Pace</b></td><td>level 3, 1,000 gold, half again the experience and twice the gold a second, half the usual respawn wait</td><td>the agent&#x27;s (R8.9)</td></tr><tr><td><b>Towers</b></td><td>none; the Sphere is the portal and nothing can hurt it; the fountain still guards the base</td><td>both</td></tr></tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="section-head"><div class="eyebrow">Part 5</div><h2>What is built</h2></div>
+  <div class="table-scroll"><table>
+    <thead><tr><th>Step</th><th>What</th><th>State</th></tr></thead>
+    <tbody><tr><td>Mockups</td><td>Both heroes drawn in the round-2 style on the shared chibi body, before any code: Part 2.</td><td>Done</td></tr><tr><td>Rules</td><td>All eight abilities in the core with their 6.72/6.73 numbers; 10 tests worked out by hand, break rows for each.</td><td>Done</td></tr><tr><td>On the roster</td><td>The fourteenth and fifteenth heroes: the pick screen, the deal, the computer players and online rooms include them.</td><td>Done</td></tr><tr><td>Look</td><td>Both models in the game from the mockups; portraits and eight icons; an ember shot and a star shot; the dusk wave, falling stars, the comet arrow.</td><td>Done</td></tr><tr><td>Heroes screen</td><td>Both cards open the inspector; each ability plays on loop.</td><td>Done</td></tr><tr><td>The arena</td><td>A second map, swapped in for an arena match; tickets, portals, waves turn about, brutes, buff camps; the HUD shows tickets; 9 tests.</td><td>Done</td></tr><tr><td>Online</td><td>The host's mode switch goes Normal, All Random All Mid, Arena; every player chooses any hero; online version 9; tested with three browsers on the arena.</td><td>Done</td></tr></tbody>
+  </table></div>
+  <h3 class="sub">Yours to decide, by number</h3>
+  <div class="table-scroll"><table>
+    <thead><tr><th>#</th><th>Question</th></tr></thead>
+    <tbody><tr><td>R8.1</td><td>The names and looks: <b>Tallow</b>, a lantern moth (Ember Dart, Dusk Wave, Lamplight, Moth Switch), and <b>Skipjack</b>, a star frog (Star Shower, Comet Arrow, Lily Leap, Pond Mist). Keep, or change any?</td></tr><tr><td>R8.9</td><td>The arena's pace and buffs are mine, in DotA's terms (1,000 gold, level 3, red/blue/purple as damage, mana and attack speed). Too fast, too slow, or other buffs?</td></tr><tr><td>R8.10</td><td>The arena's size and shape: an oval with the bases 7,000 apart and a pocket of three camps on each side. Want columns or stealth grass in the middle, as SMITE 2 has?</td></tr><tr><td>R8.11</td><td>The brute borrows the melee creep's model at 1¾ times the size. Want a model of its own?</td></tr></tbody>
+  </table></div>
+</section>
+<footer>Mockups: <code>journal/mockups/heroes4.js</code> (three.js r160, MIT), pictures from <code>ART=art8 LOOK=ape shoot.py</code>. In-game pictures: <code>tools/shots.py</code> and <code>tools/castgif.py</code> on the build of 24 October 2026. The arena's map: <code>tools/arena_map.py</code>. Icons: <code>tools/art/</code> (TikZ). Tips: <code>cargo run -p pots_core --example tips</code>. This tab is written by <code>journal/mockups/tab14.py</code>.</footer>
+</div>
+<!--/TAB 14-->
 <!--PANELS-->
 
 </div>

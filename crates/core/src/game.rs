@@ -105,6 +105,8 @@ pub struct Setup {
     pub mission: Option<usize>,
     /// All Random All Mid (round 4): heroes dealt at random, one lane.
     pub aram: bool,
+    /// The arena (round 8): the round map, tickets, any hero.
+    pub arena: bool,
     /// Whether this player has spent their reroll.
     pub rerolled: bool,
 }
@@ -113,6 +115,11 @@ pub struct Game {
     pub rules: Rules,
     pub terrain: Terrain,
     trees0: Vec<Tree>,
+    /// The map not in use, with its ground and forest: the arena's while a
+    /// normal map is in `rules.map`, and the other way round (round 8).
+    other_map: Option<(crate::rules::MapDef, Terrain, Vec<Tree>)>,
+    /// Whether the arena's map is the one in `rules.map`.
+    pub on_arena: bool,
     pub models: Models,
     pub look: Look,
     pub strings: Strings,
@@ -211,6 +218,10 @@ impl Game {
         let mut rules = Rules::load(f.rules, f.units, f.abilities, f.items, f.map)?;
         rules.ai = Some(AiDef::load(f.ai)?);
         let (terrain, trees0) = world::setup(&rules);
+        let other_map = rules.map.arena.take().map(|m| {
+            let (t, trees) = world::setup_map(&rules, &m);
+            (*m, t, trees)
+        });
         let mut models = Models::load(f.models)?;
         for d in &rules.units {
             if models.find(&d.model).is_none() {
@@ -238,6 +249,8 @@ impl Game {
             rules,
             terrain,
             trees0,
+            other_map,
+            on_arena: false,
             models,
             look,
             strings,
@@ -279,6 +292,7 @@ impl Game {
                 hero: -1,
                 mission: None,
                 aram: false,
+                arena: false,
                 rerolled: false,
             },
             alpha: 0,
@@ -290,6 +304,26 @@ impl Game {
             reduced_motion: false,
             showcase: None,
         })
+    }
+
+    /// Puts the arena's map (or the normal one) in `rules.map`, with its
+    /// ground and forest. Every rule reads the map from there, so a match
+    /// on the arena needs nothing else to know which map it stands on.
+    pub fn use_map(&mut self, arena: bool) {
+        if arena == self.on_arena {
+            return;
+        }
+        if let Some((m, t, trees)) = self.other_map.as_mut() {
+            std::mem::swap(&mut self.rules.map, m);
+            std::mem::swap(&mut self.terrain, t);
+            std::mem::swap(&mut self.trees0, trees);
+            self.on_arena = arena;
+        }
+    }
+
+    /// Whether the data holds an arena map.
+    pub fn has_arena(&self) -> bool {
+        self.other_map.is_some() && self.rules.arena.is_some()
     }
 
     pub fn ctx(&self) -> Ctx<'_> {
@@ -338,8 +372,14 @@ impl Game {
     pub fn start_arcade(&mut self) {
         let s = self.setup;
         let aram = s.aram && s.mission.is_none();
+        let arena = s.arena && s.mission.is_none() && self.has_arena();
         let deal = self.arcade_deal();
+        self.use_map(arena);
         let mut w = World::new_mode(&self.ctx(), self.trees0.clone(), self.arcade_seed(), aram);
+        w.arena = arena;
+        if arena {
+            crate::arena::start(&mut w, &self.ctx());
+        }
         self.played += 1;
         let t = &self.rules.t;
         // a shorter wait before the first wave in the arcade
@@ -370,6 +410,7 @@ impl Game {
 
     /// Puts a world on screen as the current match.
     pub fn begin(&mut self, w: World, me: usize, mission: Option<usize>, online: bool) {
+        self.use_map(w.arena);
         let spawn = self.rules.map.sides[w.players[me].team as usize].spawn;
         self.view.target = spawn;
         self.prev.clear();
@@ -1305,12 +1346,27 @@ impl Game {
                 }
                 self.stage = Some(Stage::Lineup(names, gap));
             }
-            "overview" => {
+            "overview" | "arenaview" => {
+                // `arenaview` shows the arena's map from above (round 8)
+                self.use_map(kind == "arenaview");
                 self.stage = Some(Stage::Overview);
             }
-            "match" | "map" => {
+            "match" | "map" | "arena" | "arenamap" => {
+                // `arena:<seconds>` and `arenamap:<x>,<y>` do the same on the arena (round 8)
+                let on_arena = kind.starts_with("arena") && self.has_arena();
+                self.use_map(on_arena);
+                let kind = if kind == "arena" {
+                    "match"
+                } else if kind == "arenamap" {
+                    "map"
+                } else {
+                    kind
+                };
                 let nums: Vec<i32> = arg.split(',').filter_map(|s| s.parse().ok()).collect();
                 let mut w = self.new_world(self.seed);
+                if on_arena {
+                    crate::arena::start(&mut w, &self.ctx());
+                }
                 for p in 0..PLAYERS {
                     w.players[p].bot = Some(2);
                     w.players[p].present = true;
@@ -1541,6 +1597,27 @@ impl Game {
             }
             u.facing = 0;
         }
+        // Leap goes the way the hero faces (round 8): face the way with
+        // open ground where it lands, so the bound shows clear of the forest
+        if self.rules.abilities[k].logic == "leap" {
+            let d = self.rules.abilities[k].v("distance", 4);
+            let here = w.get(me).map(|u| u.pos()).unwrap_or(spot);
+            let walk = w.walk(&self.terrain);
+            let pc = self.terrain.path_cell;
+            let open = (0..16).map(|i| fx::TURN * i / 16).find(|&a| {
+                let to = [here[0] + fx::cos(a) * d / ONE, here[1] + fx::sin(a) * d / ONE];
+                (1..=4).all(|s| {
+                    let p = [
+                        here[0] + (to[0] - here[0]) * s / 4,
+                        here[1] + (to[1] - here[1]) * s / 4,
+                    ];
+                    !crate::path::Grid::blocked(&walk, p[0] / pc, p[1] / pc)
+                })
+            });
+            if let (Some(a), Some(u)) = (open, w.get_mut(me)) {
+                u.facing = a;
+            }
+        }
         // level 16, so the ultimate's mana is in the pool, then one tick so
         // the side sees its targets
         crate::combat::give_xp(&mut w, &ctx, me, 100_000);
@@ -1549,6 +1626,9 @@ impl Game {
         w.get_mut(me).expect("added").mana = max * 1000;
         let t = if self.rules.abilities[k].on == "ally" {
             w.players[1].hero
+        } else if self.rules.abilities[k].values.contains_key("heroes_only") {
+            // Nether Swap (round 8) takes a hero: the enemy one
+            foe
         } else {
             creeps[1]
         };
@@ -1782,6 +1862,7 @@ impl Game {
                         }
                     }
                     self.m = None;
+                    self.use_map(false);
                 }
                 self.screen = value.to_string();
                 self.stage = None;
@@ -1833,6 +1914,7 @@ impl Game {
                     hero: ms.hero,
                     mission: Some(k),
                     aram: false,
+                    arena: false,
                     rerolled: false,
                 };
                 self.screen = "pick".into();
@@ -1846,7 +1928,19 @@ impl Game {
                 }
                 self.screen = "pick".into();
             }
-            "setup.mode" => self.setup.aram = !self.setup.aram,
+            "setup.mode" => {
+                // normal, then All Random All Mid, then the arena, then normal again
+                let (aram, arena) = match (self.setup.aram, self.setup.arena) {
+                    (false, false) => (
+                        self.rules.aram.is_some(),
+                        !self.rules.aram.is_some() && self.has_arena(),
+                    ),
+                    (true, _) => (false, self.has_arena()),
+                    _ => (false, false),
+                };
+                self.setup.aram = aram;
+                self.setup.arena = arena;
+            }
             "reroll" => {
                 let spare = self.rules.aram.as_ref().map(|a| a.rerolls > 0).unwrap_or(false);
                 if !(self.setup.aram && self.setup.mission.is_none() && spare) {
@@ -1920,6 +2014,7 @@ impl Game {
                     crate::online::leave(self);
                 }
                 self.m = None;
+                self.use_map(false);
                 self.screen = if online { "title".into() } else { "arcade".into() };
             }
             "ability" => self.use_slot(Aim::Ability(num()? as u8)),
@@ -2139,7 +2234,11 @@ impl Game {
 
     /// Bumps when the minimap's ground must be drawn again.
     pub fn ground_version(&self) -> u32 {
-        self.m.as_ref().map(|m| m.world.tree_version + 1).unwrap_or(0)
+        let map = if self.on_arena { 1 << 24 } else { 0 };
+        self.m
+            .as_ref()
+            .map(|m| (m.world.tree_version + 1) | map)
+            .unwrap_or(0)
     }
 }
 

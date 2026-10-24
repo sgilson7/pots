@@ -59,8 +59,8 @@ fn play(g: &mut Game, t: &mut i64, secs: i32) {
 fn every_hero_on_the_heroes_screen_opens_its_inspector() {
     let mut g = heroes_screen();
     let cards = on_screen(&g, "heroes.view");
-    let want: Vec<String> = (0..13).map(|k| k.to_string()).collect();
-    assert_eq!(cards, want, "thirteen heroes, each clickable");
+    let want: Vec<String> = (0..15).map(|k| k.to_string()).collect();
+    assert_eq!(cards, want, "fifteen heroes, each clickable");
     g.act("heroes.view", "10").unwrap();
     let s = g.showcase.as_ref().expect("open");
     assert_eq!((s.hero, s.demo), (10, Demo::Stand));
@@ -82,7 +82,7 @@ fn every_hero_on_the_heroes_screen_opens_its_inspector() {
     );
     g.act("heroes.close", "").unwrap();
     assert!(g.showcase.is_none());
-    assert_eq!(on_screen(&g, "heroes.view").len(), 13, "back to every hero");
+    assert_eq!(on_screen(&g, "heroes.view").len(), 15, "back to every hero");
 }
 
 #[test]

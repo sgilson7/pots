@@ -38,6 +38,11 @@ with sync_playwright() as p:
         before = probe(pgs[1])["net"]["seats"]
         pgs[1].click("[data-a='online.reroll']"); time.sleep(2)
         print("aram lobby: joiner rerolled; host sees", host.inner_text(".lobby .seats").replace("\n", " ")[:200])
+    elif "--arena" in sys.argv:
+        # round 8: the host's switch goes on to the arena; each picks a round-8 hero
+        host.click("[data-a='online.mode']"); time.sleep(1); host.click("[data-a='online.mode']"); time.sleep(2)
+        print("arena lobby: joiner sees arena", probe(pgs[1])["net"].get("arena"))
+        host.click(".hero-mini[data-v='13']"); pgs[1].click(".hero-mini[data-v='14']")
     else:
         host.click(".hero-mini[data-v='0']"); pgs[1].click(".hero-mini[data-v='1']")
     time.sleep(2)

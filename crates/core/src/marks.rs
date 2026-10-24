@@ -583,10 +583,54 @@ pub fn draw_missile(f: &Frame, b: &mut Batch, at: V3, ms: &crate::world::Missile
             b.tint(Mesh::Sphere, &halo, col, ONE / 4);
             trail(b, at, 5, r, f.models.named("ice"));
         }
+        // Tallow's ember (round 8): a glowing coal between two flickering
+        // dusk wings, trailing sparks
+        "ember" => {
+            glow(b, at, r, col, ONE);
+            let side = v3(-dir.z, 0, dir.x);
+            let flap = fx::sin(spin * 5) / 2;
+            let dusk = f.models.named("fx_dusk");
+            for s in [-1, 1] {
+                let p = at.add(side.scale(r * s)).add(v3(0, fx::mul(flap, r) + r / 3, 0));
+                let wing = Affine::translate(p).then(&Affine::scale(v3(r * 3 / 2, r / 3, r * 3 / 2)));
+                b.tint(Mesh::Sphere, &wing, dusk, ONE * 3 / 5);
+            }
+            trail(b, at, 5, r * 2 / 3, col);
+        }
+        // Skipjack's star (round 8): a four-pointed star turning as it
+        // flies, in a pale halo with a long tail; the Comet Arrow is a big one
+        "star" => {
+            star(b, at, r, spin, col);
+            let halo = Affine::translate(at).then(&Affine::scale(v3(r * 3, r * 3, r * 3)));
+            b.tint(Mesh::Sphere, &halo, col, ONE / 4);
+            trail(b, at, 7, r * 2 / 3, col);
+        }
+        // the Dusk Wave (round 8): a row of dusk motes across its way,
+        // rising and falling out of step
+        "dusk" => {
+            let side = v3(-dir.z, 0, dir.x);
+            for i in -2..=2 {
+                let bob = fx::mul(fx::sin(spin * 3 + i * fx::TURN / 5), r / 2);
+                let p = at.add(side.scale(r * i * 2 / 3)).add(v3(0, bob, 0));
+                glow(b, p, r / 2, col, ONE);
+                trail(b, p, 3, r / 2, col);
+            }
+        }
         _ => {
             glow(b, at, r, col, ONE);
             trail(b, at, 4, r, col);
         }
+    }
+}
+
+/// A four-pointed star `r` from its centre to a point, upright, turned by `spin`.
+fn star(b: &mut Batch, at: V3, r: i32, spin: i32, col: Rgb) {
+    for i in 0..2 {
+        let a = Affine::translate(at)
+            .then(&Affine::rot_y(spin))
+            .then(&Affine::rot_z(fx::TURN * i / 4))
+            .then(&Affine::scale(v3(r / 3, r * 2, r / 4)));
+        b.push(LAYER_PLAIN, Mesh::Octa, &a, col, STYLE_GLOW);
     }
 }
 
@@ -681,6 +725,24 @@ pub fn draw_zone(f: &Frame, b: &mut Batch, z: &crate::world::Zone) -> bool {
             if f.w.tick < z.next || z.next == u32::MAX && f.w.tick < z.until {
                 ring(b, floor, r, col, ONE * 3 / 5 + beat / 5);
                 disc(b, floor, r, col, ONE / 6);
+            }
+        }
+        // Starfall (round 8): stars drop toward the ground round her until they land
+        "stars" => {
+            if f.w.tick < z.next {
+                ring(b, floor, r, col, ONE / 2 + beat / 5);
+                let total = (z.next - z.start).max(1) as i32 * ONE;
+                let fall = fx::div(t.min(total), total);
+                for i in 0..7 {
+                    let a = fx::TURN * i * 3 / 7;
+                    let rr = fx::mul(r, ONE * (i % 3 + 1) / 4);
+                    let p = floor.add(v3(
+                        fx::mul(fx::cos(a), rr),
+                        fx::mul(ONE - fall, ONE * 7) + ONE / 4,
+                        fx::mul(fx::sin(a), rr),
+                    ));
+                    star(b, p, big(f, ONE / 2), fx::mul(t, fx::TURN / 9), col);
+                }
             }
         }
         "cloud" => {

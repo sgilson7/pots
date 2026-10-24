@@ -1118,6 +1118,70 @@
    "_after": "mega siege creep (catapult)"
   },
   {
+   "id": "brute_sun",
+   "kind": "creep",
+   "model": "creep_melee_sun",
+   "scale": 175,
+   "hp": 2600,
+   "hp_regen": 50,
+   "armor": 400,
+   "armor_type": "unarmored",
+   "attack_type": "normal",
+   "damage": [
+    70,
+    82
+   ],
+   "range": 100,
+   "bat": 100,
+   "attack_point": 47,
+   "backswing": 53,
+   "speed": 300,
+   "radius": 24,
+   "acquire": 500,
+   "day_vision": 850,
+   "night_vision": 800,
+   "bounty": [
+    90,
+    110
+   ],
+   "xp": 120,
+   "upgrade_hp": 19,
+   "upgrade_damage": 2,
+   "_after": "the arena's brute (round 8), after SMITE's Minotaur: a big melee creep that walks to the enemy portal; no source gives DotA numbers for it"
+  },
+  {
+   "id": "brute_moon",
+   "kind": "creep",
+   "model": "creep_melee_moon",
+   "scale": 175,
+   "hp": 2600,
+   "hp_regen": 50,
+   "armor": 400,
+   "armor_type": "unarmored",
+   "attack_type": "normal",
+   "damage": [
+    70,
+    82
+   ],
+   "range": 100,
+   "bat": 100,
+   "attack_point": 39,
+   "backswing": 44,
+   "speed": 300,
+   "radius": 24,
+   "acquire": 500,
+   "day_vision": 850,
+   "night_vision": 800,
+   "bounty": [
+    90,
+    110
+   ],
+   "xp": 120,
+   "upgrade_hp": 19,
+   "upgrade_damage": 2,
+   "_after": "the arena's brute (round 8), after SMITE's Minotaur: a big melee creep that walks to the enemy portal; no source gives DotA numbers for it"
+  },
+  {
    "id": "tower1_moon",
    "kind": "tower",
    "model": "tower_moon",
@@ -1919,6 +1983,110 @@
     "ice_blast"
    ],
    "_after": "Ancient Apparition (Kaldr), DotA 6.72/6.73; notes/LITERATURE.md 8.1"
+  },
+  {
+   "kind": "hero",
+   "hp": 0,
+   "hp_regen": 25,
+   "mana": 0,
+   "mana_regen": 1,
+   "armor_type": "hero",
+   "attack_type": "hero",
+   "turn": 600,
+   "radius": 24,
+   "day_vision": 1800,
+   "bounty": [
+    0,
+    0
+   ],
+   "xp": 0,
+   "id": "tallow",
+   "night_vision": 800,
+   "model": "hero_tallow",
+   "armor": 0,
+   "damage": [
+    12,
+    26
+   ],
+   "range": 400,
+   "bat": 170,
+   "attack_point": 33,
+   "backswing": 64,
+   "missile": 1500,
+   "speed": 295,
+   "acquire": 800,
+   "attrs": {
+    "primary": "agi",
+    "base": [
+     16,
+     27,
+     15
+    ],
+    "gain": [
+     230,
+     235,
+     175
+    ]
+   },
+   "abilities": [
+    "magic_missile",
+    "wave_of_terror",
+    "command_aura",
+    "nether_swap"
+   ],
+   "_after": "Vengeful Spirit (Shendelzare), DotA 6.72/6.73; notes/LITERATURE.md 9.1"
+  },
+  {
+   "kind": "hero",
+   "hp": 0,
+   "hp_regen": 25,
+   "mana": 0,
+   "mana_regen": 1,
+   "armor_type": "hero",
+   "attack_type": "hero",
+   "turn": 600,
+   "radius": 24,
+   "day_vision": 1800,
+   "bounty": [
+    0,
+    0
+   ],
+   "xp": 0,
+   "id": "skipjack",
+   "night_vision": 1200,
+   "model": "hero_skipjack",
+   "armor": -100,
+   "damage": [
+    18,
+    29
+   ],
+   "range": 600,
+   "bat": 170,
+   "attack_point": 30,
+   "backswing": 70,
+   "missile": 900,
+   "speed": 300,
+   "acquire": 800,
+   "attrs": {
+    "primary": "agi",
+    "base": [
+     17,
+     20,
+     17
+    ],
+    "gain": [
+     185,
+     275,
+     165
+    ]
+   },
+   "abilities": [
+    "starfall",
+    "elune_arrow",
+    "leap",
+    "moonlight_shadow"
+   ],
+   "_after": "Priestess of the Moon (Mirana), DotA 6.72/6.73; notes/LITERATURE.md 9.2"
   }
  ]
 }

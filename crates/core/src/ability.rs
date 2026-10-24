@@ -35,6 +35,8 @@ pub const TAG_ATTR_PCT: i32 = 1100;
 pub const TAG_CHILL: i32 = 3021;
 pub const TAG_TRACER: i32 = 3031;
 pub const TAG_FROZEN: i32 = 3032;
+/// The mod tag of Leap's hold on the leaper while she flies (round 8).
+const TAG_LEAP: u16 = 9300;
 
 fn tagged(u: &Unit, code: i32) -> bool {
     u.mods.iter().any(|m| m.kind == M::Tag && m.b == code)
@@ -194,6 +196,10 @@ pub fn can_start(w: &World, ctx: &Ctx, id: Uid, slot: usize, t: Uid, _p: P) -> b
             return false;
         }
         if v.team != u.team && v.has(M::SpellImmune) && !a.values.contains_key("pierces") {
+            return false;
+        }
+        // Nether Swap (round 8): heroes only, and never the caster itself
+        if a.values.contains_key("heroes_only") && (v.hero.is_none() || v.id == u.id) {
             return false;
         }
         if ctx.rules.units[v.def as usize].kind.is_building() {
@@ -604,6 +610,111 @@ fn effect(w: &mut World, ctx: &Ctx, id: Uid, slot: usize, k: usize, lv: i32, t: 
         "dragon_slave" => {
             let end = toward(here, at, a.v("length", lv));
             point_missile(w, id, here, end, a.v("speed", lv), k, lv, missile_of(ctx, k));
+        }
+        // Wave of Terror (round 8): a wave out along the line that takes
+        // health (6.72: not damage, so magic resistance does not cut it) and
+        // armor from each enemy it passes
+        "terror_wave" => {
+            let end = toward(here, at, a.v("length", lv));
+            point_missile(w, id, here, end, a.v("speed", lv), k, lv, missile_of(ctx, k));
+        }
+        // Nether Swap: the caster and the hero trade places; trees round
+        // both spots fall, and the hero's channel breaks
+        "nether_swap" => {
+            let Some(there) = w.live(t).map(|v| v.pos()) else {
+                return;
+            };
+            w.mark(MK_PROC, k, id, id, here);
+            w.mark(MK_PROC, k, id, t, there);
+            for (u, p) in [(id, there), (t, here)] {
+                if let Some(v) = w.get_mut(u) {
+                    v.x = p[0] * SUB;
+                    v.y = p[1] * SUB;
+                    v.path.clear();
+                }
+            }
+            if let Some(Act::Channel { slot, .. }) = w.get(t).map(|v| v.act) {
+                channel_broken(w, ctx, t, slot as usize);
+            }
+            w.cut_trees_in(ctx, here, 300);
+            w.cut_trees_in(ctx, there, 300);
+        }
+        // Starfall: after a moment every enemy round her is struck, and a
+        // second star falls on one of those close by her for half
+        "starfall" => {
+            let delay = secs_x100(w, a.v("delay", lv)) - w.tick;
+            zone(
+                w,
+                id,
+                here,
+                a.v("radius", lv),
+                k,
+                lv,
+                delay,
+                w.tick + delay + 1,
+                0,
+            );
+        }
+        // Elune's Arrow: a long arrow that stops at the first enemy it meets;
+        // the farther it flew, the longer the stun
+        "elune_arrow" => {
+            let end = toward(here, at, a.range_at(lv));
+            point_missile(w, id, here, end, a.v("speed", lv), k, lv, missile_of(ctx, k));
+        }
+        // Leap: she bounds forward the way she faces, to the nearest open
+        // ground there; on landing, allied heroes round her run and strike faster
+        "leap" => {
+            let f = w.get(id).map(|u| u.facing).unwrap_or(0);
+            let d = a.v("distance", lv);
+            let size = ctx.rules.map.size;
+            let mut to = [
+                (here[0] + fx::cos(f) * d / fx::ONE).clamp(128, size - 128),
+                (here[1] + fx::sin(f) * d / fx::ONE).clamp(128, size - 128),
+            ];
+            let walk = w.walk(ctx.terrain);
+            let pc = ctx.terrain.path_cell;
+            if let Some((cx, cy)) = crate::path::nearest_open(&walk, to[0] / pc, to[1] / pc, 6) {
+                to = [cx * pc + pc / 2, cy * pc + pc / 2];
+            }
+            zone(
+                w,
+                id,
+                here,
+                a.v("radius", lv),
+                k,
+                lv,
+                0,
+                u32::MAX,
+                a.v("speed", lv),
+            );
+            if let Some(z) = w.zones.last_mut() {
+                z.to = to;
+            }
+            add(w, id, M::Root, id, 0, 0, TAG_LEAP, true);
+            add(w, id, M::Disarm, id, 0, 0, TAG_LEAP, true);
+            if let Some(u) = w.get_mut(id) {
+                u.path.clear();
+                u.act = Act::None;
+            }
+        }
+        // Moonlight Shadow: every allied hero fades from sight; attacking
+        // or casting shows it again until it has stood still for the fade time
+        "moonlight" => {
+            let until = secs_x100(w, a.v("duration", lv));
+            let fade = (a.v("fade", lv) * TPS / 100) as u32;
+            let heroes: Vec<Uid> = w
+                .units
+                .iter()
+                .filter(|u| u.alive && u.team == team && u.hero.is_some())
+                .map(|u| u.id)
+                .collect();
+            for &h in &heroes {
+                add(w, h, M::Tag, id, until, (w.tick + fade) as i32, tg, true);
+            }
+            zone(w, id, here, 0, k, lv, 0, until, fade as i32);
+            if let Some(z) = w.zones.last_mut() {
+                z.done = heroes;
+            }
         }
         "light_strike" => {
             let delay = secs_x100(w, a.v("delay", lv)) - w.tick;
@@ -1191,6 +1302,104 @@ fn pulse(w: &mut World, ctx: &Ctx, z: &mut Zone) {
             }
             z.next = w.tick + 1;
         }
+        "starfall" => {
+            let dmg = a.v("damage", lv);
+            w.mark(MK_LAND, k, z.src, z.src, z.at);
+            for v in enemies_near(w, ctx, z.team, z.at, z.radius, false) {
+                combat::damage(w, ctx, z.src, v, dmg, Dmg::Magic);
+            }
+            if let Some(me) = w.live(z.src).map(|u| u.pos()) {
+                let near = enemies_near(w, ctx, z.team, me, a.v("second", lv), false);
+                if !near.is_empty() {
+                    let v = near[w.rng.below(near.len() as u32) as usize];
+                    let p = w.get(v).map(|u| u.pos()).unwrap_or(me);
+                    w.mark(MK_PROC, k, z.src, v, p);
+                    combat::damage(w, ctx, z.src, v, dmg * a.v("second_pct", lv) / 100, Dmg::Magic);
+                }
+            }
+            z.until = 0;
+        }
+        // Leap's bound: she flies to her landing spot, then the buff
+        "leap" => {
+            let Some(u) = w.live(z.src) else {
+                z.until = 0;
+                return;
+            };
+            let here = u.pos();
+            let step = (z.a / TPS).max(1);
+            let next = if dist(here, z.to) <= step + 16 {
+                z.to
+            } else {
+                toward(here, z.to, step)
+            };
+            if let Some(u) = w.get_mut(z.src) {
+                u.x = next[0] * SUB;
+                u.y = next[1] * SUB;
+                u.path.clear();
+            }
+            z.at = next;
+            if next == z.to {
+                w.remove_mods(z.src, TAG_LEAP);
+                let until = secs_x100(w, a.v("duration", lv));
+                let team = z.team;
+                for ally in w.near(next, z.radius, |u| u.team == team && u.hero.is_some()) {
+                    add(
+                        w,
+                        ally,
+                        M::AttackPct,
+                        z.src,
+                        until,
+                        a.v("attack_pct", lv),
+                        tg,
+                        true,
+                    );
+                    add(w, ally, M::MovePct, z.src, until, a.v("move_pct", lv), tg, true);
+                }
+                w.mark(MK_LAND, k, z.src, z.src, next);
+                z.until = 0;
+                return;
+            }
+            z.next = w.tick + 1;
+        }
+        // Moonlight Shadow's watch over each hero it hid: an attack or a
+        // cast shows the hero; the fade time after its last, it hides again
+        "moonlight" => {
+            let fade = z.a;
+            let tick = w.tick as i32;
+            for h in z.done.clone() {
+                let Some(u) = w.live(h) else { continue };
+                let acted = matches!(u.anim, crate::world::ANIM_ATTACK | crate::world::ANIM_CAST);
+                let last = u.anim_at as i32;
+                let hidden = u
+                    .mods
+                    .iter()
+                    .find(|m| m.tag == tg && m.kind == M::Invisible)
+                    .map(|m| m.a);
+                let wait = u
+                    .mods
+                    .iter()
+                    .find(|m| m.tag == tg && m.kind == M::Tag)
+                    .map(|m| m.a);
+                if let Some(since) = hidden {
+                    if acted && last > since {
+                        if let Some(u) = w.get_mut(h) {
+                            u.mods.retain(|m| !(m.tag == tg && m.kind == M::Invisible));
+                        }
+                        add(w, h, M::Tag, z.src, z.until, last + fade, tg, true);
+                    }
+                } else if let Some(at) = wait {
+                    if acted && last + fade > at {
+                        add(w, h, M::Tag, z.src, z.until, last + fade, tg, true);
+                    } else if tick >= at {
+                        if let Some(u) = w.get_mut(h) {
+                            u.mods.retain(|m| !(m.tag == tg && m.kind == M::Tag));
+                        }
+                        add(w, h, M::Invisible, z.src, z.until, tick, tg, true);
+                    }
+                }
+            }
+            z.next = w.tick + 1;
+        }
         // Timber Chain's pull: the caster flies to the tree, cutting enemies
         // within `radius` of his path once each; the tree falls when he lands
         "timber_chain" => {
@@ -1750,6 +1959,51 @@ pub fn missile_passes(w: &mut World, ctx: &Ctx, m: &mut Missile) {
                 }
             }
         }
+        "terror_wave" => {
+            let r = a.v("width", level);
+            let until = secs_x100(w, a.v("duration", level));
+            for v in enemies_near(w, ctx, m.team, at, r, false) {
+                if !m.done.contains(&v) {
+                    m.done.push(v);
+                    combat::damage_milli(w, ctx, m.src, v, a.v("damage_x100", level) * 10, Dmg::Pure, false);
+                    add(
+                        w,
+                        v,
+                        M::Armor,
+                        m.src,
+                        until,
+                        -a.v("armor", level) * 100,
+                        tag(k),
+                        true,
+                    );
+                }
+            }
+        }
+        "elune_arrow" => {
+            let r = a.v("width", level);
+            let hit = w
+                .near(at, r, |u| {
+                    u.team != m.team
+                        && !ctx.rules.units[u.def as usize].kind.is_building()
+                        && ctx.rules.units[u.def as usize].kind != Kind::Ward
+                        && !u.has(M::Invulnerable)
+                        && !u.has(M::SpellImmune)
+                })
+                .into_iter()
+                .next();
+            if let Some(v) = hit {
+                // 0.5 s for each 150 flown, from 0.5 s to 5 s
+                let flown = m.age as i32 * m.speed / SUB;
+                let held = (flown * 50 / a.v("per", level).max(1))
+                    .clamp(a.v("stun_min", level), a.v("stun_max", level));
+                w.mark(MK_PROC, k, m.src, v, at);
+                combat::damage(w, ctx, m.src, v, a.v("damage", level), Dmg::Magic);
+                stun(w, ctx, m.src, v, held, tag(k));
+                m.to = [m.x, m.y];
+                m.speed = i32::MAX / 4;
+                m.done.push(v);
+            }
+        }
         "hook" => {
             let r = a.v("width", level);
             let hit = w
@@ -2119,6 +2373,29 @@ fn auras(w: &mut World, ctx: &Ctx) {
                         u.team == team
                             && (ctx.rules.units[u.def as usize].missile > 0 && !berserk(u))
                             && !ctx.rules.units[u.def as usize].kind.is_building()
+                    });
+                    for ally in allies {
+                        let base = stats::of(ctx, w, ally).damage;
+                        let bonus = (base[0] + base[1]) / 2 * a.v("pct", lv) / 100;
+                        w.add_mod(
+                            ally,
+                            Mod {
+                                kind: M::Damage,
+                                src: id,
+                                until,
+                                a: bonus,
+                                b: 0,
+                                tag: tg,
+                            },
+                        );
+                    }
+                }
+                "command" if !illusion => {
+                    // 6.72: every ally near, creeps too, gains a share of its base damage
+                    let allies = w.near(here, reach, |u| {
+                        u.team == team
+                            && !ctx.rules.units[u.def as usize].kind.is_building()
+                            && ctx.rules.units[u.def as usize].kind != Kind::Ward
                     });
                     for ally in allies {
                         let base = stats::of(ctx, w, ally).damage;

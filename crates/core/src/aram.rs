@@ -51,7 +51,8 @@ pub fn built_lanes(w: &World, ctx: &Ctx) -> Vec<u8> {
 /// are at the base, and teleports are not sold (R4.6).
 pub fn shop_of<'a>(w: &World, ctx: &'a Ctx, k: usize) -> &'a str {
     let it = &ctx.rules.items[k];
-    if def(w, ctx).is_some() {
+    // the arena has only its bases' shops too (round 8)
+    if def(w, ctx).is_some() || crate::arena::def(w, ctx).is_some() {
         if it.logic == "tp" {
             return "none";
         }
@@ -66,17 +67,26 @@ pub fn shop_of<'a>(w: &World, ctx: &'a Ctx, k: usize) -> &'a str {
 
 /// Experience a hero earns in this match: the mode's share of `xp`.
 pub fn xp(w: &World, ctx: &Ctx, xp: i32) -> i32 {
-    match def(w, ctx) {
-        Some(a) => xp * a.xp_pct / 100,
+    match pace(w, ctx) {
+        Some((_, pct, _)) => xp * pct / 100,
         None => xp,
     }
+}
+
+/// The level heroes start at and the percents of the usual experience and
+/// gold per second, in this mode or in the arena (round 8).
+fn pace(w: &World, ctx: &Ctx) -> Option<(i32, i32, i32)> {
+    if let Some(a) = def(w, ctx) {
+        return Some((a.start_level, a.xp_pct, a.gold_pct));
+    }
+    crate::arena::def(w, ctx).map(|a| (a.start_level, a.xp_pct, a.gold_pct))
 }
 
 /// The gold each hero earns at each periodic payment in this match.
 pub fn periodic_gold(w: &World, ctx: &Ctx) -> i32 {
     let g = ctx.rules.t.periodic_gold;
-    match def(w, ctx) {
-        Some(a) => g * a.gold_pct / 100,
+    match pace(w, ctx) {
+        Some((_, _, pct)) => g * pct / 100,
         None => g,
     }
 }
@@ -85,9 +95,9 @@ pub fn periodic_gold(w: &World, ctx: &Ctx) -> i32 {
 /// experience that level takes, a point to spend for each level, and full
 /// health and mana at that level.
 pub fn start_level(w: &mut World, ctx: &Ctx, id: Uid) {
-    let Some(a) = def(w, ctx) else { return };
+    let Some((start, _, _)) = pace(w, ctx) else { return };
     let t = &ctx.rules.t;
-    let level = a.start_level.clamp(1, t.max_level);
+    let level = start.clamp(1, t.max_level);
     let xp = if level > 1 {
         t.xp_levels.get((level - 2) as usize).copied().unwrap_or(0)
     } else {

@@ -196,22 +196,25 @@ fn fill_switch(g: &Game, fill: bool) -> Node {
     )
 }
 
-/// The mode: Normal or All Random All Mid, a click switches (round 4).
-fn mode_switch(g: &Game, aram: bool, act: &str) -> Node {
+/// The mode: Normal, All Random All Mid (round 4) or the arena (round 8);
+/// a click moves to the next.
+fn mode_switch(g: &Game, aram: bool, arena: bool, act: &str) -> Node {
     let s = &g.strings;
-    let mut b = button(
-        if aram { "mode on" } else { "mode" },
-        s.ui(if aram { "mode.aram" } else { "mode.normal" }),
-        act,
-        "",
-    );
-    b.off = g.rules.aram.is_none();
+    let key = if aram {
+        "mode.aram"
+    } else if arena {
+        "mode.arena"
+    } else {
+        "mode.normal"
+    };
+    let mut b = button(if aram || arena { "mode on" } else { "mode" }, s.ui(key), act, "");
+    b.off = g.rules.aram.is_none() && !g.has_arena();
     b.tip = Some(Tip {
-        title: s.ui("mode.aram"),
-        text: s.ui("mode.aram.text"),
+        title: s.ui(key),
+        text: s.ui(&format!("{key}.text")),
         ..Tip::default()
     });
-    b.term = "All Random All Mid".into();
+    b.term = if arena { "Arena" } else { "All Random All Mid" }.into();
     with(
         node("div", "stepper mode-row"),
         vec![text("span", "label", s.ui("arcade.mode")), b],
@@ -270,7 +273,7 @@ fn arcade(g: &Game) -> Node {
         vec![
             text("h2", "", s.ui("arcade.custom")),
             text("p", "fine", s.ui("arcade.custom.text")),
-            mode_switch(g, st.aram, "setup.mode"),
+            mode_switch(g, st.aram, st.arena, "setup.mode"),
             stepper(s.ui("arcade.allies"), st.allies.to_string(), "setup.allies"),
             stepper(s.ui("arcade.enemies"), st.enemies.to_string(), "setup.enemies"),
             stepper(
@@ -803,20 +806,37 @@ fn hud(g: &Game) -> Node {
     } else {
         clock(since / TPS)
     };
-    let kills = |team: u8| -> i32 { w.players.iter().filter(|x| x.team == team).map(|x| x.kills).sum() };
+    // in the arena each side's tickets stand where its kills would (round 8)
+    let kills = |team: u8| -> i32 {
+        if w.arena {
+            return w.tickets[team as usize];
+        }
+        w.players.iter().filter(|x| x.team == team).map(|x| x.kills).sum()
+    };
     let day = w.is_day(&ctx);
+    let score = |team: u8| {
+        let mut n = text(
+            "span",
+            if team == 0 { "score sun" } else { "score moon" },
+            kills(team).to_string(),
+        );
+        if w.arena {
+            n.term = "Ticket".into();
+        }
+        n
+    };
     kids.push(keyed(
         with(
             node("div", "topbar"),
             vec![
-                text("span", "score sun", kills(0).to_string()),
+                score(0),
                 text("span", "clock", clock_text),
                 text(
                     "span",
                     if day { "daynight day" } else { "daynight night" },
                     s.ui(if day { "hud.day" } else { "hud.night" }),
                 ),
-                text("span", "score moon", kills(1).to_string()),
+                score(1),
                 text(
                     "span",
                     "kda",
@@ -1727,9 +1747,11 @@ pub fn online_view(g: &Game) -> Node {
         setup.push(with(node("div", "hero-mini-grid"), cards));
     }
     if host {
-        setup.push(mode_switch(g, o.aram, "online.mode"));
+        setup.push(mode_switch(g, o.aram, o.arena, "online.mode"));
     } else if o.aram {
         setup.push(text("p", "fine", s.ui("mode.aram")));
+    } else if o.arena {
+        setup.push(text("p", "fine", s.ui("mode.arena")));
     }
     if host {
         setup.push(fill_switch(g, o.fill));

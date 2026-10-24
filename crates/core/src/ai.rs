@@ -186,7 +186,8 @@ pub fn think(w: &mut World, ctx: &Ctx) {
             }
             orders::apply(w, ctx, p, Cmd::Pick(k as u8));
             let seat = p % 5;
-            w.players[p].brain.lane = lane_index(ai.lanes.get(seat).map(|s| s.as_str()).unwrap_or("mid"));
+            let want = ai.lanes.get(seat).map(|s| s.as_str()).unwrap_or("mid");
+            w.players[p].brain.lane = lane_on_map(ctx, want, seat);
             continue;
         }
         if w.aram && aram(w, ctx, p) {
@@ -228,6 +229,19 @@ fn aram(w: &mut World, ctx: &Ctx, p: usize) -> bool {
         }
     }
     false
+}
+
+/// The seat's lane, or, on a map without it (the arena has no middle
+/// lane, round 8), one of the map's lanes, turn about by seat.
+fn lane_on_map(ctx: &Ctx, name: &str, seat: usize) -> u8 {
+    let lanes = &ctx.rules.map.sides[0].lanes;
+    if lanes.contains_key(name) {
+        return lane_index(name);
+    }
+    let have: Vec<&String> = lanes.keys().collect();
+    have.get(seat % have.len().max(1))
+        .map(|n| lane_index(n))
+        .unwrap_or(1)
 }
 
 fn lane_index(name: &str) -> u8 {
@@ -453,6 +467,14 @@ fn useful_cast(w: &World, ctx: &Ctx, l: &Look, slot: usize) -> Option<(Uid, P)> 
     }
     if a.logic == "return_chakram" || a.logic == "ice_blast_release" {
         return None;
+    }
+    if a.logic == "leap" {
+        // Leap goes the way she faces: only with the foe ahead and beyond its reach
+        let facing = w.get(l.hero)?.facing;
+        let ahead = crate::fx::wrap(crate::fx::atan2(at[1] - l.here[1], at[0] - l.here[0]) - facing).abs();
+        if ahead > crate::fx::TURN / 8 || within(l.here, at, 350) {
+            return None;
+        }
     }
     if a.logic == "chilling_touch" {
         // the touch goes on its own attacks: cast round itself with a fight close
@@ -779,8 +801,10 @@ fn act(w: &mut World, ctx: &Ctx, ai: &AiDef, d: &Difficulty, p: usize, l: &Look,
         "push" => {
             let lane = w.players[p].brain.lane;
             let names = ["top", "mid", "bot"];
-            let path = &ctx.rules.map.sides[l.team as usize].lanes[names[lane as usize % 3]];
-            let goal = *path.last().unwrap_or(&l.here);
+            let path = ctx.rules.map.sides[l.team as usize]
+                .lanes
+                .get(names[lane as usize % 3]);
+            let goal = path.and_then(|p| p.last()).copied().unwrap_or(l.here);
             orders::apply(w, ctx, p, Cmd::AttackMove(goal));
         }
         "rune" => {

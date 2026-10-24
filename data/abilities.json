@@ -2160,6 +2160,324 @@
    "color": "fx_frost",
    "key": "KeyR",
    "_after": "Release"
+  },
+  {
+   "id": "magic_missile",
+   "logic": "assassinate",
+   "target": "unit",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    110,
+    120,
+    130,
+    140
+   ],
+   "cooldown": [
+    1000
+   ],
+   "range": [
+    500
+   ],
+   "cast_point": 30,
+   "values": {
+    "speed": [
+     1250
+    ],
+    "damage": [
+     100,
+     175,
+     250,
+     325
+    ],
+    "stun": [
+     145,
+     155,
+     165,
+     175
+    ]
+   },
+   "icon": "abilities/magic_missile",
+   "color": "fx_ember",
+   "key": "KeyQ",
+   "_after": "Magic Missile (missile speed unsourced; Dota 2's 1250)"
+  },
+  {
+   "id": "wave_of_terror",
+   "logic": "terror_wave",
+   "target": "point",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    40
+   ],
+   "cooldown": [
+    1500
+   ],
+   "range": [
+    1400
+   ],
+   "cast_point": 30,
+   "values": {
+    "length": [
+     1400
+    ],
+    "width": [
+     300
+    ],
+    "speed": [
+     2000
+    ],
+    "damage_x100": [
+     1875,
+     3750,
+     5625,
+     7500
+    ],
+    "armor": [
+     2,
+     3,
+     4,
+     5
+    ],
+    "duration": [
+     2000
+    ]
+   },
+   "icon": "abilities/wave_of_terror",
+   "color": "fx_dusk",
+   "key": "KeyW",
+   "_after": "Wave of Terror (6.72: health removal and armor only; speed unsourced, Dota 2's 2000)"
+  },
+  {
+   "id": "command_aura",
+   "logic": "command",
+   "target": "passive",
+   "on": "ally",
+   "ultimate": false,
+   "mana": [],
+   "cooldown": [],
+   "range": [],
+   "cast_point": 30,
+   "values": {
+    "radius": [
+     900
+    ],
+    "pct": [
+     12,
+     20,
+     28,
+     36
+    ]
+   },
+   "icon": "abilities/command_aura",
+   "color": "",
+   "key": "KeyE",
+   "_after": "Command Aura (base damage only, every ally)"
+  },
+  {
+   "id": "nether_swap",
+   "logic": "nether_swap",
+   "target": "unit",
+   "on": "any",
+   "ultimate": true,
+   "mana": [
+    100,
+    150,
+    200
+   ],
+   "cooldown": [
+    4500
+   ],
+   "range": [
+    600,
+    900,
+    1200
+   ],
+   "cast_point": 30,
+   "values": {
+    "pierces": [
+     1
+    ],
+    "heroes_only": [
+     1
+    ]
+   },
+   "icon": "abilities/nether_swap",
+   "color": "fx_dusk",
+   "key": "KeyR",
+   "_after": "Nether Swap (heroes only, ally or enemy, through spell immunity)"
+  },
+  {
+   "id": "starfall",
+   "logic": "starfall",
+   "target": "none",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    100,
+    120,
+    140,
+    160
+   ],
+   "cooldown": [
+    1200
+   ],
+   "range": [],
+   "cast_point": 50,
+   "values": {
+    "radius": [
+     625
+    ],
+    "delay": [
+     57
+    ],
+    "damage": [
+     75,
+     150,
+     225,
+     300
+    ],
+    "second": [
+     175
+    ],
+    "second_pct": [
+     50
+    ]
+   },
+   "icon": "abilities/starfall",
+   "color": "fx_star",
+   "key": "KeyQ",
+   "_after": "Starfall (6.72: a second star on a random enemy within 175, half damage; delay unsourced, Dota 2's 0.57 s)"
+  },
+  {
+   "id": "elune_arrow",
+   "logic": "elune_arrow",
+   "target": "point",
+   "on": "enemy",
+   "ultimate": false,
+   "mana": [
+    100
+   ],
+   "cooldown": [
+    2500
+   ],
+   "range": [
+    3000
+   ],
+   "cast_point": 50,
+   "values": {
+    "speed": [
+     857
+    ],
+    "width": [
+     115
+    ],
+    "damage": [
+     90,
+     180,
+     270,
+     360
+    ],
+    "stun_min": [
+     50
+    ],
+    "stun_max": [
+     500
+    ],
+    "per": [
+     150
+    ]
+   },
+   "icon": "abilities/elune_arrow",
+   "color": "fx_star",
+   "key": "KeyW",
+   "_after": "Elune's Arrow (6.73: stuns invisible units too; hits creeps; speed unsourced, Dota 2's 857)"
+  },
+  {
+   "id": "leap",
+   "logic": "leap",
+   "target": "none",
+   "on": "ally",
+   "ultimate": false,
+   "mana": [
+    40,
+    35,
+    30,
+    20
+   ],
+   "cooldown": [
+    3000,
+    2600,
+    2200,
+    1800
+   ],
+   "range": [],
+   "cast_point": 50,
+   "values": {
+    "distance": [
+     630,
+     720,
+     780,
+     870
+    ],
+    "speed": [
+     2000
+    ],
+    "radius": [
+     775
+    ],
+    "attack_pct": [
+     4,
+     8,
+     12,
+     16
+    ],
+    "move_pct": [
+     4,
+     8,
+     12,
+     16
+    ],
+    "duration": [
+     1000
+    ]
+   },
+   "icon": "abilities/leap",
+   "color": "fx_star",
+   "key": "KeyE",
+   "_after": "Leap (6.72: no charges, the buff on landing; distances as the older playdota page and the Dota 2 wiki, R8)"
+  },
+  {
+   "id": "moonlight_shadow",
+   "logic": "moonlight",
+   "target": "none",
+   "on": "ally",
+   "ultimate": true,
+   "mana": [
+    175
+   ],
+   "cooldown": [
+    18000,
+    16000,
+    14000
+   ],
+   "range": [],
+   "cast_point": 50,
+   "values": {
+    "duration": [
+     1100
+    ],
+    "fade": [
+     250,
+     200,
+     150
+    ]
+   },
+   "icon": "abilities/moonlight_shadow",
+   "color": "fx_star",
+   "key": "KeyR",
+   "_after": "Moonlight Shadow (every allied hero, 11 s; 6.72 cooldowns)"
   }
  ]
 }

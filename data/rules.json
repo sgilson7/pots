@@ -273,6 +273,51 @@
   "xp_pct": 150,
   "gold_pct": 200
  },
+ "arena": {
+  "_note": "The arena (round 8, after SMITE 2's Arena; notes/LITERATURE.md section 10). Tickets and their costs, the 20-second waves of three melee, three ranged and one siege creep, a brute for each side every three minutes, camps that return three minutes after they are cleared and buffs that last two minutes are SMITE 2's (SMITE 1's where SMITE 2 copied them). Starting gold, the pace and the respawn share are the agent's, put in DotA's terms (R8.x).",
+  "tickets": 500,
+  "hero_cost": 5,
+  "creep_cost": 1,
+  "portal_cost": 1,
+  "brute_cost": 15,
+  "last_tickets": 10,
+  "portal_radius": 450,
+  "wave_every": 20,
+  "wave": [
+   3,
+   3,
+   1
+  ],
+  "brute_every": 180,
+  "brutes": [
+   "brute_sun",
+   "brute_moon"
+  ],
+  "camp_back": 180,
+  "buff_secs": 120,
+  "buffs": [
+   [
+    "red",
+    "damage_pct",
+    20
+   ],
+   [
+    "blue",
+    "mana_regen",
+    300
+   ],
+   [
+    "purple",
+    "attack_pct",
+    15
+   ]
+  ],
+  "starting_gold": 1000,
+  "start_level": 3,
+  "xp_pct": 150,
+  "gold_pct": 200,
+  "respawn_pct": 50
+ },
  "heroes": [
   {
    "unit": "ironvow",
@@ -325,6 +370,14 @@
   {
    "unit": "shiver",
    "_after": "Ancient Apparition"
+  },
+  {
+   "unit": "tallow",
+   "_after": "Vengeful Spirit"
+  },
+  {
+   "unit": "skipjack",
+   "_after": "Mirana"
   }
  ],
  "preview_heroes": []

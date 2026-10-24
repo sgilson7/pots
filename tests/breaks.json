@@ -37,8 +37,8 @@
  {
   "name": "respawn ignores level",
   "file": "crates/core/src/combat.rs",
-  "find": "let respawn = w.tick + (level * t.respawn_per_level * TPS) as u32;",
-  "replace": "let respawn = w.tick + (t.respawn_per_level * TPS) as u32;",
+  "find": "let wait = crate::arena::respawn_secs(w, ctx, level * t.respawn_per_level);",
+  "replace": "let wait = crate::arena::respawn_secs(w, ctx, t.respawn_per_level);",
   "test": "a_hero_waits_four_seconds_a_level_to_respawn"
  },
  {
@@ -380,8 +380,8 @@
  {
   "name": "the joiner never hears that computer players are off",
   "file": "crates/core/src/online.rs",
-  "find": "            o.aram = aram;\n            o.fill = fill;",
-  "replace": "            o.aram = aram;",
+  "find": "            o.arena = arena;\n            o.fill = fill;",
+  "replace": "            o.arena = arena;",
   "test": "with_computer_players_off_only_the_people_in_the_room_play"
  },
  {
@@ -450,14 +450,14 @@
  {
   "name": "round 7: aram experience is the usual",
   "file": "crates/core/src/aram.rs",
-  "find": "        Some(a) => xp * a.xp_pct / 100,",
+  "find": "        Some((_, pct, _)) => xp * pct / 100,",
   "replace": "        Some(_) => xp,",
   "test": "heroes_earn_half_again_the_experience_and_twice_the_gold_each_second"
  },
  {
   "name": "round 7: aram gold per second is the usual",
   "file": "crates/core/src/aram.rs",
-  "find": "        Some(a) => g * a.gold_pct / 100,",
+  "find": "        Some((_, _, pct)) => g * pct / 100,",
   "replace": "        Some(_) => g,",
   "test": "heroes_earn_half_again_the_experience_and_twice_the_gold_each_second"
  },
@@ -1062,5 +1062,243 @@
   "find": "\"shape\": \"flake\",",
   "replace": "\"shape\": \"flakes\",",
   "test": "every_shooter_has_a_shot_of_its_own"
+ },
+ {
+  "name": "round 8: Tallow and Skipjack on the roster",
+  "file": "data/rules.json",
+  "find": "\"unit\": \"tallow\"",
+  "replace": "\"unit\": \"rime\"",
+  "test": "tallow_and_skipjack_can_be_chosen_with_their_level_one_numbers"
+ },
+ {
+  "name": "round 8: Ember Dart stuns",
+  "file": "data/abilities.json",
+  "find": "\"stun\": [\n     145,\n     155,\n     165,\n     175\n    ]",
+  "replace": "\"stun\": [5, 5, 5, 5]",
+  "test": "ember_dart_damages_and_stuns_one_enemy"
+ },
+ {
+  "name": "round 8: Dusk Wave takes armor",
+  "file": "crates/core/src/ability.rs",
+  "find": "                        -a.v(\"armor\", level) * 100,",
+  "replace": "                        0 * a.v(\"armor\", level) * 100,",
+  "test": "dusk_wave_takes_health_and_armor_from_each_enemy_it_passes"
+ },
+ {
+  "name": "round 8: Dusk Wave takes health",
+  "file": "crates/core/src/ability.rs",
+  "find": "combat::damage_milli(w, ctx, m.src, v, a.v(\"damage_x100\", level) * 10, Dmg::Pure, false);",
+  "replace": "let _ = Dmg::Pure;",
+  "test": "dusk_wave_takes_health_and_armor_from_each_enemy_it_passes"
+ },
+ {
+  "name": "round 8: Lamplight lifts allies only",
+  "file": "crates/core/src/ability.rs",
+  "find": "// 6.72: every ally near, creeps too, gains a share of its base damage\n                    let allies = w.near(here, reach, |u| {\n                        u.team == team",
+  "replace": "// 6.72: every ally near, creeps too, gains a share of its base damage\n                    let allies = w.near(here, reach, |u| {\n                        u.team != NEUTRAL",
+  "test": "lamplight_raises_every_ally_s_damage_by_a_share_of_its_base"
+ },
+ {
+  "name": "round 8: Moth Switch takes heroes only",
+  "file": "crates/core/src/ability.rs",
+  "find": "(v.hero.is_none() || v.id == u.id)",
+  "replace": "(v.id == u.id)",
+  "test": "moth_switch_trades_places_with_a_hero_even_one_immune_to_spells"
+ },
+ {
+  "name": "round 8: Moth Switch trades places",
+  "file": "crates/core/src/ability.rs",
+  "find": "for (u, p) in [(id, there), (t, here)] {",
+  "replace": "for (u, p) in [(id, there), (t, there)] {",
+  "test": "moth_switch_trades_places_with_a_hero_even_one_immune_to_spells"
+ },
+ {
+  "name": "round 8: Star Shower's second star",
+  "file": "crates/core/src/ability.rs",
+  "find": "dmg * a.v(\"second_pct\", lv) / 100",
+  "replace": "0 * a.v(\"second_pct\", lv) / 100",
+  "test": "star_shower_strikes_every_enemy_near_and_one_close_by_again_for_half"
+ },
+ {
+  "name": "round 8: Comet Arrow stops at the first",
+  "file": "crates/core/src/ability.rs",
+  "find": "stun(w, ctx, m.src, v, held, tag(k));\n                m.to = [m.x, m.y];\n                m.speed = i32::MAX / 4;",
+  "replace": "stun(w, ctx, m.src, v, held, tag(k));",
+  "test": "comet_arrow_stops_at_the_first_enemy_and_stuns_longer_the_farther_it_flew"
+ },
+ {
+  "name": "round 8: Comet Arrow's stun grows with flight",
+  "file": "crates/core/src/ability.rs",
+  "find": "(flown * 50 / a.v(\"per\", level).max(1))",
+  "replace": "(50 / a.v(\"per\", level).max(1))",
+  "test": "comet_arrow_stops_at_the_first_enemy_and_stuns_longer_the_farther_it_flew"
+ },
+ {
+  "name": "round 8: Lily Leap's distance",
+  "file": "crates/core/src/ability.rs",
+  "find": "let d = a.v(\"distance\", lv);",
+  "replace": "let d = a.v(\"distance\", lv) / 2;",
+  "test": "lily_leap_bounds_forward_and_speeds_allied_heroes_where_it_lands"
+ },
+ {
+  "name": "round 8: Lily Leap's buff",
+  "file": "crates/core/src/ability.rs",
+  "find": "                        M::AttackPct,\n                        z.src,\n                        until,\n                        a.v(\"attack_pct\", lv),",
+  "replace": "                        M::AttackPct,\n                        z.src,\n                        until,\n                        0,",
+  "test": "lily_leap_bounds_forward_and_speeds_allied_heroes_where_it_lands"
+ },
+ {
+  "name": "round 8: Pond Mist waits out the fade",
+  "file": "crates/core/src/ability.rs",
+  "find": "add(w, h, M::Tag, id, until, (w.tick + fade) as i32, tg, true);",
+  "replace": "add(w, h, M::Tag, id, until, w.tick as i32, tg, true);",
+  "test": "pond_mist_hides_allied_heroes_after_the_fade_and_an_attack_shows_one_again"
+ },
+ {
+  "name": "round 8: an attack shows a misted hero",
+  "file": "crates/core/src/ability.rs",
+  "find": "if acted && last > since {",
+  "replace": "if false && last > since {",
+  "test": "pond_mist_hides_allied_heroes_after_the_fade_and_an_attack_shows_one_again"
+ },
+ {
+  "name": "round 8: an invisible hero does not strike on its own",
+  "file": "crates/core/src/orders.rs",
+  "find": "            if hidden {\n",
+  "replace": "            if false {\n",
+  "test": "an_invisible_hero_attacks_only_when_told_to"
+ },
+ {
+  "name": "round 8: Tallow's ember shot",
+  "file": "data/presentation.json",
+  "find": "\"tallow\": {\n   \"shape\": \"ember\"",
+  "replace": "\"tallowx\": {\n   \"shape\": \"ember\"",
+  "test": "every_shooter_has_a_shot_of_its_own"
+ },
+ {
+  "name": "arena: 500 tickets",
+  "file": "data/rules.json",
+  "find": "\"tickets\": 500",
+  "replace": "\"tickets\": 400",
+  "test": "an_arena_match_starts_with_500_tickets_no_towers_and_portals_nothing_can_hurt"
+ },
+ {
+  "name": "arena: the portal cannot be hurt",
+  "file": "crates/core/src/lanes.rs",
+  "find": "Kind::Sphere => w.arena || standing(w, team, 4, None),",
+  "replace": "Kind::Sphere => standing(w, team, 4, None),",
+  "test": "an_arena_match_starts_with_500_tickets_no_towers_and_portals_nothing_can_hurt"
+ },
+ {
+  "name": "arena: a hero's death costs five",
+  "file": "crates/core/src/arena.rs",
+  "find": "Kind::Hero => spend(w, team, a.hero_cost),",
+  "replace": "Kind::Hero => {}",
+  "test": "a_hero_s_death_costs_its_side_five_tickets"
+ },
+ {
+  "name": "arena: only a hero's kill of a creep costs",
+  "file": "crates/core/src/arena.rs",
+  "find": "Kind::Creep if by_hero && team <= MOON =>",
+  "replace": "Kind::Creep if team <= MOON =>",
+  "test": "a_creep_a_hero_kills_costs_one_ticket_and_none_once_down_to_ten"
+ },
+ {
+  "name": "arena: the last ten tickets",
+  "file": "crates/core/src/arena.rs",
+  "find": "if w.tickets[team as usize] > a.last_tickets {",
+  "replace": "if true {",
+  "test": "a_creep_a_hero_kills_costs_one_ticket_and_none_once_down_to_ten"
+ },
+ {
+  "name": "arena: creeps walk into the portal",
+  "file": "crates/core/src/arena.rs",
+  "find": "if within(u.pos(), sphere, a.portal_radius) {",
+  "replace": "if false && within(u.pos(), sphere, a.portal_radius) {",
+  "test": "a_creep_that_walks_into_the_portal_costs_one_and_a_brute_fifteen"
+ },
+ {
+  "name": "arena: a brute costs fifteen",
+  "file": "crates/core/src/arena.rs",
+  "find": "if brute { a.brute_cost } else { a.portal_cost }",
+  "replace": "a.portal_cost",
+  "test": "a_creep_that_walks_into_the_portal_costs_one_and_a_brute_fifteen"
+ },
+ {
+  "name": "arena: none left loses",
+  "file": "crates/core/src/arena.rs",
+  "find": "if *t == 0 {",
+  "replace": "if *t < 0 {",
+  "test": "a_side_with_no_tickets_left_loses"
+ },
+ {
+  "name": "arena: waves take turn about",
+  "file": "crates/core/src/arena.rs",
+  "find": "let lane = if w.waves % 2 == 1 { 0 } else { 2 };",
+  "replace": "let lane = 0;",
+  "test": "waves_of_seven_leave_every_20_s_by_one_lane_then_the_other_and_a_brute_every_3_minutes"
+ },
+ {
+  "name": "arena: seven to a wave",
+  "file": "crates/core/src/arena.rs",
+  "find": "            for _ in 0..n {\n",
+  "replace": "            for _ in 0..n.min(2) {\n",
+  "test": "waves_of_seven_leave_every_20_s_by_one_lane_then_the_other_and_a_brute_every_3_minutes"
+ },
+ {
+  "name": "arena: a brute every three minutes",
+  "file": "crates/core/src/arena.rs",
+  "find": "if since > 0 && since.is_multiple_of(brute) {",
+  "replace": "if false {",
+  "test": "waves_of_seven_leave_every_20_s_by_one_lane_then_the_other_and_a_brute_every_3_minutes"
+ },
+ {
+  "name": "arena: a cleared camp's buff",
+  "file": "crates/core/src/arena.rs",
+  "find": "give_buff(w, a, hero, buff);",
+  "replace": "let _ = (hero, buff);",
+  "test": "clearing_a_camp_gives_its_buff_for_two_minutes_and_the_camp_returns_after_three"
+ },
+ {
+  "name": "arena: a cleared camp returns",
+  "file": "crates/core/src/arena.rs",
+  "find": "w.camps_back[k] = w.tick + (a.camp_back * TPS) as u32;",
+  "replace": "w.camps_back[k] = 0;",
+  "test": "clearing_a_camp_gives_its_buff_for_two_minutes_and_the_camp_returns_after_three"
+ },
+ {
+  "name": "arena: the normal map back after the match",
+  "file": "crates/core/src/game.rs",
+  "find": "                self.m = None;\n                self.use_map(false);\n                self.screen = if online",
+  "replace": "                self.m = None;\n                self.screen = if online",
+  "test": "the_custom_match_switches_to_the_arena_and_its_map_and_back"
+ },
+ {
+  "name": "arena: the mode switch reaches the arena",
+  "file": "crates/core/src/game.rs",
+  "find": "(true, _) => (false, self.has_arena()),",
+  "replace": "(true, _) => (false, false),",
+  "test": "the_custom_match_switches_to_the_arena_and_its_map_and_back"
+ },
+ {
+  "name": "arena: tickets in the top bar",
+  "file": "crates/core/src/ui.rs",
+  "find": "        if w.arena {\n            return w.tickets[team as usize];\n        }\n",
+  "replace": "",
+  "test": "the_custom_match_switches_to_the_arena_and_its_map_and_back"
+ },
+ {
+  "name": "arena: a seat meant for a missing lane takes another",
+  "file": "crates/core/src/ai.rs",
+  "find": "    if lanes.contains_key(name) {\n        return lane_index(name);\n    }",
+  "replace": "    return lane_index(name);",
+  "test": "heroes_appear_within_reach_of_their_shop_and_every_computer_player_goes_out_to_fight"
+ },
+ {
+  "name": "arena: online on the arena",
+  "file": "crates/core/src/online.rs",
+  "find": "    let arena = arena && g.has_arena();\n    g.use_map(arena);",
+  "replace": "    let arena = false && g.has_arena();\n    g.use_map(arena);",
+  "test": "three_browsers_on_the_arena_choose_any_hero_and_play_one_match"
  }
 ]

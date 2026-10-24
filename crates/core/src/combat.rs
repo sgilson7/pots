@@ -389,6 +389,7 @@ fn kill(w: &mut World, ctx: &Ctx, id: Uid) {
     let level = v.level();
     let tier = v.tier;
     let illusion = v.has(M::Illusion);
+    let camp = v.camp;
     let tick = w.tick;
     let killer_info = w.get(killer).map(|k| (k.team, k.owner));
     {
@@ -403,6 +404,7 @@ fn kill(w: &mut World, ctx: &Ctx, id: Uid) {
     if illusion {
         return;
     }
+    crate::arena::died(w, ctx, kind, team, camp, killer);
     let t = &ctx.rules.t;
     let d = &ctx.rules.units[def];
     let (k_team, k_owner) = killer_info.unwrap_or((NEUTRAL, -1));
@@ -483,7 +485,8 @@ fn kill_hero(w: &mut World, ctx: &Ctx, id: Uid, killer: Uid, level: i32, at: cra
     let owner = v.owner;
     let team = v.team;
     let streak = v.hero.as_ref().map(|h| h.streak).unwrap_or(0);
-    let respawn = w.tick + (level * t.respawn_per_level * TPS) as u32;
+    let wait = crate::arena::respawn_secs(w, ctx, level * t.respawn_per_level);
+    let respawn = w.tick + (wait * TPS) as u32;
     crate::ability::hero_died_near(w, ctx, at, team);
     if let Some(h) = w.get_mut(id).and_then(|u| u.hero.as_mut()) {
         h.streak = 0;

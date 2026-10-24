@@ -169,10 +169,22 @@ Each row of `SECOND-ORDER.md` with status *person*, by number:
 - **Check:** `tests/browser/interactions.py` `locked_moves` tells the page the body holds the lock and moves the mouse; with the fix taken out it fails in all three engines (R7.66). Safari itself with a real pointer lock is the person's check.
 - **Checks and live (21 October 2026):** with the fix taken out the new check failed in Chromium, Firefox and WebKit; `./scripts/publish.sh` ran `./scripts/check.sh` (**BUILDER CHECK PASSED**, Chromium, Firefox, WebKit) and published build `147c1c0`; `BUILDER_ORIGIN=https://sgilson7.github.io/pots tests/browser/check.py` passed in all three engines on the live site, the new check included. No core change, so the cargo tests and break list were not re-run.
 
+## Round 8 (24 October 2026): Tallow, Skipjack and the arena (T38)
+
+- **Research:** two research agents; `notes/LITERATURE.md` section 9 (Vengeful Spirit and Mirana as of 6.72/6.73) and section 10 (SMITE 2's Arena, and SMITE 1's where SMITE 2 copied it). Where the sources disagree, the agent chose (R8.2, R8.3, R8.4, R8.8).
+- **Mockups first:** `journal/mockups/heroes4.js`, sheets in `journal/art8/models/`; then `shoot.py export` and `tools/modelport.py` added `hero_tallow` and `hero_skipjack` to `data/models.json` with no drift in the other models.
+- **The heroes:** `tallow` and `skipjack` in `data/units.json`, eight abilities in `data/abilities.json`, the roster's fourteenth and fifteenth in `data/rules.json`, strings, computer builds. Rules in `crates/core/src/ability.rs` (`terror_wave`, `command`, `nether_swap`, `starfall`, `elune_arrow`, `leap`, `moonlight`; Magic Missile reuses `assassinate`). An idle invisible unit no longer attacks on its own (R8.6). New shots `ember` and `star`, the `dusk` wave and the `stars` zone in `crates/core/src/marks.rs`. Portraits and icons in `tools/art/`.
+- **The arena:** `crates/core/src/arena.rs` (tickets, portals, waves turn about, brutes, buff camps, the pace); its map is `data/map.json`'s `arena`, written by `tools/arena_map.py`, swapped into `rules.map` for an arena match (`Game::use_map`, R8.12). The mode switch goes Normal, All Random All Mid, Arena, in the custom match and the online lobby (R8.15); the top bar shows tickets. Two bugs found by playing computer players on it: the middle-lane seat stayed home (R8.13) and the shop was out of reach (R8.14).
+- **Online:** version 9 (the roster changed); the lobby and start messages carry the arena; `three_browsers_on_the_arena_choose_any_hero_and_play_one_match` in `crates/core/src/online/tests.rs`.
+- **Tests:** `tests/heroes3.rs` (10), `tests/arena.rs` (9), the online test (1); break rows "round 8:" and "arena:" (34). Shiver's and the heroes screen's tests count fifteen heroes.
+- **Journal tab 14** (`journal/mockups/tab14.py`).
+- **Checks (24 October 2026):** `./scripts/count-tests.sh` 215 passed, 0 failed, 5 ignored; `./scripts/check.sh` **BUILDER CHECK PASSED** (Chromium, Firefox, WebKit); `scripts/break_tests.py` on the 34 new rows, the rows the test changes touched and the six repointed rows: every one caught (R8.18); every row's text in `tests/breaks.json` matches once. The other older rows were not re-run. The online smoke test with `--arena` met through the relays and both browsers played one arena match. LIVE_T38
+
 ## Open for the person
 
 Each row of `SECOND-ORDER.md` with status *person*, by number:
 
+- **R8.1**: Tallow's and Skipjack's names, looks and ability names (Ember Dart, Dusk Wave, Lamplight, Moth Switch; Star Shower, Comet Arrow, Lily Leap, Pond Mist). Keep, or change any?
 - **R7.55**: Shiver's name, look and ability names (Frozen Ground, Snow Whirl, Frost Talons, Hailstar, Hailfall). Keep, or change any?
 - **R7.44**: open each hero on the heroes screen and play each ability: does every demonstration read clearly?
 - **R7.2**: selling is instant on a right-click and pays half. Ask first, or give a full refund for a few seconds after buying?

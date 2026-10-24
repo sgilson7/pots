@@ -12,6 +12,10 @@ An attribute. Each point adds armor and attack speed, and an agility hero's dama
 
 A mode of the custom match and online play. Each player is dealt a random hero, and all ten fight in the middle lane. Heroes start a few levels up and earn experience and gold faster than in a normal match, so it plays shorter.
 
+### Arena
+
+A mode of the custom match and online play, on a small round map with a base at each end and no towers. Each side starts with tickets; the side that runs out loses.
+
 ### Armor
 
 Cuts the physical damage a unit takes. Each point of armor counts for less than the one before, so no amount makes a unit immune. Negative armor makes it take more.
@@ -25,6 +29,14 @@ A fifth choice for a level's point: a little strength, agility and intelligence 
 ### Barracks
 
 A building behind each lane's last tower. While it stands, the enemy's creeps in that lane stay ordinary; when it falls, your side's creeps there grow stronger.
+
+### Brute
+
+A big creep each side sends into the arena every three minutes. If it walks into the enemy portal, the enemy loses many tickets.
+
+### Buff
+
+A strong effect for a while. In the arena, the hero who clears a camp gets that camp's buff.
 
 ### Buyback
 
@@ -72,6 +84,10 @@ A flask that waits in the middle lane in All Random All Mid. Walk over it to get
 
 An attribute. Each point adds mana and mana regeneration, and an intelligence hero's damage.
 
+### Invisible
+
+Unseen by the enemy, who cannot target the unit unless a sentry ward stands near it.
+
 ### Lane
 
 One of the three roads between the two bases: the top lane, the middle lane and the bottom lane.
@@ -95,6 +111,10 @@ How fast a unit walks, in map units a second.
 ### Neutral camp
 
 A group of creeps that belongs to no side, waiting in the forest. A camp refills on the minute if no one stands in it.
+
+### Portal
+
+In the arena, the Sphere at each base. Nothing can hurt it, but each enemy creep that walks into it costs its side tickets.
 
 ### Reroll
 
@@ -125,6 +145,10 @@ An attribute. Each point adds health and health regeneration, and a strength her
 ### Stun
 
 Stops a unit from moving, attacking or using anything for a while.
+
+### Ticket
+
+In the arena, each side's count toward losing. A side loses tickets when its heroes die, when its creeps are killed by heroes, and when enemy creeps walk into its portal. At none, it loses.
 
 ### Tower
 

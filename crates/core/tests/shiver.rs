@@ -101,7 +101,8 @@ fn shiver_can_be_chosen_with_its_level_one_numbers() {
     // 18 strength: 150 + 18 × 19 = 492 health; 25 intelligence: 25 × 13 =
     // 325 mana; damage 19–29 plus 25 for intelligence, its main attribute
     let f = common::fixture();
-    assert_eq!(f.rules.roster, 13, "ten heroes, Hackle, Chipper and Shiver");
+    // the thirteenth on the roster; round 8's heroes come after it
+    assert!(f.rules.roster >= 13, "ten heroes, Hackle, Chipper and Shiver");
     assert_eq!(f.rules.units[f.rules.heroes[12]].id, "shiver");
     let ctx = f.ctx();
     let mut w = f.world(1);

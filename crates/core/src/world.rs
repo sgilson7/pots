@@ -371,6 +371,9 @@ pub const EV_FIRST_BLOOD: u8 = 12;
 pub const EV_HORN: u8 = 13;
 pub const EV_CAST: u8 = 14;
 pub const EV_RESPAWN: u8 = 15;
+/// A creep walked into a portal in the arena (round 8): a is the side that
+/// lost tickets, b how many.
+pub const EV_PORTAL: u8 = 16;
 
 /// A moment of an ability worth drawing (round 2, T3): a cast begun, a
 /// spell let go, a missile or a blast landing, a passive firing. Only the
@@ -426,6 +429,12 @@ pub struct World {
     pub marks: Vec<Mark>,
     /// All Random All Mid (round 4).
     pub aram: bool,
+    /// The arena (round 8): the round map and its tickets.
+    pub arena: bool,
+    /// Each side's tickets in the arena; the side that runs out loses.
+    pub tickets: [i32; 2],
+    /// The arena's camps: the tick each cleared camp returns, 0 while full.
+    pub camps_back: Vec<u32>,
     /// The tick each relic returns, Sunward ones first; 0 while it waits.
     pub relics: Vec<u32>,
 }
@@ -534,6 +543,9 @@ impl World {
             carrying: [-1; 2],
             marks: Vec::new(),
             aram,
+            arena: false,
+            tickets: [0, 0],
+            camps_back: Vec::new(),
             relics,
         };
         w.place_buildings(ctx);
@@ -774,6 +786,8 @@ impl World {
             h = h.wrapping_mul(0x0100_0000_01b3);
         };
         mix(self.tick as i64);
+        mix(self.tickets[0] as i64);
+        mix(self.tickets[1] as i64);
         for u in &self.units {
             if !u.alive {
                 continue;
@@ -994,8 +1008,13 @@ fn blank() -> Unit {
 
 /// Builds the ground and an empty world for a match.
 pub fn setup(rules: &Rules) -> (Terrain, Vec<Tree>) {
+    setup_map(rules, &rules.map)
+}
+
+/// The ground and forest of `map`, with `rules`' building footprints.
+pub fn setup_map(rules: &Rules, map: &crate::rules::MapDef) -> (Terrain, Vec<Tree>) {
     let mut footprints = Vec::new();
-    for side in &rules.map.sides {
+    for side in &map.sides {
         for b in &side.buildings {
             if let Some(d) = rules.unit(&b.unit) {
                 let fp = rules.units[d].footprint;
@@ -1005,6 +1024,6 @@ pub fn setup(rules: &Rules) -> (Terrain, Vec<Tree>) {
             }
         }
     }
-    let g = map::generate(&rules.map, &footprints);
+    let g = map::generate(map, &footprints);
     (g.terrain, g.trees)
 }

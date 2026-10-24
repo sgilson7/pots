@@ -33,15 +33,16 @@ pub const LEASH: i32 = 900;
 pub fn clock(w: &mut World, ctx: &Ctx) {
     let t = &ctx.rules.t;
     let tick = w.tick;
-    if tick == 0 && !w.aram {
+    if tick == 0 && !w.aram && !w.arena {
         spawn_boss(w, ctx);
     }
     crate::aram::clock(w, ctx);
+    crate::arena::clock(w, ctx);
     if tick == w.horn_at {
         w.event(EV_HORN, 0, 0, [0, 0]);
     }
-    // creep waves
-    if tick >= w.horn_at && (tick - w.horn_at).is_multiple_of((t.wave_every * TPS) as u32) {
+    // creep waves (the arena sends its own)
+    if !w.arena && tick >= w.horn_at && (tick - w.horn_at).is_multiple_of((t.wave_every * TPS) as u32) {
         w.waves += 1;
         spawn_waves(w, ctx);
     }
@@ -58,7 +59,7 @@ pub fn clock(w: &mut World, ctx: &Ctx) {
     // neutral camps: first half a minute after the horn, then on every minute mark
     let first = w.horn_at + (t.neutral_first * TPS) as u32;
     let minute = (t.neutral_every * TPS) as u32;
-    if !w.aram && (tick == first || (tick > first && (tick - w.horn_at).is_multiple_of(minute))) {
+    if !w.aram && !w.arena && (tick == first || (tick > first && (tick - w.horn_at).is_multiple_of(minute))) {
         spawn_camps(w, ctx);
     }
     // runes: every even minute from the horn, unless one still waits
@@ -174,32 +175,45 @@ fn spawn_waves(w: &mut World, ctx: &Ctx) {
                 // a column, two abreast, so the wave does not start stacked
                 let off = [(k as i32 % 2) * 60 - 30, -(k as i32 / 2) * 60];
                 let at = [spawn[0] + off[0], spawn[1] + off[1]];
-                let id = w.spawn(ctx, def, team, at);
-                let max = {
-                    let u = w.get_mut(id).expect("just spawned");
-                    u.lane = li as u8;
-                    u.lane_name = li as u8;
-                    u.waypoint = 0;
-                    u.upgrade = level;
-                    0
-                };
-                let _ = max;
-                let s = stats::of(ctx, w, id);
-                w.get_mut(id).expect("just spawned").hp = s.max_hp * 1000;
+                spawn_creep(w, ctx, def, team, li, at, level);
             }
         }
     }
 }
 
+/// One lane creep of unit `def` for `team` at `at`, walking lane `li`
+/// (0 top, 1 mid, 2 bot) at upgrade `level`, at full health.
+pub fn spawn_creep(w: &mut World, ctx: &Ctx, def: usize, team: u8, li: usize, at: P, level: i32) -> Uid {
+    let id = w.spawn(ctx, def, team, at);
+    {
+        let u = w.get_mut(id).expect("just spawned");
+        u.lane = li as u8;
+        u.lane_name = li as u8;
+        u.waypoint = 0;
+        u.upgrade = level;
+    }
+    let s = stats::of(ctx, w, id);
+    w.get_mut(id).expect("just spawned").hp = s.max_hp * 1000;
+    id
+}
+
 fn spawn_camps(w: &mut World, ctx: &Ctx) {
-    for (k, camp) in ctx.rules.map.camps.iter().enumerate() {
+    for k in 0..ctx.rules.map.camps.len() {
+        spawn_camp(w, ctx, k);
+    }
+}
+
+/// Camp `k`'s creeps, unless anything stands in the camp.
+pub fn spawn_camp(w: &mut World, ctx: &Ctx, k: usize) {
+    let camp = &ctx.rules.map.camps[k];
+    {
         let tag = k as u8 + 1;
         let occupied = w
             .units
             .iter()
             .any(|u| u.alive && (u.camp == tag || within(u.pos(), camp.at, CAMP_RADIUS)));
         if occupied || camp.groups.is_empty() {
-            continue;
+            return;
         }
         let g = w.rng.below(camp.groups.len() as u32) as usize;
         for (j, name) in camp.groups[g].iter().enumerate() {
@@ -634,7 +648,8 @@ fn protect(w: &mut World, ctx: &Ctx) {
             Kind::Tower if tier == 4 => built.iter().all(|&l| standing(w, team, 3, Some(l))),
             Kind::Tower if tier > 1 => standing(w, team, tier - 1, Some(lane)),
             Kind::Barracks => standing(w, team, 3, Some(lane)),
-            Kind::Sphere => standing(w, team, 4, None),
+            // the arena's Sphere is its portal, which nothing can hurt (round 8)
+            Kind::Sphere => w.arena || standing(w, team, 4, None),
             _ => false,
         };
         let creeps_near = !w

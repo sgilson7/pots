@@ -741,6 +741,99 @@ def ice_blast_release(rng):
     return fig
 
 
+def magic_missile(rng):
+    fig = ability_fig("magic_missile")
+    # an ember with two moth wings, streaking down to a dazed foe's stars
+    M.trail(fig, [(0.34, 1.5), (0.6, 1.28), (0.86, 1.08)], "flame", w0=0.02, w1=0.14)
+    for sgn in (-1, 1):
+        fig.ellipse(1.0 + sgn * 0.2, 1.06 + 0.12, 0.2, 0.09, "violet", rot=sgn * 25)
+    fig.circle(1.0, 1.0, 0.18, "flame")
+    fig.circle(1.0, 1.0, 0.1, "flamehot")
+    M.stun_stars(fig, 1.22, 0.52, s=0.9)
+    return fig
+
+
+def wave_of_terror(rng):
+    fig = ability_fig("wave_of_terror")
+    # a wall of dusk rolling to the right, motes rising off its crest
+    fig.blob([(0.32, 0.5), (0.36, 1.0), (0.62, 1.34), (1.0, 1.42), (1.44, 1.2), (1.66, 0.86), (1.62, 0.5)], "night", tension=0.5)
+    fig.blob([(0.5, 0.5), (0.56, 0.9), (0.8, 1.16), (1.12, 1.2), (1.42, 0.98), (1.5, 0.5)], "violet", tension=0.5)
+    for x, y in ((0.7, 1.5), (1.1, 1.6), (1.46, 1.42)):
+        fig.circle(x, y, 0.06, "violet")
+    M.shield(fig, 1.0, 0.72, s=0.42, fill="steeldark")
+    fig.stroke([(0.86, 0.9), (1.14, 0.54)], width=2.4)
+    return fig
+
+
+def command_aura(rng):
+    fig = ability_fig("command_aura")
+    # a lantern's glow over a raised blade
+    fig.circle(1.0, 1.0, 0.62, "flamehot!35!paper")
+    fig.circle(1.0, 1.0, 0.42, "flamehot!60!paper")
+    M.sword(fig, 1.0, 0.98, s=0.82, rot=0)
+    for x, y in ((0.5, 1.4), (1.5, 1.36), (1.46, 0.56)):
+        M.sparkle(fig, x, y, 0.08, "flamehot")
+    return fig
+
+
+def nether_swap(rng):
+    fig = ability_fig("nether_swap")
+    # two figures and the curved arrows of a trade
+    for x, fill in ((0.6, "violet"), (1.4, "life")):
+        fig.circle(x, 1.0, 0.16, fill)
+        fig.blob([(x - 0.2, 0.42), (x - 0.18, 0.76), (x + 0.18, 0.76), (x + 0.2, 0.42)], fill, tension=0.4)
+    fig.stroke([(0.62, 1.32), (1.0, 1.56), (1.38, 1.32)], width=2.6, smooth=True, role="night")
+    fig.poly([(1.3, 1.42), (1.46, 1.26), (1.28, 1.24)], "night")
+    fig.stroke([(1.38, 0.3), (1.0, 0.16), (0.62, 0.3)], width=2.6, smooth=True, role="night")
+    fig.poly([(0.7, 0.2), (0.54, 0.34), (0.72, 0.38)], "night")
+    return fig
+
+
+def starfall(rng):
+    fig = ability_fig("starfall")
+    # stars streaking down onto the ground, one bursting
+    for x0, y0, x1, y1 in ((0.4, 1.6, 0.72, 0.86), (0.9, 1.7, 1.1, 0.92), (1.46, 1.56, 1.32, 0.78)):
+        M.trail(fig, [(x0, y0), ((x0 + x1) / 2, (y0 + y1) / 2), (x1, y1)], "spark", w0=0.02, w1=0.1)
+        M.star(fig, x1, y1, 0.12, "spark")
+    fig.ellipse(1.0, 0.5, 0.6, 0.12, "night!40!paper")
+    M.burst(fig, 1.1, 0.56, 0.18, "flamehot")
+    return fig
+
+
+def elune_arrow(rng):
+    fig = ability_fig("elune_arrow")
+    # a long arrow with a star for a head, its trail growing behind
+    M.trail(fig, [(0.3, 0.42), (0.7, 0.76), (1.1, 1.1)], "spark", w0=0.02, w1=0.12)
+    M.arrow(fig, 0.4, 0.5, 1.42, 1.38, fletch="mana")
+    M.star(fig, 1.48, 1.44, 0.16, "spark")
+    return fig
+
+
+def leap(rng):
+    fig = ability_fig("leap")
+    # a frog's arc over a lily pad, speed lines where it lands
+    fig.ellipse(0.5, 0.5, 0.26, 0.08, "leaf")
+    fig.ellipse(1.5, 0.5, 0.26, 0.08, "leaf")
+    fig.stroke([(0.5, 0.62), (0.9, 1.42), (1.4, 0.86)], width=2.2, smooth=True, role="night")
+    fig.ellipse(1.3, 1.12, 0.2, 0.15, "leaf!80!snow")
+    fig.circle(1.24, 1.26, 0.06, "snow")
+    fig.circle(1.38, 1.26, 0.06, "snow")
+    M.motion(fig, [[(1.62, 0.66), (1.8, 0.7)], [(1.6, 0.8), (1.76, 0.86)]], width=1.8)
+    return fig
+
+
+def moonlight_shadow(rng):
+    fig = ability_fig("moonlight_shadow")
+    # a crescent moon over three fading figures in mist
+    fig.circle(1.0, 1.36, 0.26, "cloud")
+    fig.circle(1.12, 1.44, 0.22, "storm!34!paper")
+    for x, a in ((0.56, 60), (1.0, 40), (1.44, 20)):
+        fig.circle(x, 0.86, 0.12, f"night!{a}!paper")
+        fig.blob([(x - 0.15, 0.4), (x - 0.13, 0.7), (x + 0.13, 0.7), (x + 0.15, 0.4)], f"night!{a}!paper", tension=0.4)
+    fig.ellipse(1.0, 0.42, 0.66, 0.1, "cloud")
+    return fig
+
+
 _FUNCS = {f.__name__: f for f in (
     storm_bolt, great_cleave, warcry, gods_strength,
     crystal_nova, frostbite, brilliance_aura, freezing_field,
@@ -755,7 +848,9 @@ _FUNCS = {f.__name__: f for f in (
     warden_bash,
     berserker_rage, whirling_axes, whirling_axes_melee, fervor, battle_trance,
     whirling_death, timber_chain, reactive_armor, chakram, return_chakram,
-    cold_feet, ice_vortex, chilling_touch, ice_blast, ice_blast_release)}
+    cold_feet, ice_vortex, chilling_touch, ice_blast, ice_blast_release,
+    magic_missile, wave_of_terror, command_aura, nether_swap,
+    starfall, elune_arrow, leap, moonlight_shadow)}
 
 _missing = set(ability_ids()) ^ set(_FUNCS)
 if _missing:

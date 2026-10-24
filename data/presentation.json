@@ -183,6 +183,16 @@
    "shape": "flake",
    "color": "fx_frost",
    "size": 50
+  },
+  "tallow": {
+   "shape": "ember",
+   "color": "fx_ember",
+   "size": 45
+  },
+  "skipjack": {
+   "shape": "star",
+   "color": "fx_star",
+   "size": 42
   }
  },
  "fx": {
@@ -917,6 +927,146 @@
   },
   "ice_blast_release": {
    "color": "fx_frost"
+  },
+  "magic_missile": {
+   "color": "fx_ember",
+   "cast": true,
+   "missile": {
+    "shape": "ember",
+    "size": 80
+   },
+   "land": [
+    {
+     "kind": "flash",
+     "r": 150,
+     "dur": 50
+    },
+    {
+     "kind": "ring",
+     "r": 120,
+     "dur": 40
+    }
+   ]
+  },
+  "wave_of_terror": {
+   "color": "fx_dusk",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "wave",
+     "r": 180,
+     "dur": 90
+    }
+   ],
+   "missile": {
+    "shape": "dusk",
+    "size": 130
+   }
+  },
+  "command_aura": {
+   "color": "fx_ember"
+  },
+  "nether_swap": {
+   "color": "fx_dusk",
+   "cast": true,
+   "proc": [
+    {
+     "kind": "flash",
+     "r": 150,
+     "dur": 50
+    },
+    {
+     "kind": "rise",
+     "r": 110,
+     "dur": 50
+    },
+    {
+     "kind": "ring",
+     "r": 140,
+     "dur": 40
+    }
+   ]
+  },
+  "starfall": {
+   "color": "fx_star",
+   "cast": true,
+   "zone": "stars",
+   "land": [
+    {
+     "kind": "ring",
+     "key": "radius",
+     "dur": 40
+    },
+    {
+     "kind": "flash",
+     "r": 220,
+     "dur": 40
+    }
+   ],
+   "proc": [
+    {
+     "kind": "sky",
+     "r": 90,
+     "dur": 40
+    },
+    {
+     "kind": "flash",
+     "r": 90,
+     "dur": 30
+    }
+   ]
+  },
+  "elune_arrow": {
+   "color": "fx_star",
+   "cast": true,
+   "missile": {
+    "shape": "star",
+    "size": 95
+   },
+   "proc": [
+    {
+     "kind": "flash",
+     "r": 160,
+     "dur": 50
+    },
+    {
+     "kind": "ring",
+     "r": 140,
+     "dur": 50
+    }
+   ]
+  },
+  "leap": {
+   "color": "fx_star",
+   "cast": true,
+   "land": [
+    {
+     "kind": "ring",
+     "r": 320,
+     "dur": 40
+    },
+    {
+     "kind": "flash",
+     "r": 130,
+     "dur": 40
+    }
+   ]
+  },
+  "moonlight_shadow": {
+   "color": "fx_star",
+   "cast": true,
+   "fire": [
+    {
+     "kind": "ring",
+     "r": 400,
+     "dur": 60
+    },
+    {
+     "kind": "rise",
+     "r": 140,
+     "dur": 60
+    }
+   ]
   }
  },
  "backdrop": {
@@ -955,7 +1105,10 @@
    "ice_blast": 5,
    "ice_blast_release": 4,
    "cold_feet": 6,
-   "chilling_touch": 5
+   "chilling_touch": 5,
+   "elune_arrow": 5,
+   "moonlight_shadow": 5,
+   "starfall": 3
   },
   "demo_ahead": 250,
   "shift_pct": 22,
