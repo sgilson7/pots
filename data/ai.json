@@ -1,0 +1,772 @@
+{
+ "lanes": [
+  "mid",
+  "top",
+  "bot",
+  "top",
+  "bot"
+ ],
+ "difficulty": [
+  {
+   "id": "passive",
+   "reaction": 30,
+   "last_hit": 15,
+   "deny": 0,
+   "cast": 15,
+   "retreat": 50,
+   "aggression": 5,
+   "shops": true,
+   "flags": []
+  },
+  {
+   "id": "easy",
+   "reaction": 20,
+   "last_hit": 35,
+   "deny": 10,
+   "cast": 35,
+   "retreat": 40,
+   "aggression": 25,
+   "shops": true,
+   "flags": []
+  },
+  {
+   "id": "normal",
+   "reaction": 12,
+   "last_hit": 60,
+   "deny": 30,
+   "cast": 60,
+   "retreat": 35,
+   "aggression": 50,
+   "shops": true,
+   "flags": [
+    "denies"
+   ]
+  },
+  {
+   "id": "hard",
+   "reaction": 7,
+   "last_hit": 80,
+   "deny": 55,
+   "cast": 85,
+   "retreat": 30,
+   "aggression": 70,
+   "shops": true,
+   "flags": [
+    "denies",
+    "runes"
+   ]
+  },
+  {
+   "id": "unfair",
+   "reaction": 4,
+   "last_hit": 95,
+   "deny": 75,
+   "cast": 100,
+   "retreat": 25,
+   "aggression": 85,
+   "shops": true,
+   "flags": [
+    "denies",
+    "runes",
+    "gank"
+   ]
+  }
+ ],
+ "trees": {
+  "hero": {
+   "rules": [
+    {
+     "if": [
+      "dead"
+     ],
+     "do": "wait",
+     "note": "dead: shop from the fountain"
+    },
+    {
+     "if": [
+      "has_points"
+     ],
+     "do": "learn",
+     "note": "spend a skill point"
+    },
+    {
+     "if": [
+      {
+       "needs_fountain": 25
+      }
+     ],
+     "do": "go_home",
+     "interrupt": true,
+     "note": "low on health: go to the fountain"
+    },
+    {
+     "if": [
+      "at_fountain",
+      {
+       "hp_below": 90
+      }
+     ],
+     "do": "stay",
+     "note": "heal up"
+    },
+    {
+     "if": [
+      {
+       "hp_below": 70
+      },
+      "can_heal"
+     ],
+     "do": "potion",
+     "note": "use a salve, a tango or a clarity"
+    },
+    {
+     "if": [
+      {
+       "not": {
+        "mana_above": 35
+       }
+      },
+      "can_mana"
+     ],
+     "do": "potion",
+     "note": "use a clarity when low on mana"
+    },
+    {
+     "if": [
+      "can_buy"
+     ],
+     "do": "buy",
+     "note": "buy the next item of the build"
+    },
+    {
+     "if": [
+      "tower_targets_me"
+     ],
+     "do": "retreat",
+     "interrupt": true,
+     "note": "a tower is hitting me"
+    },
+    {
+     "if": [
+      {
+       "outnumbered": 1000
+      },
+      {
+       "hp_below": 60
+      }
+     ],
+     "do": "retreat",
+     "note": "outnumbered"
+    },
+    {
+     "if": [
+      "ability_ready",
+      {
+       "enemy_hero_near": 900
+      }
+     ],
+     "do": "cast",
+     "note": "use an ability on an enemy hero"
+    },
+    {
+     "if": [
+      {
+       "enemy_hero_weak": [
+        35,
+        900
+       ]
+      },
+      {
+       "not": "under_enemy_tower"
+      }
+     ],
+     "do": "fight",
+     "note": "finish a weak enemy hero"
+    },
+    {
+     "if": [
+      {
+       "enemies_near": [
+        1,
+        700
+       ]
+      },
+      {
+       "allies_near": [
+        1,
+        900
+       ]
+      },
+      {
+       "not": "under_enemy_tower"
+      },
+      {
+       "chance": 30
+      }
+     ],
+     "do": "fight",
+     "note": "fight with an ally"
+    },
+    {
+     "if": [
+      {
+       "skill": "runes"
+      },
+      {
+       "chance": 10
+      }
+     ],
+     "do": "rune",
+     "note": "take a rune"
+    },
+    {
+     "if": [
+      {
+       "after": 20
+      },
+      {
+       "not": {
+        "enemy_creeps_near": 1500
+       }
+      },
+      {
+       "chance": 30
+      }
+     ],
+     "do": "push",
+     "note": "push the lane late"
+    },
+    {
+     "if": [
+      {
+       "enemy_hero_near": 700
+      },
+      {
+       "chance": 20
+      }
+     ],
+     "do": "harass",
+     "note": "harass in lane"
+    },
+    {
+     "if": [
+      {
+       "after": 8
+      },
+      {
+       "not": {
+        "enemy_hero_near": 1000
+       }
+      },
+      {
+       "hp_above": 50
+      }
+     ],
+     "do": "siege",
+     "note": "help the creeps take a building"
+    },
+    {
+     "do": "farm",
+     "note": "last-hit and deny in lane"
+    }
+   ]
+  }
+ },
+ "builds": {
+  "ironvow": {
+   "skills": [
+    0,
+    1,
+    0,
+    2,
+    0,
+    3,
+    0,
+    1,
+    1,
+    1,
+    3,
+    2,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "branch",
+    "branch",
+    "salve",
+    "boots",
+    "gloves",
+    "belt",
+    "mask_death",
+    "ogre_club",
+    "mithril",
+    "bkb",
+    "demon_edge",
+    "claymore",
+    "daedalus"
+   ]
+  },
+  "rime": {
+   "skills": [
+    1,
+    2,
+    0,
+    2,
+    0,
+    3,
+    0,
+    0,
+    1,
+    1,
+    3,
+    1,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "clarity",
+    "observer",
+    "boots",
+    "magic_stick",
+    "branch",
+    "branch",
+    "wizardry",
+    "ring_regen",
+    "force_staff",
+    "blink"
+   ]
+  },
+  "cinder": {
+   "skills": [
+    0,
+    1,
+    0,
+    1,
+    0,
+    3,
+    0,
+    1,
+    1,
+    2,
+    3,
+    2,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "clarity",
+    "branch",
+    "circlet",
+    "mantle",
+    "boots",
+    "wizardry",
+    "null_talisman",
+    "dagon",
+    "blink"
+   ]
+  },
+  "thistle": {
+   "skills": [
+    0,
+    2,
+    0,
+    1,
+    0,
+    3,
+    0,
+    2,
+    2,
+    2,
+    3,
+    1,
+    1,
+    1,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "slippers",
+    "circlet",
+    "boots",
+    "gloves",
+    "elvenskin",
+    "alacrity",
+    "elvenskin",
+    "yasha",
+    "ultimate_orb",
+    "manta",
+    "demon_edge",
+    "claymore",
+    "daedalus"
+   ]
+  },
+  "gristle": {
+   "skills": [
+    0,
+    1,
+    0,
+    1,
+    0,
+    3,
+    0,
+    1,
+    1,
+    2,
+    3,
+    2,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "salve",
+    "branch",
+    "branch",
+    "boots",
+    "gauntlets",
+    "circlet",
+    "ring_health",
+    "vitality",
+    "vanguard",
+    "blink"
+   ]
+  },
+  "tectus": {
+   "skills": [
+    0,
+    2,
+    0,
+    1,
+    0,
+    3,
+    0,
+    2,
+    2,
+    2,
+    3,
+    1,
+    1,
+    1,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "clarity",
+    "branch",
+    "boots",
+    "magic_stick",
+    "branch",
+    "branch",
+    "blink",
+    "point_booster"
+   ]
+  },
+  "kestrel": {
+   "skills": [
+    0,
+    2,
+    0,
+    1,
+    0,
+    3,
+    0,
+    2,
+    2,
+    2,
+    3,
+    1,
+    1,
+    1,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "salve",
+    "slippers",
+    "circlet",
+    "boots",
+    "blades",
+    "blades",
+    "ring_health",
+    "void_stone",
+    "claymore",
+    "broadsword",
+    "battlefury"
+   ]
+  },
+  "hexwright": {
+   "skills": [
+    0,
+    2,
+    0,
+    1,
+    0,
+    3,
+    0,
+    1,
+    1,
+    1,
+    3,
+    2,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "clarity",
+    "observer",
+    "boots",
+    "magic_stick",
+    "branch",
+    "branch",
+    "blink"
+   ]
+  },
+  "longwick": {
+   "skills": [
+    1,
+    0,
+    1,
+    2,
+    1,
+    3,
+    1,
+    2,
+    2,
+    2,
+    3,
+    0,
+    0,
+    0,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "slippers",
+    "circlet",
+    "boots",
+    "gloves",
+    "elvenskin",
+    "mithril",
+    "gloves",
+    "maelstrom",
+    "hyperstone",
+    "mjollnir"
+   ]
+  },
+  "tempest": {
+   "skills": [
+    0,
+    2,
+    0,
+    1,
+    0,
+    3,
+    0,
+    1,
+    1,
+    1,
+    3,
+    2,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "clarity",
+    "branch",
+    "boots",
+    "magic_stick",
+    "branch",
+    "branch",
+    "energy",
+    "point_booster",
+    "ultimate_orb"
+   ]
+  },
+  "hackle": {
+   "skills": [
+    1,
+    0,
+    1,
+    2,
+    1,
+    3,
+    1,
+    2,
+    2,
+    2,
+    3,
+    0,
+    0,
+    0,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "slippers",
+    "circlet",
+    "boots",
+    "gloves",
+    "mask_death",
+    "elvenskin",
+    "yasha",
+    "ultimate_orb",
+    "manta",
+    "demon_edge",
+    "claymore",
+    "daedalus"
+   ]
+  },
+  "chipper": {
+   "skills": [
+    1,
+    0,
+    0,
+    2,
+    0,
+    3,
+    0,
+    1,
+    1,
+    1,
+    3,
+    2,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "salve",
+    "branch",
+    "branch",
+    "boots",
+    "gauntlets",
+    "circlet",
+    "ring_health",
+    "vitality",
+    "vanguard",
+    "blink"
+   ]
+  },
+  "shiver": {
+   "skills": [
+    0,
+    1,
+    0,
+    1,
+    0,
+    3,
+    0,
+    1,
+    1,
+    4,
+    3,
+    2,
+    2,
+    2,
+    2,
+    3
+   ],
+   "items": [
+    "tango",
+    "clarity",
+    "observer",
+    "boots",
+    "magic_stick",
+    "branch",
+    "branch",
+    "wizardry",
+    "ring_regen",
+    "force_staff",
+    "blink"
+   ]
+  },
+  "tallow": {
+   "skills": [
+    0,
+    1,
+    0,
+    2,
+    0,
+    3,
+    0,
+    1,
+    1,
+    1,
+    3,
+    2,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "salve",
+    "boots",
+    "magic_stick",
+    "slippers",
+    "circlet",
+    "wraith_band",
+    "headdress",
+    "mekansm",
+    "yasha"
+   ]
+  },
+  "skipjack": {
+   "skills": [
+    0,
+    1,
+    0,
+    2,
+    0,
+    3,
+    0,
+    1,
+    1,
+    1,
+    3,
+    2,
+    2,
+    2,
+    4,
+    3
+   ],
+   "items": [
+    "tango",
+    "slippers",
+    "circlet",
+    "boots",
+    "wraith_band",
+    "gloves",
+    "elvenskin",
+    "yasha",
+    "ultimate_orb",
+    "manta"
+   ]
+  }
+ }
+}

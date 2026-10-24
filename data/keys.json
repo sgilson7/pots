@@ -1,0 +1,43 @@
+{
+ "bindings": {
+  "KeyQ": "ability 0",
+  "KeyW": "ability 1",
+  "KeyE": "ability 2",
+  "KeyR": "ability 3",
+  "Digit1": "item 0",
+  "Digit2": "item 1",
+  "Digit3": "item 2",
+  "Digit4": "item 3",
+  "Digit5": "item 4",
+  "Digit6": "item 5",
+  "Numpad7": "item 0",
+  "Numpad8": "item 1",
+  "Numpad4": "item 2",
+  "Numpad5": "item 3",
+  "Numpad1": "item 4",
+  "Numpad2": "item 5",
+  "KeyA": "attack",
+  "KeyS": "stop",
+  "KeyH": "hold",
+    "KeyF": "cannon",
+  "KeyO": "learn",
+  "KeyB": "shop",
+  "Tab": "score",
+  "Space": "center",
+  "F1": "center",
+  "ArrowUp": "pan up",
+  "ArrowDown": "pan down",
+  "ArrowLeft": "pan left",
+  "ArrowRight": "pan right",
+  "Escape": "cancel",
+  "F10": "menu",
+  "KeyP": "pause"
+ },
+ "learn_keys": {
+  "KeyQ": 0,
+  "KeyW": 1,
+  "KeyE": 2,
+  "KeyR": 3,
+  "KeyT": 4
+ }
+}

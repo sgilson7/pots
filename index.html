@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Reference default. connect-src 'self' and the relays in web/net/config.js (the online feature, BRIEF.md);
+       'wasm-unsafe-eval' lets the page compile its own WebAssembly module;
+       form-action 'none' blocks form posts. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' wss://nos.lol wss://nostr.mom wss://relay.damus.io wss://relay.primal.net wss://nostr-01.yakihonne.com wss://nostr.sathoarder.com wss://relay.mostro.network; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Protection of the Spheres</title>
+  <link rel="stylesheet" href="style.css?v=92144fbb40d6">
+</head>
+<body data-ready="false" data-screen="title">
+  <canvas id="view" aria-label="The battlefield"></canvas>
+  <div id="minimap" aria-label="Minimap">
+    <canvas id="minimap-ground"></canvas>
+    <canvas id="minimap-top"></canvas>
+  </div>
+  <div id="ui"></div>
+  <div id="tip" role="tooltip" hidden></div>
+  <div id="cursor" aria-hidden="true"></div>
+  <p id="notice" role="status" data-nogl="This game needs WebGL 2, which this browser does not offer."></p>
+  <noscript><p>This game needs JavaScript and WebAssembly.</p></noscript>
+  <script type="module" src="app.js?v=92144fbb40d6"></script>
+</body>
+</html>
